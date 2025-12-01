@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "node-oom-heapdump": "^3.7.2"
+  }
+}
