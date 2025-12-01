@@ -3,9 +3,14 @@ import { Socket } from 'socket.io';
 import * as os from 'os';
 import { spawn, ChildProcess } from 'child_process';
 
+interface TerminalSession {
+    process: ChildProcess;
+    buffer: string;
+}
+
 @Injectable()
 export class TerminalService {
-    private sessions: Map<string, ChildProcess> = new Map();
+    private sessions: Map<string, TerminalSession> = new Map();
 
     getAvailableShells() {
         const isWin = os.platform() === 'win32';
@@ -27,63 +32,78 @@ export class TerminalService {
         const defaultShell = os.platform() === 'win32' ? 'powershell.exe' : 'bash';
         const shell = shellPath || defaultShell;
 
-        console.log(`[Terminal] Spawning shell: ${shell}`);
+        console.log(`[Terminal] Spawning shell with child_process: ${shell}`);
 
-        // Use child_process.spawn as a fallback for node-pty
-        // shell: false ensures we can pass paths with spaces correctly without cmd.exe interference
-        const args = shell.toLowerCase().includes('bash') ? ['-i'] : [];
-        const ptyProcess = spawn(shell, args, {
-            cwd: process.cwd(),
-            env: { ...process.env, FORCE_COLOR: '1' },
-            shell: false,
-        });
+        try {
+            // Use child_process instead of node-pty
+            const childProcess = spawn(shell, [], {
+                cwd: process.cwd(),
+                env: process.env,
+                shell: true,
+                windowsHide: false,
+            });
 
-        this.sessions.set(client.id, ptyProcess);
+            const session: TerminalSession = {
+                process: childProcess,
+                buffer: '',
+            };
 
-        // Initial setup for Windows to support UTF-8
-        if (os.platform() === 'win32') {
-            if (shell.includes('cmd') || shell.includes('powershell')) {
-                ptyProcess.stdin.write('chcp 65001\r\n');
-            }
+            this.sessions.set(client.id, session);
+
+            // Handle stdout
+            childProcess.stdout?.on('data', (data) => {
+                const output = data.toString();
+                client.emit('terminal:output', output);
+            });
+
+            // Handle stderr
+            childProcess.stderr?.on('data', (data) => {
+                const output = data.toString();
+                client.emit('terminal:output', output);
+            });
+
+            // Handle exit
+            childProcess.on('exit', (code, signal) => {
+                client.emit('terminal:output', `\r\nProcess exited with code ${code}\r\n`);
+                this.sessions.delete(client.id);
+            });
+
+            // Handle errors
+            childProcess.on('error', (error) => {
+                console.error(`[Terminal] Process error:`, error);
+                client.emit('terminal:output', `\r\nError: ${error.message}\r\n`);
+            });
+
+            console.log(`[Terminal] Process created with PID: ${childProcess.pid}`);
+
+            // Send welcome message
+            client.emit('terminal:output', `*** Connected to Backend Terminal ***\r\n\r\n`);
+
+            return childProcess;
+        } catch (error) {
+            console.error(`[Terminal] Error spawning process:`, error);
+            client.emit('terminal:output', `\r\nError: ${error.message}\r\n`);
+            throw error;
         }
-
-        // Handle output
-        ptyProcess.stdout.on('data', (data) => {
-            const output = data.toString('utf-8');
-            client.emit('terminal:output', output);
-        });
-
-        ptyProcess.stderr.on('data', (data) => {
-            const output = data.toString('utf-8');
-            client.emit('terminal:output', output);
-        });
-
-        ptyProcess.on('exit', (code) => {
-            client.emit('terminal:output', `\r\nProcess exited with code ${code}\r\n`);
-        });
-
-        ptyProcess.on('error', (err) => {
-            client.emit('terminal:output', `\r\nError: ${err.message}\r\n`);
-        });
-
-        return ptyProcess;
     }
 
     handleInput(clientId: string, input: string) {
-        const ptyProcess = this.sessions.get(clientId);
-        if (ptyProcess && ptyProcess.stdin) {
-            ptyProcess.stdin.write(input);
+        const session = this.sessions.get(clientId);
+        if (session && session.process.stdin) {
+            session.process.stdin.write(input);
         }
     }
 
     handleResize(clientId: string, cols: number, rows: number) {
-        // child_process doesn't support resizing natively like pty
+        // child_process doesn't support resize like PTY
+        // This is a limitation compared to node-pty
+        console.log(`[Terminal] Resize requested (${cols}x${rows}) but not supported with child_process`);
     }
 
     removeSession(clientId: string) {
-        const ptyProcess = this.sessions.get(clientId);
-        if (ptyProcess) {
-            ptyProcess.kill();
+        const session = this.sessions.get(clientId);
+        if (session) {
+            session.process.kill();
             this.sessions.delete(clientId);
         }
     }
