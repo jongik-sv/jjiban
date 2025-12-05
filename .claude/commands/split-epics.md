@@ -7,9 +7,9 @@
 **이 명령어는 문서화 작업 전용입니다:**
 - ✅ PRD 문서 분석 및 전략적 Epic 분할
 - ✅ Epic PRD 문서 생성
-- ✅ Chain (Feature) 구조 정의
-- ✅ 폴더 구조 생성
+- ✅ EPIC 레벨 폴더 구조 생성
 - ✅ 의존성 분석 및 매핑
+- ❌ **Chain 폴더/문서 생성 금지** - EPIC 레벨까지만
 - ❌ **코드 작성 금지** - 구현은 별도 명령어 사용
 - ❌ **코드 생성 금지** - 설계 문서만 작성
 
@@ -40,7 +40,7 @@
 
 **적절한 전략적 EPIC (✅ True EPIC-Level)**:
 ```
-✅ NEW-EPIC-02: Visualization & User Experience (4-5개월)
+✅ EPIC-02: Visualization & User Experience (4-5개월)
    ├── CHAIN-02-01: Dashboard & Reporting (1-3개월)
    ├── CHAIN-02-02: Kanban Board UI (1-2개월)
    └── CHAIN-02-03: Gantt Chart UI (1-2개월)
@@ -61,7 +61,7 @@
 → 각각 1-2개월 규모, 너무 작음
 
 ✅ **올바른 분할 (전략적 통합)**:
-- NEW-EPIC: Visualization & UX (4-5개월)
+- EPIC: Visualization & UX (4-5개월)
   - 세 가지 기능 모두 "프로젝트 데이터 시각화"라는 전략적 역량
 
 ### 2. 도메인 중심 사고
@@ -208,59 +208,38 @@ PRD 분석 시 다음을 자동으로 체크하고 누락 시 EPIC-P01에 추가
 ## EPIC 네이밍 규칙
 
 ### 전략적 EPIC
-- **ID 형식**: `NEW-EPIC-{01-99}`
-- **폴더명**: `NEW-EPIC-{ID}-{kebab-case-name}`
+- **ID 형식**: `EPIC-{01-99}`
+- **폴더명**: `EPIC-{ID}-{kebab-case-name}`
 - **예시**:
-  - `NEW-EPIC-01-platform-foundation`
-  - `NEW-EPIC-02-core-project-management`
-  - `NEW-EPIC-03-workflow-document-engine`
+  - `EPIC-01-core-project-management`
+  - `EPIC-02-workflow-document-engine`
 
 ### 플랫폼 EPIC (특수)
-- **ID 형식**: `NEW-EPIC-01` 또는 `EPIC-P01` (레거시)
-- **폴더명**: `NEW-EPIC-01-platform-foundation`
-
-### Chain (Feature)
-- **ID 형식**: `CHAIN-{epic-id}-{01-99}-{name}`
-- **폴더명**: `CHAIN-{epic-id}-{num}-{kebab-case-name}`
-- **예시**:
-  - `CHAIN-02-01-dashboard-reporting`
-  - `CHAIN-04-03-task-detail-viewer`
+- **ID 형식**: `EPIC-01` 또는 `EPIC-P01` (레거시)
+- **폴더명**: `EPIC-P01-platform`
 
 ---
 
 ## 폴더 구조
 
+**⚠️ 이 명령어는 EPIC 레벨까지만 생성합니다. Chain은 epic-prd.md에 정의만 하고 폴더는 생성하지 않습니다.**
+
 ```
 projects/
-├── NEW-EPIC-01-platform-foundation/
-│   ├── epic-prd.md
-│   └── (Chain 폴더는 필요시 생성)
+├── EPIC-P01-platform/
+│   └── epic-prd.md
 │
-├── NEW-EPIC-02-core-project-management/
-│   ├── epic-prd.md
-│   ├── CHAIN-02-01-dashboard-reporting/
-│   │   └── chain-prd.md
-│   └── CHAIN-02-02-project-issue-management/
-│       └── chain-prd.md
+├── EPIC-01-core-project-management/
+│   └── epic-prd.md
 │
-├── NEW-EPIC-03-workflow-document-engine/
-│   ├── epic-prd.md
-│   ├── CHAIN-03-01-workflow-engine/
-│   │   └── chain-prd.md
-│   └── CHAIN-03-02-document-management/
-│       └── chain-prd.md
+├── EPIC-02-workflow-document-engine/
+│   └── epic-prd.md
 │
-├── NEW-EPIC-04-visualization-ux/
-│   ├── epic-prd.md
-│   ├── CHAIN-04-01-kanban-board/
-│   ├── CHAIN-04-02-gantt-chart/
-│   └── CHAIN-04-03-task-detail-viewer/
+├── EPIC-03-visualization-ux/
+│   └── epic-prd.md
 │
-└── NEW-EPIC-05-ai-automation/
-    ├── epic-prd.md
-    ├── CHAIN-05-01-llm-terminal/
-    ├── CHAIN-05-02-workflow-automation/
-    └── CHAIN-05-03-cli-deployment/
+└── EPIC-04-ai-automation/
+    └── epic-prd.md
 ```
 
 ---
@@ -274,7 +253,7 @@ projects/
 
 | 항목 | 내용 |
 |------|------|
-| Epic ID | NEW-EPIC-{번호} |
+| Epic ID | EPIC-{번호} |
 | Epic 이름 | {이름} |
 | 문서 버전 | 1.0 |
 | 작성일 | {오늘 날짜} |
@@ -311,6 +290,8 @@ projects/
 ---
 
 ## 2. Chain (기능) 목록
+
+**⚠️ Chain은 문서로만 정의하며, 별도 폴더나 chain-prd.md는 생성하지 않습니다.**
 
 이 Epic은 다음 Chain들로 구성됩니다:
 
@@ -387,130 +368,10 @@ projects/
 | 1.0 | {날짜} | 초안 작성 |
 ```
 
----
-
-## 실행 예시
-
-### jjiban 프로젝트 사례
-
-**입력**: `jjiban-prd.md` (59KB, 대규모 프로젝트 관리 도구)
-
-**초기 분석 결과 (세분화)**:
-```
-❌ 11개 EPIC 추출 (너무 세분화됨):
-- EPIC-P01: 플랫폼 인프라 (4-6개월) ✅ 적절
-- EPIC-001: Dashboard (1-3개월) ⚠️ 너무 작음
-- EPIC-002: 프로젝트 관리 (1-3개월) ⚠️ 너무 작음
-- EPIC-003: Workflow Engine (2-3개월)
-- EPIC-004: Document Management (2-3개월)
-- EPIC-005: Kanban Board (1-2개월) ⚠️ 너무 작음
-- EPIC-006: Gantt Chart (1-2개월) ⚠️ 너무 작음
-- EPIC-007: Task Detail Viewer (1-2개월) ⚠️ 너무 작음
-- EPIC-008: LLM Terminal (2-3개월)
-- EPIC-009: Workflow Automation (2-3개월)
-- EPIC-010: CLI Deployment (2-3개월)
-```
-
-**통합 및 재구조화 (전략적 EPIC)**:
-```
-✅ 5개 전략적 EPIC (3-6개월 단위):
-
-NEW-EPIC-01: Platform Foundation (4-6개월)
-- 기존 EPIC-P01 유지
-
-NEW-EPIC-02: Core Project Management System (5-6개월)
-- CHAIN-02-01: Dashboard & Reporting (기존 EPIC-001)
-- CHAIN-02-02: Project & Issue Management (기존 EPIC-002)
-통합 근거: Dashboard는 프로젝트 데이터 UI, 두 기능 긴밀 결합
-
-NEW-EPIC-03: Workflow & Document Engine (5-6개월)
-- CHAIN-03-01: Workflow Engine (기존 EPIC-003)
-- CHAIN-03-02: Document Management (기존 EPIC-004)
-통합 근거: 워크플로우 단계마다 문서 생성, 불가분의 관계
-
-NEW-EPIC-04: Visualization & User Experience (4-5개월)
-- CHAIN-04-01: Kanban Board UI (기존 EPIC-005)
-- CHAIN-04-02: Gantt Chart UI (기존 EPIC-006)
-- CHAIN-04-03: Task Detail Viewer (기존 EPIC-007)
-통합 근거: 세 가지 모두 프로젝트 데이터 시각화, 공통 요소 공유
-
-NEW-EPIC-05: AI-Powered Automation (5-6개월)
-- CHAIN-05-01: LLM Terminal (기존 EPIC-008)
-- CHAIN-05-02: Workflow Automation (기존 EPIC-009)
-- CHAIN-05-03: CLI Deployment (기존 EPIC-010)
-통합 근거: 핵심 차별화 요소, "AI 개발 어시스턴트" 역량 형성
-```
-
-**최종 구조**:
-```
-📊 EPIC 재구조화 완료: 11개 → 5개 전략적 EPIC
-
-projects/
-├── NEW-EPIC-01-platform-foundation/ (4-6개월)
-├── NEW-EPIC-02-core-project-management/ (5-6개월, 2 Chains)
-├── NEW-EPIC-03-workflow-document-engine/ (5-6개월, 2 Chains)
-├── NEW-EPIC-04-visualization-ux/ (4-5개월, 3 Chains)
-└── NEW-EPIC-05-ai-automation/ (5-6개월, 3 Chains)
-
-✅ 전략적 명확성: 5개의 명확한 비즈니스 역량
-✅ 포트폴리오 관리 간소화: 11개 → 5개 추적 항목
-✅ 의존성 명확화: EPIC 간 관계가 더 명확함
-✅ 더 나은 계획: 3-6개월 단위의 전략적 계획
-✅ 구조 보존: 모든 기존 작업이 Chain으로 보존됨
-```
-
----
-
-## 출력 형식
-
-```
-📄 PRD 분석 완료: {PRD 파일명}
-🔍 프로젝트 타입: {자동 감지된 타입}
-
-📊 초기 기능 그룹 추출: {N}개
-→ 통합 필요: {M}개 그룹이 Chain-Level (1-3개월)
-→ 전략적 통합 수행 중...
-
-✅ 전략적 EPIC 추출 완료: {K}개 (각 3-6개월)
-
-📁 생성된 구조:
-projects/
-├── NEW-EPIC-01-platform-foundation/ (4-6개월)
-├── NEW-EPIC-02-{name}/ (5-6개월, {N} Chains)
-├── NEW-EPIC-03-{name}/ (5-6개월, {N} Chains)
-└── ...
-
-📈 EPIC 요약:
-
-[전략적 EPIC]
-┌─────────────┬──────────────────────────┬────────┬───────────┐
-│ Epic ID     │ Epic 이름                │ 기간   │ Chains    │
-├─────────────┼──────────────────────────┼────────┼───────────┤
-│ NEW-EPIC-01 │ Platform Foundation      │ 4-6개월│ -         │
-│ NEW-EPIC-02 │ Core PM System           │ 5-6개월│ 2개       │
-│ NEW-EPIC-03 │ Workflow & Doc Engine    │ 5-6개월│ 2개       │
-│ NEW-EPIC-04 │ Visualization & UX       │ 4-5개월│ 3개       │
-│ NEW-EPIC-05 │ AI-Powered Automation    │ 5-6개월│ 3개       │
-└─────────────┴──────────────────────────┴────────┴───────────┘
-
-🔗 의존성 로드맵:
-
-Phase 1 (Months 1-6): Foundation
-├─ NEW-EPIC-01: Platform Foundation
-│
-Phase 2 (Months 2-7): Core Functionality
-├─ NEW-EPIC-02: Core PM (depends on EPIC-01)
-└─ NEW-EPIC-03: Workflow (depends on EPIC-01, EPIC-02)
-│
-Phase 3 (Months 4-9): User Interface
-└─ NEW-EPIC-04: Visualization (depends on EPIC-01, EPIC-02, EPIC-03)
-│
-Phase 4 (Months 5-11): Advanced Features
-└─ NEW-EPIC-05: AI Automation (depends on EPIC-01, EPIC-03, EPIC-04)
 
 📋 다음 단계:
 1. 각 EPIC PRD 검토
-2. Chain을 Module로 분해
+2. 필요 시 Chain 폴더 및 chain-prd.md 별도 생성 (별도 명령어)
 3. 플랫폼 EPIC 우선 구현
 4. 전략적 EPIC 순차 구현
 5. 일정 및 담당자 할당
@@ -551,7 +412,7 @@ Phase 4 (Months 5-11): Advanced Features
 4. AI: Chain-Level 감지 → 전략적 통합 제안
 5. 사용자: 통합 승인 (y/n)
 6. AI: 5-7개 전략적 EPIC 생성
-7. AI: Chain 구조 정의
-8. AI: 폴더 및 PRD 문서 생성
+7. AI: Chain 구조 정의 (epic-prd.md 내부에만)
+8. AI: EPIC 폴더 및 epic-prd.md 생성 (Chain 폴더는 생성 안 함)
 9. 완료!
 ```
