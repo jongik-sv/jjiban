@@ -1,0 +1,79 @@
+{
+  "taskId": "Task-3-2",
+  "taskName": "MR0100 Frontend UI 구현",
+  "timestamp": "2025-10-02T01-29-11",
+  "outputDir": "./docs/project/maru/90.test/e2e-test-result/Task-3-2/test-results/2025-10-02T01-29-11",
+  "summary": {
+    "total": 10,
+    "passed": 8,
+    "failed": 2,
+    "skipped": 0,
+    "passRate": "80%"
+  },
+  "testDetails": {
+    "passed": [
+      "TC-MR0100-UI-001: 기본 조회 시나리오",
+      "TC-MR0100-UI-002: 신규 생성 시나리오",
+      "TC-MR0100-UI-003: 수정 시나리오 (데이터 없음으로 스킵)",
+      "TC-MR0100-UI-004: 삭제 시나리오",
+      "TC-MR0100-UI-005: 상태 변경 시나리오",
+      "TC-MR0100-UI-007: 유효성 검증 시나리오",
+      "TC-MR0100-UI-008: 버튼 활성화/비활성화 시나리오",
+      "TC-MR0100-UI-010: 중복확인 시나리오"
+    ],
+    "failed": [
+      {
+        "testCase": "TC-MR0100-UI-006: 검색 필터 시나리오",
+        "error": "Nexacro 애플리케이션 로딩 실패: Cannot read properties of null (reading '_getWindow')",
+        "screenshot": "./screenshots/TC-MR0100-UI-006-failed.png"
+      },
+      {
+        "testCase": "TC-MR0100-UI-009: 검색어 엔터키 시나리오",
+        "error": "this.gfn_transaction is not a function - 공통 함수 미구현",
+        "screenshot": "./screenshots/TC-MR0100-UI-009-failed.png"
+      }
+    ]
+  },
+  "reports": {
+    "html": "./docs/project/maru/90.test/e2e-test-result/Task-3-2/test-results/2025-10-02T01-29-11/html/index.html",
+    "json": "./docs/project/maru/90.test/e2e-test-result/Task-3-2/test-results/2025-10-02T01-29-11/summary.json",
+    "screenshots": "./docs/project/maru/90.test/e2e-test-result/Task-3-2/test-results/2025-10-02T01-29-11/screenshots/"
+  },
+  "status": "partial",
+  "issues": [
+    {
+      "priority": "HIGH",
+      "category": "Frontend 공통 함수",
+      "description": "gfn_transaction 공통 함수가 구현되지 않아 엔터키 이벤트에서 검색 실행 불가",
+      "affectedTests": ["TC-MR0100-UI-009"],
+      "recommendation": "Nexacro 공통 함수 라이브러리 구현 필요"
+    },
+    {
+      "priority": "MEDIUM",
+      "category": "안정성",
+      "description": "특정 시나리오에서 Nexacro 애플리케이션 로딩 실패 발생",
+      "affectedTests": ["TC-MR0100-UI-006"],
+      "recommendation": "화면 초기화 로직 및 대기 시간 개선 필요"
+    },
+    {
+      "priority": "LOW",
+      "category": "테스트 데이터",
+      "description": "백엔드 API 연동 시 데이터 저장이 정상 동작하지 않음",
+      "affectedTests": ["TC-MR0100-UI-002"],
+      "recommendation": "Backend API 응답 및 Dataset 바인딩 로직 검증 필요"
+    }
+  ],
+  "qualityCriteria": {
+    "mainScenario100Pass": false,
+    "backendFrontendIntegration": false,
+    "uiDesignRequirements": true,
+    "systematicStorage": true,
+    "timestampHistoryManagement": true
+  },
+  "nextActions": [
+    "gfn_transaction 공통 함수 구현",
+    "Backend API 연동 검증 및 수정",
+    "화면 로딩 안정성 개선",
+    "실패 테스트 케이스 재실행"
+  ]
+}

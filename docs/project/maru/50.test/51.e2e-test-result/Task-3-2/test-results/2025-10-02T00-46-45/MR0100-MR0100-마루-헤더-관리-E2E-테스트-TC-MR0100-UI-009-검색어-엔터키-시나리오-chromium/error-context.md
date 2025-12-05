@@ -1,0 +1,51 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e7]:
+  - textbox [ref=e12]: MR0100 - 마루 헤더 관리
+  - generic [ref=e34]:
+    - textbox [ref=e36]: 마루유형
+    - textbox [active] [ref=e40]: 전체
+    - textbox [ref=e44]: 상태
+    - textbox [ref=e48]: 전체
+    - textbox [ref=e52]: 검색어(ID/명)
+    - textbox [ref=e54]: TEST
+    - generic [ref=e56]: 조회
+  - generic [ref=e68]:
+    - textbox [ref=e70]: 마루 목록
+    - generic [ref=e72]: 신규
+    - generic [ref=e74]: 수정
+    - generic [ref=e76]: 삭제
+    - generic [ref=e78]: 상태변경
+    - generic [ref=e85]:
+      - generic [ref=e87]: "NO"
+      - generic [ref=e89]: 선택
+      - generic [ref=e91]: 마루ID
+      - generic [ref=e93]: 마루명
+      - generic [ref=e95]: 타입
+      - generic [ref=e97]: 상태
+      - generic [ref=e99]: 우선사용
+      - generic [ref=e101]: 버전
+      - generic [ref=e103]: 시작일
+    - textbox [ref=e118]: 상세 정보
+    - textbox [ref=e121]: 마루ID*
+    - textbox [disabled] [ref=e123]
+    - generic [ref=e125]: 중복확인
+    - textbox [ref=e127]: 상태
+    - textbox [ref=e129]: CREATED
+    - textbox [ref=e131]: 버전
+    - textbox [ref=e133]: "1"
+    - textbox [ref=e135]: 마루명*
+    - textbox [disabled] [ref=e137]
+    - textbox [ref=e139]: 마루유형*
+    - textbox [disabled] [ref=e143]
+    - textbox [ref=e147]: 우선사용
+    - textbox [disabled] [ref=e151]: 아니오
+    - textbox [ref=e155]: 유효기간
+    - textbox [disabled] [ref=e159]: "- -"
+    - generic [ref=e163]: ~
+    - textbox [disabled] [ref=e167]: 9999-12-31
+    - generic [ref=e171]: 저장
+    - generic [ref=e173]: 취소
+    - generic [ref=e175]: 초기화
+```

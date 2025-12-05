@@ -1,0 +1,134 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" style="background-color: #f5f5f5;">
+  <!-- Title -->
+  <text x="600" y="40" text-anchor="middle" font-size="24" font-weight="bold" fill="#333">
+    CM0100 - MARU 시스템 대시보드 UI 설계
+  </text>
+
+  <!-- Header Section -->
+  <rect x="50" y="60" width="1100" height="60" fill="#2c3e50" rx="5"/>
+  <text x="80" y="95" font-size="18" font-weight="bold" fill="#fff">MARU 시스템 대시보드</text>
+  <text x="900" y="90" font-size="12" fill="#ecf0f1">마지막 업데이트: 2025-10-05 14:35:00</text>
+
+  <!-- Refresh Controls -->
+  <rect x="900" y="100" width="80" height="25" fill="#3498db" rx="3" data-testid="refresh-button"/>
+  <text x="940" y="118" text-anchor="middle" font-size="12" fill="#fff">새로고침</text>
+
+  <rect x="990" y="100" width="140" height="25" fill="#27ae60" rx="3"/>
+  <text x="1060" y="118" text-anchor="middle" font-size="12" fill="#fff">자동 새로고침: ON</text>
+
+  <!-- System Status Widget -->
+  <g data-testid="system-status-widget">
+    <rect x="50" y="140" width="1100" height="120" fill="#fff" stroke="#ddd" stroke-width="2" rx="5"/>
+    <text x="80" y="165" font-size="16" font-weight="bold" fill="#333">시스템 상태</text>
+
+    <!-- Server Status -->
+    <rect x="80" y="180" width="330" height="60" fill="#ecf0f1" rx="3"/>
+    <text x="95" y="200" font-size="14" font-weight="bold" fill="#2c3e50">서버 상태</text>
+    <text x="95" y="218" font-size="20" fill="#27ae60" data-testid="system-status-server">✅ 정상</text>
+    <text x="95" y="235" font-size="12" fill="#7f8c8d">가동: 12시간 0분 | 메모리: 28.3%</text>
+
+    <!-- Database Status -->
+    <rect x="430" y="180" width="300" height="60" fill="#ecf0f1" rx="3"/>
+    <text x="445" y="200" font-size="14" font-weight="bold" fill="#2c3e50">Database 연결</text>
+    <text x="445" y="218" font-size="20" fill="#27ae60">✅ 정상</text>
+    <text x="445" y="235" font-size="12" fill="#7f8c8d">응답: 5ms | 타입: SQLite</text>
+
+    <!-- Cache Status -->
+    <rect x="750" y="180" width="380" height="60" fill="#ecf0f1" rx="3"/>
+    <text x="765" y="200" font-size="14" font-weight="bold" fill="#2c3e50">캐시 상태</text>
+    <text x="765" y="218" font-size="20" fill="#27ae60">✅ 정상 (히트율: 92%)</text>
+    <text x="765" y="235" font-size="12" fill="#7f8c8d">항목: 45개 | 메모리: 12.5MB</text>
+  </g>
+
+  <!-- Maru Stats Widget -->
+  <g data-testid="maru-stats-widget">
+    <rect x="50" y="280" width="1100" height="150" fill="#fff" stroke="#ddd" stroke-width="2" rx="5"/>
+    <text x="80" y="305" font-size="16" font-weight="bold" fill="#333">마루 현황</text>
+
+    <!-- Total Maru -->
+    <rect x="80" y="320" width="300" height="90" fill="#3498db" rx="5"/>
+    <text x="230" y="345" text-anchor="middle" font-size="14" fill="#fff" font-weight="bold">전체 마루</text>
+    <text x="230" y="380" text-anchor="middle" font-size="48" fill="#fff" font-weight="bold" data-testid="maru-total">120</text>
+
+    <!-- CODE Type -->
+    <rect x="400" y="320" width="300" height="90" fill="#2ecc71" rx="5"/>
+    <text x="550" y="345" text-anchor="middle" font-size="14" fill="#fff" font-weight="bold">CODE 타입</text>
+    <text x="550" y="380" text-anchor="middle" font-size="48" fill="#fff" font-weight="bold">85</text>
+
+    <!-- RULE Type -->
+    <rect x="720" y="320" width="300" height="90" fill="#e74c3c" rx="5"/>
+    <text x="870" y="345" text-anchor="middle" font-size="14" fill="#fff" font-weight="bold">RULE 타입</text>
+    <text x="870" y="380" text-anchor="middle" font-size="48" fill="#fff" font-weight="bold">35</text>
+
+    <!-- Status Distribution -->
+    <text x="80" y="425" font-size="12" fill="#7f8c8d">상태별 분포:</text>
+    <text x="170" y="425" font-size="12" fill="#f39c12" font-weight="bold">CREATED (15)</text>
+    <text x="290" y="425" font-size="12" fill="#27ae60" font-weight="bold">INUSE (95)</text>
+    <text x="400" y="425" font-size="12" fill="#95a5a6" font-weight="bold">DEPRECATED (10)</text>
+  </g>
+
+  <!-- Code/Rule Statistics Widget -->
+  <g>
+    <rect x="50" y="450" width="1100" height="100" fill="#fff" stroke="#ddd" stroke-width="2" rx="5"/>
+    <text x="80" y="475" font-size="16" font-weight="bold" fill="#333">코드/룰 통계</text>
+
+    <rect x="80" y="490" width="500" height="45" fill="#ecf0f1" rx="3"/>
+    <text x="95" y="510" font-size="14" fill="#2c3e50">코드 카테고리: <tspan font-weight="bold">42개</tspan></text>
+    <text x="95" y="528" font-size="14" fill="#2c3e50">코드값: <tspan font-weight="bold">1,250개</tspan></text>
+
+    <rect x="600" y="490" width="530" height="45" fill="#ecf0f1" rx="3"/>
+    <text x="615" y="510" font-size="14" fill="#2c3e50">룰 변수: <tspan font-weight="bold">68개</tspan></text>
+    <text x="615" y="528" font-size="14" fill="#2c3e50">룰 레코드: <tspan font-weight="bold">210개</tspan></text>
+  </g>
+
+  <!-- Recent Activities Widget -->
+  <g data-testid="recent-activities-widget">
+    <rect x="50" y="570" width="1100" height="180" fill="#fff" stroke="#ddd" stroke-width="2" rx="5"/>
+    <text x="80" y="595" font-size="16" font-weight="bold" fill="#333">최근 활동</text>
+
+    <!-- Activity Item 1 -->
+    <rect x="80" y="605" width="1040" height="30" fill="#e8f4f8" rx="3"/>
+    <text x="95" y="625" font-size="14" fill="#2c3e50">🆕 DEPT_015 (신규 부서 코드)</text>
+    <text x="1000" y="625" font-size="12" fill="#7f8c8d">2시간 전 | admin</text>
+
+    <!-- Activity Item 2 -->
+    <rect x="80" y="640" width="1040" height="30" fill="#fff3e0" rx="3"/>
+    <text x="95" y="660" font-size="14" fill="#2c3e50">🔄 RULE_008 (급여 계산 룰) - 상태 변경</text>
+    <text x="1000" y="660" font-size="12" fill="#7f8c8d">3시간 전 | admin</text>
+
+    <!-- Activity Item 3 -->
+    <rect x="80" y="675" width="1040" height="30" fill="#f3e5f5" rx="3"/>
+    <text x="95" y="695" font-size="14" fill="#2c3e50">✏️ CODE_042 (직급 코드) - 수정</text>
+    <text x="1000" y="695" font-size="12" fill="#7f8c8d">4시간 전 | admin</text>
+
+    <!-- More indicator -->
+    <text x="600" y="730" text-anchor="middle" font-size="12" fill="#95a5a6">... 더 보기 (7건)</text>
+  </g>
+
+  <!-- Quick Links Widget -->
+  <g>
+    <rect x="50" y="770" width="1100" height="100" fill="#fff" stroke="#ddd" stroke-width="2" rx="5"/>
+    <text x="80" y="795" font-size="16" font-weight="bold" fill="#333">빠른 접근</text>
+
+    <!-- Quick Link Button 1 -->
+    <rect x="80" y="810" width="250" height="45" fill="#3498db" rx="5" data-testid="quick-link-MR0100"/>
+    <text x="205" y="838" text-anchor="middle" font-size="16" fill="#fff" font-weight="bold">📊 마루 헤더 관리</text>
+
+    <!-- Quick Link Button 2 -->
+    <rect x="350" y="810" width="250" height="45" fill="#2ecc71" rx="5" data-testid="quick-link-CD0100"/>
+    <text x="475" y="838" text-anchor="middle" font-size="16" fill="#fff" font-weight="bold">🏷️ 코드 카테고리 관리</text>
+
+    <!-- Quick Link Button 3 -->
+    <rect x="620" y="810" width="250" height="45" fill="#e67e22" rx="5" data-testid="quick-link-RL0100"/>
+    <text x="745" y="838" text-anchor="middle" font-size="16" fill="#fff" font-weight="bold">⚙️ 룰 변수 관리</text>
+
+    <!-- Quick Link Button 4 -->
+    <rect x="890" y="810" width="240" height="45" fill="#9b59b6" rx="5" data-testid="quick-link-MR0300"/>
+    <text x="1010" y="838" text-anchor="middle" font-size="16" fill="#fff" font-weight="bold">📜 마루 이력 조회</text>
+  </g>
+
+  <!-- Footer Note -->
+  <text x="600" y="885" text-anchor="middle" font-size="10" fill="#95a5a6">
+    개념 수준 UI 설계도 - Nexacro N V24 기반 구현 예정
+  </text>
+</svg>

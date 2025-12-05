@@ -1,0 +1,10 @@
+요구사항 ID,요구사항 분류,요구사항 설명,설계 섹션,API 엔드포인트,테스트 케이스 ID,구현 파일,상태,우선순위,비고
+CD0100-REQ-001,기능,코드 카테고리 목록 조회,§5.1 / §8.1,CC001 GET /api/v1/maru-headers/{maruId}/categories,"TC-API-001, TC-API-008",routes/codeCategory.js,초안,High,페이징 및 정렬 지원
+CD0100-REQ-002,기능,코드 카테고리 상세 조회,§5.2 / §8.2,CC002 GET /api/v1/maru-headers/{maruId}/categories/{categoryId},TC-API-002,routes/codeCategory.js,초안,High,특정 버전/시점 조회 지원
+CD0100-REQ-003,기능,코드 카테고리 생성,§5.3 / §8.3,CC003 POST /api/v1/maru-headers/{maruId}/categories,"TC-API-003, TC-API-004, TS-001, TS-002, TS-003",routes/codeCategory.js,초안,High,중복 검증 및 상태별 정책 적용
+CD0100-REQ-004,기능,코드 카테고리 수정,§5.4 / §8.4,CC004 PUT /api/v1/maru-headers/{maruId}/categories/{categoryId},"TC-API-005, TC-API-006, TS-004, TS-005, TS-006",routes/codeCategory.js,초안,High,선분 이력 기반 수정
+CD0100-REQ-005,기능,코드 카테고리 삭제,§5.5 / §8.5,CC005 DELETE /api/v1/maru-headers/{maruId}/categories/{categoryId},TC-API-007,routes/codeCategory.js,초안,High,논리적/물리적 삭제
+CD0100-REQ-006,기능,코드 타입 검증,§5.6 / §9,"N/A (검증 로직)","TC-VAL-001, TC-VAL-002, TC-VAL-003, TC-VAL-004, TC-VAL-005",services/codeCategory.service.js,초안,High,Normal/RegEx 타입별 검증
+CD0100-REQ-007,비기능,성능 요구사항,§11,All APIs,"TC-PERF-001, TC-PERF-002, TC-PERF-003",전체 구현,초안,Medium,응답시간 < 1초
+CD0100-REQ-008,비기능,안정성 요구사항,§9,All APIs,"TC-ERR-001, TC-ERR-002",전체 구현,초안,Medium,트랜잭션 롤백 및 에러 핸들링
+CD0100-REQ-009,비기능,보안 요구사항,§10,All APIs,수동 테스트 체크리스트,전체 구현,초안,High,SQL Injection / XSS 방지

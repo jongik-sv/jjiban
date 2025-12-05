@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JJIban State Diagram</title>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'base',
+            themeVariables: {
+                primaryColor: '#e3f2fd',
+                secondaryColor: '#f3e5f5',
+                tertiaryColor: '#fff3e0',
+                edgeLabelBackground: '#ffffff',
+                fontFamily: 'Segoe UI, sans-serif'
+            }
+        });
+    </script>
+    <style>
+        body { margin: 0; padding: 20px; background-color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; font-family: 'Segoe UI', sans-serif; }
+        #diagram { box-shadow: 0 4px 6px rgba(0,0,0,0.1); padding: 20px; border-radius: 8px; background: white; }
+    </style>
+</head>
+<body>
+    <div id="diagram" class="mermaid">
+    stateDiagram-v2
+        direction LR
+        
+        %% Nodes
+        s1: Todo
+        s2: Basic Design
+        s3: Detail Design
+        s4: Detail Review
+        s5: Detail Improved
+        s6: Implementation
+        s7: Code Review
+        s8: Improve Code
+        s9: Test
+        s10: Done
+
+        %% Main Flow
+        [*] --> s1
+        s1 --> s2 : start
+        s2 --> s3 : draft
+        s3 --> s4 : plan
+        
+        s4 --> s6 : review (Pass)
+        s6 --> s7 : build
+        
+        s7 --> s9 : audit (Pass)
+        s9 --> s10 : verify
+        s10 --> [*] : done
+
+        %% Loops
+        s4 --> s5 : review (Reject)
+        s5 --> s4 : revise
+
+        s7 --> s8 : audit (Reject)
+        s8 --> s7 : patch
+
+        %% Styles
+        classDef default fill:#fff,stroke:#333,stroke-width:1px,rx:5,ry:5,font-size:14px;
+        classDef start fill:#e1f5fe,stroke:#0288d1,stroke-width:2px;
+        classDef design fill:#e8f5e9,stroke:#388e3c,stroke-width:2px;
+        classDef review fill:#f3e5f5,stroke:#8e24aa,stroke-width:2px;
+        classDef code fill:#fff3e0,stroke:#f57c00,stroke-width:2px;
+        classDef done fill:#eceff1,stroke:#546e7a,stroke-width:2px;
+
+        class s1 start
+        class s2,s3,s5 design
+        class s4,s5 review
+        class s6,s8 code
+        class s7,s8 review
+        class s9 code
+        class s10 done
+    </div>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!--
+  Detailed UI Mockup for CD0300: Code Validation Management
+  Version: 1.1
+  Author: Gemini
+  Purpose: To provide a more detailed visual guide for implementation and testing.
+-->
+<svg width="650" height="450" xmlns="http://www.w3.org/2000/svg">
+
+  <style>
+    .win-border { stroke: #4a4a4a; stroke-width: 1; fill: #fdfdfd; }
+    .win-title-bg { fill: #f0f0f0; stroke: #cccccc; stroke-width: 1; }
+    .win-title-text { font-family: 'Malgun Gothic', sans-serif; font-size: 14px; fill: #333; font-weight: bold; }
+    .btn-bg { fill: #e1e1e1; stroke: #b0b0b0; rx: 3; cursor: pointer; }
+    .btn-bg:hover { fill: #d1d1d1; }
+    .btn-text { font-family: 'Malgun Gothic', sans-serif; font-size: 12px; fill: #333; text-anchor: middle; dominant-baseline: middle; pointer-events: none; }
+    .grid-header-bg { fill: #fafafa; stroke: #dcdcdc; }
+    .grid-cell-bg { fill: #fff; stroke: #dcdcdc; }
+    .grid-cell-bg:hover { fill: #f5f5f5; }
+    .grid-text { font-family: 'Malgun Gothic', sans-serif; font-size: 12px; fill: #555; }
+    .popup-overlay { fill: black; fill-opacity: 0.4; }
+    .popup-bg { fill: #ffffff; stroke: #999; stroke-width: 1.5; filter: drop-shadow(0px 5px 15px rgba(0,0,0,0.3)); rx: 4; }
+    .label-text { font-family: 'Malgun Gothic', sans-serif; font-size: 13px; font-weight: bold; }
+    .value-text { font-family: 'Malgun Gothic', sans-serif; font-size: 13px; }
+    .suggestion-text { font-family: 'Malgun Gothic', sans-serif; font-size: 13px; fill: #0066cc; font-style: italic; }
+    .small-text { font-family: 'Malgun Gothic', sans-serif; font-size: 11px; fill: #777; }
+  </style>
+
+  <!-- Main Window -->
+  <rect x="1" y="1" width="648" height="320" class="win-border" />
+  <rect x="1" y="1" width="648" height="30" class="win-title-bg" />
+  <text x="10" y="20" class="win-title-text">CD0300: 코드 검증 관리</text>
+
+  <!-- Action Buttons -->
+  <g>
+    <rect x="15" y="45" width="140" height="28" class="btn-bg" data-testid="run-validation-btn" />
+    <text x="85" y="59" class="btn-text">코드 검증 실행 (F2)</text>
+    <rect x="165" y="45" width="70" height="28" class="btn-bg" data-testid="help-btn" />
+    <text x="200" y="59" class="btn-text">도움말</text>
+  </g>
+
+  <!-- Grid Section -->
+  <text x="15" y="100" class="label-text">▼ 검증 결과 그리드 (총 2건)</text>
+  <g data-testid="validation-grid">
+    <!-- Grid Header -->
+    <rect x="15" y="115" width="620" height="30" class="grid-header-bg" />
+    <text x="25" y="130" class="grid-text">상태</text>
+    <text x="85" y="130" class="grid-text">오류 유형</text>
+    <text x="205" y="130" class="grid-text">오류 내용</text>
+    <text x="385" y="130" class="grid-text">대상 마루</text>
+    <text x="515" y="130" class="grid-text">대상 코드</text>
+
+    <!-- Grid Row 1 -->
+    <rect x="15" y="145" width="620" height="30" class="grid-cell-bg" data-testid="grid-row-0" />
+    <text x="25" y="160" class="grid-text" fill="red">[오류]</text>
+    <text x="85" y="160" class="grid-text">중복 코드</text>
+    <text x="205" y="160" class="grid-text">'A01' 중복</text>
+    <text x="385" y="160" class="grid-text">CODE_A</text>
+    <text x="515" y="160" class="grid-text">A01</text>
+
+    <!-- Grid Row 2 -->
+    <rect x="15" y="175" width="620" height="30" class="grid-cell-bg" data-testid="grid-row-1" />
+    <text x="25" y="190" class="grid-text" fill="orange">[경고]</text>
+    <text x="85" y="190" class="grid-text">정의 불일치</text>
+    <text x="205" y="190" class="grid-text">숫자만 입력 가능</text>
+    <text x="385" y="190" class="grid-text">CODE_B</text>
+    <text x="515" y="190" class="grid-text">B01</text>
+  </g>
+
+  <!-- Popup Overlay -->
+  <rect x="0" y="0" width="650" height="450" class="popup-overlay" />
+
+  <!-- Popup Window -->
+  <g transform="translate(125, 100)" data-testid="popup-error-details">
+      <rect x="0" y="0" width="400" height="250" class="popup-bg" />
+      <rect x="0" y="0" width="400" height="30" class="win-title-bg" />
+      <text x="10" y="20" class="win-title-text">오류 상세 정보 (ID: DUP-001)</text>
+
+      <text x="15" y="55" class="label-text">오류 유형:</text>
+      <text x="125" y="55" class="value-text">중복 코드</text>
+
+      <text x="15" y="80" class="label-text">대상 마루:</text>
+      <text x="125" y="80" class="value-text">CODE_A (공통코드)</text>
+
+      <text x="15" y="105" class="label-text">대상 코드:</text>
+      <text x="125" y="105" class="value-text">A01</text>
+
+      <text x="15" y="130" class="label-text">발생 위치:</text>
+      <text x="125" y="130" class="value-text">TB_MR_CODE_BASE.CODE_ID</text>
+
+      <text x="15" y="155" class="label-text">상세 내용:</text>
+      <text x="125" y="155" class="value-text">동일한 코드가 2건 존재합니다.</text>
+
+      <line x1="15" y1="175" x2="385" y2="175" stroke="#ccc" />
+      <text x="170" y="170" class="small-text">수정 제안</text>
+      
+      <text x="15" y="200" class="suggestion-text">'A01' 코드를 'A01_1' (으)로 변경합니다.</text>
+
+      <g transform="translate(210, 215)">
+        <rect x="0" y="0" width="80" height="25" class="btn-bg" data-testid="apply-fix-btn" />
+        <text x="40" y="12.5" class="btn-text">수정 적용</text>
+      </g>
+
+      <g transform="translate(300, 215)">
+        <rect x="0" y="0" width="80" height="25" class="btn-bg" data-testid="close-popup-btn" />
+        <text x="40" y="12.5" class="btn-text">닫기</text>
+      </g>
+  </g>
+
+</svg>

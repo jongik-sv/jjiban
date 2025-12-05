@@ -1,0 +1,155 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800">
+  <!-- 배경 -->
+  <rect width="1200" height="800" fill="#f8f9fa"/>
+
+  <!-- 제목 -->
+  <text x="600" y="40" text-anchor="middle" font-size="24" font-weight="bold" fill="#212529">
+    Task 5.1 MR0300 Backend API Architecture
+  </text>
+  <text x="600" y="70" text-anchor="middle" font-size="16" fill="#6c757d">
+    마루 이력 조회 API 구조도
+  </text>
+
+  <!-- Frontend Layer -->
+  <rect x="50" y="120" width="300" height="180" fill="#e3f2fd" stroke="#1976d2" stroke-width="2" rx="8"/>
+  <text x="200" y="150" text-anchor="middle" font-size="18" font-weight="bold" fill="#1565c0">
+    Frontend (Nexacro N)
+  </text>
+
+  <!-- Frontend Components -->
+  <rect x="70" y="170" width="260" height="40" fill="#bbdefb" stroke="#1976d2" stroke-width="1" rx="4"/>
+  <text x="200" y="195" text-anchor="middle" font-size="14" fill="#0d47a1">MR0300.xfdl (이력 조회 화면)</text>
+
+  <rect x="70" y="220" width="260" height="40" fill="#bbdefb" stroke="#1976d2" stroke-width="1" rx="4"/>
+  <text x="200" y="245" text-anchor="middle" font-size="14" fill="#0d47a1">Dataset: ds_history, ds_compare</text>
+
+  <!-- API Layer -->
+  <rect x="450" y="120" width="300" height="500" fill="#f3e5f5" stroke="#7b1fa2" stroke-width="2" rx="8"/>
+  <text x="600" y="150" text-anchor="middle" font-size="18" font-weight="bold" fill="#6a1b9a">
+    Backend API (Node.js + Express)
+  </text>
+
+  <!-- API Endpoints -->
+  <rect x="470" y="170" width="260" height="50" fill="#e1bee7" stroke="#7b1fa2" stroke-width="1" rx="4"/>
+  <text x="600" y="195" text-anchor="middle" font-size="13" font-weight="bold" fill="#4a148c">MH007-A: 이력 목록 조회</text>
+  <text x="600" y="210" text-anchor="middle" font-size="11" fill="#6a1b9a">GET /history</text>
+
+  <rect x="470" y="230" width="260" height="50" fill="#e1bee7" stroke="#7b1fa2" stroke-width="1" rx="4"/>
+  <text x="600" y="255" text-anchor="middle" font-size="13" font-weight="bold" fill="#4a148c">MH007-B: 특정 시점 조회</text>
+  <text x="600" y="270" text-anchor="middle" font-size="11" fill="#6a1b9a">GET /as-of/{date}</text>
+
+  <rect x="470" y="290" width="260" height="50" fill="#e1bee7" stroke="#7b1fa2" stroke-width="1" rx="4"/>
+  <text x="600" y="315" text-anchor="middle" font-size="13" font-weight="bold" fill="#4a148c">MH007-C: 버전 비교</text>
+  <text x="600" y="330" text-anchor="middle" font-size="11" fill="#6a1b9a">GET /compare</text>
+
+  <rect x="470" y="350" width="260" height="50" fill="#e1bee7" stroke="#7b1fa2" stroke-width="1" rx="4"/>
+  <text x="600" y="375" text-anchor="middle" font-size="13" font-weight="bold" fill="#4a148c">MH007-D: 이력 통계</text>
+  <text x="600" y="390" text-anchor="middle" font-size="11" fill="#6a1b9a">GET /stats</text>
+
+  <!-- Middleware -->
+  <rect x="470" y="420" width="260" height="80" fill="#d1c4e9" stroke="#7b1fa2" stroke-width="1" rx="4"/>
+  <text x="600" y="445" text-anchor="middle" font-size="13" font-weight="bold" fill="#4a148c">Middleware</text>
+  <text x="600" y="465" text-anchor="middle" font-size="11" fill="#6a1b9a">• Joi Validation</text>
+  <text x="600" y="480" text-anchor="middle" font-size="11" fill="#6a1b9a">• Error Handling</text>
+  <text x="600" y="495" text-anchor="middle" font-size="11" fill="#6a1b9a">• Nexacro XML Converter</text>
+
+  <!-- Service Layer -->
+  <rect x="470" y="520" width="260" height="80" fill="#c5cae9" stroke="#7b1fa2" stroke-width="1" rx="4"/>
+  <text x="600" y="545" text-anchor="middle" font-size="13" font-weight="bold" fill="#4a148c">Service Layer</text>
+  <text x="600" y="565" text-anchor="middle" font-size="11" fill="#6a1b9a">• 버전 비교 알고리즘</text>
+  <text x="600" y="580" text-anchor="middle" font-size="11" fill="#6a1b9a">• 통계 계산 로직</text>
+  <text x="600" y="595" text-anchor="middle" font-size="11" fill="#6a1b9a">• 날짜 처리 유틸리티</text>
+
+  <!-- Database Layer -->
+  <rect x="850" y="120" width="300" height="500" fill="#e8f5e9" stroke="#388e3c" stroke-width="2" rx="8"/>
+  <text x="1000" y="150" text-anchor="middle" font-size="18" font-weight="bold" fill="#2e7d32">
+    Database (Oracle)
+  </text>
+
+  <!-- Tables -->
+  <rect x="870" y="170" width="260" height="120" fill="#c8e6c9" stroke="#388e3c" stroke-width="1" rx="4"/>
+  <text x="1000" y="195" text-anchor="middle" font-size="13" font-weight="bold" fill="#1b5e20">TB_MR_HEAD</text>
+  <text x="1000" y="215" text-anchor="middle" font-size="11" fill="#2e7d32">• MARU_ID, VERSION</text>
+  <text x="1000" y="230" text-anchor="middle" font-size="11" fill="#2e7d32">• START_DATE, END_DATE</text>
+  <text x="1000" y="245" text-anchor="middle" font-size="11" fill="#2e7d32">• MARU_NAME, STATUS</text>
+  <text x="1000" y="260" text-anchor="middle" font-size="11" fill="#2e7d32">• 선분 이력 모델</text>
+  <text x="1000" y="275" text-anchor="middle" font-size="10" fill="#558b2f" font-style="italic">(Version tracking)</text>
+
+  <!-- Index -->
+  <rect x="870" y="300" width="260" height="80" fill="#a5d6a7" stroke="#388e3c" stroke-width="1" rx="4"/>
+  <text x="1000" y="325" text-anchor="middle" font-size="13" font-weight="bold" fill="#1b5e20">Index</text>
+  <text x="1000" y="345" text-anchor="middle" font-size="11" fill="#2e7d32">IDX_TB_MR_CODE_HEAD_01</text>
+  <text x="1000" y="360" text-anchor="middle" font-size="11" fill="#2e7d32">(END_DATE, START_DATE,</text>
+  <text x="1000" y="375" text-anchor="middle" font-size="11" fill="#2e7d32">MARU_ID)</text>
+
+  <!-- Cache Layer -->
+  <rect x="870" y="400" width="260" height="80" fill="#fff9c4" stroke="#f9a825" stroke-width="1" rx="4"/>
+  <text x="1000" y="425" text-anchor="middle" font-size="13" font-weight="bold" fill="#f57f17">Cache (node-cache)</text>
+  <text x="1000" y="445" text-anchor="middle" font-size="11" fill="#f9a825">• TTL: 5분</text>
+  <text x="1000" y="460" text-anchor="middle" font-size="11" fill="#f9a825">• Key: history:{id}:{params}</text>
+  <text x="1000" y="475" text-anchor="middle" font-size="10" fill="#f57f17" font-style="italic">(Performance optimization)</text>
+
+  <!-- Swagger Documentation -->
+  <rect x="870" y="500" width="260" height="100" fill="#ffe0b2" stroke="#e65100" stroke-width="1" rx="4"/>
+  <text x="1000" y="525" text-anchor="middle" font-size="13" font-weight="bold" fill="#bf360c">Swagger/OpenAPI 3.0</text>
+  <text x="1000" y="545" text-anchor="middle" font-size="11" fill="#e65100">• API 문서 자동 생성</text>
+  <text x="1000" y="560" text-anchor="middle" font-size="11" fill="#e65100">• Interactive UI</text>
+  <text x="1000" y="575" text-anchor="middle" font-size="11" fill="#e65100">• 예제 요청/응답</text>
+  <text x="1000" y="590" text-anchor="middle" font-size="10" fill="#bf360c" font-style="italic">(/api-docs)</text>
+
+  <!-- 화살표: Frontend -> API -->
+  <path d="M 350 210 L 450 210" stroke="#1976d2" stroke-width="3" fill="none" marker-end="url(#arrowblue)"/>
+  <text x="400" y="200" text-anchor="middle" font-size="12" fill="#1565c0">HTTP GET</text>
+
+  <!-- 화살표: API -> Database -->
+  <path d="M 750 350 L 850 350" stroke="#7b1fa2" stroke-width="3" fill="none" marker-end="url(#arrowpurple)"/>
+  <text x="800" y="340" text-anchor="middle" font-size="12" fill="#6a1b9a">SQL Query</text>
+
+  <!-- 화살표: Database -> API (응답) -->
+  <path d="M 850 380 L 750 380" stroke="#388e3c" stroke-width="3" fill="none" marker-end="url(#arrowgreen)"/>
+  <text x="800" y="395" text-anchor="middle" font-size="12" fill="#2e7d32">Result Set</text>
+
+  <!-- 화살표: API -> Frontend (응답) -->
+  <path d="M 450 250 L 350 250" stroke="#7b1fa2" stroke-width="3" fill="none" marker-end="url(#arrowpurple2)"/>
+  <text x="400" y="270" text-anchor="middle" font-size="12" fill="#6a1b9a">Nexacro XML</text>
+
+  <!-- 데이터 흐름 설명 -->
+  <rect x="50" y="650" width="1100" height="120" fill="#fff3e0" stroke="#ef6c00" stroke-width="2" rx="8"/>
+  <text x="600" y="680" text-anchor="middle" font-size="16" font-weight="bold" fill="#e65100">
+    주요 데이터 흐름
+  </text>
+  <text x="100" y="710" font-size="12" fill="#bf360c">
+    1. Frontend에서 이력 조회 요청 (HTTP GET with params)
+  </text>
+  <text x="100" y="730" font-size="12" fill="#bf360c">
+    2. API Layer에서 Joi 검증 → Service Layer 비즈니스 로직 실행
+  </text>
+  <text x="100" y="750" font-size="12" fill="#bf360c">
+    3. Repository에서 Oracle DB 조회 (선분 이력 모델 활용, 인덱스 최적화)
+  </text>
+  <text x="700" y="710" font-size="12" fill="#bf360c">
+    4. Cache 확인 → 히트 시 즉시 반환, 미스 시 DB 조회 후 캐싱
+  </text>
+  <text x="700" y="730" font-size="12" fill="#bf360c">
+    5. 결과 데이터를 Nexacro Dataset XML로 변환
+  </text>
+  <text x="700" y="750" font-size="12" fill="#bf360c">
+    6. Frontend로 응답 반환 (ErrorCode 0 = 성공)
+  </text>
+
+  <!-- 화살표 마커 정의 -->
+  <defs>
+    <marker id="arrowblue" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#1976d2"/>
+    </marker>
+    <marker id="arrowpurple" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#7b1fa2"/>
+    </marker>
+    <marker id="arrowpurple2" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#7b1fa2"/>
+    </marker>
+    <marker id="arrowgreen" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#388e3c"/>
+    </marker>
+  </defs>
+</svg>
