@@ -7,7 +7,7 @@
 | Chain ID | CHAIN-jjiban-02 |
 | 관련 PRD | chain-prd.md |
 | 문서 버전 | 1.0 |
-| 작성일 | 2024-12-06 |
+| 작성일 | 2025-12-06 |
 | 상태 | Draft |
 
 ---
@@ -45,9 +45,9 @@
 ```
 
 ### 1.2 주요 컴포넌트
-- **Kanban Board**: 드래그 앤 드롭 카드 UI (react-beautiful-dnd)
-- **Gantt Chart**: 타임라인 시각화 (DHTMLX Gantt)
-- **Task Detail**: 문서 통합 뷰 (Markdown 렌더러)
+- **Kanban Board**: 드래그 앤 드롭 카드 UI (@dnd-kit/core ^6.x)
+- **Gantt Chart**: 타임라인 시각화 (frappe-gantt ^1.0.x)
+- **Task Detail**: 문서 통합 뷰 (react-markdown ^9.x)
 - **Document Service**: 파일 시스템 읽기 및 렌더링
 
 ---
@@ -184,4 +184,4 @@ Epic (1) ────── (N) Milestone
 
 | 버전 | 날짜 | 변경 내용 |
 |------|------|-----------|
-| 1.0 | 2024-12-06 | 초안 작성 |
+| 1.0 | 2025-12-06 | 초안 작성 |

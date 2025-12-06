@@ -4,10 +4,10 @@
 
 | 항목 | 내용 |
 |------|------|
-| 문서 버전 | 1.7 |
-| 작성일 | 2024-12-05 |
+| 문서 버전 | 1.8 |
+| 작성일 | 2025-12-06 |
 | 상태 | Draft |
-| 최근 변경 | npm CLI 패키지 배포 방식 추가 |
+| 최근 변경 | 문서 일관성 개선 및 누락 범위 추가 |
 
 ---
 
@@ -696,20 +696,23 @@ jjiban wbs sync --all --project EPIC-001
 
 ### 4.2 기술 스택
 
-| 레이어 | 기술 | 비고 |
-|--------|------|------|
-| **Frontend** | React + TypeScript | SPA |
-| UI 컴포넌트 | Ant Design / Shadcn | 칸반: react-beautiful-dnd |
-| Gantt 차트 | DHTMLX Gantt / Frappe Gantt | 또는 D3.js |
-| 상태 관리 | Zustand / Redux Toolkit | |
-| 웹 터미널 | xterm.js | WebSocket 연동 |
-| Markdown | react-markdown + remark-gfm | Mermaid: mermaid.js |
-| **Backend** | Node.js (Express/Fastify) | 또는 Python (FastAPI) |
-| 실시간 통신 | Socket.IO / WebSocket | 터미널 스트리밍 |
-| 터미널 백엔드 | node-pty | LLM CLI 실행 |
-| **Database** | SQLite (Prisma ORM) | 이슈, 프로젝트 메타데이터 |
-| 파일 저장 | 로컬 파일시스템 | 문서, 로그 (Git 버전 관리) |
-| 인증 | JWT + bcrypt | 세션 관리 |
+> **참고**: 상세 버전 정보는 `jjiban-trd.md` 참조
+
+| 레이어 | 기술 | 버전 | 비고 |
+|--------|------|------|------|
+| **Frontend** | React + TypeScript | ^19.2.x / ^5.6.x | React Compiler 지원 |
+| UI 컴포넌트 | Ant Design | ^6.0.x | React 19 네이티브 지원 |
+| 칸반 DnD | @dnd-kit/core | ^6.x | react-beautiful-dnd deprecated 대체 |
+| Gantt 차트 | frappe-gantt | ^1.0.x | 오픈소스, 경량 |
+| 상태 관리 | Zustand | ^5.x | React 19 호환 |
+| 웹 터미널 | @xterm/xterm | ^5.x | VS Code 사용, 성능 최적화 |
+| Markdown | react-markdown + remark-gfm | ^9.x | Mermaid: mermaid ^11.x |
+| **Backend** | Express.js + TypeScript | ^5.1.x / ^5.6.x | 업계 표준, node-pty 연동 검증 |
+| 실시간 통신 | Socket.IO | ^4.8.x | WebSocket 추상화 |
+| 터미널 백엔드 | node-pty | ^1.x | LLM CLI 실행 |
+| **Database** | SQLite + Prisma | - / ^7.x | 파일 기반, 드라이버 어댑터 필수 |
+| 파일 저장 | 로컬 파일시스템 | - | 문서, 로그 (Git 버전 관리) |
+| 인증 | JWT + bcrypt | jsonwebtoken ^9.x | 세션 관리 |
 
 ---
 
@@ -727,6 +730,40 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// User (사용자)
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String   // bcrypt hashed
+  name      String
+  role      String   @default("viewer") // admin, pm, developer, viewer
+  avatar    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sessions  Session[]
+  epics     Epic[]    // created by
+}
+
+// Session (JWT Refresh Token)
+model Session {
+  id           String   @id @default(cuid())
+  userId       String
+  refreshToken String   @unique
+  expiresAt    DateTime
+  createdAt    DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// Config (시스템 설정)
+model Config {
+  id    String @id @default(cuid())
+  key   String @unique
+  value String // JSON string
+  type  String // string, number, boolean, json
+}
+
 // Epic (프로젝트)
 model Epic {
   id          String   @id @default(cuid())
@@ -736,10 +773,28 @@ model Epic {
   startDate   DateTime?
   targetDate  DateTime?
   status      String   @default("active") // active, completed, archived
+  createdById String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  createdBy   User?       @relation(fields: [createdById], references: [id])
   chains      Chain[]
+  milestones  Milestone[]
+}
+
+// Milestone (릴리즈 마일스톤)
+model Milestone {
+  id          String   @id @default(cuid())
+  epicId      String
+  name        String
+  description String?
+  targetDate  DateTime
+  status      String   @default("active") // active, completed, archived
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  epic           Epic             @relation(fields: [epicId], references: [id], onDelete: Cascade)
+  taskMilestones TaskMilestone[]
 }
 
 // Chain (Feature)
@@ -820,6 +875,18 @@ model Task {
   updatedAt       DateTime @updatedAt
 
   module          Module   @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  taskMilestones  TaskMilestone[]
+}
+
+// TaskMilestone (Task-Milestone M:N 관계)
+model TaskMilestone {
+  taskId      String
+  milestoneId String
+
+  task      Task      @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  milestone Milestone @relation(fields: [milestoneId], references: [id], onDelete: Cascade)
+
+  @@id([taskId, milestoneId])
 }
 ```
 
@@ -838,7 +905,117 @@ model Task {
 
 ---
 
-### 4.4 웹 터미널 아키텍처
+### 4.4 실시간 협업 및 알림 시스템
+
+#### 4.4.1 실시간 동기화 (WebSocket)
+
+다중 사용자 환경에서 데이터 동기화를 위한 WebSocket 이벤트:
+
+```typescript
+// 서버 → 클라이언트 브로드캐스트 이벤트
+interface RealtimeEvents {
+  'task:updated': { taskId: string; changes: Partial<Task>; updatedBy: string };
+  'task:statusChanged': { taskId: string; from: string; to: string; updatedBy: string };
+  'kanban:cardMoved': { taskId: string; fromColumn: string; toColumn: string };
+  'document:created': { taskId: string; filename: string };
+  'workflow:stageChanged': { taskId: string; stage: string; command: string };
+}
+```
+
+#### 4.4.2 알림 시스템
+
+| 알림 유형 | 트리거 | 수신자 | 채널 |
+|----------|--------|--------|------|
+| Task 할당 | Task 담당자 변경 시 | 새 담당자 | WebSocket, 인앱 |
+| 리뷰 요청 | 설계리뷰/코드리뷰 진입 시 | 리뷰어 | WebSocket, 인앱 |
+| 워크플로우 완료 | Task 완료 시 | PL, 관련자 | WebSocket, 인앱 |
+| 에러 알림 | 자동화 실패 시 | 담당자 | WebSocket, 인앱 |
+
+---
+
+### 4.5 에러 처리 체계
+
+#### 4.5.1 에러 코드 정의
+
+```typescript
+enum ErrorCode {
+  // 인증 에러 (1xxx)
+  AUTH_INVALID_TOKEN = 1001,
+  AUTH_EXPIRED_TOKEN = 1002,
+  AUTH_INSUFFICIENT_PERMISSION = 1003,
+
+  // 유효성 에러 (2xxx)
+  VALIDATION_REQUIRED_FIELD = 2001,
+  VALIDATION_INVALID_FORMAT = 2002,
+  VALIDATION_OUT_OF_RANGE = 2003,
+
+  // 리소스 에러 (3xxx)
+  RESOURCE_NOT_FOUND = 3001,
+  RESOURCE_ALREADY_EXISTS = 3002,
+  RESOURCE_LOCKED = 3003,
+
+  // 워크플로우 에러 (4xxx)
+  WORKFLOW_INVALID_TRANSITION = 4001,
+  WORKFLOW_REVIEW_REQUIRED = 4002,
+
+  // 파일 에러 (5xxx)
+  FILE_NOT_FOUND = 5001,
+  FILE_ACCESS_DENIED = 5002,
+  FILE_SIZE_EXCEEDED = 5003,
+
+  // 시스템 에러 (9xxx)
+  SYSTEM_INTERNAL_ERROR = 9001,
+  SYSTEM_DATABASE_ERROR = 9002,
+  SYSTEM_TERMINAL_ERROR = 9003,
+}
+```
+
+#### 4.5.2 에러 응답 형식
+
+```json
+{
+  "success": false,
+  "error": {
+    "code": 4001,
+    "message": "워크플로우 상태 전환이 허용되지 않습니다",
+    "details": {
+      "currentStatus": "todo",
+      "attemptedStatus": "implementation",
+      "allowedTransitions": ["basic-design"]
+    },
+    "timestamp": "2025-12-06T10:30:00Z"
+  }
+}
+```
+
+---
+
+### 4.6 Health Check 및 모니터링
+
+#### 4.6.1 Health Check API
+
+| API | Method | 경로 | 설명 |
+|-----|--------|------|------|
+| 기본 상태 | GET | `/api/health` | 서버 실행 상태 |
+| 상세 상태 | GET | `/api/health/detailed` | DB, 파일시스템, 메모리 상태 |
+
+**응답 예시:**
+```json
+{
+  "status": "healthy",
+  "version": "1.0.0",
+  "uptime": "2h 34m",
+  "checks": {
+    "database": { "status": "ok", "latency": "5ms" },
+    "fileSystem": { "status": "ok", "projectsDir": "accessible" },
+    "memory": { "status": "ok", "used": "256MB", "total": "512MB" }
+  }
+}
+```
+
+---
+
+### 4.7 웹 터미널 아키텍처
 
 ```
 ┌──────────────┐     WebSocket      ┌──────────────┐     PTY      ┌──────────────┐
@@ -1430,11 +1607,12 @@ cp -r backup-20241205/projects .
 
 | 버전 | 날짜 | 변경 내용 |
 |------|------|-----------|
-| 1.7 | 2024-12-05 | **배포 방식 추가**: ① npm CLI 패키지 구조, ② 명령어 설계 (init, start, stop, migrate, status), ③ Docker 지원, ④ 배포 프로세스 |
-| 1.6 | 2024-12-05 | **워크플로우 개선**: ① TDD/E2E 테스트 결과서 분리, ② Working Copy 방식 도입 (설계/구현 파일 직접 수정), ③ `.archive` 백업 옵션 추가 |
-| 1.5 | 2024-12-05 | 문서 구조 재편 - 이해도 개선 (개념 → 사용법 → 구현 순서) |
-| 1.4 | 2024-12-05 | 문서 기반 WBS 자동 생성 및 DB Merge 기능 추가 (5.4.4) |
-| 1.3 | 2024-12-04 | 워크플로우 다이어그램 상세 설명 추가 |
-| 1.2 | 2024-12-03 | SQLite 스키마 및 문서 체계 상세화 |
-| 1.1 | 2024-12-02 | 품질 게이트 개념 추가 |
-| 1.0 | 2024-12-01 | 초안 작성 |
+| 1.8 | 2025-12-06 | **일관성 개선**: ① 기술 스택 버전 TRD와 동기화, ② User/Session/Milestone/Config 스키마 추가, ③ 실시간 협업/알림 시스템 추가, ④ 에러 코드 체계 정의, ⑤ Health Check API 추가 |
+| 1.7 | 2025-12-05 | **배포 방식 추가**: ① npm CLI 패키지 구조, ② 명령어 설계 (init, start, stop, migrate, status), ③ Docker 지원, ④ 배포 프로세스 |
+| 1.6 | 2025-12-05 | **워크플로우 개선**: ① TDD/E2E 테스트 결과서 분리, ② Working Copy 방식 도입 (설계/구현 파일 직접 수정), ③ `.archive` 백업 옵션 추가 |
+| 1.5 | 2025-12-05 | 문서 구조 재편 - 이해도 개선 (개념 → 사용법 → 구현 순서) |
+| 1.4 | 2025-12-05 | 문서 기반 WBS 자동 생성 및 DB Merge 기능 추가 (5.4.4) |
+| 1.3 | 2025-12-04 | 워크플로우 다이어그램 상세 설명 추가 |
+| 1.2 | 2025-12-03 | SQLite 스키마 및 문서 체계 상세화 |
+| 1.1 | 2025-12-02 | 품질 게이트 개념 추가 |
+| 1.0 | 2025-12-01 | 초안 작성 |

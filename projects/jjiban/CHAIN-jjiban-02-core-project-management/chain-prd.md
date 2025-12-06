@@ -7,7 +7,7 @@
 | Chain ID | CHAIN-jjiban-02 |
 | Chain 이름 | Core Project Management |
 | 문서 버전 | 1.0 |
-| 작성일 | 2024-12-06 |
+| 작성일 | 2025-12-06 |
 | 상태 | Draft |
 | Chain 유형 | Feature |
 | 예상 기간 | 2-3개월 |
@@ -30,7 +30,9 @@
 - Gantt 차트 (타임라인 시각화, 계층 구조, 일정 드래그 조정)
 - Task 상세 화면 (정보 편집, 문서 연동, 미리보기)
 - 백로그 관리 (테이블 뷰, 필터, 정렬)
+- 대시보드 (프로젝트 요약, 내 할 일, 최근 활동)
 - 마일스톤 관리 (릴리즈 계획, 진행률 추적)
+
 
 **제외:**
 - 워크플로우 자동화 (CHAIN-03, CHAIN-04)
@@ -53,7 +55,7 @@
 
 **기능**:
 - 칸반 보드 레이아웃 (컬럼별 카드 그룹핑)
-- 드래그 앤 드롭 상태 변경 (react-beautiful-dnd)
+- 드래그 앤 드롭 상태 변경 (@dnd-kit/core)
 - 카드 컴포넌트 (이슈 타입, 제목, 담당자, 라벨)
 - 필터링 (담당자, 이슈 타입, 라벨, 날짜 범위)
 - 검색 (제목, 설명, ID)
@@ -92,25 +94,25 @@
 
 ---
 
-### MODULE-jjiban-02-03: Task Detail & Document Integration (3주)
-**비전**: "Task 정보와 문서를 하나의 화면에서 통합 관리"
+### MODULE-jjiban-02-03: Task Detail & Document Viewer Integration (2주)
+**비전**: "Task 정보 관리 및 문서 뷰어 패널 연동"
 
 **기능**:
 - Task 기본 정보 패널 (담당자, 상태, 우선순위, 브랜치명)
 - 설명 편집 (Rich Text Editor)
 - 문서 목록 표시 (documentPath 기반)
-- 문서 미리보기 패널 (Markdown 렌더링, Mermaid 다이어그램)
+- 문서 미리보기 패널 (Chain-03의 엔진 연동)
 - 파일 네비게이션 (트리 뷰)
 - 상위 관계 표시 (Module → Chain → Epic)
 - 활동 이력 (상태 변경, 담당자 변경 로그)
 
 **인수 조건**:
 - [ ] Task 정보 실시간 저장
-- [ ] 문서 미리보기 렌더링 (Markdown, Mermaid)
+- [ ] Chain-03의 문서 뷰어 컴포넌트 정상 로드
 - [ ] 파일 트리 네비게이션
 - [ ] 활동 이력 타임라인 표시
 
-**예상 Task 수**: 6개
+**예상 Task 수**: 5개
 
 ---
 
@@ -156,6 +158,47 @@
 
 ---
 
+### MODULE-jjiban-02-06: Dashboard (2주)
+**비전**: "프로젝트 현황을 한 눈에 파악하는 개인화 대시보드"
+
+**기능**:
+- 프로젝트 요약 카드 (진행률, 남은 일정)
+- 내 할 일 목록 (오늘 마감, 우선순위 높음)
+- 최근 활동 타임라인 (팀원 활동 로그)
+- 전체 진행률 차트 (Chain/Module별 완수율)
+- 바로가기 (최근 방문한 페이지)
+
+**인수 조건**:
+- [ ] 로그인 시 첫 화면으로 로드
+- [ ] 사용자별 할 일 필터링 정확도 100%
+- [ ] 실시간 활동 로그 업데이트
+- [ ] 차트 렌더링 성능 최적화
+
+**예상 Task 수**: 5개
+
+---
+
+### MODULE-jjiban-02-07: Project (Epic) Management (1주)
+**비전**: "프로젝트 전체를 생성하고 관리하는 중앙 허브"
+
+**기능**:
+- Epic 목록 화면 (그리드 뷰, 카드 뷰 전환)
+- Epic 생성 폼 (이름, 설명, 목표일, 담당자)
+- Epic 편집 및 삭제
+- Epic 검색 및 필터 (상태, 담당자, 날짜)
+- Epic 상세 화면 (하위 Chain 목록, 진행률)
+- Epic 아카이브 기능
+
+**인수 조건**:
+- [ ] Epic CRUD 완전 지원
+- [ ] 그리드/카드 뷰 전환
+- [ ] 검색 응답 시간 < 300ms
+- [ ] Epic 삭제 시 확인 다이얼로그
+
+**예상 Task 수**: 4개
+
+---
+
 ## 3. 의존성
 
 ### 3.1 선행 Chains
@@ -166,11 +209,11 @@
 - CHAIN-jjiban-04: LLM Integration & Automation
 
 ### 3.3 외부 의존성
-- react-beautiful-dnd (드래그 앤 드롭)
-- DHTMLX Gantt 또는 Frappe Gantt (Gantt 차트)
-- react-markdown + remark-gfm (Markdown 렌더링)
-- mermaid (다이어그램 렌더링)
-- recharts 또는 Chart.js (번다운 차트)
+- @dnd-kit/core ^6.x (드래그 앤 드롭) ← react-beautiful-dnd deprecated 대체
+- frappe-gantt ^1.0.x (Gantt 차트)
+- react-markdown ^9.x + remark-gfm (Markdown 렌더링)
+- mermaid ^11.x (다이어그램 렌더링)
+- recharts (번다운 차트)
 
 ---
 
@@ -183,34 +226,48 @@
 | Gantt 차트 | `/gantt/:projectId` | Gantt 뷰 | MODULE-02-02 |
 | Task 상세 | `/task/:taskId` | Task 상세 및 문서 | MODULE-02-03 |
 | 백로그 | `/backlog/:projectId` | 테이블 뷰 | MODULE-02-04 |
+
 | 마일스톤 | `/milestones/:projectId` | 릴리즈 관리 | MODULE-02-05 |
+| 대시보드 | `/` 또는 `/dashboard` | 메인 대시보드 | MODULE-02-06 |
+| 프로젝트 목록 | `/projects` | Epic 목록 | MODULE-02-07 |
+| 프로젝트 상세 | `/projects/:epicId` | Epic 상세 및 편집 | MODULE-02-07 |
 
 ### 4.2 API 목록
 | API | Method | 경로 | 설명 | 관련 Module |
 |-----|--------|------|------|-------------|
-| 이슈 목록 조회 | GET | `/api/issues?epicId={id}&status={status}` | 필터링된 이슈 목록 | MODULE-02-01 |
-| 이슈 상태 변경 | PATCH | `/api/issues/:id/status` | 상태 업데이트 | MODULE-02-01 |
+| 이슈 목록 조회 | GET | `/api/issues?epicId={id}&status={status}` | 통합 이슈 목록 조회 | MODULE-02-01 |
+| Epic CRUD | CRUD | `/api/epics` | Epic 관리 | MODULE-02-04 |
+| Chain CRUD | CRUD | `/api/chains` | Chain 관리 | MODULE-02-04 |
+| Module CRUD | CRUD | `/api/modules` | Module 관리 | MODULE-02-04 |
+| Task CRUD | CRUD | `/api/tasks` | Task 관리 | MODULE-02-03 |
 | Gantt 데이터 조회 | GET | `/api/gantt/:projectId` | Gantt 차트 데이터 | MODULE-02-02 |
 | 일정 업데이트 | PATCH | `/api/issues/:id/schedule` | 시작일/종료일 변경 | MODULE-02-02 |
-| Task 상세 조회 | GET | `/api/tasks/:id` | Task 정보 및 문서 | MODULE-02-03 |
-| Task 수정 | PUT | `/api/tasks/:id` | Task 정보 업데이트 | MODULE-02-03 |
 | 마일스톤 목록 | GET | `/api/milestones?projectId={id}` | 마일스톤 목록 | MODULE-02-05 |
-| 마일스톤 생성 | POST | `/api/milestones` | 새 마일스톤 | MODULE-02-05 |
+| 대시보드 데이터 | GET | `/api/dashboard/summary` | 요약 정보 조회 | MODULE-02-06 |
+| 내 할 일 | GET | `/api/dashboard/my-tasks` | 내 할 일 목록 | MODULE-02-06 |
+| 활동 로그 | GET | `/api/dashboard/activities` | 프로젝트 활동 로그 | MODULE-02-06 |
+| Epic 목록 | GET | `/api/epics` | 전체 Epic 목록 조회 | MODULE-02-07 |
+| Epic 생성 | POST | `/api/epics` | 새 Epic 생성 | MODULE-02-07 |
+| Epic 상세 | GET | `/api/epics/:id` | Epic 상세 조회 | MODULE-02-07 |
+| Epic 수정 | PUT | `/api/epics/:id` | Epic 수정 | MODULE-02-07 |
+| Epic 삭제 | DELETE | `/api/epics/:id` | Epic 삭제 (아카이브) | MODULE-02-07 |
 
 ---
 
 ## 5. 기술 스택
 
-| 레이어 | 기술 | 비고 |
-|--------|------|------|
-| Frontend | React 18 + TypeScript | SPA |
-| Drag & Drop | react-beautiful-dnd | 칸반 드래그 |
-| Gantt Chart | DHTMLX Gantt 또는 Frappe Gantt | 타임라인 시각화 |
-| Markdown | react-markdown + remark-gfm | 문서 렌더링 |
-| Diagram | mermaid | 다이어그램 렌더링 |
-| Charts | recharts 또는 Chart.js | 번다운 차트 |
-| Backend | Node.js (Express/Fastify) | REST API |
-| Database | SQLite (Prisma) | 메타데이터 저장 |
+> **참고**: 상세 버전 정보는 `jjiban-trd.md` 참조
+
+| 레이어 | 기술 | 버전 | 비고 |
+|--------|------|------|------|
+| Frontend | React + TypeScript | ^19.2.x | SPA |
+| Drag & Drop | @dnd-kit/core | ^6.x | 칸반 드래그 |
+| Gantt Chart | frappe-gantt | ^1.0.x | 타임라인 시각화 |
+| Markdown | react-markdown + remark-gfm | ^9.x | 문서 렌더링 |
+| Diagram | mermaid | ^11.x | 다이어그램 렌더링 |
+| Charts | recharts | - | 번다운 차트 |
+| Backend | Express.js | ^5.1.x | REST API |
+| Database | SQLite (Prisma) | ^7.x | 메타데이터 저장 |
 
 ---
 
@@ -221,7 +278,8 @@
 | M1: 칸반 보드 | Week 3 | 칸반 UI, 드래그 앤 드롭 |
 | M2: Gantt 차트 | Week 6 | Gantt 시각화, 일정 조정 |
 | M3: Task 상세 & 백로그 | Week 9 | Task 상세, 백로그 테이블 |
-| M4: 마일스톤 & 통합 | Week 12 | 마일스톤 관리, 전체 통합 |
+| M4: 마일스톤 & 프로젝트 관리 | Week 11 | 마일스톤 관리, Epic 관리 |
+| M5: 통합 테스트 | Week 12 | 전체 통합 테스트 |
 
 ---
 
@@ -238,4 +296,5 @@
 
 | 버전 | 날짜 | 변경 내용 |
 |------|------|-----------|
-| 1.0 | 2024-12-06 | 초안 작성 |
+| 1.1 | 2025-12-06 | MODULE-02-07 Epic 관리 추가, @dnd-kit/core로 통일 |
+| 1.0 | 2025-12-06 | 초안 작성 |

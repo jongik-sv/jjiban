@@ -57,6 +57,151 @@ EPIC PRD 문서를 분석하여 **Chain 단위 (1-3개월 배포 가능 Feature)
 
 ---
 
+## 🎯 MECE 원칙 (Mutually Exclusive, Collectively Exhaustive)
+
+### MECE 개념
+
+**MECE는 효과적인 분할을 위한 핵심 원칙입니다:**
+
+- **Mutually Exclusive (상호 배타적)**: 각 Chain이 **겹치지 않음**
+- **Collectively Exhaustive (전체를 포괄)**: 모든 기능이 **어떤 Chain에든 포함됨**
+
+```
+❌ MECE 위반 (겹침 + 빠짐):
+CHAIN-01: 프로젝트 관리 (칸반, Gantt, Task)
+CHAIN-02: 칸반 보드 (프로젝트 내 일부)
+CHAIN-03: 자동화 (워크플로우만)
+→ "칸반"이 CHAIN-01, CHAIN-02에 겹침
+→ "문서 관리" 누락
+
+✅ MECE 준수 (겹치지 않음 + 빠지지 않음):
+CHAIN-01: Platform Foundation (Portal, 디자인시스템, DB, 인증)
+CHAIN-02: Core Project Management (칸반, Gantt, Task 상세)
+CHAIN-03: Workflow & Automation (워크플로우, 자동화)
+CHAIN-04: Document Management (문서, 템플릿, WBS)
+→ 각 Chain이 명확하게 구분됨
+→ EPIC의 모든 기능이 포함됨
+```
+
+### Chain 분할에서의 MECE 적용
+
+#### 1. 상호 배타적 (Mutually Exclusive)
+
+**각 Chain은 명확하게 구분되어야 함:**
+
+```markdown
+**기능 영역별 경계 설정**:
+- 칸반 보드 기능 전체 → CHAIN-02에만 포함
+- 자동화 기능 전체 → CHAIN-03에만 포함
+- 문서 기능 전체 → CHAIN-04에만 포함
+
+**기능 중복 예방**:
+❌ "Task 상세" → CHAIN-02와 CHAIN-03 모두에 포함 (겹침)
+✅ "Task 상세" → CHAIN-02에만 포함 (명확한 소속)
+
+**특정 기능이 여러 Chain에 필요한 경우**:
+→ 해당 기능을 CHAIN-01 (Platform Foundation)에 포함
+→ 모든 Chain에서 공유 가능하게 설계
+```
+
+#### 2. 전체를 포괄 (Collectively Exhaustive)
+
+**EPIC의 모든 기능이 어떤 Chain에든 포함:**
+
+```markdown
+**체크리스트: EPIC PRD의 모든 섹션이 커버되었나?**
+
+Section 2.1: 이슈 타입 체계
+→ CHAIN-01 (Platform Foundation)에 포함
+
+Section 2.2: 워크플로우 체계
+→ CHAIN-03 (Workflow & Automation)에 포함
+
+Section 3.1: 칸반 보드
+→ CHAIN-02 (Core Project Management)에 포함
+
+...모든 섹션이 어떤 Chain에든 할당됨
+```
+
+### MECE 검증 체크리스트
+
+분할 완료 후 다음을 확인하세요:
+
+```markdown
+## 상호 배타적 검증
+
+□ 각 Chain의 주요 기능이 명확하게 정의되었는가?
+□ 기능이 여러 Chain에 중복되지 않는가?
+□ Chain 간의 경계가 명확한가?
+
+**기능 중복 검사 (5분)**:
+1. PRD에서 각 주요 기능 추출
+2. 해당 기능이 포함된 Chain 확인
+3. 1개 Chain에만 포함되었나? 확인
+
+## 전체를 포괄 검증
+
+□ EPIC PRD의 모든 섹션이 어떤 Chain에 할당되었는가?
+□ 프로젝트에 필수적인 요소(인증, DB, UI시스템)가 모두 포함되었는가?
+□ 빠진 기능이 없는가?
+
+**누락 검사 (5분)**:
+1. EPIC PRD의 모든 섹션 목록화
+2. 각 섹션이 어떤 Chain에 포함되었는지 매핑
+3. 미할당 섹션이 있나? 확인
+
+## 실제 예시
+
+**❌ MECE 위반 사례**:
+```
+CHAIN-01: Platform Foundation
+  - Portal & 레이아웃
+  - 디자인 시스템
+  - 인증 (기본)
+
+CHAIN-02: Project Management
+  - 칸반 보드
+  - Task 상세
+  - 워크플로우 (일부)
+
+CHAIN-03: Automation
+  - 워크플로우 (일부)  ← 겹침!
+  - 자동화
+
+누락: 문서 관리 기능 없음
+```
+
+**✅ MECE 준수 사례**:
+```
+CHAIN-01: Platform Foundation
+  - Portal & 레이아웃
+  - 디자인 시스템
+  - 데이터베이스 스키마
+  - 인증 & 권한 관리
+  - 기본 설정 & 로깅
+
+CHAIN-02: Project Management
+  - 칸반 보드
+  - Gantt 차트
+  - Task 상세 화면
+  - 문서 연동
+
+CHAIN-03: Workflow & Automation
+  - 워크플로우 설정
+  - 상태 전환
+  - 자동화 규칙
+  - 템플릿 기반 자동화
+
+CHAIN-04: Document Management
+  - 문서 CRUD
+  - 템플릿 관리
+  - WBS 구조
+  - 버전 관리
+```
+```
+
+---
+
 ## 비즈니스 요구사항 중심 분할 원칙
 
 ### 1. 기능 영역 그룹핑

@@ -7,7 +7,7 @@
 | Chain ID | CHAIN-jjiban-05 |
 | Chain 이름 | Deployment & CLI Tools |
 | 문서 버전 | 1.0 |
-| 작성일 | 2024-12-06 |
+| 작성일 | 2025-12-06 |
 | 상태 | Draft |
 | Chain 유형 | Feature |
 | 예상 기간 | 1-2개월 |
@@ -77,6 +77,7 @@ jjiban을 npm CLI 패키지로 배포하여 로컬에서 쉽게 설치하고 실
 - `jjiban migrate` - DB 마이그레이션
 - `jjiban status` - 서버 상태 확인
 - `jjiban update` - 업데이트 체크
+- `jjiban wbs sync` - WBS 동기화 (PRD → DB)
 - `jjiban --version` - 버전 확인
 - `jjiban --help` - 도움말
 
@@ -84,8 +85,9 @@ jjiban을 npm CLI 패키지로 배포하여 로컬에서 쉽게 설치하고 실
 - [ ] 모든 명령어 정상 작동
 - [ ] 도움말 자동 생성
 - [ ] 에러 메시지 사용자 친화적
+- [ ] WBS sync 명령어로 PRD → DB 동기화
 
-**예상 Task 수**: 6개
+**예상 Task 수**: 7개
 
 ---
 
@@ -192,6 +194,26 @@ jjiban start -p 3000 -d -o
 # -o, --open             브라우저 자동 열기
 ```
 
+### 4.3 jjiban wbs sync
+
+```bash
+jjiban wbs sync [options]
+
+# 옵션:
+# --epic <file>          Epic PRD에서 Chain 목록 추출
+# --chain <file>         Chain PRD에서 Module 목록 추출
+# --module <file>        Module PRD에서 Task 목록 추출
+# --all                  전체 프로젝트 동기화
+# --project <id>         특정 프로젝트 지정
+# --dry-run              실제 반영 없이 미리보기
+
+# 예시:
+jjiban wbs sync --epic epic-prd.md
+jjiban wbs sync --chain chain-prd.md
+jjiban wbs sync --all --project EPIC-001
+jjiban wbs sync --module module-prd.md --dry-run
+```
+
 ---
 
 ## 5. 기술 스택
@@ -227,4 +249,5 @@ jjiban start -p 3000 -d -o
 
 | 버전 | 날짜 | 변경 내용 |
 |------|------|-----------|
-| 1.0 | 2024-12-06 | 초안 작성 |
+| 1.1 | 2025-12-06 | WBS sync 명령어 추가 |
+| 1.0 | 2025-12-06 | 초안 작성 |

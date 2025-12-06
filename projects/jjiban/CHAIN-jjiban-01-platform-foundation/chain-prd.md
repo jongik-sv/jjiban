@@ -7,7 +7,7 @@
 | Chain ID | CHAIN-jjiban-01 |
 | Chain 이름 | Platform Foundation |
 | 문서 버전 | 1.0 |
-| 작성일 | 2024-12-06 |
+| 작성일 | 2025-12-06 |
 | 상태 | Draft |
 | Chain 유형 | Platform |
 | 예상 기간 | 2-3개월 |
@@ -33,6 +33,8 @@ jjiban 프로젝트의 모든 기능이 안정적으로 작동할 수 있도록 
 - 시스템 설정, 로깅, 에러 처리
 - 보안 설정 (CORS, Helmet, XSS 방지)
 - DevOps 인프라 (Git, CI/CD)
+- 실시간 협업 & 알림 (WebSocket)
+- 시스템 Health Check & 모니터링
 
 **제외:**
 - 비즈니스 로직 구현 (칸반, Gantt 등)
@@ -195,6 +197,64 @@ jjiban 프로젝트의 모든 기능이 안정적으로 작동할 수 있도록 
 
 ---
 
+### MODULE-jjiban-01-08: Real-time Collaboration & Notification (2주)
+**비전**: "즉각적인 정보 공유와 원활한 협업 지원"
+
+**기능**:
+- WebSocket 이벤트 브로드캐스트 (Socket.IO)
+- 인앱 알림 시스템 (Toast, Notification Center)
+- Task 할당/리뷰 요청 알림
+- 실시간 사용자 활동 표시 (Presence)
+
+**인수 조건**:
+- [ ] 중요 이벤트(할당, 댓글) 발생 시 즉시 알림 수신
+- [ ] WebSocket 연결 끊김 시 자동 재연결
+- [ ] 읽지 않은 알림 카운트 표시
+- [ ] 알림 센터에서 지난 알림 조회
+
+**예상 Task 수**: 6개
+
+---
+
+### MODULE-jjiban-01-09: Health Check & Monitoring (1주)
+**비전**: "시스템 안정성 모니터링 및 진단"
+
+**기능**:
+- GET /api/health (Liveness Probe)
+- GET /api/health/detailed (Readiness Probe - DB, FS 등 상세 점검)
+- 서버 상태 대시보드 (Admin only)
+- 시스템 리소스 사용량 모니터링
+
+**인수 조건**:
+- [ ] /api/health 응답 시간 < 100ms
+- [ ] DB 연결 실패 시 Unhealthy 상태 반환
+- [ ] 관리자 페이지에서 서비스 상태 확인 가능
+
+**예상 Task 수**: 3개
+
+---
+
+### MODULE-jjiban-01-10: Project Settings (1주)
+**비전**: "프로젝트(Epic)별 맞춤 설정 관리"
+
+**기능**:
+- 프로젝트 설정 화면 (`/projects/:epicId/settings`)
+- 워크플로우 커스터마이징 (단계 활성화/비활성화)
+- 문서 경로 설정 (기본 경로, 템플릿 경로)
+- LLM 프로바이더 선택 (프로젝트별 기본 LLM)
+- 라벨 및 우선순위 커스터마이징
+- 팀원 권한 관리 (프로젝트 레벨)
+
+**인수 조건**:
+- [ ] 프로젝트별 독립 설정 저장
+- [ ] 워크플로우 단계 on/off
+- [ ] LLM 프로바이더 선택 가능
+- [ ] 설정 변경 즉시 반영
+
+**예상 Task 수**: 4개
+
+---
+
 ## 3. 의존성
 
 ### 3.1 선행 Chains
@@ -207,17 +267,17 @@ jjiban 프로젝트의 모든 기능이 안정적으로 작동할 수 있도록 
 - CHAIN-jjiban-05: Deployment & CLI Tools
 
 ### 3.3 외부 의존성
-- React 18+
-- TypeScript 5+
-- Node.js 18+
-- Prisma ORM
+> **참고**: 상세 버전 정보는 `jjiban-trd.md` 참조
+
+- React ^19.2.x + TypeScript ^5.6.x
+- Node.js ^20.x LTS
+- Prisma ^7.x + @prisma/adapter-better-sqlite3
 - SQLite
-- JWT (jsonwebtoken)
-- bcrypt
-- Winston/Pino (로깅)
-- Helmet.js (보안)
-- React Router v6
-- Ant Design 또는 Shadcn UI
+- jsonwebtoken ^9.x + bcryptjs ^2.4.x
+- Winston ^3.17.x (로깅)
+- Helmet.js ^8.x (보안)
+- React Router ^7.1.x
+- Ant Design ^6.0.x
 - Storybook
 
 ---
@@ -231,6 +291,7 @@ jjiban 프로젝트의 모든 기능이 안정적으로 작동할 수 있도록 
 | 회원가입 | `/register` | 신규 사용자 등록 | MODULE-01-04 |
 | 프로필 설정 | `/profile` | 사용자 프로필 편집 | MODULE-01-04 |
 | 시스템 설정 | `/settings` | 전역 설정 관리 | MODULE-01-05 |
+| 프로젝트 설정 | `/projects/:epicId/settings` | 프로젝트별 설정 | MODULE-01-10 |
 
 ### 4.2 API 목록
 | API | Method | 경로 | 설명 | 관련 Module |
@@ -241,25 +302,33 @@ jjiban 프로젝트의 모든 기능이 안정적으로 작동할 수 있도록 
 | 사용자 조회 | GET | `/api/users/:id` | 사용자 정보 조회 | MODULE-01-04 |
 | 설정 조회 | GET | `/api/config` | 시스템 설정 조회 | MODULE-01-05 |
 | 설정 수정 | PUT | `/api/config` | 시스템 설정 변경 | MODULE-01-05 |
+| 상태 확인 | GET | `/api/health` | 시스템 생존 확인 | MODULE-01-09 |
+| 상세 상태 | GET | `/api/health/detailed` | 상세 상태 점검 | MODULE-01-09 |
+| 알림 목록 | GET | `/api/notifications` | 내 알림 조회 | MODULE-01-08 |
+| 알림 읽음 | PUT | `/api/notifications/:id` | 알림 읽음 처리 | MODULE-01-08 |
+| 프로젝트 설정 조회 | GET | `/api/projects/:epicId/settings` | 프로젝트 설정 조회 | MODULE-01-10 |
+| 프로젝트 설정 수정 | PUT | `/api/projects/:epicId/settings` | 프로젝트 설정 변경 | MODULE-01-10 |
 
 ---
 
 ## 5. 기술 스택
 
-| 레이어 | 기술 | 비고 |
-|--------|------|------|
-| Frontend | React 18 + TypeScript | SPA |
-| UI Library | Ant Design 또는 Shadcn UI | 공통 컴포넌트 |
-| State Management | Zustand 또는 Redux Toolkit | 전역 상태 관리 |
-| Routing | React Router v6 | 클라이언트 라우팅 |
-| Backend | Node.js (Express 또는 Fastify) | REST API 서버 |
-| ORM | Prisma | 데이터베이스 추상화 |
-| Database | SQLite | 로컬 파일 기반 DB |
-| Authentication | JWT + bcrypt | 토큰 기반 인증 |
-| Logging | Winston 또는 Pino | 구조화된 로깅 |
-| Security | Helmet.js, CORS, Rate Limiting | 보안 미들웨어 |
-| Documentation | Storybook | 컴포넌트 문서화 |
-| DevOps | GitHub Actions, Docker | CI/CD |
+> **참고**: 상세 버전 정보는 `jjiban-trd.md` 참조
+
+| 레이어 | 기술 | 버전 | 비고 |
+|--------|------|------|------|
+| Frontend | React + TypeScript | ^19.2.x / ^5.6.x | SPA |
+| UI Library | Ant Design | ^6.0.x | React 19 네이티브 지원 |
+| State Management | Zustand | ^5.x | React 19 호환 |
+| Routing | React Router | ^7.1.x | 클라이언트 라우팅 |
+| Backend | Express.js | ^5.1.x | REST API 서버 |
+| ORM | Prisma | ^7.x | 드라이버 어댑터 필수 |
+| Database | SQLite | - | 로컬 파일 기반 DB |
+| Authentication | jsonwebtoken + bcryptjs | ^9.x / ^2.4.x | 토큰 기반 인증 |
+| Logging | Winston | ^3.17.x | 구조화된 로깅 |
+| Security | Helmet.js, CORS, Rate Limiting | ^8.x | 보안 미들웨어 |
+| Documentation | Storybook | - | 컴포넌트 문서화 |
+| DevOps | GitHub Actions, Docker | - | CI/CD |
 
 ---
 
@@ -287,4 +356,5 @@ jjiban 프로젝트의 모든 기능이 안정적으로 작동할 수 있도록 
 
 | 버전 | 날짜 | 변경 내용 |
 |------|------|-----------|
-| 1.0 | 2024-12-06 | 초안 작성 |
+| 1.1 | 2025-12-06 | MODULE-01-10 프로젝트 설정 추가 |
+| 1.0 | 2025-12-06 | 초안 작성 |
