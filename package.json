@@ -8,12 +8,16 @@
     "build": "nuxt build",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "typecheck": "nuxt typecheck"
+    "typecheck": "nuxt typecheck",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:debug": "playwright test --debug"
   },
   "engines": {
     "node": ">=20.0.0"
   },
   "devDependencies": {
+    "@playwright/test": "1.49",
     "nuxt": "^3.14.0",
     "typescript": "^5.6.0",
     "vue": "^3.5.0",

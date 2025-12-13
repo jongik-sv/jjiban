@@ -47,7 +47,7 @@
 
 #### TSK-01-01-03: Pinia 상태 관리 설정
 - category: infrastructure
-- status: design [ds]
+- status: done [xx]
 - priority: high
 - assignee: -
 - schedule: 2025-12-14 ~ 2025-12-14
@@ -60,7 +60,7 @@
 
 #### TSK-01-01-04: 프로젝트 디렉토리 구조 설정
 - category: infrastructure
-- status: [ ]
+- status: done [xx]
 - priority: high
 - assignee: -
 - schedule: 2025-12-14 ~ 2025-12-15
@@ -78,7 +78,7 @@
 
 #### TSK-01-02-01: AppLayout 컴포넌트 구현
 - category: development
-- status: [ ]
+- status: done [xx]
 - priority: high
 - assignee: -
 - schedule: 2025-12-16 ~ 2025-12-17
@@ -92,7 +92,7 @@
 
 #### TSK-01-02-02: AppHeader 컴포넌트 구현
 - category: development
-- status: [ ]
+- status: done [xx]
 - priority: high
 - assignee: -
 - schedule: 2025-12-17 ~ 2025-12-18
@@ -118,7 +118,7 @@
 
 #### TSK-02-01-01: .jjiban 디렉토리 구조 생성
 - category: infrastructure
-- status: [ ]
+- status: done [xx]
 - priority: critical
 - assignee: -
 - schedule: 2025-12-16 ~ 2025-12-17
@@ -132,7 +132,7 @@
 
 #### TSK-02-01-02: 파일 읽기/쓰기 유틸리티
 - category: infrastructure
-- status: [ ]
+- status: done [xx]
 - priority: critical
 - assignee: -
 - schedule: 2025-12-17 ~ 2025-12-18
@@ -151,7 +151,7 @@
 
 #### TSK-02-02-01: wbs.md 파서 구현
 - category: development
-- status: [ ]
+- status: detail-design [dd]
 - priority: critical
 - assignee: -
 - schedule: 2025-12-18 ~ 2025-12-20
@@ -166,7 +166,7 @@
 
 #### TSK-02-02-02: wbs.md 시리얼라이저 구현
 - category: development
-- status: [ ]
+- status: detail-design [dd]
 - priority: critical
 - assignee: -
 - schedule: 2025-12-20 ~ 2025-12-22
@@ -180,7 +180,7 @@
 
 #### TSK-02-02-03: WBS 데이터 유효성 검증
 - category: development
-- status: [ ]
+- status: detail-design [dd]
 - priority: high
 - assignee: -
 - schedule: 2025-12-22 ~ 2025-12-23

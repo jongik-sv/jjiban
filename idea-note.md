@@ -72,7 +72,7 @@
 - **명령행 실행방법** : claude --model opus --dangerously-skip-permissions -p "/wf:draft TSK-01-01-03
 - **명령어 저장 없이 수행** : @.claude/commands/wf/review.md 명령어를 읽어서 절차 대로 `ACT-01-01`을 수행해. 현재 LLM은 gemini-2.5를 사용중이야.
 - context에서 mcp를 내려버리는 방법 (MCP 검색 도구를 사용해서 컨텍스트에는 없지만 똑똑하게 알아서 사용.)
-   - export ENABLE_EXPERIMENTAL_MCP_CLI=true # MAC, LINUX
+   - export ENABLE_EXPERIMENTAL_MCP_CLI=true # MAC, LINU
    - $env:ENABLE_EXPERIMENTAL_MCP_CLI="true" # WINDOWS powershell
    - set ENABLE_EXPERIMENTAL_MCP_CLI=true # WINDOWS command shell
    - claude code 내부 명령어 : mcp-cli -V 명령어 실행해줘.
@@ -92,5 +92,18 @@
     - WP 폴더 내부에 ACT, TASK 폴더가 있음
     - ACT 폴더 내부에 TASK 폴더가 있음
     - 3단계 구조는 WP 폴더 내부에 ACT 없이 TASK 폴더가 있음
-    - 4단계 구조는 WP 폴더 내부에 ACT 폴더가 있고 그 밑에 TASK 폴더가 있음
+    - 4단계 구조는 WP 폴더 내부에 ACT 폴더가 있고   그 밑에 TASK 폴더가 있음
+
+
+
+
+@.jjiban\projects\jjiban\tasks\TSK-01-02-01\ui-assets\ @.jjiban\projects\jjiban\tasks\TSK-01-02-02\ui-assets\ 안의 설계 이미지가 전체 생각하고 있는 모습인 @.jjiban\projects\jjiban\wbs-tree-mockup-compact.svg 를 잘 반영하고 잇는지 확인해줘.
+
+```
+claude --model opus --dangerously-skip-permissions -p "/wf:audit TSK-01-02-01"
+claude --model opus --dangerously-skip-permissions -p "/wf:patch TSK-01-02-01"
+claude --model opus --dangerously-skip-permissions -p "/wf:build TSK-01-02-02"
+claude --model opus --dangerously-skip-permissions -p "/wf:audit TSK-01-02-02"
+claude --model opus --dangerously-skip-permissions -p "/wf:patch TSK-01-02-02"
+```
 

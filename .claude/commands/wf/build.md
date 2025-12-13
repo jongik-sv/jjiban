@@ -109,6 +109,12 @@ parallel-processing: true
        - 테스트 데이터 명세 (Fixture 정의)
        - data-testid 셀렉터 목록
    - **infrastructure**: `010-tech-design.md` 로드
+   - **UI Assets (화면 설계)** (Frontend 포함 Task인 경우) ⭐:
+     - Task 폴더 내 `ui-assets/` 디렉토리 탐색
+     - 화면 설계 이미지 로드: `*.png`, `*.jpg`, `*.svg`, `*.webp`
+     - 와이어프레임, 목업, 디자인 시안 분석
+     - 레이아웃 구조, 컴포넌트 배치, 색상/폰트 추출
+     - 이미지 없을 경우 `011-ui-design.md` 문서 참조
    - **UI 테마 가이드** (Frontend 포함 Task인 경우):
      - `.jjiban/{project}/ui-theme-*.md` 로드 (glob 패턴으로 모든 테마 파일 탐색)
      - 색상 시스템, 타이포그래피, 컴포넌트 스타일 가이드 참조
@@ -200,7 +206,14 @@ parallel-processing: true
 
 **자동 실행 단계**:
 
-1. **Frontend 화면 구현** ⭐ UI 테마 가이드 필수 참조:
+1. **Frontend 화면 구현** ⭐ UI Assets + 테마 가이드 필수 참조:
+   - **UI Assets 기반 구현** (Task 폴더 `ui-assets/` 참조) ⭐:
+     - 화면 설계 이미지 분석 → 레이아웃 구조 파악
+     - 컴포넌트 배치: 이미지 내 요소 위치 그대로 반영
+     - 간격/여백: 이미지에서 추출한 spacing 값 적용
+     - 색상/폰트: 이미지에서 추출 또는 테마 가이드 참조
+     - 아이콘/이미지: 디자인 시안과 동일하게 적용
+     - **구현 우선순위**: ui-assets 이미지 > 011-ui-design.md > 테마 가이드
    - **UI 테마 적용** (`.jjiban/{project}/ui-theme-*.md` 참조):
      - 색상 시스템: Primary, Secondary, Surface, Text 색상 코드 사용
      - 컴포넌트 스타일: 버튼, 카드, 입력필드, 태그 등 가이드 준수
@@ -313,7 +326,7 @@ parallel-processing: true
    ```
 
 6. **HTML 보고서 생성** ⭐:
-   - **템플릿**: `@.claude/includes/e2e-html-report-template.html` 사용
+   - **템플릿**: `@.jjiban/templates/e2e-html-report.html` 사용
    - **출력 파일**: `e2e-test-report.html`
    - **포함 내용**:
      - 테스트 요약 (총 테스트 수, 통과/실패/스킵)
@@ -384,7 +397,7 @@ parallel-processing: true
 
 ## 구현 보고서 템플릿
 
-> **템플릿 파일**: `@.claude/includes/implementation_report_template.md`
+> **템플릿 파일**: `@.jjiban/templates/030-implementation.md`
 >
 > 구현 보고서는 위 템플릿을 기반으로 `030-implementation.md`를 생성합니다.
 
@@ -395,7 +408,7 @@ parallel-processing: true
 | 0 | 문서 메타데이터 | Task ID, 참조 설계서, 구현 기간, 상태 |
 | 1 | 구현 개요 | 목적, 범위, 기술 스택 |
 | 2 | Backend 구현 결과 | Controller/Service/Repository, TDD 테스트 결과 |
-| 3 | Frontend 구현 결과 | 화면 구성, API 연동, E2E 테스트 결과 |
+| 3 | Frontend 구현 결과 | ui-assets 기반 화면 구성, API 연동, E2E 테스트 결과 |
 | 4 | 선택적 품질 검증 | 성능/보안/접근성 (고복잡도 Task만) |
 | 5 | 기술적 결정사항 | 아키텍처 결정, 구현 패턴 |
 | 6 | 알려진 이슈 | 이슈 목록, 제약사항, 향후 개선 |
@@ -465,6 +478,10 @@ Category: development
 │   ├── E2E 테스트 시나리오: 8건 (E2E-001 ~ E2E-008)
 │   ├── 테스트 데이터 명세: 5건 (FX-001 ~ FX-005)
 │   └── data-testid: 15개 정의됨
+├── ui-assets/ ✅ (화면 설계 이미지) ⭐
+│   ├── 이미지 파일: 3개 (main.png, modal.png, list.png)
+│   ├── 레이아웃 구조 분석 완료
+│   └── 컴포넌트 배치 정보 추출
 ├── ui-theme-dark.md ✅ (UI 테마 가이드)
 │   ├── 색상 시스템: Primary(Purple), Surface(Dark) 정의
 │   ├── 컴포넌트 스타일: 버튼, 카드, 입력필드 등
@@ -480,6 +497,10 @@ Category: development
 └── 코드 커버리지: 85%
 
 🎨 3단계: Frontend 구현 (frontend-architect)
+├── UI Assets 기반 구현 ✅ ⭐
+│   ├── 화면 설계 이미지 분석: 3개 (main.png, modal.png, list.png)
+│   ├── 레이아웃: 이미지 기준 그리드/플렉스 구조 반영
+│   └── 컴포넌트 배치: 디자인 시안과 동일하게 구현
 ├── UI 테마 적용: ui-theme-dark.md 기반 ✅
 │   ├── 색상: Primary(#8b5cf6), Surface(#121218) 적용
 │   ├── 컴포넌트: Card, Button, Input 스타일 준수
@@ -557,6 +578,7 @@ Category: infrastructure
 | 잘못된 상태 (dev) | `[ERROR] 상세설계 상태가 아닙니다. 현재 상태: [상태]` |
 | 잘못된 상태 (infra) | `[ERROR] 상세설계 상태가 아닙니다. 현재 상태: [상태]` |
 | 설계 문서 없음 | `[ERROR] 설계 문서가 없습니다` |
+| UI Assets 없음 | `[INFO] ui-assets/ 폴더 없음. 011-ui-design.md 또는 테마 가이드 참조` |
 | 테스트 실패 | `[WARNING] 테스트 커버리지 미달: [N]% (목표: 80%)` |
 | E2E 실패 | `[WARNING] E2E 테스트 실패: [N]건` |
 | E2E 5회 재시도 초과 | `[ERROR] E2E 테스트 5회 시도 후에도 실패. 수동 개입 필요` |
@@ -595,8 +617,14 @@ Category: infrastructure
 ### 📊 품질 중심
 - 각 단계에서 품질 보증 완료
 - **Backend Task**: 테스트 커버리지 80% 이상
-- **Frontend Task**: E2E 주요 시나리오 100% 통과
+- **Frontend Task**: ui-assets 기반 디자인 일치도 + E2E 주요 시나리오 100% 통과
 - **Full-stack Task**: 양쪽 품질 기준 모두 충족
+
+### 🎨 UI Assets 기반 구현
+- Task 폴더 내 `ui-assets/` 화면 설계 이미지 우선 참조
+- 이미지 분석 → 레이아웃, 컴포넌트 배치, 색상/폰트 추출
+- 디자인 시안과 실제 구현 일치도 극대화
+- Fallback: `011-ui-design.md` → `ui-theme-*.md`
 
 ---
 
