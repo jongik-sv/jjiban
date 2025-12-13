@@ -64,7 +64,7 @@ personas: [system-architect, security-engineer, quality-engineer]
 
 @.claude/includes/wf-common.md
 
-**Task 폴더**: `.jjiban/{project}/wbs/{WP-ID}/{ACT-ID}/{TSK-ID}/`
+**Task 폴더**: `.jjiban/projects/{project}/tasks/{TSK-ID}/`
 
 ---
 
@@ -84,7 +84,7 @@ personas: [system-architect, security-engineer, quality-engineer]
    ```
 
 2. **WBS에서 Task 조회**:
-   - `.jjiban/{project}/wbs/{WP-ID}/{ACT-ID}/{TSK-ID}/task.json`에서 Task 정보 조회
+   - `.jjiban/projects/{project}/tasks/{TSK-ID}/task.json`에서 Task 정보 조회
    - category 확인: development | defect | infrastructure
    - 현재 상태 확인:
      - development: `[im]` 구현
@@ -513,35 +513,8 @@ WP 또는 ACT 단위 입력 시, 해당 범위 내 `[im]`/`[fx]` 상태 Task들�
 jjiban 프로젝트 - Workflow Command
 author: 장종익 
 Command: wf:audit
-Version: 4.0
+Version: 1.0
 
-Changes (v4.0):
-- 분할된 설계 문서 지원으로 변경
-  - 020-detail-design.md (상세설계 본문)
-  - 025-traceability-matrix.md (추적성 매트릭스)
-  - 026-test-specification.md (테스트 명세)
-- 1단계 문서 수집에 분할 문서 목록 추가
-Changes (v3.0):
-- WP/ACT 계층 입력 지원 추가
-- 병렬 처리 기능 추가 (Task 도구 활용)
-- hierarchy-input, parallel-processing frontmatter 추가
-- 계층 입력 처리 공통 모듈 참조 추가
-- WP/ACT 단위 병렬 처리 출력 예시 추가
-Changes (v2.1):
-- code_review.md 참조하여 전면 개선
-- MCP 서버 연동: context7
-- Auto-Persona 시스템 추가
-- 심각도(Severity) 분류 체계 추가
-- 우선순위(Priority) P1-P5 체계 추가
-- 상세 리뷰 보고서 템플릿 강화
-- 다중 LLM 교차 검증 기능 추가
-- 토큰 효율성 최적화
-- 코드 개선 예시 섹션 추가
-
-Changes (v2.0):
-- PRD 2.4 워크플로우 반영
-- 상태 전환 → 상태 내 액션으로 변경
-- [cr] 코드리뷰 상태 제거됨
-- [im] 구현 또는 [fx] 수정 상태에서 반복 가능
-- 문서 넘버링 규칙 추가
+Changes (v1.0):
+- 생성
 -->

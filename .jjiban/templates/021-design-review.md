@@ -1,4 +1,4 @@
-# 상세설계 리뷰 템플릿 (02-design-review-{llm}-{n}.md)
+# 상세설계 리뷰 템플릿 (021-design-review-{llm}-{n}.md)
 
 **Template Version:** 1.0.0 — **Last Updated:** 2026-12-07
 
@@ -18,14 +18,14 @@
 | 리뷰 일시 | [YYYY-MM-DD HH:MM] |
 | 리뷰어 | [LLM명] (예: Claude Opus 4.5, 실행한 LLM을 정확하게 적을 것) |
 | 리뷰 회차 | [N]차 |
-| 대상 문서 | `02-detail-design.md` |
+| 대상 문서 | `020-detail-design.md` |
 
 ### 검증 대상 문서
 
 | 문서 유형 | 경로 | 검증 여부 |
 |----------|------|----------|
-| 상세설계서 | `02-detail-design.md` | Y |
-| 기본설계서 | `01-basic-design.md` | Y/N |
+| 상세설계서 | `020-detail-design.md` | Y |
+| 기본설계서 | `010-basic-design.md` | Y/N |
 | PRD | `projects/[project]/[project]-prd.md` | Y |
 | TRD | `projects/[project]/[project]-trd.md` | Y |
 | WBS | `projects/[project]/wbs.md` | Y |
@@ -311,11 +311,11 @@
 
 | 문서 | 경로 |
 |------|------|
-| 상세설계서 | `02-detail-design.md` |
-| 기본설계서 | `01-basic-design.md` |
+| 상세설계서 | `020-detail-design.md` |
+| 기본설계서 | `010-basic-design.md` |
 | PRD | `projects/[project]/[project]-prd.md` |
 | TRD | `projects/[project]/[project]-trd.md` |
-| 상세설계 템플릿 | `.claude/includes/detail-design-template.md` |
+| 상세설계 템플릿 | `.jjiban/templates/020-detail-design.md` |
 
 ---
 

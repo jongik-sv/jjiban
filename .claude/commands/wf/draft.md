@@ -89,7 +89,7 @@ parallel-processing: true
 
 @.claude/includes/wf-common.md
 
-**Task 폴더**: `.jjiban/{project}/wbs/{WP-ID}/{ACT-ID}/{TSK-ID}/`
+**Task 폴더**: `.jjiban/projects/{project}/tasks/{TSK-ID}/`
 
 ---
 
@@ -149,10 +149,10 @@ parallel-processing: true
    ```
    탐색 경로:
    ├── Task 레벨
-   │   ├── .jjiban/{project}/wbs/{WP-ID}/{ACT-ID}/{TSK-ID}/task.json
-   │   ├── .jjiban/{project}/wbs/{WP-ID}/{ACT-ID}/{TSK-ID}/010-basic-design.md
-   │   ├── .jjiban/{project}/wbs/{WP-ID}/{ACT-ID}/{TSK-ID}/011-ui-design.md (선택적)
-   │   └── .jjiban/{project}/wbs/{WP-ID}/{ACT-ID}/{TSK-ID}/ui-assets/*.svg (선택적)
+   │   ├── .jjiban/projects/{project}/tasks/{TSK-ID}/task.json
+   │   ├── .jjiban/projects/{project}/tasks/{TSK-ID}/010-basic-design.md
+   │   ├── .jjiban/projects/{project}/tasks/{TSK-ID}/011-ui-design.md (선택적)
+   │   └── .jjiban/projects/{project}/tasks/{TSK-ID}/ui-assets/*.svg (선택적)
    │
    ├── Activity 레벨
    │   └── .jjiban/{project}/wbs/{WP-ID}/{ACT-ID}/meta.json
@@ -504,9 +504,9 @@ parallel-processing: true
 
 | 파일명 | 템플릿 | 내용 |
 |--------|--------|------|
-| `020-detail-design.md` | `.claude/includes/detail-design-template.md` | 상세설계 본문 |
-| `025-traceability-matrix.md` | `.claude/includes/traceability-matrix-template.md` | 요구사항 추적성 매트릭스 |
-| `026-test-specification.md` | `.claude/includes/test-specification-template.md` | 테스트 시나리오/케이스/데이터 |
+| `020-detail-design.md` | `.jjiban/templates/020-detail-design.md` | 상세설계 본문 |
+| `025-traceability-matrix.md` | `.jjiban/templates/025-traceability-matrix.md` | 요구사항 추적성 매트릭스 |
+| `026-test-specification.md` | `.jjiban/templates/026-test-specification.md` | 테스트 시나리오/케이스/데이터 |
 
 ### 020-detail-design.md 주요 섹션
 
@@ -717,76 +717,8 @@ Category: development
 jjiban 프로젝트 - Workflow Command
 author: 장종익
 Command: wf:draft
-Version: 9.0
+Version: 1.0
 
-Changes (v9.0):
-- ⛔ 코드 작성 금지 원칙 섹션 신설 (최상단)
-  - 절대 금지 항목 테이블 추가 (7개 유형)
-  - 유일한 예외: Prisma 스키마 명시
-  - 설계 표현 원칙 (표, 다이어그램, 트리, 텍스트) 정의
-- 3단계 상세설계 생성 전면 개편
-  - 모든 설계 항목을 표 형식으로 명시
-  - API 설계: 4개 표 템플릿 제공
-  - UI/UX 설계: 5개 표 템플릿 제공
-  - 테스트 시나리오: 3개 표 템플릿 제공
-- 핵심 원칙 섹션 강화
-  - 코드 블록 감지 시 즉시 중단 규칙 추가
-- 에러 케이스 대폭 강화
-  - 코드 블록 감지 에러 섹션 분리
-  - 6개 감지 패턴별 에러 메시지 정의
-  - Prisma 예외 허용 키워드 명시
-
-Changes (v8.0):
-- 상세설계 문서를 3개 파일로 분할
-  - 020-detail-design.md: 상세설계 본문 (축소)
-  - 025-traceability-matrix.md: 요구사항 추적성 매트릭스
-  - 026-test-specification.md: 테스트 시나리오/케이스/데이터
-- 템플릿 참조 업데이트
-  - detail-design-template.md (v3.0)
-  - traceability-matrix-template.md (신규)
-  - test-specification-template.md (신규)
-- 문서 계층 구조에 분할 문서 추가
-- 출력 예시 업데이트
-- 에러 케이스 추가
-
-Changes (v7.0):
-- 화면설계 문서(011-ui-design.md) 참조 기능 추가
-- ui-assets/*.svg 파일 참조 기능 추가
-- 1단계 검증에 화면설계 문서 존재 확인 추가 (선택적)
-- 2단계 분석에 화면설계 문서 읽기 단계 추가
-- 3단계 UI/UX 상세 설계에서 화면설계 기반 상세화 로직 추가
-- 4.3 기본설계 ↔ 화면설계 일관성 검증 섹션 추가 (CHK-UI-01 ~ CHK-UI-05)
-- 출력 예시에 화면설계 참조 내용 추가
-- 에러 케이스에 화면설계 관련 항목 추가
-
-Previous Changes (v6.0):
-- WP/ACT 계층 입력 지원 추가
-- 병렬 처리 기능 추가
-- @.claude/includes/wf-hierarchy-input.md 참조 추가
-- allowed-tools에 Task 추가 (병렬 처리용)
-- 병렬 처리 출력 예시 추가
-
-Previous Changes (v5.0):
-- 3단계에 테스트케이스 상세 설계 단계 추가 (build 연계)
-- UI/UX 설계에 data-testid 속성 정의 추가
-- 테스트 설계 원칙 명시 (FR/BR 완전 매핑)
-- 단위 테스트 상세화 항목 추가 (파일/함수/Mock/커버리지)
-- E2E 테스트 상세화 항목 추가 (셀렉터/API/assertion)
-- 테스트 데이터(Fixture) 정의 항목 추가
-
-Previous Changes (v4.0):
-- 계층적 문서 탐색 기능 추가 (Task → Activity → WP → Project)
-- 상위 PRD/TRD 문서 자동 참조 기능 추가
-- 일관성 검증 단계 대폭 강화 (PRD↔기본설계↔상세설계↔TRD)
-- 논리 충돌 감지 로직 추가
-- 추적성 매트릭스 3단계 매핑 (PRD → 기본설계 → 상세설계)
-- 템플릿 별도 파일로 분리 (.claude/includes/detail-design-template.md)
-- 에러 케이스 확장 (PRD/TRD 미발견, 일관성 검증 실패 등)
-
-Previous Changes (v3.0):
-- 자동 실행 플로우 구조화
-- 요구사항 추적성 강화 (FR-XXX, BR-XXX)
-- 설계 검증 단계 추가 (완전성, 일관성)
-- UI 테스트케이스 섹션 추가
-- MCP 서버 활용 (sequential-thinking, context7)
+Changes (v1.0):
+- 생성
 -->

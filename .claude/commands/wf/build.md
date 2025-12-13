@@ -22,7 +22,7 @@ parallel-processing: true
 > **최적화된 구현 전문화**: 상세설계서를 바탕으로 TDD 방식으로 Task를 구현하고 구현 보고서를 자동 생성합니다.
 >
 > **상태 전환**: `[dd] 상세설계` → `[im] 구현` (development)
-> **상태 전환**: `[ds] 설계` → `[im] 구현` (infrastructure)
+> **상태 전환**: `[dd] 상세설계` → `[im] 구현` (infrastructure)
 > **적용 category**: development, infrastructure
 >
 > **계층 입력 지원**: Work Package, Activity, Task 단위 입력 가능 (WP/ACT 입력 시 하위 Task 병렬 처리)
@@ -50,22 +50,22 @@ parallel-processing: true
 
 | 입력 | 처리 방식 | 상태 필터 |
 |------|----------|----------|
-| `TSK-XX-XX-XX` | 단일 Task 처리 | `[dd]` 상세설계, `[ds]` 설계 |
-| `ACT-XX-XX` | ACT 내 모든 Task 병렬 처리 | `[dd]` 상세설계, `[ds]` 설계 |
-| `WP-XX` | WP 내 모든 Task 병렬 처리 | `[dd]` 상세설계, `[ds]` 설계 |
+| `TSK-XX-XX-XX` | 단일 Task 처리 | `[dd]` 상세설계 |
+| `ACT-XX-XX` | ACT 내 모든 Task 병렬 처리 | `[dd]` 상세설계 |
+| `WP-XX` | WP 내 모든 Task 병렬 처리 | `[dd]` 상세설계 |
 
 ## 상태 전환 규칙
 
 | category | 현재 상태 | 다음 상태 | 생성 문서 |
 |----------|----------|----------|----------|
 | development | `[dd]` 상세설계 | `[im]` 구현 | `030-implementation.md` |
-| infrastructure | `[ds]` 설계 | `[im]` 구현 | `030-implementation.md` |
+| infrastructure | `[dd]` 상세설계 | `[im]` 구현 | `030-implementation.md` |
 
 ## 문서 경로
 
 @.claude/includes/wf-common.md
 
-**Task 폴더**: `.jjiban/{project}/wbs/{WP-ID}/{ACT-ID}/{TSK-ID}/`
+**Task 폴더**: `.jjiban/projects/{project}/tasks/{TSK-ID}/`
 
 ---
 
@@ -91,11 +91,11 @@ parallel-processing: true
 **자동 실행 단계**:
 
 1. **Task 정보 추출 및 파싱**:
-   - Task JSON (`.jjiban/{project}/wbs/{WP-ID}/{ACT-ID}/{TSK-ID}/task.json`)에서 Task 정보 조회
+   - Task JSON (`.jjiban/projects/{project}/tasks/{TSK-ID}/task.json`)에서 Task 정보 조회
    - category가 `development` 또는 `infrastructure`인지 확인
    - 현재 상태 확인:
      - development: `[dd]` 상세설계
-     - infrastructure: `[ds]` 설계
+     - infrastructure: `[dd]` 상세설계
 
 2. **설계 문서 분석**:
    - **development**: 분할된 3개 문서 로드
@@ -176,7 +176,7 @@ parallel-processing: true
 
 5. **TDD 테스트 결과 저장**:
    ```
-   .jjiban/{project}/wbs/{WP-ID}/{ACT-ID}/{TSK-ID}/test-results/
+   .jjiban/projects/{project}/tasks/{TSK-ID}/test-results/
    ├── tdd/
    │   ├── coverage/
    │   ├── test-results.json
@@ -300,7 +300,7 @@ parallel-processing: true
 
 5. **테스트 결과 저장**:
    ```
-   .jjiban/{project}/wbs/{WP-ID}/{ACT-ID}/{TSK-ID}/test-results/
+   .jjiban/projects/{project}/tasks/{TSK-ID}/test-results/
    ├── e2e/
    │   ├── e2e-test-report.html    ← HTML 시각화 보고서 (스크린샷 포함)
    │   ├── e2e-test-results.md     ← 마크다운 결과서
@@ -377,7 +377,7 @@ parallel-processing: true
 
 3. **Task JSON 상태 업데이트**:
    - `[dd]` → `[im]` (development) - Task JSON의 status 필드
-   - `[ds]` → `[im]` (infrastructure) - Task JSON의 status 필드
+   - `[dd]` → `[im]` (infrastructure) - Task JSON의 status 필드
    - updated_at 필드 업데이트
 
 ---
@@ -525,7 +525,7 @@ Category: development
 
 Task: TSK-03-01-01
 Category: infrastructure
-상태 전환: [ds] 설계 → [im] 구현
+상태 전환: [dd] 상세설계 → [im] 구현
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -555,7 +555,7 @@ Category: infrastructure
 |------|--------|
 | 잘못된 category | `[ERROR] development 또는 infrastructure만 지원합니다` |
 | 잘못된 상태 (dev) | `[ERROR] 상세설계 상태가 아닙니다. 현재 상태: [상태]` |
-| 잘못된 상태 (infra) | `[ERROR] 설계 상태가 아닙니다. 현재 상태: [상태]` |
+| 잘못된 상태 (infra) | `[ERROR] 상세설계 상태가 아닙니다. 현재 상태: [상태]` |
 | 설계 문서 없음 | `[ERROR] 설계 문서가 없습니다` |
 | 테스트 실패 | `[WARNING] 테스트 커버리지 미달: [N]% (목표: 80%)` |
 | E2E 실패 | `[WARNING] E2E 테스트 실패: [N]건` |
@@ -642,62 +642,8 @@ Category: infrastructure
 jjiban 프로젝트 - Workflow Command
 author: 장종익
 Command: wf:build
-Version: 7.0
+Version: 1.0
 
-Changes (v7.0):
-- E2E 테스트-수정 자동화 루프 추가 (무한 루프 방지)
-  - 최대 5회 재시도 제한
-  - 실패 시 자동으로 코드 수정 후 재실행
-- 에러 유형별 자동 수정 전략 표 추가
-  - Locator 실패, Timeout, Assertion, Network, Element 없음
-- 재시도 히스토리 기록 형식 추가
-- 에러 케이스 추가 (E2E/TDD 5회 재시도 초과)
-- 출력 예시에 테스트-수정 루프 진행 상황 추가
-
-Changes (v6.0):
-- 분할된 설계 문서 참조로 변경
-  - 020-detail-design.md (상세설계 본문)
-  - 025-traceability-matrix.md (추적성 매트릭스)
-  - 026-test-specification.md (테스트 명세)
-- 1단계 설계 문서 분석 섹션 업데이트
-- 2단계/3단계 테스트 참조 문서 변경
-- 구현 보고서 연계 정보 업데이트
-- 출력 예시 업데이트
-
-Changes (v5.0):
-- WP/ACT 계층 입력 지원 추가
-- 병렬 처리 기능 추가
-- @.claude/includes/wf-hierarchy-input.md 참조 추가
-- 병렬 처리 출력 예시 추가
-
-Changes (v4.3):
-- E2E HTML 보고서 생성 기능 추가
-  - 템플릿: @.claude/includes/e2e-html-report-template.html
-  - 스크린샷 갤러리 및 클릭 확대 기능
-  - 요구사항 커버리지 시각화
-  - 실패 상세 정보 (에러 메시지 + 스크린샷)
-- 테스트 결과 저장 구조 개선 (e2e-test-report.html 추가)
-
-Changes (v4.2):
-- 구현 보고서 템플릿을 @.claude/includes/implementation_report_template.md 참조로 변경
-- sequential-thinking MCP 제거 (thinking 모델 사용 예정)
-- personas에서 java-developer → backend-architect 변경
-
-Changes (v4.1):
-- 상세설계(020-detail-design.md) 테스트 시나리오 연계 추가
-  - 1단계: 섹션 13 테스트 계획, 섹션 2.3 추적성 매트릭스, 섹션 10 data-testid 추출
-  - 2단계: 단위 테스트 시나리오(UT-XXX) → Vitest 테스트 코드 변환
-  - 3단계: E2E 테스트 시나리오(E2E-XXX) → Playwright 테스트 코드 변환
-  - 테스트 데이터 명세(FX-XXX) → Fixture 생성
-- 구현 보고서에 상세설계 ↔ 테스트 매핑 표 추가
-- 요구사항 커버리지(FR/BR → 테스트 ID) 추적 강화
-
-Changes (v4.0):
-- TDD 기반 구현 프로세스 추가
-- 에이전트 위임 (personas) 설정 추가
-- Backend/Frontend 조건부 실행 로직 추가
-- 품질 기준 및 테스트 결과 저장 추가
-- 구현 보고서 템플릿 강화
-- 5단계 자동 실행 플로우 도입
-- implement.md 참조하여 전면 개편
+Changes (v1.0):
+- 생성
 -->

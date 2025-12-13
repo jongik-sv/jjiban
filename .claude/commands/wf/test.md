@@ -58,7 +58,7 @@ personas: [backend-architect, frontend-architect, quality-engineer]
 
 @.claude/includes/wf-common.md
 
-**Task 폴더**: `.jjiban/{project}/wbs/{WP-ID}/{ACT-ID}/{TSK-ID}/`
+**Task 폴더**: `.jjiban/projects/{project}/tasks/{TSK-ID}/`
 
 ---
 
@@ -194,7 +194,7 @@ personas: [backend-architect, frontend-architect, quality-engineer]
 4. **테스트 결과 저장**:
    ```
    # 폴더명 형식: test-results/[YYYYMMDDHHmm] (예: test-results/202512081430)
-   .jjiban/{project}/wbs/{WP-ID}/{ACT-ID}/{TSK-ID}/test-results/[timestamp]/
+   .jjiban/projects/{project}/tasks/{TSK-ID}/test-results/[timestamp]/
    ├── tdd/
    │   ├── coverage/
    │   │   ├── lcov-report/
@@ -296,7 +296,7 @@ personas: [backend-architect, frontend-architect, quality-engineer]
 4. **테스트 결과 저장**:
    ```
    # 폴더명 형식: test-results/[YYYYMMDDHHmm] (예: test-results/202512081430)
-   .jjiban/{project}/wbs/{WP-ID}/{ACT-ID}/{TSK-ID}/test-results/[timestamp]/
+   .jjiban/projects/{project}/tasks/{TSK-ID}/test-results/[timestamp]/
    ├── e2e/
    │   ├── e2e-test-report.html    ← HTML 시각화 보고서 (스크린샷 포함)
    │   ├── e2e-test-results.md     ← 마크다운 결과서
@@ -310,7 +310,7 @@ personas: [backend-architect, frontend-architect, quality-engineer]
    ```
 
 5. **HTML 보고서 생성** ⭐:
-   - **템플릿**: `@.claude/includes/e2e-html-report-template.html` 사용
+   - **템플릿**: `@.jjiban/templates/e2e-html-report.html` 사용
    - **출력 파일**: `e2e-test-report.html`
    - **포함 내용**:
      - 테스트 요약 (총 테스트 수, 통과/실패/스킵)
@@ -344,8 +344,8 @@ personas: [backend-architect, frontend-architect, quality-engineer]
    - 커버리지 데이터
 
 2. **테스트 결과서 작성** (Task 폴더에 저장):
-   - **TDD 실행 시**: `@.claude/includes/tdd-test-results-template.md` 기반으로 `070-tdd-test-results.md` 생성
-   - **E2E 실행 시**: `@.claude/includes/e2e-test-results-template.md` 기반으로 `070-e2e-test-results.md` 생성
+   - **TDD 실행 시**: `@.jjiban/templates/070-tdd-test-results.md` 기반으로 `070-tdd-test-results.md` 생성
+   - **E2E 실행 시**: `@.jjiban/templates/070-e2e-test-results.md` 기반으로 `070-e2e-test-results.md` 생성
    - 결과서 파일은 **Task 폴더 루트**에 저장 (예: `TSK-01-01-02/070-e2e-test-results.md`)
 
 3. **테스트 아티팩트 수집 및 저장** ⭐:
@@ -357,7 +357,7 @@ personas: [backend-architect, frontend-architect, quality-engineer]
      cp .playwright-mcp/e2e-*.png [Task-ID]/test-results/[timestamp]/e2e/screenshots/
      ```
    - **HTML 보고서 생성**:
-     - 템플릿: `@.claude/includes/e2e-html-report-template.html`
+     - 템플릿: `@.jjiban/templates/e2e-html-report.html`
      - 출력: `test-results/[timestamp]/e2e/e2e-test-report.html`
      - 스크린샷 상대 경로: `./screenshots/e2e-001-*.png`
    - **TDD 커버리지 복사** (실행 시):
@@ -612,56 +612,8 @@ WP 또는 ACT 단위 입력 시, 해당 범위 내 development Task들에 대해
 jjiban 프로젝트 - Workflow Command
 author: 장종익
 Command: wf:test
-Version: 4.0
+Version: 1.0
 
-Changes (v4.0):
-- 테스트-수정 자동화 루프 추가 (무한 루프 방지)
-  - TDD: 최대 5회 재시도, 실패 시 코드 자동 수정
-  - E2E: 최대 5회 재시도, 실패 시 코드 자동 수정
-- 에러 유형별 자동 수정 전략 표 추가
-  - TDD: AssertionError, TypeError, ReferenceError, Mock 실패, Async 오류
-  - E2E: Locator 실패, Timeout, Assertion, Network, Element 없음
-- 에러 케이스 추가 (TDD/E2E 5회 재시도 초과)
-- 출력 예시에 테스트-수정 루프 진행 상황 추가
-
-Changes (v3.0):
-- 분할된 설계 문서 참조로 변경
-  - 020-detail-design.md (상세설계 본문)
-  - 025-traceability-matrix.md (추적성 매트릭스)
-  - 026-test-specification.md (테스트 명세)
-- 1단계 설계 문서 분석 섹션 업데이트
-- 2단계/3단계 테스트 참조 문서 변경
-- 에러 케이스 추가 (테스트 명세 없음, 추적성 매트릭스 없음)
-- 출력 예시 업데이트
-
-Changes (v2.1):
-- 테스트 결과서 출력 위치 명확화
-  - 070-xxx-test-results.md는 Task 폴더 루트에 저장
-  - test-results/[timestamp]/ 폴더에는 아티팩트만 저장 (HTML, 스크린샷, JSON)
-- Playwright MCP 스크린샷 복사 단계 추가
-  - .playwright-mcp/ → test-results/[timestamp]/e2e/screenshots/
-- 4단계 "테스트 아티팩트 수집 및 저장" 단계 명시
-- 출력 예시 업데이트
-
-Changes (v2.0):
-- WP/ACT 계층 입력 지원 추가
-- 병렬 처리 기능 추가 (Task 도구 활용)
-- hierarchy-input, parallel-processing frontmatter 추가
-- 계층 입력 처리 공통 모듈 참조 추가
-- WP/ACT 단위 병렬 처리 출력 예시 추가
-- personas 오타 수정 (uality-engineer → quality-engineer)
-
-Changes (v1.1):
-- E2E HTML 보고서 생성 기능 추가
-  - 템플릿: @.claude/includes/e2e-html-report-template.html
-  - 스크린샷 갤러리 및 클릭 확대 기능
-  - 요구사항 커버리지 시각화
-  - 실패 상세 정보 (에러 메시지 + 스크린샷)
-- 테스트 결과 저장 구조 개선
-
-Purpose:
-- /wf:build에서 TDD/E2E 테스트 부분만 분리
-- 테스트만 독립적으로 실행 가능
-- 상태 변경 없이 반복 실행 가능
-- 테스트 결과서 자동 생성 (HTML + MD)
+Changes (v1.0):
+- 생성
 -->

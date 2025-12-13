@@ -9,7 +9,8 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Task]
 
 # /wf:done - 작업 최종 완료
 
-> **상태 확정**: `[xx] 완료` 상태 유지 및 최종 마무리
+> **상태 전환**: `[vf] 검증` → `[xx] 완료` (development, defect)
+> **상태 전환**: `[im] 구현` → `[xx] 완료` (infrastructure)
 > **적용 category**: development, defect, infrastructure
 
 ## 사용법
@@ -29,23 +30,23 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Task]
 
 | 입력 타입 | 처리 방식 | 상태 필터 |
 |-----------|----------|----------|
-| `TSK-XX-XX-XX` | 단일 Task 처리 | `[xx]` 완료 |
-| `ACT-XX-XX` | ACT 내 Task 병렬 처리 | `[xx]` 상태만 |
-| `WP-XX` | WP 내 Task 병렬 처리 | `[xx]` 상태만 |
+| `TSK-XX-XX-XX` | 단일 Task 처리 | `[vf]` 검증, `[im]` 구현 |
+| `ACT-XX-XX` | ACT 내 Task 병렬 처리 | `[vf]`, `[im]` 상태만 |
+| `WP-XX` | WP 내 Task 병렬 처리 | `[vf]`, `[im]` 상태만 |
 
-## 상태 규칙
+## 상태 전환 규칙
 
-| category | 현재 상태 | 액션 | 생성 문서 |
-|----------|----------|------|----------|
-| development | `[xx]` 완료 | 매뉴얼 작성 | `080-manual.md` |
-| defect | `[xx]` 완료 | 완료 확인 | - |
-| infrastructure | `[xx]` 완료 | 완료 확인 | - |
+| category | 현재 상태 | 다음 상태 | 생성 문서 |
+|----------|----------|----------|----------|
+| development | `[vf]` 검증 | `[xx]` 완료 | `080-manual.md` |
+| defect | `[vf]` 검증 | `[xx]` 완료 | - |
+| infrastructure | `[im]` 구현 | `[xx]` 완료 | - |
 
 ## 문서 경로
 
 @.claude/includes/wf-common.md
 
-**Task 폴더**: `.jjiban/{project}/wbs/{WP-ID}/{ACT-ID}/{TSK-ID}/`
+**Task 폴더**: `.jjiban/projects/{project}/tasks/{TSK-ID}/`
 
 ---
 
@@ -53,7 +54,9 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Task]
 
 ### 1단계: Task 검증
 1. WBS에서 Task 찾기
-2. 현재 상태가 `[xx]` 완료인지 확인
+2. category 확인 및 현재 상태 검증:
+   - development, defect: `[vf]` 검증 상태인지 확인
+   - infrastructure: `[im]` 구현 상태인지 확인
 
 ### 2단계: 완료 체크리스트 검증
 
@@ -219,8 +222,10 @@ Category: [category]
 ═══════════════════════════════════════════════════════
 ```
 
-### 5단계: WBS 최종 업데이트
-1. `[xx]` 상태 확정
+### 5단계: WBS 상태 전환 및 업데이트
+1. 상태 전환:
+   - development, defect: `[vf]` → `[xx]`
+   - infrastructure: `[im]` → `[xx]`
 2. 완료일 기록
 3. WBS 파일 저장
 
@@ -259,19 +264,20 @@ Task TSK-01-01-01 완료
 
 | 에러 | 메시지 |
 |------|--------|
-| 잘못된 상태 | `[ERROR] 완료 상태가 아닙니다. 현재 상태: [상태]` |
+| 잘못된 상태 (dev/defect) | `[ERROR] 검증 상태가 아닙니다. 현재 상태: [상태]` |
+| 잘못된 상태 (infra) | `[ERROR] 구현 상태가 아닙니다. 현재 상태: [상태]` |
 | 미완료 항목 | `[WARNING] 일부 문서가 없습니다: [문서목록]` |
 
 ## WP/ACT 단위 병렬 처리
 
-WP 또는 ACT 단위 입력 시, 해당 범위 내 `[xx]` 상태 Task들의 완료 처리를 병렬로 실행합니다.
+WP 또는 ACT 단위 입력 시, 해당 범위 내 `[vf]`/`[im]` 상태 Task들의 완료 처리를 병렬로 실행합니다.
 
 ```
 [wf:done] 워크플로우 시작 (병렬 처리)
 
 입력: WP-01 (Work Package)
 범위: Core - Issue Management
-대상 Task: 12개 (상태 필터 적용: 10개)
+대상 Task: 12개 (상태 필터 [vf]/[im] 적용: 10개)
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -287,7 +293,13 @@ WP 또는 ACT 단위 입력 시, 해당 범위 내 `[xx]` 상태 Task들의 완�
 📊 처리 결과 요약:
 ├── 성공: 10개
 ├── 실패: 0개
-└── 스킵: 2개 (완료 상태 아님)
+└── 스킵: 2개 ([vf]/[im] 상태 아님)
+
+상태 전환:
+├── TSK-01-01-01: [vf] → [xx] ✅
+├── TSK-01-01-02: [vf] → [xx] ✅
+├── TSK-01-02-01: [im] → [xx] ✅ (infrastructure)
+└── ...
 
 생성된 문서 (development만):
 ├── TSK-01-01-01/080-manual.md
@@ -304,60 +316,13 @@ WP 또는 ACT 단위 입력 시, 해당 범위 내 `[xx]` 상태 Task들의 완�
 
 ---
 
-## 워크플로우 전체 다이어그램
-
-### development (10단계)
-```
-[ ] Todo
-  │ /wf:start
-  ▼
-[bd] 기본설계
-  │ /wf:draft
-  ▼
-[dd] 상세설계
-  │ /wf:plan
-  ▼
-[dr] 설계리뷰 ◄──┐
-  │              │ /wf:review → /wf:revise
-  │ /wf:approved │
-  ▼              │
-[im] 구현 ───────┘
-  │ /wf:build
-  ▼
-[cr] 코드리뷰 ◄──┐
-  │              │ /wf:audit → /wf:patch
-  │ /wf:approved │
-  ▼              │
-[ts] 통합테스트 ─┘
-  │ /wf:verify
-  ▼
-[xx] 완료
-  │ /wf:done
-  ▼
-  완료!
-```
-
----
 
 <!--
 jjiban 프로젝트 - Workflow Command
 author: 장종익 
 Command: wf:done
-Version: 3.0
+Version: 1.0
 
-Changes (v3.0):
-- 분할된 설계 문서 지원으로 변경
-  - 020-detail-design.md (상세설계 본문)
-  - 025-traceability-matrix.md (추적성 매트릭스)
-  - 026-test-specification.md (테스트 명세)
-- 2단계 development 체크리스트에 분할 문서 추가
-- 4단계 산출물 목록에 분할 문서 추가
-Changes (v2.0):
-- WP/ACT 계층 입력 지원 추가
-- 병렬 처리 기능 추가 (Task 도구 활용)
-- hierarchy-input, parallel-processing frontmatter 추가
-- 계층 입력 처리 공통 모듈 참조 추가
-- WP/ACT 단위 병렬 처리 출력 예시 추가
 Changes (v1.0):
-- 초기 버전
+- 생성
 -->

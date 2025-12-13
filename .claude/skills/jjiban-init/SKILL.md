@@ -37,12 +37,13 @@ python scripts/init.py --path /path/to/project --project my-project
 │   ├── 030-implementation.md
 │   └── (test templates)
 │
-└── [project-id]/          # Project folder
-    ├── project.json       # Project metadata
-    ├── team.json          # Team members
-    ├── wbs.md             # WBS (single source of truth)
-    └── tasks/             # Task documents
-        └── TSK-XX-XX/
+└── projects/              # Projects folder
+    └── [project-id]/      # Project folder
+        ├── project.json   # Project metadata
+        ├── team.json      # Team members
+        ├── wbs.md         # WBS (single source of truth)
+        └── tasks/         # Task documents
+            └── TSK-XX-XX/
 ```
 
 ## Bundled Resources

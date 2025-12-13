@@ -10,8 +10,8 @@ mcp-servers: [playwright]
 
 # /wf:verify - 통합테스트 시작
 
-> **상태 전환**: `[im] 구현` → `[ts] 통합테스트` (development)
-> **상태 전환**: `[fx] 수정` → `[ts] 테스트` (defect)
+> **상태 전환**: `[im] 구현` → `[vf] 검증` (development)
+> **상태 전환**: `[fx] 수정` → `[vf] 검증` (defect)
 > **적용 category**: development, defect
 
 ## 사용법
@@ -39,21 +39,21 @@ mcp-servers: [playwright]
 
 | category | 현재 상태 | 다음 상태 | 생성 문서 |
 |----------|----------|----------|----------|
-| development | `[im]` 구현 | `[ts]` 통합테스트 | `070-integration-test.md` |
-| defect | `[fx]` 수정 | `[ts]` 테스트 | `070-test-results.md` |
+| development | `[im]` 구현 | `[vf]` 검증 | `070-integration-test.md` |
+| defect | `[fx]` 수정 | `[vf]` 검증 | `070-test-results.md` |
 
 ## 문서 경로
 
 @.claude/includes/wf-common.md
 
-**Task 폴더**: `.jjiban/{project}/wbs/{WP-ID}/{ACT-ID}/{TSK-ID}/`
+**Task 폴더**: `.jjiban/projects/{project}/tasks/{TSK-ID}/`
 
 ---
 
 ## 실행 과정
 
 ### 1단계: Task 검증
-1. Task JSON에서 Task 찾기 (`.jjiban/{project}/wbs/{WP-ID}/{ACT-ID}/{TSK-ID}/task.json`)
+1. Task JSON에서 Task 찾기 (`.jjiban/projects/{project}/tasks/{TSK-ID}/task.json`)
 2. category가 `development` 또는 `defect`인지 확인
 3. 현재 상태 확인:
    - development: `[im]` 구현
@@ -91,7 +91,7 @@ mcp-servers: [playwright]
 | Category | development |
 | 테스트 일시 | [오늘 날짜/시간] |
 | 테스트 환경 | [환경 정보] |
-| 상태 | [ts] 통합테스트 |
+| 상태 | [vf] 검증 |
 
 ---
 
@@ -192,7 +192,7 @@ mcp-servers: [playwright]
 | Category | defect |
 | 테스트 일시 | [오늘 날짜/시간] |
 | 원본 결함 | [결함 설명] |
-| 상태 | [ts] 테스트 |
+| 상태 | [vf] 검증 |
 
 ---
 
@@ -237,7 +237,7 @@ mcp-servers: [playwright]
 ```
 
 ### 5단계: Task JSON 상태 업데이트
-1. `[im]` → `[ts]` (development) 또는 `[fx]` → `[ts]` (defect) 상태 변경
+1. `[im]` → `[vf]` (development) 또는 `[fx]` → `[vf]` (defect) 상태 변경
 2. updated_at 필드 업데이트
 3. Task JSON 파일 저장
 
@@ -251,7 +251,7 @@ mcp-servers: [playwright]
 
 Task: TSK-01-01-01
 Category: development
-상태 전환: [im] 구현 → [ts] 통합테스트
+상태 전환: [im] 구현 → [vf] 검증
 
 구현 검증:
 ├── 030-implementation.md ✅
@@ -275,7 +275,7 @@ Category: development
 
 Task: TSK-02-01-01
 Category: defect
-상태 전환: [fx] 수정 → [ts] 테스트
+상태 전환: [fx] 수정 → [vf] 검증
 
 수정 검증:
 ├── 030-implementation.md ✅
@@ -330,9 +330,9 @@ WP 또는 ACT 단위 입력 시, 해당 범위 내 `[im]`/`[fx]` 상태 Task들�
 └── 스킵: 0개
 
 상태 전환:
-├── TSK-01-01-01: [im] → [ts] ✅
-├── TSK-01-01-02: [im] → [ts] ✅
-├── TSK-01-02-01: [im] → [ts] ✅
+├── TSK-01-01-01: [im] → [vf] ✅
+├── TSK-01-01-02: [im] → [vf] ✅
+├── TSK-01-02-01: [im] → [vf] ✅
 └── ...
 
 생성된 문서:
@@ -355,18 +355,8 @@ WP 또는 ACT 단위 입력 시, 해당 범위 내 `[im]`/`[fx]` 상태 Task들�
 jjiban 프로젝트 - Workflow Command
 author: 장종익 
 Command: wf:verify
-Version: 3.0
+Version: 1.0
 
-Changes (v3.0):
-- WP/ACT 계층 입력 지원 추가
-- 병렬 처리 기능 추가 (Task 도구 활용)
-- hierarchy-input, parallel-processing frontmatter 추가
-- 계층 입력 처리 공통 모듈 참조 추가
-- WP/ACT 단위 병렬 처리 출력 예시 추가
-Changes (v2.0):
-- PRD 2.4 워크플로우 반영
-- 상태 전환: [ts] → [xx] 에서 [im] → [ts] 또는 [fx] → [ts]로 변경
-- [cr] 코드리뷰 상태 제거됨
-- development: 070-integration-test.md 생성
-- defect: 070-test-results.md 생성
+Changes (v1.0):
+- 생성
 -->

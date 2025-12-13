@@ -59,7 +59,7 @@ parallel-processing: true
 
 **Task 폴더 구조**:
 ```
-.jjiban/{project}/wbs/{WP-ID}/{ACT-ID}/{TSK-ID}/
+.jjiban/projects/{project}/tasks/{TSK-ID}/
 ├── task.json
 ├── 010-basic-design.md     ← 입력 (필수)
 ├── 011-ui-design.md        ← 출력 (화면설계 문서)

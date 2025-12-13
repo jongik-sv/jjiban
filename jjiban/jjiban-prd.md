@@ -4,7 +4,7 @@
 
 | 항목 | 내용 |
 |------|------|
-| 문서 버전 | 5.0 |
+| 문서 버전 | 5.1 |
 | 작성일 | 2025-12-13 |
 | 상태 | Draft |
 
@@ -185,15 +185,17 @@ Project (프로젝트)
 
 ```json
 {
+  "version": "1.2",
   "columns": [
-    { "id": "todo", "name": "Todo", "symbols": ["[ ]"], "order": 1, "color": "#gray" },
-    { "id": "design", "name": "Design", "symbols": ["[bd]"], "order": 2, "color": "#blue" },
-    { "id": "detail", "name": "Detail", "symbols": ["[dd]", "[an]", "[ds]"], "order": 3, "color": "#purple" },
-    { "id": "implement", "name": "Implement", "symbols": ["[im]", "[fx]"], "order": 4, "color": "#orange" },
-    { "id": "verify", "name": "Verify", "symbols": ["[ts]"], "order": 5, "color": "#yellow" },
-    { "id": "done", "name": "Done", "symbols": ["[xx]"], "order": 6, "color": "#green" }
+    { "id": "todo", "codes": [" "], "name": "Todo", "order": 1, "color": "#6b7280" },
+    { "id": "design", "codes": ["bd"], "name": "Design", "order": 2, "color": "#3b82f6" },
+    { "id": "detail", "codes": ["dd", "an"], "name": "Detail", "order": 3, "color": "#8b5cf6" },
+    { "id": "implement", "codes": ["im", "fx"], "name": "Implement", "order": 4, "color": "#f59e0b" },
+    { "id": "verify", "codes": ["vf"], "name": "Verify", "order": 5, "color": "#eab308" },
+    { "id": "done", "codes": ["xx"], "name": "Done", "order": 6, "color": "#22c55e" }
   ]
 }
+
 ```
 
 **칸반 컬럼 구조**
@@ -262,27 +264,27 @@ Project (프로젝트)
 | 명령어 | 현재 상태 | 다음 상태 | 설명 | 생성 문서 |
 |--------|----------|----------|------|----------|
 | `start` | `todo` | `bd` | 기본설계 시작 | `010-basic-design.md` |
-| `draft` | `bd` | `dd` | 상세설계 시작 | `020-detail-design.md` |
+| `draft` | `bd` | `dd` | 상세설계 시작 | `020-detail-design.md`, `025-traceability-matrix.md`, `026-test-specification.md` |
 | `build` | `dd` | `im` | 구현 시작 | `030-implementation.md` |
-| `verify` | `im` | `ts` | 통합테스트 시작 | `070-integration-test.md` |
-| `done` | `ts` | `xx` | 작업 완료 | `080-manual.md` |
+| `verify` | `im` | `vf` | 통합테스트 시작 | `070-integration-test.md` |
+| `done` | `vf` | `xx` | 작업 완료 | `080-manual.md` |
 
 **defect 워크플로우 규칙**
 
 | 명령어 | 현재 상태 | 다음 상태 | 설명 | 생성 문서 |
 |--------|----------|----------|------|----------|
 | `start` | `todo` | `an` | 결함 분석 시작 | `010-defect-analysis.md` |
-| `analyze` | `an` | `fx` | 수정 시작 | `030-implementation.md` |
-| `verify` | `fx` | `ts` | 회귀 테스트 시작 | `070-test-results.md` |
-| `done` | `ts` | `xx` | 수정 완료 | - |
+| `fix` | `an` | `fx` | 수정 시작 | `030-implementation.md` |
+| `verify` | `fx` | `vf` | 회귀 테스트 시작 | `070-test-results.md` |
+| `done` | `vf` | `xx` | 수정 완료 | - |
 
 **infrastructure 워크플로우 규칙**
 
 | 명령어 | 현재 상태 | 다음 상태 | 설명 | 생성 문서 |
 |--------|----------|----------|------|----------|
-| `start` | `todo` | `ds` | 기술 설계 시작 | `010-tech-design.md` |
+| `start` | `todo` | `dd` | 기술 설계 시작 | `010-tech-design.md` |
 | `skip` | `todo` | `im` | 설계 생략, 바로 구현 | - |
-| `build` | `ds` | `im` | 구현 시작 | `030-implementation.md` |
+| `build` | `dd` | `im` | 구현 시작 | `030-implementation.md` |
 | `done` | `im` | `xx` | 작업 완료 | - |
 
 #### 3.2.5 상태 내 액션 (workflow-actions.json)
@@ -294,6 +296,7 @@ Project (프로젝트)
 | `ui` | `[bd]` | development | 화면설계 작성 | `011-ui-design.md` | X |
 | `review` | `[dd]` | development | LLM 설계 리뷰 | `021-design-review-{llm}-{n}.md` | O |
 | `apply` | `[dd]` | development | 리뷰 내용 반영 | `020-detail-design.md` | O |
+| `test` | `[im]` | development | TDD/E2E 테스트 실행 | `070-tdd-test-results.md`, `070-e2e-test-results.md` | O |
 | `audit` | `[im]`, `[fx]` | 전체 | LLM 코드 리뷰 | `031-code-review-{llm}-{n}.md` | O |
 | `patch` | `[im]`, `[fx]` | 전체 | 리뷰 내용 반영 | `030-implementation.md` | O |
 
@@ -325,13 +328,13 @@ class WorkflowEngine {
 #### 3.2.7 카테고리별 흐름도
 
 ```
-development:     [ ] → [bd] → [dd] → [im] → [ts] → [xx]
+development:     [ ] → [bd] → [dd] → [im] → [vf] → [xx]
                   │     │      │      │      │      │
 칸반 컬럼:       Todo Design Detail  Impl  Verify Done
                   │     ╳      │      │      │      │
-defect:          [ ] ──────→ [an] → [fx] → [ts] → [xx]
+defect:          [ ] ──────→ [an] → [fx] → [vf] → [xx]
                   │     ╳      │      │      ╳      │
-infrastructure:  [ ] ──────→ [ds]?→ [im] ──────→ [xx]
+infrastructure:  [ ] ──────→ [dd]?→ [im] ──────→ [xx]
 ```
 
 #### 3.2.8 확장 시나리오
@@ -372,15 +375,16 @@ infrastructure:  [ ] ──────→ [ds]?→ [im] ──────→ [
 .jjiban/
 ├── settings/              # 전역 설정
 ├── templates/             # 문서 템플릿
-└── [project-id]/
-    ├── project.json       # 프로젝트 메타데이터
-    ├── team.json          # 팀원 목록
-    ├── wbs.md             # WBS 통합 파일
-    └── tasks/             # Task 문서 폴더
-        └── {TSK-ID}/
-            ├── 010-basic-design.md
-            ├── 020-detail-design.md
-            └── 030-implementation.md
+└── projects/              # 프로젝트 폴더
+    └── [project-id]/
+        ├── project.json   # 프로젝트 메타데이터
+        ├── team.json      # 팀원 목록
+        ├── wbs.md         # WBS 통합 파일
+        └── tasks/         # Task 문서 폴더
+            └── {TSK-ID}/
+                ├── 010-basic-design.md
+                ├── 020-detail-design.md
+                └── 030-implementation.md
 ```
 
 #### 3.3.2 Task 워크플로우 문서
@@ -406,9 +410,13 @@ infrastructure:  [ ] ──────→ [ds]?→ [im] ──────→ [
 | | 화면설계 | `011-ui-design.md` |
 | | 상세설계 | `020-detail-design.md` |
 | | 설계 리뷰 | `021-design-review-{llm}-{n}.md` |
+| | 추적성 매트릭스 | `025-traceability-matrix.md` |
+| | 테스트 명세 | `026-test-specification.md` |
 | | 구현 | `030-implementation.md` |
 | | 코드 리뷰 | `031-code-review-{llm}-{n}.md` |
 | | 통합테스트 | `070-integration-test.md` |
+| | TDD 테스트 결과 | `070-tdd-test-results.md` |
+| | E2E 테스트 결과 | `070-e2e-test-results.md` |
 | | 매뉴얼 | `080-manual.md` |
 | **defect** | | |
 | | 분석 | `010-defect-analysis.md` |
@@ -457,16 +465,15 @@ infrastructure:  [ ] ──────→ [ds]?→ [im] ──────→ [
 
 #### 3.4.3 LLM CLI 직접 통합
 
-LLM CLI가 `.jjiban/` 폴더의 JSON 파일을 직접 수정할 수 있습니다.
+LLM CLI가 `.jjiban/` 폴더의 파일을 직접 수정할 수 있습니다.
 
 ```
 사용자: "TSK-01-01 상태를 im으로 변경해줘"
 
 Claude Code:
-1. .jjiban/wbs/WP-01/ACT-01/TSK-01-01.json 읽기
-2. status 필드를 "im"으로 변경
-3. history에 변경 이력 추가
-4. 파일 저장
+1. .jjiban/projects/[project-id]/wbs.md 읽기
+2. TSK-01-01의 status 필드를 "[im]"으로 변경
+3. 파일 저장
 ```
 
 #### 3.4.4 웹 터미널
@@ -548,23 +555,25 @@ Claude Code:
 │   ├── 070-integration-test.md
 │   └── 080-manual.md
 │
-└── [project-id]/                  # 프로젝트 폴더
-    ├── project.json               # 프로젝트 메타데이터
-    ├── team.json                  # 팀원 목록
-    ├── wbs.md                     # WBS 통합 파일 (유일한 소스)
-    │
-    └── tasks/                     # Task 문서 폴더
-        ├── TSK-01-01/             # 3단계: WP-ACT 없이 직접
-        │   ├── 010-basic-design.md
-        │   └── 020-detail-design.md
-        └── TSK-01-01-01/          # 4단계: WP-ACT-TSK
-            ├── 010-basic-design.md
-            └── 020-detail-design.md
+└── projects/                      # 프로젝트 폴더
+    └── [project-id]/              # 개별 프로젝트
+        ├── project.json           # 프로젝트 메타데이터
+        ├── team.json              # 팀원 목록
+        ├── wbs.md                 # WBS 통합 파일 (유일한 소스)
+        │
+        └── tasks/                 # Task 문서 폴더
+            ├── TSK-01-01/         # 3단계: WP-ACT 없이 직접
+            │   ├── 010-basic-design.md
+            │   └── 020-detail-design.md
+            └── TSK-01-01-01/      # 4단계: WP-ACT-TSK
+                ├── 010-basic-design.md
+                └── 020-detail-design.md
 ```
 
 > **wbs.md**: WP, ACT, TSK의 모든 메타데이터를 단일 마크다운 파일로 관리. LLM이 한 번에 전체 구조를 파악 가능
 > **3단계 구조**: Project → WP → TSK (소규모 프로젝트)
 > **4단계 구조**: Project → WP → ACT → TSK (대규모 프로젝트)
+> **projects 폴더**: 모든 프로젝트가 여기에 저장됨
 > **settings 폴더**: 전역 설정. 없으면 기본 설정을 메모리에서 생성
 
 ### 5.2 settings/projects.json (프로젝트 목록)
@@ -991,6 +1000,7 @@ WBS 트리 목업을 기반으로 한 다크 블루 테마를 기본 테마로 �
 | `ui` | 기본설계 | 화면설계 작성, 화면설계 문서 생성 |
 | `review` | 상세설계 | LLM 설계 리뷰 실행, 리뷰문서 생성 |
 | `apply` | 상세설계 | 리뷰 내용을 설계서에 반영 |
+| `test` | 구현 | TDD/E2E 테스트 실행, 테스트 결과서 생성 |
 | `audit` | 구현 | LLM 코드 리뷰 실행, 리뷰문서 생성 |
 | `patch` | 구현 | 리뷰 내용을 코드에 반영 |
 
@@ -1001,7 +1011,7 @@ WBS 트리 목업을 기반으로 한 다크 블루 테마를 기본 테마로 �
 | 명령어 | 설명 | 상태 전환 |
 |--------|------|----------|
 | `start` | 결함 분석 시작 | Todo → 분석 |
-| `analyze` | 수정 시작 | 분석 → 수정 |
+| `fix` | 수정 시작 | 분석 → 수정 |
 | `verify` | 회귀 테스트 시작 | 수정 → 테스트 |
 | `done` | 수정 완료 | 테스트 → 완료 |
 
@@ -1035,12 +1045,11 @@ WBS 트리 목업을 기반으로 한 다크 블루 테마를 기본 테마로 �
 |------|------|----------------|-----------|
 | `[ ]` | Todo (대기) | 공통 | Todo |
 | `[bd]` | 기본설계 | development | Design |
-| `[dd]` | 상세설계 | development | Detail |
+| `[dd]` | 상세설계/설계 | development, infrastructure | Detail |
 | `[an]` | 분석 | defect | Detail |
-| `[ds]` | 설계 | infrastructure | Detail |
 | `[im]` | 구현 | development, infrastructure | Implement |
 | `[fx]` | 수정 | defect | Implement |
-| `[ts]` | 테스트 | development, defect | Verify |
+| `[vf]` | 검증 | development, defect | Verify |
 | `[xx]` | 완료 | 공통 | Done |
 
 ---
@@ -1049,11 +1058,4 @@ WBS 트리 목업을 기반으로 한 다크 블루 테마를 기본 테마로 �
 
 | 버전 | 날짜 | 변경 내용 |
 |------|------|-----------|
-| 5.0 | 2025-12-13 | **디렉토리 구조 개선**: wbs.md 단일 파일로 WP/ACT/TSK 메타데이터 통합, index.json 제거, settings 폴더를 전역으로 이동, templates 폴더 추가, 3단계/4단계 WBS 구조 선택 지원, Task 문서는 tasks/ 폴더로 분리 |
-| 4.0 | 2026-12-12 | **유연한 워크플로우 시스템**: 하드코딩된 워크플로우 제거 → 데이터 기반 규칙 엔진으로 전환, config 폴더 및 설정 파일(kanban-columns.json, categories.json, workflow-rules.json, workflow-actions.json) 추가, 카테고리/워크플로우 관리 화면 추가, project.json에서 statusFlow 제거 |
-| 3.2 | 2026-12-12 | 테마 시스템 섹션 추가: Dark Blue 기본 테마, 다중 테마 지원, 계층 구조 색상 정의 |
-| 3.1 | 2026-12-10 | Sub-Task 지원 추가: Task → Task 계층 허용, 진행 중 Task 세분화 가능 |
-| 3.0 | 2026-12-10 | 파일 기반 아키텍처로 전면 재작성: DB 제거, 분산 JSON 도입, 인증 제거, npx 로컬 실행 방식 |
-| 2.6 | 2026-12-09 | 6단계 통합 칸반 구조 추가 |
-| 2.5 | 2026-12-08 | 문서 번호 체계 3자리로 변경 |
-| 2.4 | 2026-12-07 | 워크플로우 단순화 |
+| 0.1 | 2026-12-13 | 초기 버전 |

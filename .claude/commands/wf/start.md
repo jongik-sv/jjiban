@@ -9,7 +9,7 @@ parallel-processing: true
 
 # /wf:start - 워크플로우 시작
 
-> **상태 전환**: `[ ] Todo` → `[bd] 기본설계` | `[an] 분석` | `[ds] 설계`
+> **상태 전환**: `[ ] Todo` → `[bd] 기본설계` | `[an] 분석` | `[dd] 상세설계`
 >
 > **계층 입력 지원**: Work Package, Activity, Task 단위 입력 가능 (WP/ACT 입력 시 하위 Task 병렬 처리)
 
@@ -45,8 +45,8 @@ parallel-processing: true
 | category | 현재 상태 | 다음 상태 | 생성 문서 |
 |----------|----------|----------|----------|
 | development | `[ ]` Todo | `[bd]` 기본설계 | `010-basic-design.md` |
-| defect | `[ ]` Todo | `[an]` 분석 | `defect-analysis.md` |
-| infrastructure | `[ ]` Todo | `[ds]` 설계 | `tech-design.md` (선택) |
+| defect | `[ ]` Todo | `[an]` 분석 | `010-defect-analysis.md` |
+| infrastructure | `[ ]` Todo | `[dd]` 상세설계 | `tech-design.md` (선택) |
 
 ---
 
@@ -54,7 +54,7 @@ parallel-processing: true
 
 ### 1단계: Task 정보 수집
 
-1. **Task JSON에서 Task 찾기**: `.jjiban/{project}/wbs/{WP-ID}/{ACT-ID}/{TSK-ID}/task.json`
+1. **Task JSON에서 Task 찾기**: `.jjiban/projects/{project}/tasks/{TSK-ID}/task.json`
 2. **수집할 정보**:
    - Task ID, Task명, category
    - 상위 계층 (WP-ID, ACT-ID)
@@ -84,7 +84,7 @@ parallel-processing: true
 
 #### 2.1 PRD 참조 섹션 읽기
 
-1. `.jjiban/{project}/project.json` 또는 `.jjiban/{project}/prd.md` 열기
+1. `.jjiban/projects/{project}/project.json` 또는 `.jjiban/projects/{project}/prd.md` 열기
 2. WBS에서 추출한 PRD 섹션 번호로 해당 내용 찾기
 3. **추출할 내용** (비즈니스 관점):
    - 해당 섹션의 기능 설명
@@ -96,7 +96,7 @@ parallel-processing: true
 
 #### 2.2 TRD 참조 내용 읽기 (참고용)
 
-1. `.jjiban/{project}/trd.md` 열기
+1. `.jjiban/projects/{project}/trd.md` 열기
 2. Task와 관련된 기술 요구사항 참고 (상세설계 단계에서 활용)
 
 ---
@@ -133,13 +133,13 @@ parallel-processing: true
 
 **Task 폴더 경로**:
 ```
-.jjiban/{project}/wbs/{WP-ID}/{ACT-ID}/{TSK-ID}/
+.jjiban/projects/{project}/tasks/{TSK-ID}/
 ```
 
 **예시**:
-- Task 폴더: `.jjiban/jjiban/wbs/WP-01/ACT-01-01/TSK-01-01-01/`
-- Task JSON: `.jjiban/jjiban/wbs/WP-01/ACT-01-01/TSK-01-01-01/task.json`
-- 설계 문서: `.jjiban/jjiban/wbs/WP-01/ACT-01-01/TSK-01-01-01/010-basic-design.md`
+- Task 폴더: `.jjiban/projects/jjiban/tasks/TSK-01-01-01/`
+- Task JSON: `.jjiban/projects/jjiban/tasks/TSK-01-01-01/task.json`
+- 설계 문서: `.jjiban/projects/jjiban/tasks/TSK-01-01-01/010-basic-design.md`
 
 ---
 
@@ -304,18 +304,18 @@ flowchart TD
 ---
 
 ## 관련 문서
-- 프로젝트 정보: `.jjiban/{project}/project.json`
-- PRD: `.jjiban/{project}/prd.md`
-- TRD: `.jjiban/{project}/trd.md`
+- 프로젝트 정보: `.jjiban/projects/{project}/project.json`
+- PRD: `.jjiban/projects/{project}/prd.md`
+- TRD: `.jjiban/projects/{project}/trd.md`
 
 
 #### defect 카테고리
 ```
 [Task-ID]/
-└── defect-analysis.md  # 결함 분석 문서
+└── 010-defect-analysis.md  # 결함 분석 문서
 ```
 
-**defect-analysis.md 템플릿**:
+**010-defect-analysis.md 템플릿**:
 ```markdown
 # 결함 분석: [Task명]
 
@@ -360,10 +360,10 @@ flowchart TD
 #### infrastructure 카테고리
 ```
 [Task-ID]/
-└── tech-design.md  # 기술 설계 문서 (선택)
+└── 010-tech-design.md  # 기술 설계 문서 (선택)
 ```
 
-**tech-design.md 템플릿**:
+**010-tech-design.md 템플릿**:
 ```markdown
 # 기술 설계: [Task명]
 
@@ -372,7 +372,7 @@ flowchart TD
 |------|------|
 | Task ID | [Task-ID] |
 | Category | infrastructure |
-| 상태 | [ds] 설계 |
+| 상태 | [dd] 상세설계 |
 
 ## 1. 목적
 [인프라/리팩토링 목적]
@@ -409,8 +409,8 @@ flowchart TD
 
 ### 6단계: Task JSON 상태 업데이트
 
-1. Task JSON 파일 열기: `.jjiban/{project}/wbs/{WP-ID}/{ACT-ID}/{TSK-ID}/task.json`
-2. status 필드 변경: `"[ ]"` → `"[bd]"` | `"[an]"` | `"[ds]"`
+1. Task JSON 파일 열기: `.jjiban/projects/{project}/tasks/{TSK-ID}/task.json`
+2. status 필드 변경: `"[ ]"` → `"[bd]"` | `"[an]"` | `"[dd]"`
 3. updated_at 필드 업데이트
 4. 파일 저장
 
@@ -631,18 +631,8 @@ Category: development
 jjiban 프로젝트 - Workflow Command
 author: 장종익 
 Command: wf:start
-Version: 5.0
-Changes (v5.0):
-- Frontend 감지 및 /wf:ui 자동 호출 기능 추가
-- 7단계: Frontend 감지 규칙 및 자동 실행 흐름 추가
-- 출력 예시에 Frontend 포함/미포함 케이스 분리
-- 감지 키워드: 화면, UI, Frontend, Form, 컴포넌트, 페이지, 목록, 대시보드 등
+Version: 1.0
 
-Previous (v4.0):
-- WP/ACT 계층 입력 지원 추가
-- 병렬 처리 기능 추가
-- @.claude/includes/wf-hierarchy-input.md 참조 추가
-- allowed-tools에 Task 추가 (병렬 처리용)
-- 병렬 처리 출력 예시 추가
-Previous (v3.0): Task PRD 제거, 기본설계 문서만 생성 (비즈니스 위주)
+Changes (v1.0):
+- 생성
 -->

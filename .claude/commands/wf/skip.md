@@ -59,7 +59,7 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Task]
 
 @.claude/includes/wf-common.md
 
-**Task 폴더**: `.jjiban/{project}/wbs/{WP-ID}/{ACT-ID}/{TSK-ID}/`
+**Task 폴더**: `.jjiban/projects/{project}/tasks/{TSK-ID}/`
 
 ---
 
@@ -162,7 +162,7 @@ Category: infrastructure
 |------|--------|
 | 잘못된 category | `[ERROR] infrastructure category만 지원합니다` |
 | 잘못된 상태 | `[ERROR] Todo 상태가 아닙니다. 현재 상태: [상태]` |
-| 이미 설계 시작 | `[ERROR] 이미 설계가 시작되었습니다. /wf:design 사용` |
+| 이미 설계 시작 | `[ERROR] 이미 설계가 시작되었습니다. /wf:build 사용` |
 
 ## WP/ACT 단위 병렬 처리
 
@@ -214,8 +214,8 @@ WP 또는 ACT 단위 입력 시, 해당 범위 내 `[ ]` Todo 상태인 infrastr
 [ ] Todo
   │ /wf:start
   ▼
-[ds] 설계
-  │ /wf:design
+[dd] 상세설계
+  │ /wf:build
   ▼
 [im] 구현 → ...
 ```
@@ -238,14 +238,8 @@ WP 또는 ACT 단위 입력 시, 해당 범위 내 `[ ]` Todo 상태인 infrastr
 jjiban 프로젝트 - Workflow Command
 author: 장종익 
 Command: wf:skip
-Version: 2.0
+Version: 1.0
 
-Changes (v2.0):
-- WP/ACT 계층 입력 지원 추가
-- 병렬 처리 기능 추가 (Task 도구 활용)
-- hierarchy-input, parallel-processing frontmatter 추가
-- 계층 입력 처리 공통 모듈 참조 추가
-- WP/ACT 단위 병렬 처리 출력 예시 추가
 Changes (v1.0):
 - 초기 버전
 -->

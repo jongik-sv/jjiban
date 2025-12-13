@@ -1,10 +1,10 @@
-# E2E 테스트 결과서 템플릿 (05-e2e-test-results.md)
+# E2E 테스트 결과서 템플릿 (070-e2e-test-results.md)
 
 **Template Version:** 1.0.0 — **Last Updated:** 2026-12-07
 
 > **용도**: build 단계에서 E2E 테스트 실행 후 결과를 기록하는 문서
 > **생성 시점**: `/wf:build` 명령어 실행 시 자동 생성
-> **참조 문서**: `02-detail-design.md` 섹션 2.3 (테스트 역추적 매트릭스), 섹션 13.2 (E2E 테스트)
+> **참조 문서**: `020-detail-design.md` 섹션 2.3 (테스트 역추적 매트릭스), 섹션 13.2 (E2E 테스트)
 
 ---
 
@@ -17,7 +17,7 @@
 | 테스트 일시 | [YYYY-MM-DD HH:mm] |
 | 테스트 환경 | Playwright [버전], Chromium |
 | 베이스 URL | http://localhost:3000 |
-| 상세설계 문서 | `02-detail-design.md` |
+| 상세설계 문서 | `020-detail-design.md` |
 
 ---
 
@@ -239,7 +239,7 @@ Running 4 tests using 1 worker
 ## 10. 다음 단계
 
 ### 테스트 통과 시
-- 코드 리뷰 진행 (`06-code-review-{llm}-{n}.md` 생성)
+- 코드 리뷰 진행 (`031-code-review-{llm}-{n}.md` 생성)
 - `/wf:approved` 또는 `/wf:audit` 실행
 
 ### 테스트 실패 시
@@ -251,10 +251,10 @@ Running 4 tests using 1 worker
 
 ## 관련 문서
 
-- 상세설계: `02-detail-design.md`
-- 구현 문서: `05-implementation.md`
-- 단위 테스트 결과: `05-tdd-test-results.md`
-- 코드 리뷰: `06-code-review-{llm}-{n}.md`
+- 상세설계: `020-detail-design.md`
+- 구현 문서: `030-implementation.md`
+- 단위 테스트 결과: `070-tdd-test-results.md`
+- 코드 리뷰: `031-code-review-{llm}-{n}.md`
 
 ---
 

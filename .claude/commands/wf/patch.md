@@ -70,7 +70,7 @@ personas: [refactoring-expert, backend-architect, quality-engineer]
 
 @.claude/includes/wf-common.md
 
-**Task 폴더**: `.jjiban/{project}/wbs/{WP-ID}/{ACT-ID}/{TSK-ID}/`
+**Task 폴더**: `.jjiban/projects/{project}/tasks/{TSK-ID}/`
 
 ---
 
@@ -91,13 +91,13 @@ personas: [refactoring-expert, backend-architect, quality-engineer]
    ```
 
 2. **WBS에서 Task 정보 조회**:
-   - `.jjiban/{project}/wbs/{WP-ID}/{ACT-ID}/{TSK-ID}/task.json` 에서 Task 정보 조회
+   - `.jjiban/projects/{project}/tasks/{TSK-ID}/task.json` 에서 Task 정보 조회
    - category 확인 (development | defect | infrastructure)
    - 현재 상태 확인: `[im]` 또는 `[fx]`
 
 3. **Task 디렉토리 구조 확인**:
    ```
-   .jjiban/{project}/wbs/{WP-ID}/{ACT-ID}/{TSK-ID}/
+   .jjiban/projects/{project}/tasks/{TSK-ID}/
    ├── 010-basic-design.md (development만)
    ├── 020-detail-design.md
    ├── 030-implementation.md
@@ -382,35 +382,8 @@ WP 또는 ACT 단위 입력 시, 해당 범위 내 `[im]`/`[fx]` 상태 Task들�
 jjiban 프로젝트 - Workflow Command
 author: 장종익 
 Command: wf:patch
-Version: 5.0
+Version: 1.0
 
-Changes (v5.0):
-- WP/ACT 계층 입력 지원 추가
-- 병렬 처리 기능 추가 (Task 도구 활용)
-- hierarchy-input, parallel-processing frontmatter 추가
-- 계층 입력 처리 공통 모듈 참조 추가
-- WP/ACT 단위 병렬 처리 출력 예시 추가
-Changes (v4.0):
-- "(적용완료)" 패턴 적용
-- 리뷰 문서 탐색 시 적용완료 파일 제외 로직 추가
-- 6단계: 리뷰 문서 적용완료 처리 신규 추가
-- 출력 형식에 적용완료 처리 표시 추가
-- 에러 케이스에 "미적용 리뷰 없음", "이미 적용된 리뷰" 추가
-- 반복 리뷰-패치 사이클 다이어그램에 적용완료 처리 표시
-
-Changes (v3.0):
-- qa:apply 수준으로 전면 개선
-- 최적화 목표 및 성능 프로파일 추가
-- Auto-Persona 및 MCP 서버 활용 추가
-- 에이전트 위임 방식 도입
-- 우선순위 기반 적용 가이드 추가
-- 자동 실행 단계 상세화
-- 출력 형식 개선 (이모지, 구조화)
-
-Changes (v2.0):
-- PRD 2.4 워크플로우 반영
-- 상태 전환 → 상태 내 액션으로 변경
-- [cr] 코드리뷰 상태 제거됨
-- [im] 구현 또는 [fx] 수정 상태에서 반복 가능
-- audit와 연계하여 리뷰-패치 사이클 지원
+Changes (v1.0):
+- 생성
 -->

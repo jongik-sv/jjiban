@@ -80,7 +80,7 @@
       <text x="865" y="55" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="#333">verify</text>
 
       <rect x="910" y="45" width="140" height="40" rx="6" fill="#fce4ec" stroke="#c2185b" stroke-width="2"/>
-      <text x="980" y="70" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#c2185b">[ts] 테스트</text>
+      <text x="980" y="70" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#c2185b">[vf] 검증</text>
 
       <line x1="1050" y1="65" x2="1120" y2="65" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
       <text x="1085" y="55" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="#333">done</text>
@@ -109,7 +109,7 @@
       <text x="540" y="70" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#43a047">[an] 분석</text>
 
       <line x1="610" y1="65" x2="680" y2="65" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
-      <text x="645" y="55" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="#333">analyze</text>
+      <text x="645" y="55" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="#333">fix</text>
 
       <rect x="690" y="45" width="140" height="40" rx="6" fill="#fff3e0" stroke="#ef6c00" stroke-width="2"/>
       <text x="760" y="70" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#ef6c00">[fx] 수정</text>
@@ -118,7 +118,7 @@
       <text x="865" y="55" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="#333">verify</text>
 
       <rect x="910" y="45" width="140" height="40" rx="6" fill="#fce4ec" stroke="#c2185b" stroke-width="2"/>
-      <text x="980" y="70" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#c2185b">[ts] 테스트</text>
+      <text x="980" y="70" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#c2185b">[vf] 검증</text>
 
       <line x1="1050" y1="65" x2="1120" y2="65" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
       <text x="1085" y="55" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="#333">done</text>
@@ -145,7 +145,7 @@
       <text x="430" y="20" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="#999">skip (설계 생략)</text>
 
       <rect x="470" y="45" width="140" height="40" rx="6" fill="#e8f5e9" stroke="#43a047" stroke-width="2"/>
-      <text x="540" y="70" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#43a047">[ds] 설계</text>
+      <text x="540" y="70" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#43a047">[dd] 설계</text>
 
       <line x1="610" y1="65" x2="680" y2="65" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
       <text x="645" y="55" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="#333">build</text>
@@ -200,10 +200,10 @@
       <tspan font-weight="bold" fill="#1976d2">development:</tspan> Todo -> Design -> Detail -> Implement -> Verify -> Done (전체 단계)
     </text>
     <text x="0" y="55" font-family="Arial, sans-serif" font-size="13" fill="#555">
-      <tspan font-weight="bold" fill="#e65100">defect:</tspan> Todo -> Detail(분석) -> Implement(수정) -> Verify(테스트) -> Done (Design 스킵)
+      <tspan font-weight="bold" fill="#e65100">defect:</tspan> Todo -> Detail(분석) -> Implement(수정) -> Verify(검증) -> Done (Design 스킵)
     </text>
     <text x="0" y="80" font-family="Arial, sans-serif" font-size="13" fill="#555">
-      <tspan font-weight="bold" fill="#5c6bc0">infrastructure:</tspan> Todo -> Detail(설계)? -> Implement -> Done (Design/Verify 스킵, 설계 선택적)
+      <tspan font-weight="bold" fill="#5c6bc0">infrastructure:</tspan> Todo -> Detail(설계)? -> Implement -> Done (Design/Verify 스킵, 설계 선택적, dd 상태 사용)
     </text>
   </g>
 

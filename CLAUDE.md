@@ -49,8 +49,8 @@ Todo [ ] → Design [bd] → Detail [dd] → Implement [im] → Verify [vf] → 
 
 | 카테고리 | 상태 흐름 |
 |---------|----------|
-| development | `[ ]` → `[bd]` → `[dd]` → `[im]` → `[ts]` → `[xx]` |
-| defect | `[ ]` → `[an]` → `[fx]` → `[ts]` → `[xx]` |
+| development | `[ ]` → `[bd]` → `[dd]` → `[im]` → `[vf]` → `[xx]` |
+| defect | `[ ]` → `[an]` → `[fx]` → `[vf]` → `[xx]` |
 | infrastructure | `[ ]` → `[ds]?` → `[im]` → `[xx]` |
 
 ### 워크플로우 명령어
@@ -72,13 +72,13 @@ Todo [ ] → Design [bd] → Detail [dd] → Implement [im] → Verify [vf] → 
 │   ├── workflows.json     # 워크플로우 규칙
 │   └── actions.json       # 상태 내 액션
 ├── templates/             # 문서 템플릿
-└── [project-id]/          # 프로젝트 폴더
-    ├── project.json       # 프로젝트 메타
-    ├── team.json          # 팀원 목록
-    ├── wbs.md             # WBS 통합 (유일한 소스)
-    └── tasks/             # Task 문서
-        └── {TSK-ID}/
-            └── 010-basic-design.md
+└── projects/              # 프로젝트 폴더
+    └── [project-id]/
+        ├── project.json   # 프로젝트 메타
+        ├── team.json      # 팀원 목록
+        ├── wbs.md         # WBS 통합 (유일한 소스)
+        └── tasks/         # Task 문서
+            └── {TSK-ID}/
 ```
 
 ---

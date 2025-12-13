@@ -45,7 +45,7 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Task, mcp__sequential-think
 
 @.claude/includes/wf-common.md
 
-**Task 폴더**: `.jjiban/{project}/wbs/{WP-ID}/{ACT-ID}/{TSK-ID}/`
+**Task 폴더**: `.jjiban/projects/{project}/tasks/{TSK-ID}/`
 
 ---
 
@@ -73,7 +73,7 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Task, mcp__sequential-think
 
 #### 3.1 문서 구조 및 완전성 검증
 1. **상세설계서 구조 분석** (분할된 3개 문서 검증):
-   - `020-detail-design.md`: 상세설계 템플릿(`@.claude/includes/detail-design-template.md`) 준수 여부
+   - `020-detail-design.md`: 상세설계 템플릿(`@.jjiban/templates/020-detail-design.md`) 준수 여부
    - `025-traceability-matrix.md`: 추적성 매트릭스 템플릿(`@.claude/includes/traceability-matrix-template.md`) 준수 여부
    - `026-test-specification.md`: 테스트 명세 템플릿(`@.claude/includes/test-specification-template.md`) 준수 여부
    - 각 문서의 필수 섹션 포함 여부
@@ -317,32 +317,8 @@ WP 또는 ACT 단위 입력 시, 해당 범위 내 `[dd]` 상태 Task들을 병�
 jjiban 프로젝트 - Workflow Command
 author: 장종익 
 Command: wf:review
-Version: 5.0
-Changes (v5.0):
-- 분할된 설계 문서 검증으로 변경
-  - 020-detail-design.md (상세설계 본문)
-  - 025-traceability-matrix.md (추적성 매트릭스)
-  - 026-test-specification.md (테스트 명세)
-- 2단계 문서 수집에 분할 문서 추가
-- 3.1 문서 구조 검증에 분할 문서별 템플릿 준수 검증 추가
-- 3.4 테스트 가능성 평가에 분할 문서 참조 추가
-- 에러 케이스 추가 (추적성 매트릭스 없음, 테스트 명세 없음)
-- 출력 예시 업데이트
+Version: 1.0
 
-Changes (v4.0):
-- WP/ACT 계층 입력 지원 추가
-- 병렬 처리 기능 추가 (Task 도구 활용)
-- hierarchy-input, parallel-processing frontmatter 추가
-- 계층 입력 처리 공통 모듈 참조 추가
-- WP/ACT 단위 병렬 처리 출력 예시 추가
-Changes (v3.0):
-- 다층 품질 검증 프로세스 추가 (아키텍처, 보안, 성능, 품질)
-- 이슈 분류 기준 상세화 (P1-P5, Severity)
-- 검증 관점 명시 (system-architect, security-engineer, quality-engineer)
-- 출력 형식 개선 (표 형식 요약)
-Changes (v2.0):
-- 상태 전환 → 상태 내 액션으로 변경
-- 반복 가능한 리뷰 사이클 지원
-- /wf:apply 연계 추가
-- 문서 넘버링 규칙 추가
+Changes (v1.0):
+- 생성
 -->

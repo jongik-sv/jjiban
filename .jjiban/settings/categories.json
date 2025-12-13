@@ -1,0 +1,26 @@
+{
+  "version": "1.0",
+  "categories": [
+    {
+      "id": "development",
+      "name": "Development",
+      "description": "New feature development",
+      "icon": "code",
+      "color": "#3b82f6"
+    },
+    {
+      "id": "defect",
+      "name": "Defect",
+      "description": "Bug fix",
+      "icon": "bug",
+      "color": "#ef4444"
+    },
+    {
+      "id": "infrastructure",
+      "name": "Infrastructure",
+      "description": "Technical debt, refactoring",
+      "icon": "server",
+      "color": "#8b5cf6"
+    }
+  ]
+}

@@ -84,6 +84,7 @@ def init_base_structure(base_path: Path, force: bool = False, dry_run: bool = Fa
     # Create base directories
     create_directory(jjiban_path / "settings", dry_run)
     create_directory(jjiban_path / "templates", dry_run)
+    create_directory(jjiban_path / "projects", dry_run)
 
     # Copy settings files
     settings_src = assets_dir / "settings"
@@ -106,9 +107,10 @@ def init_base_structure(base_path: Path, force: bool = False, dry_run: bool = Fa
 
 
 def init_project(base_path: Path, project_name: str, force: bool = False, dry_run: bool = False):
-    """Initialize a new project within .jjiban."""
+    """Initialize a new project within .jjiban/projects/."""
     jjiban_path = base_path / ".jjiban"
-    project_path = jjiban_path / project_name
+    projects_dir = jjiban_path / "projects"
+    project_path = projects_dir / project_name
     assets_dir = get_assets_dir()
     templates_src = assets_dir / "templates"
 

@@ -40,7 +40,7 @@
 
     <!-- Arrow: analyze -->
     <line x1="340" y1="185" x2="400" y2="185" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
-    <text x="370" y="175" font-family="Arial, sans-serif" font-size="11" font-weight="bold" text-anchor="middle" fill="#c62828">analyze</text>
+    <text x="370" y="175" font-family="Arial, sans-serif" font-size="11" font-weight="bold" text-anchor="middle" fill="#c62828">fix</text>
 
     <!-- 수정 (with action box) -->
     <rect x="400" y="130" width="180" height="110" rx="8" fill="#fff3e0" stroke="#ef6c00" stroke-width="3" filter="url(#shadow)"/>
@@ -61,7 +61,7 @@
 
     <!-- 테스트 -->
     <rect x="650" y="150" width="120" height="70" rx="8" fill="#e8f5e9" stroke="#2e7d32" stroke-width="3" filter="url(#shadow)"/>
-    <text x="710" y="180" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#2e7d32">[ts] 테스트</text>
+    <text x="710" y="180" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#2e7d32">[vf] 검증</text>
     <text x="710" y="200" font-family="Arial, sans-serif" font-size="11" text-anchor="middle" fill="#666">회귀 테스트</text>
 
     <!-- Arrow: done -->
@@ -102,7 +102,7 @@
     <text x="0" y="0" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#333">명령어 분류</text>
 
     <text x="0" y="30" font-family="Arial, sans-serif" font-size="13" fill="#555">
-      <tspan font-weight="bold" fill="#333">상태 전환 명령어:</tspan> start, analyze, verify, done
+      <tspan font-weight="bold" fill="#333">상태 전환 명령어:</tspan> start, fix, verify, done
     </text>
     <text x="0" y="55" font-family="Arial, sans-serif" font-size="13" fill="#555">
       <tspan font-weight="bold" fill="#7b1fa2">상태 내 액션:</tspan> audit, patch (수정 단계) - 반복 가능, 상태 변경 없음

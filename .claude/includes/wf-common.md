@@ -6,93 +6,107 @@
 
 ## 파일 기반 아키텍처 경로 규칙
 
-### 1. 통합 폴더 구조
+### 1. 디렉토리 구조
 
-JJIBAN은 단일 `.jjiban/{project}/` 폴더에 모든 데이터와 문서를 통합 관리합니다.
+JJIBAN은 `.jjiban/` 폴더에 모든 데이터와 문서를 관리합니다.
 
-> **중요**: 폴더명에 설명이 포함됨 (`WP-XX_description`, `ACT-XX-XX_description`)
-> glob 검색 시 `WP-XX*`, `ACT-XX-XX*` 와일드카드 패턴 사용 필수
+> **중요**: PRD 5.1 디렉토리 구조를 따릅니다.
 
 ```
-.jjiban/                                  # JJIBAN 데이터 루트
-└── {project}/                            # 프로젝트 폴더
-    ├── project.json                      # 프로젝트 메타데이터
-    ├── team.json                         # 팀 멤버 목록
-    ├── index.json                        # 칸반 인덱스 (자동 생성)
-    ├── jjiban-prd.md                     # PRD 문서
-    ├── jjiban-trd.md                     # TRD 문서
-    ├── wbs.md                            # WBS 문서
-    ├── {WP-ID}_description/              # Work Package (3단계: WP/ACT/TSK)
-    │   ├── meta.json                     # WP 메타데이터
-    │   └── {ACT-ID}_description/         # Activity
-    │       ├── meta.json                 # ACT 메타데이터
-    │       └── {TSK-ID}/                 # Task 폴더 (TSK-XX-XX-XX)
-    │           ├── task.json             # Task 상세 데이터
-    │           ├── 010-basic-design.md
-    │           ├── 020-detail-design.md
-    │           └── ...
-    └── {WP-ID}_description/              # Work Package (2단계: WP/TSK, ACT 없음)
-        ├── meta.json
-        └── {TSK-ID}/                     # Task 폴더 직접 (TSK-XX-XX)
-            ├── task.json
-            └── ...
+.jjiban/
+├── settings/                      # 전역 설정 (모든 프로젝트 공통)
+│   ├── projects.json              # 프로젝트 목록
+│   ├── columns.json               # 칸반 컬럼 정의
+│   ├── categories.json            # 카테고리 정의
+│   ├── workflows.json             # 워크플로우 규칙
+│   └── actions.json               # 상태 내 액션 정의
+│
+├── templates/                     # 문서 템플릿
+│   ├── 010-basic-design.md
+│   ├── 011-ui-design.md
+│   ├── 020-detail-design.md
+│   ├── 030-implementation.md
+│   ├── 070-integration-test.md
+│   └── 080-manual.md
+│
+└── projects/                      # 프로젝트 폴더
+    └── {project-id}/              # 개별 프로젝트
+        ├── project.json           # 프로젝트 메타데이터
+        ├── team.json              # 팀원 목록
+        ├── wbs.md                 # WBS 통합 파일 (유일한 소스)
+        │
+        └── tasks/                 # Task 문서 폴더
+            ├── TSK-01-01/         # 3단계: WP-ACT 없이 직접
+            │   ├── 010-basic-design.md
+            │   └── 020-detail-design.md
+            └── TSK-01-01-01/      # 4단계: WP-ACT-TSK
+                ├── 010-basic-design.md
+                └── 020-detail-design.md
 ```
+
+> **wbs.md**: WP, ACT, TSK의 모든 메타데이터를 단일 마크다운 파일로 관리. LLM이 한 번에 전체 구조를 파악 가능
+> **3단계 구조**: Project → WP → TSK (소규모 프로젝트)
+> **4단계 구조**: Project → WP → ACT → TSK (대규모 프로젝트)
+> **settings 폴더**: 전역 설정. 없으면 기본 설정을 메모리에서 생성
 
 ### 2. 주요 파일 경로
 
-> glob 검색 시 `WP-XX*`, `ACT-XX-XX*` 와일드카드 패턴 사용 필수
+| 용도 | 경로 | 설명 |
+|------|------|------|
+| 프로젝트 목록 | `.jjiban/settings/projects.json` | 전역 프로젝트 목록 |
+| 프로젝트 정보 | `.jjiban/projects/{project}/project.json` | 프로젝트 메타데이터 |
+| WBS 통합 파일 | `.jjiban/projects/{project}/wbs.md` | WP/ACT/TSK 메타데이터 |
+| 팀 정보 | `.jjiban/projects/{project}/team.json` | 팀 멤버 목록 |
+| Task 문서 폴더 | `.jjiban/projects/{project}/tasks/{TSK-ID}/` | Task 관련 문서 |
+| 문서 템플릿 | `.jjiban/templates/` | 전역 문서 템플릿 |
 
-| 용도 | 경로 (glob 패턴) | 설명 |
-|------|-----------------|------|
-| 프로젝트 정보 | `.jjiban/{project}/project.json` | 프로젝트 메타데이터 |
-| PRD | `.jjiban/{project}/jjiban-prd.md` | PRD 문서 |
-| TRD | `.jjiban/{project}/jjiban-trd.md` | TRD 문서 |
-| UI Theme | `.jjiban/{project}/ui-theme-*.md` | UI 테마 가이드 (다크/라이트) |
-| WBS | `.jjiban/{project}/wbs.md` | WBS 문서 |
-| 팀 정보 | `.jjiban/{project}/team.json` | 팀 멤버 목록 |
-| 칸반 인덱스 | `.jjiban/{project}/index.json` | 전체 Task 요약 |
-| WP 메타데이터 | `.jjiban/{project}/{WP-ID}*/meta.json` | Work Package 정보 |
-| ACT 메타데이터 | `.jjiban/{project}/{WP-ID}*/{ACT-ID}*/meta.json` | Activity 정보 |
-| Task 데이터 (3단계) | `.jjiban/{project}/{WP-ID}*/{ACT-ID}*/{TSK-ID}/task.json` | Task 상세 정보 |
-| Task 데이터 (2단계) | `.jjiban/{project}/{WP-ID}*/{TSK-ID}/task.json` | Task 상세 정보 (ACT 없음) |
-| Task 문서 | `.jjiban/{project}/{WP-ID}*/**/{TSK-ID}/*.md` | Task 관련 문서 |
+### 3. wbs.md 구조 (Task 메타데이터 관리)
 
-### 3. Task JSON 스키마
+**파일 경로**: `.jjiban/projects/{project}/wbs.md`
 
-**파일 경로 (3단계)**: `.jjiban/{project}/{WP-ID}*/{ACT-ID}*/{TSK-ID}/task.json`
-**파일 경로 (2단계)**: `.jjiban/{project}/{WP-ID}*/{TSK-ID}/task.json`
+```markdown
+# WBS - {Project Name}
 
-```json
-{
-  "id": "TSK-01-01-01",
-  "title": "Project CRUD 구현",
-  "category": "development",
-  "status": "[ ]",
-  "assignee": null,
-  "priority": "medium",
-  "estimate": null,
-  "description": "프로젝트 생성, 조회, 수정, 삭제 기능 구현",
-  "acceptance_criteria": [],
-  "created_at": "2026-01-01T00:00:00Z",
-  "updated_at": "2026-01-01T00:00:00Z"
-}
+> version: 1.0
+> depth: 4
+> updated: 2026-12-13
+
+---
+
+## WP-01: 플랫폼 기반 구축
+- status: in_progress
+- priority: high
+- schedule: 2026-01-15 ~ 2026-02-14
+- progress: 25%
+
+### ACT-01-01: 프로젝트 관리
+- status: in_progress
+- schedule: 2026-01-15 ~ 2026-01-22
+
+#### TSK-01-01-01: 프로젝트 CRUD API 구현
+- category: development
+- status: implement [im]
+- priority: high
+- assignee: hong
+- schedule: 2026-01-15 ~ 2026-01-21
+- tags: api, backend, crud
+- depends: -
+- blocked-by: -
 ```
 
-### 4. Task 상태 코드
+### 4. Task 상태 코드 (wbs.md에서 관리)
 
-| 상태 코드 | 의미 | Category |
-|----------|------|----------|
-| `[ ]` | Todo (미시작) | 공통 |
-| `[bd]` | 기본설계 | development |
-| `[dd]` | 상세설계 | development |
-| `[dr]` | 설계리뷰 | development |
-| `[ds]` | 설계 | infrastructure |
-| `[an]` | 분석 | defect |
-| `[im]` | 구현 | 공통 |
-| `[fx]` | 수정 | defect |
-| `[cr]` | 코드리뷰 | 공통 |
-| `[ts]` | 통합테스트 | development |
-| `[xx]` | 완료 | 공통 |
+| 상태 코드 | 의미 | Category | 칸반 컬럼 |
+|----------|------|----------|----------|
+| `[ ]` | Todo (미시작) | 공통 | Todo |
+| `[bd]` | 기본설계 | development | Design |
+| `[dd]` | 상세설계 | development | Detail |
+| `[an]` | 분석 | defect | Detail |
+| `[ds]` | 설계 | infrastructure | Detail |
+| `[im]` | 구현 | development, infrastructure | Implement |
+| `[fx]` | 수정 | defect | Implement |
+| `[ts]` | 테스트/통합테스트 | development, defect | Verify |
+| `[xx]` | 완료 | 공통 | Done |
 
 ---
 
@@ -100,19 +114,22 @@ JJIBAN은 단일 `.jjiban/{project}/` 폴더에 모든 데이터와 문서를 �
 
 ### 1. Task 폴더 구조
 
-모든 Task 관련 데이터와 문서는 Task 폴더 내에 통합 저장됩니다.
+모든 Task 관련 문서는 Task 폴더 내에 저장됩니다.
 
-> **3단계 구조**: `.jjiban/{project}/{WP-ID}*/{ACT-ID}*/{TSK-ID}/`
-> **2단계 구조**: `.jjiban/{project}/{WP-ID}*/{TSK-ID}/`
+> **Task 문서 경로**: `.jjiban/projects/{project}/tasks/{TSK-ID}/`
 
 ```
 {TSK-ID}/                              # Task 폴더
-├── task.json                          # Task 메타데이터
 ├── 010-basic-design.md                # 기본설계 (development)
 ├── 010-tech-design.md                 # 기술설계 (infrastructure)
-├── 010-analysis.md                    # 결함분석 (defect)
+├── 010-defect-analysis.md             # 결함분석 (defect)
+├── 011-ui-design.md                   # 화면설계 (development, 선택)
+├── ui-assets/                         # SVG 화면 파일 (선택)
+│   └── screen-*.svg
 ├── 020-detail-design.md               # 상세설계 (development)
 ├── 021-design-review-{llm}-{n}.md     # 설계리뷰
+├── 025-traceability-matrix.md         # 추적성 매트릭스
+├── 026-test-specification.md          # 테스트 명세
 ├── 030-implementation.md              # 구현 문서
 ├── 031-code-review-{llm}-{n}.md       # 코드리뷰
 ├── 070-integration-test.md            # 통합테스트 (development)
@@ -129,10 +146,13 @@ JJIBAN은 단일 `.jjiban/{project}/` 폴더에 모든 데이터와 문서를 �
 | 번호 | 파일명 | 용도 | Category |
 |------|--------|------|----------|
 | 010 | `010-basic-design.md` | 기본설계 | development |
+| 011 | `011-ui-design.md` | 화면설계 | development |
 | 020 | `020-detail-design.md` | 상세설계 | development |
 | 021 | `021-design-review-{llm}-{n}.md` | 설계리뷰 (N차) | development |
+| 025 | `025-traceability-matrix.md` | 추적성 매트릭스 | development |
+| 026 | `026-test-specification.md` | 테스트 명세 | development |
 | 010 | `010-tech-design.md` | 기술설계 | infrastructure |
-| 010 | `010-analysis.md` | 결함분석 | defect |
+| 010 | `010-defect-analysis.md` | 결함분석 | defect |
 | 030 | `030-implementation.md` | 구현 문서 | 공통 |
 | 031 | `031-code-review-{llm}-{n}.md` | 코드리뷰 (N차) | 공통 |
 | 070 | `070-integration-test.md` | 통합테스트 | development |
@@ -141,68 +161,67 @@ JJIBAN은 단일 `.jjiban/{project}/` 폴더에 모든 데이터와 문서를 �
 
 ### 3. 전체 경로 예시
 
-| Task ID | Task 폴더 경로 (glob 패턴) | 구조 |
-|---------|---------------------------|------|
-| TSK-01-01-01 | `.jjiban/jjiban/WP-01*/ACT-01-01*/TSK-01-01-01/` | 3단계 |
-| TSK-01-02-01 | `.jjiban/jjiban/WP-01*/ACT-01-02*/TSK-01-02-01/` | 3단계 |
-| TSK-08-01 | `.jjiban/jjiban/WP-08*/TSK-08-01/` | 2단계 |
-| TSK-09-02 | `.jjiban/jjiban/WP-09*/TSK-09-02/` | 2단계 |
+| Task ID | Task 폴더 경로 | 구조 |
+|---------|----------------|------|
+| TSK-01-01-01 | `.jjiban/projects/{project}/tasks/TSK-01-01-01/` | 4단계 |
+| TSK-01-02-01 | `.jjiban/projects/{project}/tasks/TSK-01-02-01/` | 4단계 |
+| TSK-02-01 | `.jjiban/projects/{project}/tasks/TSK-02-01/` | 3단계 |
 
 ---
 
 ## Task 조회 절차
 
-> **glob 패턴 주의**: 폴더명에 설명이 포함되므로 `WP-XX*`, `ACT-XX-XX*` 와일드카드 필수
-
-### 1. Task ID로 폴더 경로 찾기
+### 1. wbs.md에서 Task 정보 조회
 
 ```javascript
-function getTaskPath(project, taskId) {
-    // 3단계: TSK-01-02-03 → WP-01*/ACT-01-02*/TSK-01-02-03/
-    const match3 = taskId.match(/^TSK-(\d{2})-(\d{2})-(\d{2})$/i);
-    if (match3) {
-        const [_, wp, act, _tsk] = match3;
-        return `.jjiban/${project}/WP-${wp}*/ACT-${wp}-${act}*/${taskId}/`;
-    }
-
-    // 2단계: TSK-08-01 → WP-08*/TSK-08-01/
-    const match2 = taskId.match(/^TSK-(\d{2})-(\d{2})$/i);
-    if (match2) {
-        const [_, wp, _tsk] = match2;
-        return `.jjiban/${project}/WP-${wp}*/${taskId}/`;
-    }
-
-    return null;
+// wbs.md 파일 경로
+function getWbsPath(project) {
+    return `.jjiban/projects/${project}/wbs.md`;
 }
 
-// Task JSON 파일 경로 (glob 패턴)
-function getTaskJsonPath(project, taskId) {
-    return `${getTaskPath(project, taskId)}task.json`;
+// Task 문서 폴더 경로
+function getTaskFolderPath(project, taskId) {
+    return `.jjiban/projects/${project}/tasks/${taskId}/`;
+}
+
+// Task 문서 경로
+function getTaskDocPath(project, taskId, docName) {
+    return `.jjiban/projects/${project}/tasks/${taskId}/${docName}`;
 }
 ```
 
-### 2. WP/ACT 하위 Task 목록 조회
+### 2. wbs.md에서 Task 상태 확인
+
+wbs.md 파일을 파싱하여 Task 상태를 확인합니다.
 
 ```javascript
-// WP 하위 모든 Task 조회 (3단계/2단계 모두 지원)
-function getTasksInWP(project, wpId) {
-    // 와일드카드로 WP 폴더 찾기 (예: WP-01* → WP-01_core-issue-management)
-    return glob(`.jjiban/${project}/${wpId}*/**/TSK-*/task.json`);
-}
+function getTaskFromWbs(wbsContent, taskId) {
+    // TSK-ID 패턴으로 Task 섹션 찾기
+    const taskPattern = new RegExp(`^#{2,4} ${taskId}:`, 'im');
+    const taskMatch = wbsContent.match(taskPattern);
 
-// ACT 하위 모든 Task 조회
-function getTasksInACT(project, wpId, actId) {
-    // 와일드카드로 ACT 폴더 찾기 (예: ACT-01-01* → ACT-01-01_entity-crud)
-    return glob(`.jjiban/${project}/${wpId}*/${actId}*/TSK-*/task.json`);
+    if (!taskMatch) return null;
+
+    // status 필드에서 상태 추출
+    // - status: implement [im]
+    const statusPattern = /- status:\s*\w+\s*\[(\w+)\]/;
+    // 파싱 로직...
 }
 ```
 
-### 3. Task 상태 확인
+### 3. Task 상태 업데이트
+
+wbs.md 파일에서 해당 Task의 status 필드를 수정합니다.
 
 ```javascript
-function getTaskStatus(taskJsonPath) {
-    const taskData = JSON.parse(readFile(taskJsonPath));
-    return taskData.status;  // "[ ]", "[bd]", "[im]", etc.
+function updateTaskStatus(project, taskId, newStatus) {
+    const wbsPath = getWbsPath(project);
+    let wbsContent = readFile(wbsPath);
+
+    // Task 섹션에서 status 필드 찾아 변경
+    // 예: "- status: todo [ ]" → "- status: implement [im]"
+
+    writeFile(wbsPath, wbsContent);
 }
 ```
 
@@ -210,23 +229,42 @@ function getTaskStatus(taskJsonPath) {
 
 ## 프로젝트 설정 파일
 
+### settings/projects.json 스키마
+
+**경로**: `.jjiban/settings/projects.json`
+
+```json
+{
+  "version": "1.0",
+  "projects": [
+    {
+      "id": "jjiban",
+      "name": "JJIBAN Project Manager",
+      "path": "jjiban",
+      "status": "active",
+      "wbsDepth": 4,
+      "createdAt": "2026-01-15"
+    }
+  ],
+  "defaultProject": "jjiban"
+}
+```
+
 ### project.json 스키마
 
-**경로**: `.jjiban/{project}/project.json`
+**경로**: `.jjiban/projects/{project}/project.json`
 
 ```json
 {
   "id": "jjiban",
-  "name": "JJIBAN - AI 기반 프로젝트 관리 도구",
-  "description": "LLM 기반 소프트웨어 개발 지원 도구",
-  "tech_stack": {
-    "frontend": "Nuxt 3",
-    "backend": "Nuxt Server Routes",
-    "database": "JSON Files",
-    "runtime": "Node.js"
-  },
-  "created_at": "2026-01-01T00:00:00Z",
-  "updated_at": "2026-01-01T00:00:00Z"
+  "name": "JJIBAN Project Manager",
+  "description": "AI 기반 프로젝트 관리 도구",
+  "version": "0.1.0",
+  "status": "active",
+  "createdAt": "2026-01-15T00:00:00Z",
+  "updatedAt": "2026-12-12T10:00:00Z",
+  "scheduledStart": "2026-01-15",
+  "scheduledEnd": "2026-06-30"
 }
 ```
 
@@ -234,23 +272,20 @@ function getTaskStatus(taskJsonPath) {
 
 <!--
 jjiban 프로젝트 - Workflow Common Module
-Version: 3.0
-author: 장종익 
+Version: 4.0
+author: 장종익
 
-Changes (v3.0):
-- 데이터와 문서를 단일 폴더로 통합
-- .jjiban/{project}/ 구조로 변경
-- Task 폴더 내에 task.json + 문서 통합
-- projects/ 폴더 제거, 모든 것을 .jjiban/ 하위로 이동
-- PRD/TRD 경로: .jjiban/{project}/prd.md, trd.md
+Changes (v4.0):
+- PRD 5.1 디렉토리 구조에 맞게 전면 개편
+- .jjiban/projects/{project}/ 경로로 변경
+- .jjiban/settings/ 전역 설정 폴더 추가
+- .jjiban/templates/ 문서 템플릿 폴더 추가
+- task.json 제거 → wbs.md에서 메타데이터 통합 관리
+- tasks/ 폴더에는 문서만 저장 (TSK-ID 폴더)
+- wbs.md 구조 및 파싱 방법 설명 추가
+- 상태 코드에 칸반 컬럼 매핑 추가
 
-Changes (v2.0):
-- 파일 기반 아키텍처로 전환 (분산 JSON 구조)
-- .jjiban/ 데이터 경로 추가
-- projects/docs/tasks/ 문서 경로 분리
-- Task JSON 스키마 정의
-- 기존 폴더 구조 규칙 대체
-
-Changes (v1.0):
-- 초기 버전
+Previous (v3.0):
+- .jjiban/{project}/ 구조
+- task.json 개별 파일 사용
 -->
