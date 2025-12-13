@@ -1,0 +1,169 @@
+/* TailwindCSS Layer 설정 (PrimeVue 통합) */
+@layer tailwind-base, primevue, tailwind-utilities;
+
+@layer tailwind-base {
+  @tailwind base;
+}
+
+@layer tailwind-utilities {
+  @tailwind components;
+  @tailwind utilities;
+}
+
+/* Dark Blue 테마 CSS 변수 (PRD 10.1) */
+:root {
+  /* 배경 색상 */
+  --color-bg: #1a1a2e;
+  --color-header: #16213e;
+  --color-sidebar: #0f0f23;
+  --color-card: #1e1e38;
+
+  /* 프라이머리 색상 */
+  --color-primary: #3b82f6;
+  --color-primary-hover: #2563eb;
+
+  /* 시맨틱 색상 */
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+
+  /* 텍스트 색상 */
+  --color-text: #e8e8e8;
+  --color-text-secondary: #888888;
+  --color-text-muted: #666666;
+
+  /* 보더 색상 */
+  --color-border: #3d3d5c;
+  --color-border-light: #4d4d6c;
+
+  /* 계층 아이콘 색상 (PRD 10.1) */
+  --color-level-project: #8b5cf6;
+  --color-level-wp: #3b82f6;
+  --color-level-act: #22c55e;
+  --color-level-task: #f59e0b;
+}
+
+/* 기본 바디 스타일 - Dark 테마 적용 */
+body {
+  @apply bg-bg text-text antialiased;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* 스크롤바 스타일 (다크 테마) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-bg-sidebar;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-border rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-border-light;
+}
+
+/* 선택 영역 스타일 */
+::selection {
+  @apply bg-primary/30 text-white;
+}
+
+/* 포커스 링 스타일 */
+*:focus-visible {
+  @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-bg;
+}
+
+/* 링크 기본 스타일 */
+a {
+  @apply text-primary hover:text-primary-600 transition-colors;
+}
+
+/* 코드 블록 스타일 */
+code {
+  @apply font-mono text-sm bg-surface-50 px-1.5 py-0.5 rounded text-primary-300;
+}
+
+pre code {
+  @apply bg-transparent p-0;
+}
+
+/* PrimeVue 다크 테마 오버라이드 */
+.dark {
+  /* PrimeVue가 .dark 클래스로 다크 모드 감지 */
+}
+
+/* 유틸리티 클래스 */
+.card {
+  @apply bg-bg-card border border-border rounded-xl p-4 shadow-card;
+}
+
+.card-hover {
+  @apply hover:shadow-card-hover hover:border-border-light transition-all duration-200;
+}
+
+/* 레벨 배지 스타일 */
+.level-badge {
+  @apply inline-flex items-center justify-center w-6 h-6 rounded-md text-xs font-bold text-white;
+}
+
+.level-badge-project {
+  @apply bg-level-project;
+}
+
+.level-badge-wp {
+  @apply bg-level-wp;
+}
+
+.level-badge-act {
+  @apply bg-level-act;
+}
+
+.level-badge-task {
+  @apply bg-level-task;
+}
+
+/* 상태 배지 스타일 */
+.status-badge {
+  @apply inline-flex items-center px-2 py-0.5 rounded text-xs font-medium;
+}
+
+.status-todo {
+  @apply bg-text-muted/20 text-text-secondary;
+}
+
+.status-design {
+  @apply bg-primary/20 text-primary;
+}
+
+.status-implement {
+  @apply bg-warning/20 text-warning;
+}
+
+.status-verify {
+  @apply bg-success/20 text-success;
+}
+
+.status-done {
+  @apply bg-success text-white;
+}
+
+/* 카테고리 태그 스타일 */
+.category-tag {
+  @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium;
+}
+
+.category-dev {
+  @apply bg-primary/20 text-primary border border-primary/30;
+}
+
+.category-defect {
+  @apply bg-danger/20 text-danger border border-danger/30;
+}
+
+.category-infra {
+  @apply bg-level-project/20 text-level-project border border-level-project/30;
+}
