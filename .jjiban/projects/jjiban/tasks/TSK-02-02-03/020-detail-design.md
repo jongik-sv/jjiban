@@ -154,10 +154,46 @@ graph LR
 | 항목 | 내용 |
 |------|------|
 | 목적 | 전체 WBS 트리 검증 |
-| 입력 | nodes: WbsNode[] |
+| 입력 | nodes: WbsNode[], options?: ValidationOptions |
 | 출력 | ValidationResult |
-| 알고리즘 | 1. 중복 ID 검사 수행<br>2. 각 노드에 대해 재귀적으로 validateNode 호출<br>3. 모든 오류/경고 수집<br>4. ValidationResult 생성 및 반환 |
+| 알고리즘 | 1. 중복 ID 검사 수행<br>2. 순환 참조 검출 (visited Set 사용)<br>3. 각 노드에 대해 재귀적으로 validateNode 호출<br>4. options.failFast가 true면 첫 오류 시 즉시 반환<br>5. 모든 오류/경고 수집<br>6. ValidationResult 생성 및 반환 |
 | 복잡도 | O(n) - n은 노드 수 |
+
+**ValidationOptions 인터페이스**:
+| 옵션 | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| failFast | boolean | false | 첫 번째 오류 발견 시 즉시 반환 (Early Return) |
+| depth | 3 \| 4 | undefined | 프로젝트 깊이 (Task ID 검증에 사용) |
+
+**순환 참조 검출**:
+```
+함수 validateWbs(nodes, options):
+    visitedSet = new Set<string>()
+    errors = []
+
+    함수 validateRecursive(node, parent):
+        if visitedSet.has(node.id):
+            errors.push(ValidationError(
+                type: CIRCULAR_REFERENCE,
+                message: "순환 참조 감지: " + node.id
+            ))
+            return
+        visitedSet.add(node.id)
+
+        // 노드 검증...
+        if options.failFast && errors.length > 0:
+            return
+
+        for child in node.children:
+            validateRecursive(child, node)
+
+        visitedSet.delete(node.id)  // 백트래킹
+
+    for node in nodes:
+        validateRecursive(node, null)
+
+    return ValidationResult(...)
+```
 
 #### validateNode
 | 항목 | 내용 |
@@ -173,10 +209,22 @@ graph LR
 | 항목 | 내용 |
 |------|------|
 | 목적 | ID 형식 검증 |
-| 입력 | id: string, type: WbsNodeType |
+| 입력 | id: string, type: WbsNodeType, depth?: 3 \| 4 |
 | 출력 | ValidationError \| null |
-| 알고리즘 | 1. 타입에 맞는 정규식 패턴 선택<br>2. id가 패턴과 일치하는지 검사<br>3. 불일치 시 ValidationError 생성<br>4. 일치 시 null 반환 |
+| 알고리즘 | 1. 타입에 맞는 정규식 패턴 선택<br>2. type='task'인 경우:<br>&nbsp;&nbsp;- depth 파라미터가 있으면 해당 깊이 패턴만 검사<br>&nbsp;&nbsp;- depth 없으면 3단계 OR 4단계 패턴 중 하나라도 매칭되면 통과<br>3. id가 패턴과 일치하는지 검사<br>4. 불일치 시 ValidationError 생성<br>5. 일치 시 null 반환 |
 | 예외 처리 | 알 수 없는 타입 입력 시 INVALID_VALUE 오류 |
+
+**Task ID 유연 매칭 로직**:
+```
+함수 validateTaskId(id: string, depth?: 3 | 4):
+    if depth == 3:
+        return TSK_3LEVEL_PATTERN.test(id)
+    else if depth == 4:
+        return TSK_4LEVEL_PATTERN.test(id)
+    else:
+        // depth 미지정 시 둘 중 하나라도 매칭되면 통과
+        return TSK_3LEVEL_PATTERN.test(id) || TSK_4LEVEL_PATTERN.test(id)
+```
 
 #### getPattern
 | 항목 | 내용 |
@@ -202,7 +250,14 @@ graph LR
 | 목적 | category 값 유효성 검증 |
 | 입력 | category: string |
 | 출력 | boolean |
-| 로직 | category가 'development', 'defect', 'infrastructure' 중 하나인지 확인 |
+| 로직 | category가 `VALID_CATEGORIES` 상수 배열에 포함되는지 확인 |
+
+**참조**: `types/index.ts`의 `TaskCategory` enum 또는 `VALID_CATEGORIES` 상수 사용
+```typescript
+// types/index.ts에서 import
+import { VALID_CATEGORIES, VALID_PRIORITIES, VALID_STATUS_CODES } from '@/types'
+// VALID_CATEGORIES = ['development', 'defect', 'infrastructure']
+```
 
 #### validatePriority
 | 항목 | 내용 |
@@ -210,7 +265,9 @@ graph LR
 | 목적 | priority 값 유효성 검증 |
 | 입력 | priority: string |
 | 출력 | boolean |
-| 로직 | priority가 'critical', 'high', 'medium', 'low' 중 하나인지 확인 |
+| 로직 | priority가 `VALID_PRIORITIES` 상수 배열에 포함되는지 확인 |
+
+**참조**: `types/index.ts`의 `Priority` enum 또는 `VALID_PRIORITIES` 상수 사용
 
 ### 4.4 StatusValidator 메서드
 
@@ -220,8 +277,15 @@ graph LR
 | 목적 | 상태 코드 유효성 검증 |
 | 입력 | status: string |
 | 출력 | ValidationError \| null |
-| 알고리즘 | 1. status가 허용된 코드 목록에 있는지 확인<br>2. 없으면 ValidationError 생성 (실제 값, 허용된 목록 포함)<br>3. 있으면 null 반환 |
-| 허용 목록 | ['[ ]', '[bd]', '[dd]', '[an]', '[ds]', '[im]', '[fx]', '[vf]', '[xx]'] |
+| 알고리즘 | 1. status가 `VALID_STATUS_CODES` 상수에 있는지 확인<br>2. 없으면 ValidationError 생성 (실제 값, 허용된 목록 포함)<br>3. 있으면 null 반환 |
+| 허용 목록 | `VALID_STATUS_CODES` 상수 (types/index.ts에서 import) |
+
+**공통 상수 정의** (types/index.ts):
+```typescript
+// 파서, 시리얼라이저, 검증기에서 공통 사용
+export const VALID_STATUS_CODES = ['[ ]', '[bd]', '[dd]', '[an]', '[ds]', '[im]', '[fx]', '[vf]', '[xx]'] as const;
+export type StatusCode = typeof VALID_STATUS_CODES[number];
+```
 
 ### 4.5 HierarchyValidator 메서드
 
@@ -229,9 +293,24 @@ graph LR
 | 항목 | 내용 |
 |------|------|
 | 목적 | 부모-자식 관계 검증 |
-| 입력 | node: WbsNode, parent: WbsNode |
+| 입력 | node: WbsNode, parent: WbsNode \| null |
 | 출력 | ValidationError \| null |
-| 알고리즘 | 1. ID 접두사 추출 (예: TSK-02-02-03 → 02-02)<br>2. 부모 타입에 따라 기대 접두사 계산<br>3. 실제 접두사와 비교<br>4. 불일치 시 오류 생성 |
+| 알고리즘 | 1. parent가 null인 경우:<br>&nbsp;&nbsp;- node.type이 'wp'이면 정상 (WP는 루트 가능)<br>&nbsp;&nbsp;- node.type이 'task' 또는 'act'이면 HIERARCHY_MISMATCH 오류<br>&nbsp;&nbsp;&nbsp;&nbsp;메시지: "Task/ACT는 WP/ACT 하위에 있어야 합니다"<br>2. parent가 있는 경우:<br>&nbsp;&nbsp;- ID 접두사 추출 (예: TSK-02-02-03 → 02-02)<br>&nbsp;&nbsp;- 부모 타입에 따라 기대 접두사 계산<br>&nbsp;&nbsp;- 실제 접두사와 비교<br>&nbsp;&nbsp;- 불일치 시 오류 생성 |
+
+**Task 루트 케이스 처리**:
+```
+함수 validateHierarchy(node, parent):
+    if parent == null:
+        if node.type == 'wp':
+            return null  // WP는 루트 가능
+        else:
+            return ValidationError(
+                type: HIERARCHY_MISMATCH,
+                message: "Task/ACT는 WP/ACT 하위에 있어야 합니다: " + node.id,
+                nodeId: node.id
+            )
+    // 기존 부모-자식 관계 검증 로직...
+```
 
 #### extractPrefix
 | 항목 | 내용 |

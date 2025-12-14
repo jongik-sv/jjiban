@@ -218,7 +218,7 @@ flowchart TD
      - `- requirements:` 추가
      - 각 요구사항에 대해 `  - {requirement}` 추가 (2칸 들여쓰기)
    - **ref**: 값이 있으면 `- ref: {value}` 추가
-   - **progress**: WP나 ACT 타입이고 값이 있으면 `- progress: {value}%` 추가
+   - **progress**: WP나 ACT 타입이고 값이 있으면 `- progress: {value}` 추가 (숫자만, % 없음)
 3. lines 배열 반환
 
 **제약조건**:
@@ -249,11 +249,31 @@ flowchart TD
 **제약조건**:
 - 재귀 깊이는 10을 초과할 수 없음 (무한 루프 방지)
 - children이 undefined나 빈 배열이면 재귀 호출 생략
+- 순환 참조 검출: visited Set에 현재 노드 ID 추가, 이미 존재하면 SerializationError 발생
+
+**순환 참조 검출 알고리즘**:
+```
+visitedSet = new Set<string>()
+
+함수 serializeNodeWithCheck(node, context, visitedSet):
+    if visitedSet.has(node.id):
+        throw SerializationError("Circular reference detected: " + node.id)
+
+    visitedSet.add(node.id)
+    result = serializeNode(node, context)
+    visitedSet.delete(node.id)  // 백트래킹 시 제거
+    return result
+```
 
 ### 5.4 메타데이터 생성 알고리즘
 
-**입력**: metadata (WbsMetadata)
+**입력**: metadata (WbsMetadata), options?: SerializerOptions
 **출력**: 메타데이터 블록 문자열
+
+**SerializerOptions**:
+| 옵션 | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| updateDate | boolean | true | updated 필드를 현재 날짜로 갱신할지 여부 |
 
 **단계**:
 1. 다음 형식으로 문자열 구성:
@@ -266,9 +286,11 @@ flowchart TD
 2. 각 필드가 없으면 기본값 사용:
    - version: "1.0"
    - depth: 4
-   - updated: 현재 날짜 (YYYY-MM-DD)
-   - start: metadata.updated와 동일
+   - updated: options.updateDate가 true이면 현재 날짜 (YYYY-MM-DD), false이면 기존 값 유지
+   - start: metadata.start 또는 metadata.updated
 3. 문자열 반환
+
+**주의**: `updateDate: false` 옵션 사용 시 내용 변경 없이 저장해도 Git Diff 노이즈가 발생하지 않음
 
 ### 5.5 최대 깊이 계산 알고리즘
 
@@ -318,7 +340,7 @@ flowchart TD
 | 입력 데이터 null | nodes가 null/undefined | SerializationError | "Input nodes cannot be null" | 빈 문자열 반환 |
 | 재귀 깊이 초과 | currentDepth > 10 | SerializationError | "Maximum recursion depth exceeded" | 예외 던지기 |
 | 잘못된 노드 타입 | node.type이 유효하지 않음 | 없음 (경고만) | console.warn 출력 | 기본 헤더 레벨 사용 |
-| 순환 참조 | node.children에 부모 포함 | SerializationError | "Circular reference detected" | 예외 던지기 |
+| 순환 참조 | node.children에 부모 포함 | SerializationError | "Circular reference detected: {nodeId}" | 예외 던지기 (visited Set 사용) |
 
 ### 7.2 에러 복구 전략
 

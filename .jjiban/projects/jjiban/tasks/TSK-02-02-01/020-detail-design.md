@@ -255,10 +255,16 @@ wbs.md 마크다운 파일의 텍스트 구조를 파싱하여 WbsNode[] 계층 
 1. "- requirements:" 라인 발견
 2. 다음 라인부터 시작
 3. 들여쓰기(공백 또는 탭)로 시작하는 라인을 수집
+   - 들여쓰기 패턴 정규식: /^(\s{2,}|\t+)-\s*(.+)$/
 4. "-"로 시작하는 리스트 아이템의 경우 "-" 제거
 5. 들여쓰기 없는 라인 또는 다른 속성 라인 발견 시 중단
 6. 수집된 라인 배열을 requirements로 저장
 ```
+
+**들여쓰기 파싱 정규식**:
+| 패턴명 | 정규식 | 용도 | 예시 매칭 |
+|--------|--------|------|----------|
+| INDENT_LIST_PATTERN | `/^(\s{2,}|\t+)-\s*(.+)$/` | 들여쓰기 리스트 아이템 | `  - Nuxt 3 프로젝트 생성` |
 
 **예시**:
 
@@ -383,10 +389,12 @@ wbs.md 마크다운 파일의 텍스트 구조를 파싱하여 WbsNode[] 계층 
             totalTasks = allTasks.length
             completedTasks = allTasks에서 status == "[xx]"인 개수
 
+            // 0으로 나누기 방지: totalTasks가 0인 경우 명시적으로 0 할당
             if totalTasks > 0:
-                node.progress = (completedTasks / totalTasks) * 100
+                node.progress = Math.round((completedTasks / totalTasks) * 100)
                 node.taskCount = totalTasks
             else:
+                // WP/ACT 노드 아래 Task가 없는 경우 (모두 WP/ACT인 경우)
                 node.progress = 0
                 node.taskCount = 0
         else:
@@ -570,7 +578,7 @@ attributeParsers = {
 
 | 시나리오 | 입력 | 예상 출력 |
 |---------|------|----------|
-| 실제 wbs.md 파싱 | 현재 프로젝트 wbs.md | 56개 노드, 계층 구조 |
+| 실제 wbs.md 파싱 | 현재 프로젝트 wbs.md | 28개 노드, 계층 구조 |
 | 3단계 구조 | WP → TSK | 정상 트리 |
 | 4단계 구조 | WP → ACT → TSK | 정상 트리 |
 | 혼합 구조 | 3단계 + 4단계 혼재 | 정상 트리 |

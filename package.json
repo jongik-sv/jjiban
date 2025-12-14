@@ -9,6 +9,9 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "typecheck": "nuxt typecheck",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:debug": "playwright test --debug"
@@ -18,8 +21,11 @@
   },
   "devDependencies": {
     "@playwright/test": "1.49",
+    "@types/node": "^25.0.2",
+    "@vitest/coverage-v8": "^4.0.15",
     "nuxt": "^3.14.0",
     "typescript": "^5.6.0",
+    "vitest": "^4.0.15",
     "vue": "^3.5.0",
     "vue-router": "^4.4.0",
     "vue-tsc": "^2.2.0"

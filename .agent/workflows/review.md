@@ -1,8 +1,4 @@
 ---
-description: development Task 설계 리뷰 실행. 상태 변경 없음, 반복 가능
----
-
----
 name: wf:review
 description: "development Task 설계 리뷰 실행. 상태 변경 없음, 반복 가능"
 category: workflow
@@ -78,8 +74,8 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Task, mcp__sequential-think
 #### 3.1 문서 구조 및 완전성 검증
 1. **상세설계서 구조 분석** (분할된 3개 문서 검증):
    - `020-detail-design.md`: 상세설계 템플릿(`@.jjiban/templates/020-detail-design.md`) 준수 여부
-   - `025-traceability-matrix.md`: 추적성 매트릭스 템플릿(`@.claude/includes/traceability-matrix-template.md`) 준수 여부
-   - `026-test-specification.md`: 테스트 명세 템플릿(`@.claude/includes/test-specification-template.md`) 준수 여부
+   - `025-traceability-matrix.md`: 추적성 매트릭스 템플릿(`@.jjiban/templates/025-traceability-matrix.md`) 준수 여부
+   - `026-test-specification.md`: 테스트 명세 템플릿(`@.jjiban/templates/026-test-specification.md`) 준수 여부
    - 각 문서의 필수 섹션 포함 여부
    - 문서 간 상호 참조 일관성
 
@@ -156,7 +152,7 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Task, mcp__sequential-think
 
 ### 5단계: 리뷰 문서 생성
 
-템플릿 참조: `@.claude/includes/design-review-template.md`
+템플릿 참조: `@.jjiban/templates/021-design-review.md`
 
 ---
 

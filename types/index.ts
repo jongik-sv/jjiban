@@ -10,18 +10,59 @@ export type TaskStatus = '[ ]' | '[bd]' | '[dd]' | '[an]' | '[ds]' | '[im]' | '[
 // 우선순위
 export type Priority = 'critical' | 'high' | 'medium' | 'low';
 
-// WBS 노드 인터페이스
+// 일정 범위
+export interface ScheduleRange {
+  start: string;  // YYYY-MM-DD
+  end: string;    // YYYY-MM-DD
+}
+
+// WBS 메타데이터
+export interface WbsMetadata {
+  version: string;
+  depth: 3 | 4;
+  updated: string;  // YYYY-MM-DD
+  start: string;    // YYYY-MM-DD
+}
+
+// WBS 노드 인터페이스 (확장)
 export interface WbsNode {
   id: string;
   type: WbsNodeType;
   title: string;
-  status?: TaskStatus;
+  status?: string;  // 파서 호환을 위해 string으로 확장 (예: "detail-design [dd]")
   category?: TaskCategory;
   priority?: Priority;
-  progress: number;
-  taskCount: number;
+  assignee?: string;
+  schedule?: ScheduleRange;
+  tags?: string[];
+  depends?: string;
+  requirements?: string[];
+  ref?: string;
+  progress?: number;
+  taskCount?: number;
   children: WbsNode[];
   expanded?: boolean;
+}
+
+// 시리얼라이저 컨텍스트
+export interface SerializerContext {
+  currentDepth: number;
+  wpCount: number;
+  maxDepth: number;
+  visited: Set<string>;
+}
+
+// 시리얼라이저 옵션
+export interface SerializerOptions {
+  updateDate?: boolean;  // updated 필드를 현재 날짜로 갱신할지 여부
+}
+
+// 시리얼라이저 에러
+export class SerializationError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'SerializationError';
+  }
 }
 
 // Task 상세 정보
