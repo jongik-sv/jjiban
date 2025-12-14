@@ -57,7 +57,12 @@ export default defineConfig({
     reuseExistingServer: !process.env.CI,
     timeout: 120000,
     stdout: 'pipe',
-    stderr: 'pipe'
+    stderr: 'pipe',
+    env: {
+      ...process.env,
+      // 테스트 환경에서는 현재 디렉토리의 .jjiban 폴더 사용
+      JJIBAN_BASE_PATH: process.cwd(),
+    },
   },
 
   // 출력 폴더

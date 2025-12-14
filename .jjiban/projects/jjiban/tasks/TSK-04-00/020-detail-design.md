@@ -248,8 +248,12 @@ const {
   data,
   pending,
   error,
+  refresh,
 } = await useFetch<ProjectListResponse>('/api/projects', {
   key: 'projects-list',
+  timeout: 5000, // 5초 타임아웃 (C-002)
+  retry: 2, // 2회 재시도 (C-002)
+  retryDelay: 1000, // 1초 간격 (C-002)
 });
 
 // ============================================================
@@ -339,8 +343,12 @@ const {
   data,       // Ref<ProjectListResponse | null>
   pending,    // Ref<boolean>
   error,      // Ref<Error | null>
+  refresh,    // () => Promise<void> - 재시도용 (C-002)
 } = await useFetch<ProjectListResponse>('/api/projects', {
   key: 'projects-list',  // 캐시 키
+  timeout: 5000,         // 5초 타임아웃 (C-002)
+  retry: 2,              // 2회 재시도 (C-002)
+  retryDelay: 1000,      // 1초 간격 (C-002)
 });
 ```
 

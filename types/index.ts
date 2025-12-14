@@ -101,16 +101,43 @@ export interface DocumentInfo {
   name: string;
   path: string;
   exists: boolean;
-  type: 'design' | 'implementation' | 'test' | 'manual';
+  type: 'design' | 'implementation' | 'test' | 'manual' | 'analysis' | 'review';
+  stage: 'current' | 'expected';
+  size?: number;                    // exists=true일 때만
+  createdAt?: string;               // exists=true일 때만
+  updatedAt?: string;               // exists=true일 때만
+  expectedAfter?: string;           // exists=false일 때만
+  command?: string;                 // exists=false일 때만
 }
 
 // 이력 엔트리
 export interface HistoryEntry {
+  taskId?: string;
   timestamp: string;
-  action: string;
+  userId?: string;
+  action: 'transition' | 'action' | 'update' | string;
+  previousStatus?: string;
+  newStatus?: string;
+  command?: string;
+  comment?: string;
+  documentCreated?: string;
+  // 기존 호환성 유지
   from?: string;
   to?: string;
-  user?: string;
+  user?: string | null;
+}
+
+// 상태 전이 결과
+export interface TransitionResult {
+  success: boolean;
+  taskId: string;
+  previousStatus?: string;
+  newStatus?: string;
+  command?: string;
+  documentCreated?: string;
+  error?: string;
+  message?: string;
+  timestamp: string;
 }
 
 // 프로젝트 정보
@@ -164,6 +191,33 @@ export const SETTINGS_FILES = {
   WORKFLOWS: 'workflows.json',
   ACTIONS: 'actions.json',
 } as const;
+
+// 워크플로우 상태 인터페이스
+export interface WorkflowState {
+  taskId: string;
+  category: TaskCategory;
+  currentState: string;
+  currentStateName: string;
+  workflow: {
+    id: string;
+    name: string;
+    states: string[];
+    transitions: any[];
+  };
+  availableCommands: string[];
+}
+
+// 워크플로우 이력 인터페이스
+export interface WorkflowHistory {
+  taskId: string;
+  timestamp: string;
+  action: 'transition' | 'update';
+  previousStatus?: string;
+  newStatus?: string;
+  command?: string;
+  comment?: string;
+  documentCreated?: string;
+}
 
 // API 응답 타입
 export interface ApiResponse<T> {

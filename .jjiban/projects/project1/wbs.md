@@ -16,13 +16,31 @@
 - status: todo
 - schedule: 2025-12-13 ~ 2026-03-13
 
-#### TSK-01-01-01: Sample Task
+#### TSK-01-01-01: Sample Development Task
 - category: development
-- status: todo [ ]
+- status: [ ]
 - priority: medium
 - assignee: -
 - schedule: 2025-12-13 ~ 2026-03-13
 - tags: sample
+- depends: -
+
+#### TSK-01-01-02: Sample Defect Task
+- category: defect
+- status: [ ]
+- priority: high
+- assignee: -
+- schedule: 2025-12-13 ~ 2026-03-13
+- tags: bug
+- depends: -
+
+#### TSK-01-01-03: Sample Infrastructure Task
+- category: infrastructure
+- status: [ ]
+- priority: low
+- assignee: -
+- schedule: 2025-12-13 ~ 2026-03-13
+- tags: infra
 - depends: -
 
 ---

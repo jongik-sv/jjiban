@@ -264,7 +264,7 @@
 
 ### TSK-03-02: WBS API
 - category: development
-- status: basic-design [bd]
+- status: done [xx]
 - priority: critical
 - assignee: -
 - schedule: 2025-12-27 ~ 2025-12-31
@@ -278,7 +278,7 @@
 
 ### TSK-03-03: Workflow API & Settings
 - category: development
-- status: [ ]
+- status: done [xx]
 - priority: high
 - assignee: -
 - schedule: 2025-12-31 ~ 2026-01-03
@@ -292,7 +292,7 @@
 
 ### TSK-03-04: Workflow Engine
 - category: development
-- status: [ ]
+- status: implement [im]
 - priority: high
 - assignee: -
 - schedule: 2026-01-03 ~ 2026-01-10
@@ -315,7 +315,7 @@
 
 ### TSK-04-00: Projects Page
 - category: development
-- status: basic-design [bd]
+- status: implement [im]
 - priority: high
 - assignee: -
 - schedule: 2026-01-06 ~ 2026-01-07

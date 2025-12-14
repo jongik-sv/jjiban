@@ -1,0 +1,230 @@
+/**
+ * 문서 서비스
+ * Task: TSK-03-03
+ * 상세설계: 020-detail-design.md 섹션 2.2
+ *
+ * Task 문서 목록 조회 (존재 + 예정)
+ */
+
+import { join } from 'path';
+import { promises as fs } from 'fs';
+import type {
+  DocumentInfo,
+  TaskCategory,
+} from '../../../types';
+import { findTaskById } from '../wbs/taskService';
+import { getWorkflows } from '../settings';
+import {
+  getTaskFolderPath,
+  listFiles,
+  fileExists,
+} from '../file';
+import { createNotFoundError } from '../errors/standardError';
+
+/**
+ * 상태 코드 추출 (예: "detail-design [dd]" → "dd")
+ * @param status - 전체 상태 문자열
+ * @returns 상태 코드 (대괄호 제외)
+ */
+function extractStatusCode(status?: string): string {
+  if (!status) return '[ ]';
+  const match = status.match(/\[([^\]]+)\]/);
+  return match ? match[1] : status;
+}
+
+/**
+ * 문서 타입 결정
+ * @param fileName - 파일명
+ * @returns DocumentInfo type
+ */
+function determineDocumentType(fileName: string): DocumentInfo['type'] {
+  const typeMapping: Record<string, DocumentInfo['type']> = {
+    '010-basic-design.md': 'design',
+    '011-ui-design.md': 'design',
+    '020-detail-design.md': 'design',
+    '021-design-review': 'review',
+    '030-implementation.md': 'implementation',
+    '031-code-review': 'review',
+    '010-analysis.md': 'analysis',
+    '020-fix.md': 'implementation',
+    '070-integration-test.md': 'test',
+    '080-manual.md': 'manual',
+  };
+
+  // 정확한 매칭
+  if (typeMapping[fileName]) {
+    return typeMapping[fileName];
+  }
+
+  // 패턴 매칭 (review 파일)
+  if (fileName.includes('review')) {
+    return 'review';
+  }
+
+  // 기본값
+  if (fileName.startsWith('010-') || fileName.startsWith('011-') || fileName.startsWith('020-')) {
+    return 'design';
+  }
+  if (fileName.startsWith('030-')) {
+    return 'implementation';
+  }
+  if (fileName.startsWith('070-')) {
+    return 'test';
+  }
+  if (fileName.startsWith('080-')) {
+    return 'manual';
+  }
+
+  return 'design';
+}
+
+/**
+ * Task의 존재 문서 목록 조회
+ * @param projectId - 프로젝트 ID
+ * @param taskId - Task ID
+ * @returns 존재 문서 목록
+ */
+export async function getExistingDocuments(
+  projectId: string,
+  taskId: string
+): Promise<DocumentInfo[]> {
+  const taskFolderPath = getTaskFolderPath(projectId, taskId);
+  const folderExists = await fileExists(taskFolderPath);
+
+  if (!folderExists) {
+    return [];
+  }
+
+  const files = await listFiles(taskFolderPath, '.md');
+  const documents: DocumentInfo[] = [];
+
+  for (const file of files) {
+    const filePath = join(taskFolderPath, file);
+    const type = determineDocumentType(file);
+
+    try {
+      const stat = await fs.stat(filePath);
+      documents.push({
+        name: file,
+        path: `tasks/${taskId}/${file}`,
+        exists: true,
+        type,
+        stage: 'current',
+        size: stat.size,
+        createdAt: stat.birthtime.toISOString(),
+        updatedAt: stat.mtime.toISOString(),
+      });
+    } catch (error) {
+      // 파일 stat 실패 시 기본 정보만 포함
+      documents.push({
+        name: file,
+        path: `tasks/${taskId}/${file}`,
+        exists: true,
+        type,
+        stage: 'current',
+      });
+    }
+  }
+
+  return documents;
+}
+
+/**
+ * Task의 예정 문서 목록 조회 (워크플로우 기반)
+ * @param projectId - 프로젝트 ID
+ * @param taskId - Task ID
+ * @param currentStatus - 현재 상태
+ * @returns 예정 문서 목록
+ */
+export async function getExpectedDocuments(
+  projectId: string,
+  taskId: string,
+  currentStatus: string
+): Promise<DocumentInfo[]> {
+  // Task 조회 (카테고리 확인)
+  const taskResult = await findTaskById(taskId);
+  if (!taskResult) {
+    return [];
+  }
+
+  const { task } = taskResult;
+  const category = task.category as TaskCategory;
+  const statusCode = extractStatusCode(currentStatus);
+
+  // 워크플로우 조회
+  const workflows = await getWorkflows();
+  const categoryWorkflow = workflows.workflows.find(
+    (wf) => wf.id === category
+  );
+
+  if (!categoryWorkflow) {
+    return [];
+  }
+
+  const documents: DocumentInfo[] = [];
+
+  // 현재 상태에서 가능한 전이의 문서 목록
+  const futureTransitions = categoryWorkflow.transitions.filter(
+    (t) => t.from === statusCode && t.document
+  );
+
+  for (const transition of futureTransitions) {
+    if (transition.document) {
+      documents.push({
+        name: transition.document,
+        path: `tasks/${taskId}/${transition.document}`,
+        exists: false,
+        type: determineDocumentType(transition.document),
+        stage: 'expected',
+        expectedAfter: `[${transition.to}] ${transition.label}`,
+        command: transition.command,
+      });
+    }
+  }
+
+  return documents;
+}
+
+/**
+ * 존재/예정 문서 병합 조회
+ * @param projectId - 프로젝트 ID
+ * @param taskId - Task ID
+ * @returns 병합된 문서 목록
+ */
+export async function getTaskDocuments(
+  projectId: string,
+  taskId: string
+): Promise<DocumentInfo[]> {
+  // Task 조회
+  const taskResult = await findTaskById(taskId);
+  if (!taskResult) {
+    throw createNotFoundError(`Task를 찾을 수 없습니다: ${taskId}`);
+  }
+
+  const { task } = taskResult;
+  const currentStatus = task.status || '[ ]';
+
+  // 존재 문서 조회
+  const existingDocs = await getExistingDocuments(projectId, taskId);
+
+  // 예정 문서 조회
+  const expectedDocs = await getExpectedDocuments(projectId, taskId, currentStatus);
+
+  // 중복 제거: 존재 문서의 name이 예정 문서에 있으면 제외
+  const existingNames = new Set(existingDocs.map((d) => d.name));
+  const filteredExpectedDocs = expectedDocs.filter(
+    (d) => !existingNames.has(d.name)
+  );
+
+  // 병합 및 정렬 (current 먼저, 그 다음 expected)
+  const allDocuments = [...existingDocs, ...filteredExpectedDocs];
+
+  // stage로 정렬
+  allDocuments.sort((a, b) => {
+    if (a.stage === 'current' && b.stage === 'expected') return -1;
+    if (a.stage === 'expected' && b.stage === 'current') return 1;
+    return 0;
+  });
+
+  return allDocuments;
+}
