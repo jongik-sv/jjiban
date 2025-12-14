@@ -1,0 +1,123 @@
+/**
+ * 프로젝트 경로 관리 테스트
+ * Task: TSK-02-03-03
+ * 테스트 명세: 026-test-specification.md
+ */
+
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import {
+  getBasePath,
+  getProjectsBasePath,
+  getProjectDir,
+  getProjectFilePath,
+  getProjectsListFilePath,
+  validateProjectId,
+} from '../../../server/utils/projects/paths';
+
+describe('ProjectPaths', () => {
+  const originalEnv = process.env.JJIBAN_BASE_PATH;
+
+  beforeEach(() => {
+    // 환경 변수 초기화
+    delete process.env.JJIBAN_BASE_PATH;
+  });
+
+  afterEach(() => {
+    // 환경 변수 복원
+    if (originalEnv) {
+      process.env.JJIBAN_BASE_PATH = originalEnv;
+    } else {
+      delete process.env.JJIBAN_BASE_PATH;
+    }
+  });
+
+  describe('getBasePath', () => {
+    it('should return current working directory when JJIBAN_BASE_PATH is not set', () => {
+      const result = getBasePath();
+      expect(result).toBe(process.cwd());
+    });
+
+    it('should return normalized JJIBAN_BASE_PATH when set', () => {
+      process.env.JJIBAN_BASE_PATH = 'C:\\test\\path';
+      const result = getBasePath();
+      expect(result).toContain('test');
+      expect(result).toContain('path');
+    });
+
+    it('should reject path traversal attack (..)', () => {
+      process.env.JJIBAN_BASE_PATH = '../malicious';
+      const result = getBasePath();
+      expect(result).toBe(process.cwd()); // 공격 시도 시 cwd 반환
+    });
+  });
+
+  describe('getProjectsBasePath', () => {
+    it('should return .jjiban/projects path', () => {
+      const result = getProjectsBasePath();
+      expect(result).toContain('.jjiban');
+      expect(result).toContain('projects');
+    });
+  });
+
+  describe('getProjectDir', () => {
+    it('should return project directory path', () => {
+      const result = getProjectDir('test-project');
+      expect(result).toContain('.jjiban');
+      expect(result).toContain('projects');
+      expect(result).toContain('test-project');
+    });
+
+    it('should throw error for invalid project ID (uppercase)', () => {
+      expect(() => getProjectDir('TestProject')).toThrow('영소문자, 숫자, 하이픈만 허용');
+    });
+
+    it('should throw error for invalid project ID (special characters)', () => {
+      expect(() => getProjectDir('test_project!')).toThrow('영소문자, 숫자, 하이픈만 허용');
+    });
+  });
+
+  describe('getProjectFilePath', () => {
+    it('should return project.json path', () => {
+      const result = getProjectFilePath('test-project', 'project.json');
+      expect(result).toContain('test-project');
+      expect(result).toContain('project.json');
+    });
+
+    it('should return team.json path', () => {
+      const result = getProjectFilePath('test-project', 'team.json');
+      expect(result).toContain('test-project');
+      expect(result).toContain('team.json');
+    });
+  });
+
+  describe('getProjectsListFilePath', () => {
+    it('should return projects.json path', () => {
+      const result = getProjectsListFilePath();
+      expect(result).toContain('.jjiban');
+      expect(result).toContain('settings');
+      expect(result).toContain('projects.json');
+    });
+  });
+
+  describe('validateProjectId', () => {
+    it('should accept valid project ID (lowercase, numbers, hyphens)', () => {
+      expect(() => validateProjectId('test-project-123')).not.toThrow();
+    });
+
+    it('should reject uppercase letters', () => {
+      expect(() => validateProjectId('TestProject')).toThrow('영소문자, 숫자, 하이픈만 허용');
+    });
+
+    it('should reject special characters', () => {
+      expect(() => validateProjectId('test_project')).toThrow('영소문자, 숫자, 하이픈만 허용');
+    });
+
+    it('should reject path traversal (..)', () => {
+      expect(() => validateProjectId('../etc/passwd')).toThrow();
+    });
+
+    it('should reject path with slashes', () => {
+      expect(() => validateProjectId('test/project')).toThrow('영소문자, 숫자, 하이픈만 허용');
+    });
+  });
+});

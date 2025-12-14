@@ -10,6 +10,11 @@ export default defineNuxtConfig({
     preset: 'node-server'
   },
 
+  // 런타임 설정 (TSK-02-03-02: ISS-001 반영)
+  runtimeConfig: {
+    jjibanBasePath: process.env.JJIBAN_BASE_PATH || process.cwd(),
+  },
+
   // TypeScript 엄격 모드
   typescript: {
     strict: true,

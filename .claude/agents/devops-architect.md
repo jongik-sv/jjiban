@@ -3,6 +3,7 @@ name: devops-architect
 description: Automate infrastructure and deployment processes with focus on reliability and observability
 category: engineering
 tools: Read, Write, Edit, Bash
+color: cyan
 ---
 
 # DevOps Architect

@@ -64,7 +64,7 @@
 - WP 밑에 따라오는 ACT, TASK를 어떻게 보여줄래?
   - 각각의 카드가 있어서 거기에 알맞게 카드를 랜더링 하면 된다.
 - 그냥 위의 방식 보다는 프로젝트 뷰를 보여주고 거기서 수정하면 되잖아. 이런 복잡한 뷰체계를 가져갈 필요가 없어. 카드는 확다 없애버리자. 정보 확인/수정용 프로퍼티 창만 필요해.
-- wbs 파일은 WP 단위로 분할해서 넣는다. 이말은 WP 단위로 프로젝트를 옮길 수 있다는 말이다. WP 단위로 PL이 관리를 해라 이런 말이다. 완전히 밀고 새로 하자.
+- 070 테스트에 관련된 문서를 다시 정리해야함
 
 
 ## 참고 사항
@@ -99,11 +99,4 @@
 
 @.jjiban\projects\jjiban\tasks\TSK-01-02-01\ui-assets\ @.jjiban\projects\jjiban\tasks\TSK-01-02-02\ui-assets\ 안의 설계 이미지가 전체 생각하고 있는 모습인 @.jjiban\projects\jjiban\wbs-tree-mockup-compact.svg 를 잘 반영하고 잇는지 확인해줘.
 
-```
-claude --model opus --dangerously-skip-permissions -p "/wf:audit TSK-01-02-01"
-claude --model opus --dangerously-skip-permissions -p "/wf:patch TSK-01-02-01"
-claude --model opus --dangerously-skip-permissions -p "/wf:build TSK-01-02-02"
-claude --model opus --dangerously-skip-permissions -p "/wf:audit TSK-01-02-02"
-claude --model opus --dangerously-skip-permissions -p "/wf:patch TSK-01-02-02"
-```
 

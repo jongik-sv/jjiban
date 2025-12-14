@@ -199,7 +199,7 @@
 
 #### TSK-02-03-01: 기본 설정 JSON 스키마 정의
 - category: infrastructure
-- status: implement [im]
+- status: done [xx]
 - priority: high
 - assignee: -
 - schedule: 2025-12-23 ~ 2025-12-24
@@ -214,7 +214,7 @@
 
 #### TSK-02-03-02: 설정 서비스 구현
 - category: development
-- status: detail-design [dd]
+- status: done [xx]
 - priority: high
 - assignee: -
 - schedule: 2025-12-24 ~ 2025-12-26
@@ -228,7 +228,7 @@
 
 #### TSK-02-03-03: 프로젝트 메타데이터 서비스
 - category: development
-- status: basic-design [bd]
+- status: done [xx]
 - priority: medium
 - assignee: -
 - schedule: 2025-12-26 ~ 2025-12-27
@@ -250,7 +250,7 @@
 
 ### TSK-03-01: Project API
 - category: development
-- status: [ ]
+- status: done [xx]
 - priority: high
 - assignee: -
 - schedule: 2025-12-23 ~ 2025-12-27
@@ -264,7 +264,7 @@
 
 ### TSK-03-02: WBS API
 - category: development
-- status: [ ]
+- status: basic-design [bd]
 - priority: critical
 - assignee: -
 - schedule: 2025-12-27 ~ 2025-12-31
@@ -312,6 +312,21 @@
 - priority: high
 - schedule: 2026-01-06 ~ 2026-01-15
 - progress: 0%
+
+### TSK-04-00: Projects Page
+- category: development
+- status: basic-design [bd]
+- priority: high
+- assignee: -
+- schedule: 2026-01-06 ~ 2026-01-07
+- tags: page, project, list
+- depends: TSK-03-01, TSK-01-02-01
+- requirements:
+  - ProjectsPage 컴포넌트 (pages/projects.vue)
+  - GET /api/projects 연동하여 프로젝트 목록 표시
+  - 프로젝트 카드/리스트 UI (PrimeVue Card 활용)
+  - 프로젝트 선택 시 /wbs?project={id} 이동
+- ref: PRD 6.1
 
 ### TSK-04-01: Tree Panel
 - category: development
@@ -465,7 +480,7 @@
 | WP-01 | Platform Infrastructure | 6 | 12/13 ~ 12/20 |
 | WP-02 | Data Storage Layer | 9 | 12/16 ~ 12/27 |
 | WP-03 | Backend API & Workflow | 4 | 12/23 ~ 01/10 |
-| WP-04 | WBS Tree View | 3 | 01/06 ~ 01/15 |
+| WP-04 | WBS Tree View | 4 | 01/06 ~ 01/15 |
 | WP-05 | Task Detail & Document | 4 | 01/13 ~ 01/22 |
 | WP-06 | Integration & Testing | 2 | 01/20 ~ 01/25 |
-| **Total** | | **28** | **~6주** |
+| **Total** | | **29** | **~6주** |

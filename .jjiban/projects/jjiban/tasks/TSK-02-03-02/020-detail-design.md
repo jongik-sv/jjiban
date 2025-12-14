@@ -103,15 +103,46 @@ server/
     └── settings/
         ├── index.ts            # SettingsService 메인
         ├── defaults.ts         # 기본값 (TSK-02-03-01)
-        └── cache.ts            # 캐시 관리 (신규)
+        ├── cache.ts            # 캐시 관리 (신규)
+        └── paths.ts            # 설정 경로 관리 (신규)
+```
+
+### 5.1.1 설정 경로 관리
+
+> **ISS-001 반영**: 경로 하드코딩 대신 환경 설정 기반 경로 관리
+
+```typescript
+// server/utils/settings/paths.ts
+export function getSettingsBasePath(): string {
+  const config = useRuntimeConfig();
+  return config.jjibanBasePath || process.cwd();
+}
+
+export function getSettingsDir(): string {
+  return join(getSettingsBasePath(), '.jjiban', 'settings');
+}
+
+export function getSettingsFilePath(type: SettingsFileType): string {
+  return join(getSettingsDir(), SETTINGS_FILE_NAMES[type]);
+}
+```
+
+**환경 설정 (nuxt.config.ts)**:
+```typescript
+export default defineNuxtConfig({
+  runtimeConfig: {
+    jjibanBasePath: process.env.JJIBAN_BASE_PATH || process.cwd(),
+  },
+});
 ```
 
 ### 5.2 모듈 역할
 
 | 모듈 | 역할 | 의존성 |
 |------|------|--------|
-| `settings/index.ts` | 설정 로드 및 조회 함수 export | cache.ts, defaults.ts |
-| `settings/cache.ts` | 메모리 캐시 관리 | defaults.ts |
+| `settings/index.ts` | 설정 로드 및 조회 함수 export | cache.ts, defaults.ts, paths.ts |
+| `settings/cache.ts` | 메모리 캐시 관리 | defaults.ts, paths.ts |
+| `settings/paths.ts` | 설정 경로 관리 | runtimeConfig |
 | `settings/defaults.ts` | 기본값 상수 (기존) | types/settings.ts |
 | `api/settings/[type].get.ts` | REST API 핸들러 | settings/index.ts |
 
@@ -122,8 +153,11 @@ graph TD
     API["/api/settings/[type].get.ts"] --> SVC["settings/index.ts"]
     SVC --> CACHE["settings/cache.ts"]
     SVC --> DEFAULTS["settings/defaults.ts"]
+    SVC --> PATHS["settings/paths.ts"]
     CACHE --> DEFAULTS
+    CACHE --> PATHS
     CACHE --> FS["fs/promises"]
+    PATHS --> RC["runtimeConfig"]
     DEFAULTS --> TYPES["types/settings.ts"]
 ```
 
@@ -167,7 +201,7 @@ TSK-02-03-01에서 정의된 `types/settings.ts` 활용:
 | `getWorkflows()` | 없음 | `Promise<WorkflowsConfig>` | 워크플로우 조회 |
 | `getActions()` | 없음 | `Promise<ActionsConfig>` | 액션 조회 |
 | `refreshCache()` | 없음 | `Promise<void>` | 캐시 무효화 |
-| `getSettingsByType()` | `type: SettingsFileType` | `Promise<ConfigType>` | 타입별 조회 |
+| `getSettingsByType()` | `type: SettingsFileType` | `Promise<ColumnsConfig \| CategoriesConfig \| WorkflowsConfig \| ActionsConfig>` | 타입별 조회 |
 
 ### 7.2 REST API 엔드포인트
 
@@ -309,11 +343,24 @@ stateDiagram-v2
 
 ### 10.2 에러 응답 형식
 
+> **P4-1 반영**: 디버깅 용이성을 위해 timestamp 필드 추가
+
 | 필드 | 타입 | 설명 |
 |------|------|------|
 | statusCode | number | HTTP 상태 코드 |
 | statusMessage | string | 에러 유형 |
 | message | string | 상세 메시지 |
+| timestamp | string | 에러 발생 시각 (ISO 8601) |
+
+**에러 응답 예시**:
+```json
+{
+  "statusCode": 400,
+  "statusMessage": "INVALID_SETTINGS_TYPE",
+  "message": "Invalid settings type: unknown",
+  "timestamp": "2025-12-14T10:30:00.000Z"
+}
+```
 
 ---
 
@@ -323,10 +370,12 @@ stateDiagram-v2
 
 | 항목 | 파일 | 체크 |
 |------|------|------|
+| 경로 관리 모듈 구현 | `server/utils/settings/paths.ts` | [ ] |
 | 캐시 모듈 구현 | `server/utils/settings/cache.ts` | [ ] |
 | 서비스 함수 구현 | `server/utils/settings/index.ts` | [ ] |
 | API 핸들러 구현 | `server/api/settings/[type].get.ts` | [ ] |
 | 타입 가드 구현 | `server/utils/settings/index.ts` | [ ] |
+| runtimeConfig 설정 | `nuxt.config.ts` | [ ] |
 
 ### 11.2 품질 체크리스트
 
@@ -346,13 +395,15 @@ stateDiagram-v2
 | 파일 경로 | 용도 |
 |----------|------|
 | `server/utils/settings/cache.ts` | 캐시 관리 모듈 |
+| `server/utils/settings/paths.ts` | 설정 경로 관리 (ISS-001 반영) |
 | `server/api/settings/[type].get.ts` | REST API 핸들러 |
 
 ### 12.2 수정 파일
 
 | 파일 경로 | 수정 내용 |
 |----------|----------|
-| `server/utils/settings/index.ts` | 서비스 함수 추가 |
+| `server/utils/settings/index.ts` | 서비스 함수 추가, paths.ts 의존성 |
+| `nuxt.config.ts` | jjibanBasePath runtimeConfig 추가 (ISS-001 반영) |
 
 ### 12.3 참조 파일 (수정 없음)
 
