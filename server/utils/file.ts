@@ -42,13 +42,18 @@ export class JsonParseError extends Error {
 
 /**
  * JSON 파일 읽기
+ * @param path 파일 경로
+ * @returns 파싱된 JSON 또는 null (파일 없음/파싱 실패)
  */
 export async function readJsonFile<T>(path: string): Promise<T | null> {
   try {
     const content = await fs.readFile(path, 'utf-8');
     return JSON.parse(content) as T;
-  } catch (error) {
-    console.error(`Failed to read JSON file: ${path}`, error);
+  } catch (error: any) {
+    // ENOENT (파일 없음)는 정상 케이스 - 로깅하지 않음
+    if (error?.code !== 'ENOENT') {
+      console.error(`Failed to read JSON file: ${path}`, error);
+    }
     return null;
   }
 }
@@ -69,12 +74,17 @@ export async function writeJsonFile<T>(path: string, data: T): Promise<boolean> 
 
 /**
  * Markdown 파일 읽기
+ * @param path 파일 경로
+ * @returns 파일 내용 또는 null (파일 없음)
  */
 export async function readMarkdownFile(path: string): Promise<string | null> {
   try {
     return await fs.readFile(path, 'utf-8');
-  } catch (error) {
-    console.error(`Failed to read Markdown file: ${path}`, error);
+  } catch (error: any) {
+    // ENOENT (파일 없음)는 정상 케이스 - 로깅하지 않음
+    if (error?.code !== 'ENOENT') {
+      console.error(`Failed to read Markdown file: ${path}`, error);
+    }
     return null;
   }
 }
