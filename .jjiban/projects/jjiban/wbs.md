@@ -76,6 +76,21 @@
   - 유틸리티 함수 디렉토리 (utils/)
 - ref: PRD 9
 
+#### TSK-01-01-05: WBS Store API 응답 처리 버그 수정
+- category: defect
+- domain: frontend
+- status: [xx]
+- priority: critical
+- assignee: -
+- schedule: 2025-12-15 ~ 2025-12-15
+- tags: bug, store, api
+- depends: TSK-01-01-03
+- requirements:
+  - fetchWbs 함수의 API 응답 형식 수정
+  - API 응답 `{metadata, tree}` 객체에서 tree 배열 추출
+  - "nodes is not iterable" 에러 해결
+- ref: TSK-04-03 E2E 테스트 결과
+
 ### ACT-01-02: App Layout
 - status: todo
 - schedule: 2025-12-16 ~ 2025-12-18

@@ -728,6 +728,50 @@ stateDiagram-v2
 | BR-007 | 스토어 간 반응형 연동 | pages/wbs.vue | watch로 currentProject 변화 감지 → fetchWbs 호출 | 단위 테스트 (watch 트리거) |
 | BR-008 | 페이지 언마운트 시 상태 초기화 | pages/wbs.vue | onUnmounted에서 clearWbs(), clearSelection() | 단위 테스트 (정리 검증) |
 
+### 10.4 watch 가드 조건 (리뷰 반영: H-001)
+
+> **목적**: watch 순환 트리거 방지 및 불필요한 API 호출 방지
+
+| 규칙 ID | 규칙 설명 | 가드 조건 | 검증 방법 |
+|---------|----------|----------|-----------|
+| BR-009 | currentProject watch 가드 | 동일 프로젝트 ID면 skip, null → null 전환 skip | 단위 테스트 |
+| BR-010 | selectedNodeId watch 가드 | 동일 노드 ID면 skip, Task 타입이 아니면 상세 로드 skip | 단위 테스트 |
+
+**watch 가드 구현 명세 (개념 수준)**:
+
+```
+// currentProject watch 가드 조건
+watch(currentProject):
+  IF newProject?.id === oldProject?.id THEN return (skip)
+  IF !newProject AND !oldProject THEN return (skip)
+  IF newProject THEN fetchWbs(newProject.id)
+
+// selectedNodeId watch 가드 조건
+watch(selectedNodeId):
+  IF newId === oldId THEN return (skip)
+  IF node.type !== 'task' THEN clearSelectedTask()
+  ELSE loadTaskDetail(newId)
+```
+
+### 10.5 URL 쿼리 파라미터 검증 (리뷰 반영: H-002)
+
+> **목적**: 잘못된 projectId로 인한 서버 에러 방지
+
+| 규칙 ID | 규칙 설명 | 검증 패턴 | 검증 방법 |
+|---------|----------|----------|-----------|
+| BR-011 | projectId 형식 검증 | 소문자, 숫자, 하이픈만 허용 `/^[a-z0-9-]+$/` | 단위 테스트 |
+| BR-012 | 잘못된 형식 시 처리 | null 반환 → Empty State 표시 | E2E 테스트 |
+
+**URL 검증 구현 명세 (개념 수준)**:
+
+```
+computed projectId:
+  id = route.query.projectId
+  IF !id THEN return null
+  IF !/^[a-z0-9-]+$/.test(id) THEN return null (잘못된 형식)
+  return id
+```
+
 ---
 
 ## 11. 오류/예외 처리
@@ -753,7 +797,41 @@ stateDiagram-v2
 | 브라우저 뒤로가기 | 페이지 재로딩, 상태 초기화 |
 | 페이지 새로고침 | URL 쿼리에서 projectId 재추출, 순차 로딩 재실행 |
 
-### 11.3 에러 처리 플로우
+### 11.3 Empty State 우선순위 규칙 (리뷰 반영: H-003)
+
+> **목적**: 여러 Empty State 조건이 동시에 충족될 때 표시 우선순위 명확화
+
+| 우선순위 | 조건 | Empty State | data-testid |
+|---------|------|-------------|-------------|
+| 1 (최고) | 로딩 중 | ProgressSpinner + "로딩 중입니다..." | `loading-spinner` |
+| 2 | 에러 발생 | 에러 메시지 + 재시도 버튼 | `error-message` |
+| 3 | projectId 없음/잘못된 형식 | "프로젝트를 선택하세요" + 대시보드 링크 | `empty-state-no-project` |
+| 4 | 프로젝트 로드 실패 | "프로젝트를 찾을 수 없습니다" | `empty-state-project-not-found` |
+| 5 | WBS 데이터 없음 | "WBS 데이터가 없습니다" | `empty-state-no-wbs` |
+| 6 | Task 미선택 | "Task를 선택하세요" (우측 패널) | `empty-state-no-task` |
+
+**템플릿 v-if 순서 (개념 수준)**:
+
+```
+<template>
+  <!-- 1. 로딩 중 -->
+  <ProgressSpinner v-if="loading" />
+
+  <!-- 2. 에러 상태 -->
+  <ErrorMessage v-else-if="error" />
+
+  <!-- 3. projectId 없음 -->
+  <EmptyStateNoProject v-else-if="!projectId" />
+
+  <!-- 4-5. 정상 콘텐츠 (내부에서 WBS 없음 처리) -->
+  <WbsContent v-else>
+    <!-- WbsTreePanel: WBS 없음 Empty State 처리 -->
+    <!-- TaskDetailPanel: Task 미선택 Empty State 처리 -->
+  </WbsContent>
+</template>
+```
+
+### 11.4 에러 처리 플로우
 
 ```mermaid
 flowchart TD

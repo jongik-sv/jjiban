@@ -22,10 +22,28 @@ globalThis.acceptHMRUpdate = vi.fn((store: any, hotModule: any) => {
 // Mock Nuxt composables
 globalThis.useWbsStore = vi.fn(() => ({
   isExpanded: vi.fn(() => true),
-  toggleExpand: vi.fn()
+  toggleExpand: vi.fn(),
+  fetchWbs: vi.fn(),
+  clearWbs: vi.fn(),
+  tree: [],
+  loading: false
 }))
 
 globalThis.useSelectionStore = vi.fn(() => ({
   selectedNodeId: null,
-  selectNode: vi.fn()
+  selectNode: vi.fn(),
+  clearSelection: vi.fn()
+}))
+
+globalThis.useProjectStore = vi.fn(() => ({
+  loadProject: vi.fn(),
+  currentProject: null,
+  clearProject: vi.fn(),
+  projectName: ''
+}))
+
+// Mock PrimeVue useToast
+const mockToastAdd = vi.fn()
+globalThis.useToast = vi.fn(() => ({
+  add: mockToastAdd
 }))

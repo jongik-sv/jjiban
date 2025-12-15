@@ -5,6 +5,7 @@
  */
 
 import type { WbsNode } from '~/types/store'
+import type { WbsMetadata } from '~/types'
 
 export const useWbsStore = defineStore('wbs', () => {
   // ============================================================
@@ -132,11 +133,14 @@ export const useWbsStore = defineStore('wbs', () => {
     loading.value = true
     error.value = null
     try {
-      const data = await $fetch<WbsNode[]>(`/api/projects/${projectId}/wbs`)
-      tree.value = data
-      flatNodes.value = flattenTree(data)
+      // API 응답: { metadata, tree } 객체 형식
+      const response = await $fetch<{ metadata: WbsMetadata; tree: WbsNode[] }>(
+        `/api/projects/${projectId}/wbs`
+      )
+      tree.value = response.tree
+      flatNodes.value = flattenTree(response.tree)
       // 기본적으로 최상위 노드들 확장
-      data.forEach(node => expandedNodes.value.add(node.id))
+      response.tree.forEach(node => expandedNodes.value.add(node.id))
     } catch (e) {
       error.value = e instanceof Error ? e.message : 'Failed to fetch WBS'
       throw e
