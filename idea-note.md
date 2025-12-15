@@ -69,6 +69,7 @@
 - wf-hierarchy-input.md을 skill로 바꾸면 시간과 토큰을 아낄 수 있다.
 - auto 를 skill로 변환하면 프롬프트를 알아서 판별해서 명령어를 수행할 수 있다.
 - test 결과에 오류가 있으면 wbs에 표시해서 테스트 결과를 확인할 수 있도록 한다. [결과 없음, 정상, 오류] - 다시 테스트를 수행할 수 있도록 한다.
+- verify 단계의 정의를 다시 세우고 필요 없는 단계이면 삭제하자. 그럼 test 명령어로 대체. test 성공하면 vf 단계로 넘어가자.
 
 ## 참고 사항
 - continuous-claude : 생각이 나랑 같네. 알아서 순서대로 명령어를 계속 수행
@@ -79,13 +80,6 @@
    - $env:ENABLE_EXPERIMENTAL_MCP_CLI="true" # WINDOWS powershell
    - set ENABLE_EXPERIMENTAL_MCP_CLI=true # WINDOWS command shell
    - claude code 내부 명령어 : mcp-cli -V 명령어 실행해줘.
-
-
-
-
-
-
-    - 4단계 구조는 WP 폴더 내부에 ACT 폴더가 있고   그 밑에 TASK 폴더가 있음
 
 
 
@@ -103,3 +97,12 @@
 @.jjiban\projects\jjiban\tasks\TSK-01-02-01\ui-assets\ @.jjiban\projects\jjiban\tasks\TSK-01-02-02\ui-assets\ 안의 설계 이미지가 전체 생각하고 있는 모습인 @.jjiban\projects\jjiban\wbs-tree-mockup-compact.svg 를 잘 반영하고 잇는지 확인해줘.
 
 
+  3. 실패하는 테스트들 (❌)
+
+  | 파일                    | 실패 원인                                         | projects.json 관련 |
+  |-------------------------|---------------------------------------------------|--------------------|
+  | completed-field.spec.ts | WBS 메타데이터 형식 문제 (- version vs > version) | ❌ 무관            |
+  | detail-panel.spec.ts    | UI 요소 타임아웃 (드롭다운 등)                    | ❌ 무관            |
+  | detail-sections.spec.ts | UI 컴포넌트 미구현/변경                           | ❌ 무관            |
+  | wbs-tree-panel.spec.ts  | UI 요소 셀렉터 불일치                             | ❌ 무관            |
+  | wbs-search.spec.ts      | UI 요소 셀렉터 불일치                             | ❌ 무관            |
