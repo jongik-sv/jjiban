@@ -74,8 +74,10 @@ export interface ProjectDetail {
 
 // ============================================================
 // DTO Types - validators/projectValidators.ts에서 Zod로 정의
-// Nuxt auto-import로 직접 사용 가능
 // ============================================================
+
+// Re-export from validators for backward compatibility
+export type { CreateProjectDto, UpdateProjectDto, UpdateTeamDto } from '../validators/projectValidators';
 
 /**
  * 프로젝트 목록 응답

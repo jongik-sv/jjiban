@@ -103,6 +103,7 @@ describe('Project Services Integration', () => {
     const dto = {
       id: 'Invalid_Project', // 언더스코어 불허
       name: 'Invalid Project',
+      wbsDepth: 4 as const,
     };
 
     await expect(createProjectWithRegistration(dto)).rejects.toThrow();

@@ -25,7 +25,7 @@ export const createProjectSchema = z.object({
   name: z.string().min(1, '프로젝트명은 필수입니다').max(100, '프로젝트명은 100자 이하여야 합니다'),
   description: z.string().max(1000, '설명은 1000자 이하여야 합니다').optional(),
   wbsDepth: z.union([z.literal(3), z.literal(4)], {
-    errorMap: () => ({ message: 'WBS 깊이는 3 또는 4여야 합니다' })
+    message: 'WBS 깊이는 3 또는 4여야 합니다'
   }).default(4),
   scheduledStart: z.string().optional(),
   scheduledEnd: z.string().optional(),
@@ -37,13 +37,13 @@ export const createProjectSchema = z.object({
  */
 export const updateProjectSchema = z.object({
   id: z.undefined({
-    errorMap: () => ({ message: '프로젝트 ID는 변경할 수 없습니다' })
+    message: '프로젝트 ID는 변경할 수 없습니다'
   }).optional(),
   name: z.string().min(1).max(100).optional(),
   description: z.string().max(1000).optional(),
   version: z.string().optional(),
   status: z.enum(['active', 'archived'], {
-    errorMap: () => ({ message: '상태는 active 또는 archived여야 합니다' })
+    message: '상태는 active 또는 archived여야 합니다'
   }).optional(),
   scheduledStart: z.string().optional(),
   scheduledEnd: z.string().optional(),

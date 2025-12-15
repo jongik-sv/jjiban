@@ -30,8 +30,8 @@ export default defineEventHandler(async (event) => {
     // Zod 검증
     const validation = updateTeamSchema.safeParse(body);
     if (!validation.success) {
-      // Zod v4: .issues 사용 (v3의 .errors 대신)
-      const firstError = validation.error.issues?.[0] ?? validation.error.errors?.[0];
+      // Zod v4: .issues 사용
+      const firstError = validation.error.issues?.[0];
       throw createBadRequestError('VALIDATION_ERROR', firstError?.message || '유효성 검증 실패');
     }
 

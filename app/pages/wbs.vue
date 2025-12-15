@@ -29,19 +29,9 @@ const projectStore = useProjectStore()
       <LayoutAppHeader :project-name="projectStore.projectName || ''" />
     </template>
 
-    <!-- Left Panel: WBS Tree (향후 WP-04에서 구현) -->
+    <!-- Left Panel: WBS Tree Panel -->
     <template #left>
-      <div class="p-4">
-        <div class="card">
-          <h3 class="text-lg font-semibold text-text mb-4">WBS Tree</h3>
-          <p class="text-text-secondary text-sm">
-            WBS 트리 뷰가 여기에 표시됩니다.
-          </p>
-          <p class="text-text-muted text-xs mt-2">
-            (WP-04에서 구현 예정)
-          </p>
-        </div>
-      </div>
+      <WbsTreePanel />
     </template>
 
     <!-- Right Panel: Task Detail (향후 WP-05에서 구현) -->

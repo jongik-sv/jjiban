@@ -4,6 +4,11 @@ import { serializeHeader } from './serializer/header';
 import { serializeAttributes } from './serializer/attributes';
 import { buildMetadataBlock } from './serializer/metadata';
 
+// Re-export for testing and external use
+export { serializeHeader } from './serializer/header';
+export { serializeAttributes } from './serializer/attributes';
+export { buildMetadataBlock } from './serializer/metadata';
+
 const MAX_RECURSION_DEPTH = 10;
 const MAX_NODE_COUNT = 1000;
 const MAX_TITLE_LENGTH = 200;

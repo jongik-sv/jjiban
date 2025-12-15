@@ -19,6 +19,7 @@ import {
   collectAllIds,
 } from '../../../server/utils/wbs/validation';
 import type { WbsNode } from '../../../types';
+import type { ValidationError } from '../../../server/utils/wbs/validation';
 
 // ============================================================
 // UT-ID: IdValidator 단위 테스트

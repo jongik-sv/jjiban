@@ -16,7 +16,8 @@ import type {
 import { SETTINGS_FILE_NAMES } from '../../../types/settings';
 import { loadSettings as loadSettingsFromCache } from './cache';
 
-// Note: defaults, isCacheValid, refreshCache는 Nuxt가 개별 파일에서 직접 auto-import
+// Re-export cache functions for testing
+export { loadSettings, refreshCache, isCacheValid, getCacheLoadedAt } from './cache';
 
 // ============================================================
 // 서비스 함수

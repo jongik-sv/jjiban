@@ -167,8 +167,8 @@ const koreanPatterns = {
 
 [ ] Todo
   ↓ /wf:start          → requirements-analyst
-  ↓ /wf:ui (조건부)    → frontend-architect ⚠️ UI 설계 문서 없으면 실행
 [bd] 기본설계
+  ↓ /wf:ui             → frontend-architect (Frontend 포함 시)
   ↓ /wf:draft          → system-architect
 [dd] 상세설계  ← 여기서 STOP!
 
@@ -186,9 +186,8 @@ const koreanPatterns = {
 
 [dd] 상세설계 (이어서)
   ↓ /wf:build          → backend + frontend
-  │                       └── 내부적으로 /wf:test 호출
-  ↓ /wf:test (조건부)  → quality-engineer ⚠️ 결과 없을 때만
 [im] 구현
+  ↓ /wf:test           → quality-engineer (TDD + E2E)
   ↓ /wf:audit          → refactoring-expert
   ↓ /wf:patch          → (메인 에이전트)
   ↓ /wf:verify         → quality-engineer
@@ -206,18 +205,16 @@ const koreanPatterns = {
 ```
 [ ] Todo
   ↓ /wf:start          → requirements-analyst
-  │                       └── 내부적으로 /wf:ui 호출 시도
-  ↓ /wf:ui (조건부)    → frontend-architect ⚠️ UI 설계 문서 없을 때만 실행
 [bd] 기본설계
+  ↓ /wf:ui             → frontend-architect (Frontend 포함 시)
   ↓ /wf:draft          → system-architect
 [dd] 상세설계
-  ↓ /wf:review (1회)   → refactoring-expert (자동 포함)
+  ↓ /wf:review         → refactoring-expert
   ↓ /wf:apply          → (메인 에이전트)
   ↓ /wf:build          → backend-architect + frontend-architect (병렬)
-  │                       └── 내부적으로 /wf:test 호출 (TDD + E2E)
-  ↓ /wf:test (조건부)  → quality-engineer ⚠️ 테스트 결과 없을 때만 실행
 [im] 구현
-  ↓ /wf:audit (1회)    → refactoring-expert (자동 포함)
+  ↓ /wf:test           → quality-engineer (TDD + E2E)
+  ↓ /wf:audit          → refactoring-expert
   ↓ /wf:patch          → (메인 에이전트)
   ↓ /wf:verify         → quality-engineer
 [ts] 테스트
@@ -232,10 +229,9 @@ const koreanPatterns = {
   ↓ /wf:start          → requirements-analyst
 [an] 분석
   ↓ /wf:fix            → backend-architect / frontend-architect
-  │                       └── 내부적으로 /wf:test 호출 (TDD + E2E)
-  ↓ /wf:test (조건부)  → quality-engineer ⚠️ 테스트 결과 없을 때만 실행
 [fx] 수정
-  ↓ /wf:audit (1회)    → refactoring-expert (자동 포함)
+  ↓ /wf:test           → quality-engineer (TDD + E2E)
+  ↓ /wf:audit          → refactoring-expert
   ↓ /wf:patch          → (메인 에이전트)
   ↓ /wf:verify         → quality-engineer
 [ts] 테스트
@@ -460,9 +456,8 @@ Loop 1: [dd] → [im]
   │   └── apply (메인) → 리뷰 반영, 파일명에 (적용완료) 추가
   ├── mainAction:
   │   └── build (backend-architect) → 030-implementation.md, 코드 구현
-  │       └── 내부적으로 /wf:test 호출 → 070-tdd/e2e-test-results.md 생성
   └── postActions:
-      └── test (quality-engineer) → ⚠️ 테스트 결과 존재 시 스킵
+      └── test (quality-engineer) → 070-tdd/e2e-test-results.md 생성
 
 Loop 2: [im] → [ts]
   ├── preActions:

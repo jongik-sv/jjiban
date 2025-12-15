@@ -15,6 +15,7 @@ export const useWbsStore = defineStore('wbs', () => {
   const loading = ref(false)
   const error = ref<string | null>(null)
   const expandedNodes = ref<Set<string>>(new Set())
+  const searchQuery = ref('')
 
   // ============================================================
   // Getters
@@ -51,6 +52,20 @@ export const useWbsStore = defineStore('wbs', () => {
     return Math.round(totalProgress / tasks.length)
   })
 
+  /**
+   * 검색어로 필터링된 트리
+   * - 검색어가 없으면 원본 트리 반환
+   * - 검색어가 있으면 매칭되는 노드만 포함
+   */
+  const filteredTree = computed<WbsNode[]>(() => {
+    if (!searchQuery.value.trim()) {
+      return tree.value
+    }
+
+    const query = searchQuery.value.toLowerCase().trim()
+    return filterTreeNodes(tree.value, query)
+  })
+
   // ============================================================
   // Helper Functions
   // ============================================================
@@ -72,6 +87,37 @@ export const useWbsStore = defineStore('wbs', () => {
         flattenTree(node.children, result)
       }
     }
+    return result
+  }
+
+  /**
+   * 트리 노드 필터링 헬퍼 함수
+   * - 노드 ID 또는 title이 검색어를 포함하면 해당 노드와 상위 경로 유지
+   * - 재귀적으로 자식 노드 검색
+   */
+  function filterTreeNodes(nodes: WbsNode[], query: string): WbsNode[] {
+    const result: WbsNode[] = []
+
+    for (const node of nodes) {
+      // 현재 노드가 검색어와 매칭되는지 확인
+      const nodeMatches =
+        node.id.toLowerCase().includes(query) ||
+        node.title.toLowerCase().includes(query)
+
+      // 자식 노드 재귀 필터링
+      const filteredChildren = node.children
+        ? filterTreeNodes(node.children, query)
+        : []
+
+      // 현재 노드가 매칭되거나 자식 중 매칭되는 노드가 있으면 포함
+      if (nodeMatches || filteredChildren.length > 0) {
+        result.push({
+          ...node,
+          children: filteredChildren
+        })
+      }
+    }
+
     return result
   }
 
@@ -168,6 +214,13 @@ export const useWbsStore = defineStore('wbs', () => {
     expandedNodes.value.clear()
   }
 
+  /**
+   * 검색어 설정
+   */
+  function setSearchQuery(query: string) {
+    searchQuery.value = query
+  }
+
   return {
     // State
     tree,
@@ -175,11 +228,13 @@ export const useWbsStore = defineStore('wbs', () => {
     loading,
     error,
     expandedNodes,
+    searchQuery,
     // Getters
     wpCount,
     actCount,
     tskCount,
     overallProgress,
+    filteredTree,
     // Actions
     fetchWbs,
     saveWbs,
@@ -188,7 +243,8 @@ export const useWbsStore = defineStore('wbs', () => {
     isExpanded,
     expandAll,
     collapseAll,
-    clearWbs
+    clearWbs,
+    setSearchQuery
   }
 })
 

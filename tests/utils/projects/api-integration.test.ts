@@ -136,12 +136,14 @@ describe('Project Metadata Service - API Integration Tests', () => {
       await createProjectWithRegistration({
         id: uniqueId,
         name: 'Duplicate Test Base',
+        wbsDepth: 4,
       });
 
       // When: Try to create duplicate
       const duplicateDto = {
         id: uniqueId,
         name: 'Duplicate Project',
+        wbsDepth: 4 as const,
       };
 
       // Then: Should throw conflict error
@@ -153,6 +155,7 @@ describe('Project Metadata Service - API Integration Tests', () => {
       const invalidDto = {
         id: 'Invalid_Project!', // Uppercase, underscore, special chars not allowed
         name: 'Invalid Project',
+        wbsDepth: 4 as const,
       };
 
       // Then: Should throw validation error (BR-001)
@@ -455,6 +458,7 @@ describe('Project Metadata Service - API Integration Tests', () => {
           createProjectWithRegistration({
             id: invalidId,
             name: 'Test',
+            wbsDepth: 4,
           })
         ).rejects.toThrow();
       }
@@ -467,6 +471,7 @@ describe('Project Metadata Service - API Integration Tests', () => {
         const result = await createProjectWithRegistration({
           id: validId,
           name: `Project ${validId}`,
+          wbsDepth: 4,
         });
         expect(result.project.id).toBe(validId);
       }

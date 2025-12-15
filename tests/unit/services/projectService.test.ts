@@ -136,6 +136,7 @@ describe('ProjectService', () => {
       const createDto = {
         id: 'minimal-project',
         name: '최소 프로젝트',
+        wbsDepth: 4 as const,
       };
 
       // Act
@@ -153,6 +154,7 @@ describe('ProjectService', () => {
       const createDto = {
         id: 'fail-project',
         name: 'Fail Project',
+        wbsDepth: 4 as const,
       };
 
       // Act & Assert

@@ -746,6 +746,215 @@ describe('useWbsStore - UT-006', () => {
 
 ---
 
+#### UT-016: 유효하지 않은 projectId 처리
+
+**FR 매핑**: FR-001 (에러 핸들링)
+
+```typescript
+describe('useWbsStore - UT-016', () => {
+  beforeEach(() => {
+    setActivePinia(createPinia())
+  })
+
+  it('유효하지 않은 projectId로 fetchWbs() 호출 시 에러 상태가 설정된다', async () => {
+    // Given: 유효하지 않은 projectId
+    const store = useWbsStore()
+    const invalidProjectId = ''
+
+    // When: fetchWbs() 호출
+    await store.fetchWbs(invalidProjectId)
+
+    // Then: 에러 상태 확인
+    expect(store.error).toBeTruthy()
+    expect(store.loading).toBe(false)
+    expect(store.tree).toEqual([])
+  })
+
+  it('존재하지 않는 projectId로 fetchWbs() 호출 시 404 에러 처리', async () => {
+    // Given: 존재하지 않는 projectId
+    const store = useWbsStore()
+    const nonExistentId = 'non-existent-project'
+
+    // When: fetchWbs() 호출 (Mock API 404 응답)
+    vi.mock('#app', () => ({
+      $fetch: vi.fn().mockRejectedValue({ statusCode: 404 })
+    }))
+    await store.fetchWbs(nonExistentId)
+
+    // Then: 에러 메시지 확인
+    expect(store.error).toContain('프로젝트를 찾을 수 없습니다')
+    expect(store.loading).toBe(false)
+  })
+})
+```
+
+**예상 결과**:
+- 빈 projectId: 에러 상태 설정
+- 존재하지 않는 projectId: 404 에러 메시지 표시
+- 로딩 상태 false
+
+---
+
+#### UT-017: 검색어 길이 제한 테스트
+
+**FR 매핑**: FR-003 (검색 기능)
+
+```typescript
+describe('useWbsStore - UT-017', () => {
+  beforeEach(() => {
+    setActivePinia(createPinia())
+  })
+
+  it('1글자 검색어도 정상적으로 필터링된다', () => {
+    // Given: WBS 데이터 로드
+    const store = useWbsStore()
+    store.tree = [mockWbsData]
+    store.flatNodes = flattenTree([mockWbsData])
+
+    // When: 1글자 검색어 설정
+    store.setSearchQuery('T')
+
+    // Then: 'T'를 포함하는 노드 필터링
+    const filtered = store.filteredTree
+    expect(filtered.length).toBeGreaterThan(0)
+  })
+
+  it('매우 긴 검색어도 정상적으로 처리된다', () => {
+    // Given: WBS 데이터 로드
+    const store = useWbsStore()
+    store.tree = [mockWbsData]
+    store.flatNodes = flattenTree([mockWbsData])
+
+    // When: 긴 검색어 설정 (100글자)
+    const longQuery = 'a'.repeat(100)
+    store.setSearchQuery(longQuery)
+
+    // Then: 빈 결과 반환 (에러 없음)
+    const filtered = store.filteredTree
+    expect(filtered).toEqual([])
+    expect(store.error).toBeNull()
+  })
+
+  it('특수문자 포함 검색어도 정상적으로 처리된다', () => {
+    // Given: WBS 데이터 로드
+    const store = useWbsStore()
+    store.tree = [mockWbsData]
+    store.flatNodes = flattenTree([mockWbsData])
+
+    // When: 특수문자 포함 검색어
+    store.setSearchQuery('TSK-01-01')
+
+    // Then: 정상 필터링
+    const filtered = store.filteredTree
+    expect(store.error).toBeNull()
+  })
+})
+```
+
+**예상 결과**:
+- 1글자 검색: 정상 필터링
+- 긴 검색어: 빈 결과 반환 (에러 없음)
+- 특수문자: 정상 처리
+
+---
+
+#### UT-018: 빈 flatNodes 상태 테스트
+
+**FR 매핑**: FR-005 (통계 계산)
+
+```typescript
+describe('useWbsStore - UT-018', () => {
+  beforeEach(() => {
+    setActivePinia(createPinia())
+  })
+
+  it('flatNodes가 비어있을 때 wpCount는 0을 반환한다', () => {
+    // Given: 빈 스토어
+    const store = useWbsStore()
+    store.tree = []
+    store.flatNodes = new Map()
+
+    // When: wpCount getter 호출
+    const count = store.wpCount
+
+    // Then: 0 반환
+    expect(count).toBe(0)
+  })
+
+  it('flatNodes가 비어있을 때 actCount는 0을 반환한다', () => {
+    // Given: 빈 스토어
+    const store = useWbsStore()
+    store.tree = []
+    store.flatNodes = new Map()
+
+    // When: actCount getter 호출
+    const count = store.actCount
+
+    // Then: 0 반환
+    expect(count).toBe(0)
+  })
+
+  it('flatNodes가 비어있을 때 tskCount는 0을 반환한다', () => {
+    // Given: 빈 스토어
+    const store = useWbsStore()
+    store.tree = []
+    store.flatNodes = new Map()
+
+    // When: tskCount getter 호출
+    const count = store.tskCount
+
+    // Then: 0 반환
+    expect(count).toBe(0)
+  })
+
+  it('flatNodes가 비어있을 때 overallProgress는 0을 반환한다', () => {
+    // Given: 빈 스토어
+    const store = useWbsStore()
+    store.tree = []
+    store.flatNodes = new Map()
+
+    // When: overallProgress getter 호출
+    const progress = store.overallProgress
+
+    // Then: 0 반환
+    expect(progress).toBe(0)
+  })
+
+  it('Task가 없을 때 overallProgress는 0을 반환한다 (0으로 나누기 방지)', () => {
+    // Given: Task 없는 트리 (WP, ACT만 존재)
+    const store = useWbsStore()
+    const wpOnlyData: WbsNode = {
+      id: 'project',
+      type: 'project',
+      title: 'Test Project',
+      progress: 0,
+      children: [{
+        id: 'WP-01',
+        type: 'wp',
+        title: 'Work Package',
+        progress: 0,
+        children: []
+      }]
+    }
+    store.tree = [wpOnlyData]
+    store.flatNodes = flattenTree([wpOnlyData])
+
+    // When: overallProgress getter 호출
+    const progress = store.overallProgress
+
+    // Then: 0 반환 (NaN이 아님)
+    expect(progress).toBe(0)
+    expect(Number.isNaN(progress)).toBe(false)
+  })
+})
+```
+
+**예상 결과**:
+- 빈 flatNodes: 모든 카운트 0 반환
+- Task 없는 트리: overallProgress 0 반환 (NaN 방지)
+
+---
+
 ## 3. E2E 테스트 명세
 
 ### 3.1 wbs-tree-panel.spec.ts
@@ -1104,6 +1313,248 @@ test.describe('WBS Performance', () => {
 **예상 결과**:
 - 검색 응답 시간 < 500ms
 - Debounce 300ms 포함
+
+---
+
+### 4.2 wbs-performance-unit.spec.ts (PERF-002)
+
+**파일 경로**: `tests/unit/performance/wbs-performance.spec.ts`
+
+#### PERF-002: 대규모 노드 필터링 성능
+
+**NFR 매핑**: NFR-001 (성능 요구사항)
+
+> **리뷰 지적 사항**: 설계 문서에서 < 1000개 노드를 권장하나, 실제 성능 테스트가 누락되어 병목 가능성 미검증.
+> 이 테스트는 1000+ 노드에서의 필터링 성능을 검증합니다.
+
+```typescript
+import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { setActivePinia, createPinia } from 'pinia'
+import { useWbsStore } from '~/stores/wbs'
+import type { WbsNode } from '~/types/index'
+
+/**
+ * 대규모 Mock 트리 생성 함수
+ * @param nodeCount 생성할 총 노드 수
+ * @returns WbsNode 트리
+ */
+function generateLargeMockTree(nodeCount: number): WbsNode {
+  const wpCount = Math.ceil(nodeCount / 50) // WP당 약 50개 노드
+  const tskPerWp = Math.floor(nodeCount / wpCount)
+
+  const children: WbsNode[] = []
+  let totalGenerated = 0
+
+  for (let wp = 1; wp <= wpCount && totalGenerated < nodeCount; wp++) {
+    const wpNode: WbsNode = {
+      id: `WP-${String(wp).padStart(2, '0')}`,
+      type: 'wp',
+      title: `Work Package ${wp}`,
+      progress: Math.floor(Math.random() * 100),
+      children: []
+    }
+
+    for (let tsk = 1; tsk <= tskPerWp && totalGenerated < nodeCount; tsk++) {
+      const tskNode: WbsNode = {
+        id: `TSK-${String(wp).padStart(2, '0')}-${String(tsk).padStart(2, '0')}`,
+        type: 'task',
+        title: `Task ${wp}-${tsk} - Implementation of feature ${totalGenerated}`,
+        status: ['[ ]', '[bd]', '[dd]', '[im]', '[xx]'][Math.floor(Math.random() * 5)],
+        category: ['development', 'defect', 'infrastructure'][Math.floor(Math.random() * 3)],
+        progress: Math.floor(Math.random() * 100),
+        children: []
+      }
+      wpNode.children!.push(tskNode)
+      totalGenerated++
+    }
+
+    children.push(wpNode)
+  }
+
+  return {
+    id: 'large-project',
+    type: 'project',
+    title: 'Large Scale Project',
+    progress: 0,
+    children
+  }
+}
+
+/**
+ * flattenTree 헬퍼 함수
+ */
+function flattenTree(nodes: WbsNode[]): Map<string, WbsNode> {
+  const map = new Map<string, WbsNode>()
+
+  function traverse(node: WbsNode) {
+    map.set(node.id, node)
+    if (node.children) {
+      node.children.forEach(traverse)
+    }
+  }
+
+  nodes.forEach(traverse)
+  return map
+}
+
+describe('WBS Performance Tests - PERF-002', () => {
+  beforeEach(() => {
+    setActivePinia(createPinia())
+  })
+
+  it('PERF-002-1: 1000개 노드 필터링이 100ms 이내에 완료된다', () => {
+    // Given: 1000개 노드로 구성된 대규모 트리
+    const store = useWbsStore()
+    const largeTree = generateLargeMockTree(1000)
+    store.tree = [largeTree]
+    store.flatNodes = flattenTree([largeTree])
+
+    // When: 검색어 설정 및 시간 측정
+    const startTime = performance.now()
+    store.setSearchQuery('TSK-01')
+    const filteredTree = store.filteredTree // getter 호출
+    const endTime = performance.now()
+
+    const filterTime = endTime - startTime
+
+    // Then: 100ms 이내 완료
+    console.log(`1000 nodes filter time: ${filterTime.toFixed(2)}ms`)
+    expect(filterTime).toBeLessThan(100)
+    expect(filteredTree).toBeDefined()
+  })
+
+  it('PERF-002-2: 3000개 노드 필터링이 300ms 이내에 완료된다', () => {
+    // Given: 3000개 노드로 구성된 대규모 트리
+    const store = useWbsStore()
+    const largeTree = generateLargeMockTree(3000)
+    store.tree = [largeTree]
+    store.flatNodes = flattenTree([largeTree])
+
+    // When: 검색어 설정 및 시간 측정
+    const startTime = performance.now()
+    store.setSearchQuery('implementation')
+    const filteredTree = store.filteredTree
+    const endTime = performance.now()
+
+    const filterTime = endTime - startTime
+
+    // Then: 300ms 이내 완료
+    console.log(`3000 nodes filter time: ${filterTime.toFixed(2)}ms`)
+    expect(filterTime).toBeLessThan(300)
+    expect(filteredTree).toBeDefined()
+  })
+
+  it('PERF-002-3: 5000개 노드 필터링이 500ms 이내에 완료된다', () => {
+    // Given: 5000개 노드로 구성된 대규모 트리
+    const store = useWbsStore()
+    const largeTree = generateLargeMockTree(5000)
+    store.tree = [largeTree]
+    store.flatNodes = flattenTree([largeTree])
+
+    // When: 검색어 설정 및 시간 측정
+    const startTime = performance.now()
+    store.setSearchQuery('Task')
+    const filteredTree = store.filteredTree
+    const endTime = performance.now()
+
+    const filterTime = endTime - startTime
+
+    // Then: 500ms 이내 완료
+    console.log(`5000 nodes filter time: ${filterTime.toFixed(2)}ms`)
+    expect(filterTime).toBeLessThan(500)
+    expect(filteredTree).toBeDefined()
+  })
+
+  it('PERF-002-4: 1000개 노드에서 연속 검색 시 성능 저하가 없다', () => {
+    // Given: 1000개 노드 트리
+    const store = useWbsStore()
+    const largeTree = generateLargeMockTree(1000)
+    store.tree = [largeTree]
+    store.flatNodes = flattenTree([largeTree])
+
+    const searchQueries = ['TSK', 'WP-01', 'implementation', 'Task', 'feature']
+    const times: number[] = []
+
+    // When: 연속 5회 검색
+    searchQueries.forEach(query => {
+      const startTime = performance.now()
+      store.setSearchQuery(query)
+      const _ = store.filteredTree
+      const endTime = performance.now()
+      times.push(endTime - startTime)
+    })
+
+    // Then: 모든 검색이 100ms 이내, 성능 저하 없음
+    console.log(`Consecutive search times: ${times.map(t => t.toFixed(2)).join(', ')}ms`)
+    times.forEach(time => {
+      expect(time).toBeLessThan(100)
+    })
+
+    // 마지막 검색이 첫 검색보다 현저히 느리지 않음 (2배 이내)
+    expect(times[times.length - 1]).toBeLessThan(times[0] * 2 + 10)
+  })
+
+  it('PERF-002-5: flatNodes Map 생성 시간이 200ms 이내이다 (1000개 노드)', () => {
+    // Given: 1000개 노드 트리
+    const largeTree = generateLargeMockTree(1000)
+
+    // When: flattenTree 시간 측정
+    const startTime = performance.now()
+    const flatMap = flattenTree([largeTree])
+    const endTime = performance.now()
+
+    const flattenTime = endTime - startTime
+
+    // Then: 200ms 이내
+    console.log(`Flatten time (1000 nodes): ${flattenTime.toFixed(2)}ms`)
+    expect(flattenTime).toBeLessThan(200)
+    expect(flatMap.size).toBeGreaterThanOrEqual(1000)
+  })
+
+  it('PERF-002-6: 빈 검색어로 초기화 시 즉시 응답한다', () => {
+    // Given: 5000개 노드 트리 + 검색어 설정된 상태
+    const store = useWbsStore()
+    const largeTree = generateLargeMockTree(5000)
+    store.tree = [largeTree]
+    store.flatNodes = flattenTree([largeTree])
+    store.setSearchQuery('TSK')
+
+    // When: 검색어 초기화
+    const startTime = performance.now()
+    store.setSearchQuery('')
+    const filteredTree = store.filteredTree
+    const endTime = performance.now()
+
+    const resetTime = endTime - startTime
+
+    // Then: 10ms 이내 (원본 트리 반환)
+    console.log(`Reset search time: ${resetTime.toFixed(2)}ms`)
+    expect(resetTime).toBeLessThan(10)
+    expect(filteredTree).toBe(store.tree)
+  })
+})
+```
+
+**예상 결과**:
+
+| 테스트 케이스 | 노드 수 | 목표 시간 | 비고 |
+|-------------|--------|----------|------|
+| PERF-002-1 | 1,000 | < 100ms | 권장 범위 내 |
+| PERF-002-2 | 3,000 | < 300ms | 한계 테스트 |
+| PERF-002-3 | 5,000 | < 500ms | 극한 테스트 |
+| PERF-002-4 | 1,000 (5회 연속) | < 100ms 각 | 메모리 누수 없음 |
+| PERF-002-5 | 1,000 (flatten) | < 200ms | Map 생성 시간 |
+| PERF-002-6 | 5,000 (초기화) | < 10ms | 원본 참조 반환 |
+
+**성능 기준**:
+- 1000개 노드: 목표 응답 시간 100ms (사용자 인지 불가)
+- 3000개 노드: 목표 응답 시간 300ms (약간의 지연 허용)
+- 5000개 노드: 목표 응답 시간 500ms (로딩 인디케이터 권장)
+
+**실패 시 대응 계획**:
+1. 100ms 초과: filterTreeNodes 함수 Memoization 적용
+2. 300ms 초과: 검색 인덱스 구축 (Map 기반)
+3. 500ms 초과: Virtual Scrolling + 페이지네이션 적용
 
 ---
 

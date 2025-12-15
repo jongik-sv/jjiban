@@ -21,7 +21,8 @@ personas: [backend-architect, frontend-architect, quality-engineer]
 > **테스트 전문화**: 상세설계서 기반으로 TDD 단위테스트 및 E2E 테스트를 독립적으로 실행하고 테스트 결과서를 생성합니다.
 >
 > **상태 전환**: 없음 (테스트만 실행, 반복 가능)
-> **적용 category**: development
+> **적용 category**: 모든 카테고리 (구현 완료 상태 이후)
+> **실행 조건**: 구현 완료 상태 (`[im]`, `[fx]`) 이후에만 실행 가능
 
 ## 사용법
 
@@ -42,9 +43,17 @@ personas: [backend-architect, frontend-architect, quality-engineer]
 
 | 입력 타입 | 처리 방식 | 상태 필터 |
 |-----------|----------|----------|
-| `TSK-XX-XX-XX` | 단일 Task 처리 | 모든 상태 (테스트는 상태 무관) |
-| `ACT-XX-XX` | ACT 내 Task 병렬 처리 | development Task만 |
-| `WP-XX` | WP 내 Task 병렬 처리 | development Task만 |
+| `TSK-XX-XX-XX` | 단일 Task 처리 | 구현 완료 이후 상태 (카테고리별 조건 충족 시) |
+| `ACT-XX-XX` | ACT 내 Task 병렬 처리 | 구현 완료 이후 상태 Task만 |
+| `WP-XX` | WP 내 Task 병렬 처리 | 구현 완료 이후 상태 Task만 |
+
+### 카테고리별 실행 가능 상태
+
+| 카테고리 | 실행 가능 상태 | 설명 |
+|----------|---------------|------|
+| `development` | `[im]`, `[vf]`, `[xx]` | 구현 완료 이후 |
+| `defect` | `[fx]`, `[vf]`, `[xx]` | 수정 완료 이후 |
+| `infrastructure` | `[im]`, `[xx]` | 구현 완료 이후 |
 
 ## 테스트 유형
 
@@ -84,8 +93,23 @@ personas: [backend-architect, frontend-architect, quality-engineer]
 
 1. **Task 정보 추출 및 파싱**:
    - WBS에서 Task-ID로 Task 정보 조회
-   - category가 `development`인지 확인
-   - 현재 상태 확인 (테스트는 모든 상태에서 실행 가능)
+   - category 확인 (`development`, `defect`, `infrastructure`)
+   - 현재 상태 확인 및 **실행 조건 검증** ⭐:
+     ```
+     카테고리별 실행 가능 상태 검증:
+     ┌─────────────────────────────────────────────────────┐
+     │ category       │ 실행 가능 상태                     │
+     ├────────────────┼───────────────────────────────────┤
+     │ development    │ [im], [vf], [xx]                  │
+     │ defect         │ [fx], [vf], [xx]                  │
+     │ infrastructure │ [im], [xx]                        │
+     └─────────────────────────────────────────────────────┘
+
+     if (현재 상태 ∉ 실행 가능 상태) {
+       [ERROR] 테스트 실행 불가: {category}의 현재 상태 [{status}]
+       → 구현 완료 후 테스트 실행 필요
+     }
+     ```
 
 2. **설계 문서 분석** (분할된 3개 문서 로드):
    - `020-detail-design.md`: 상세설계 본문
@@ -593,7 +617,9 @@ Task: TSK-01-01-01
 
 | 에러 | 메시지 |
 |------|--------|
-| 잘못된 category | `[ERROR] development category만 지원합니다` |
+| **상태 미달 (development)** | `[ERROR] 테스트 실행 불가: development Task가 [im] 이전 상태 [{status}]입니다. /wf:build로 구현을 완료하세요.` |
+| **상태 미달 (defect)** | `[ERROR] 테스트 실행 불가: defect Task가 [fx] 이전 상태 [{status}]입니다. /wf:fix로 수정을 완료하세요.` |
+| **상태 미달 (infrastructure)** | `[ERROR] 테스트 실행 불가: infrastructure Task가 [im] 이전 상태 [{status}]입니다. /wf:build로 구현을 완료하세요.` |
 | 설계 문서 없음 | `[ERROR] 020-detail-design.md가 없습니다` |
 | 테스트 명세 없음 | `[ERROR] 026-test-specification.md가 없습니다` |
 | 추적성 매트릭스 없음 | `[WARN] 025-traceability-matrix.md가 없습니다. 요구사항 커버리지 확인 제한` |
@@ -608,14 +634,29 @@ Task: TSK-01-01-01
 
 ## WP/ACT 단위 병렬 처리
 
-WP 또는 ACT 단위 입력 시, 해당 범위 내 development Task들에 대해 테스트를 병렬로 실행합니다.
+WP 또는 ACT 단위 입력 시, 해당 범위 내 **구현 완료 상태** Task들에 대해 테스트를 병렬로 실행합니다.
+
+### 필터링 로직
+
+```
+WP/ACT 내 Task 필터링:
+1. 모든 하위 Task 조회
+2. 카테고리별 실행 가능 상태 필터:
+   - development: [im], [vf], [xx]
+   - defect: [fx], [vf], [xx]
+   - infrastructure: [im], [xx]
+3. 조건 충족 Task만 테스트 대상에 포함
+4. 조건 미충족 Task는 스킵 (로그 출력)
+```
+
+### 출력 예시
 
 ```
 [wf:test] 워크플로우 시작 (병렬 처리)
 
 입력: WP-01 (Work Package)
 범위: Core - Issue Management
-대상 Task: 12개 (development 필터 적용: 10개)
+대상 Task: 12개 (구현 완료 상태 필터 적용: 10개, 스킵: 2개)
 테스트 유형: all (TDD + E2E)
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

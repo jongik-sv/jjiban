@@ -350,7 +350,7 @@
 ### TSK-04-01: Tree Panel
 - category: development
 - domain: frontend
-- status: [dd]
+- status: [im]
 - priority: high
 - assignee: -
 - schedule: 2026-01-06 ~ 2026-01-09
@@ -473,7 +473,7 @@
 ### TSK-06-01: Integration
 - category: development
 - domain: fullstack
-- status: [ ]
+- status: [dd]
 - priority: high
 - assignee: -
 - schedule: 2026-01-20 ~ 2026-01-23
@@ -488,7 +488,7 @@
 ### TSK-06-02: Testing
 - category: development
 - domain: test
-- status: [ ]
+- status: [dd]
 - priority: medium
 - assignee: -
 - schedule: 2026-01-23 ~ 2026-01-25

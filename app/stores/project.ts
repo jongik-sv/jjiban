@@ -72,11 +72,14 @@ export const useProjectStore = defineStore('project', () => {
         body: input
       })
       currentProject.value = data
-      // 목록에도 추가
+      // 목록에도 추가 (ProjectSummary 타입에 맞게 필드 추가)
       projects.value.push({
         id: data.id,
         name: data.name,
-        status: data.status
+        path: data.id,
+        status: data.status,
+        wbsDepth: 4,
+        createdAt: data.createdAt
       })
       return data
     } catch (e) {

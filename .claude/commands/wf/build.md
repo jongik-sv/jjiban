@@ -243,70 +243,11 @@ parallel-processing: true
 **품질 기준**:
 - UI 구현 완료 (ui-assets 기반 디자인 일치)
 - API 연동 구현 완료
-- E2E 테스트 코드 작성 완료 (실행은 4단계에서)
+- E2E 테스트 코드 작성 완료
 
 ---
 
-### 4단계: 테스트 실행 (/wf:test 호출) ⭐
-**Auto-Persona**: quality-engineer (Agent 위임)
-**MCP**: context7 + playwright
-
-**실행 방식**: **subagent로 `/wf:test {TSK-ID} --type all` 호출**
-
-> **중요**: 테스트 실행 및 결과 저장 로직은 `/wf:test` 명령어로 일원화되어 있습니다.
-> wf:build는 구현에 집중하고, 테스트 관련 모든 처리는 wf:test가 담당합니다.
-
-**자동 실행 단계**:
-
-1. **wf:test 호출 준비**:
-   - Task 유형 확인 (hasBackend, hasFrontend)
-   - 테스트 유형 결정:
-     - Backend-only: `--type tdd`
-     - Frontend-only: `--type e2e`
-     - Full-stack: `--type all`
-
-2. **wf:test subagent 실행**:
-   ```javascript
-   Task({
-     description: "{TSK-ID} 테스트 실행",
-     prompt: `/wf:test {TSK-ID} --type all`,
-     subagent_type: "quality-engineer"
-   });
-   ```
-
-3. **wf:test가 수행하는 작업**:
-   - TDD 단위테스트 실행 (최대 5회 자동 수정)
-   - E2E 테스트 실행 (최대 5회 자동 수정)
-   - `070-tdd-test-results.md` 생성 (Task 폴더 루트)
-   - `070-e2e-test-results.md` 생성 (Task 폴더 루트)
-   - `test-results/[timestamp]/` 아티팩트 저장:
-     ```
-     .jjiban/projects/{project}/tasks/{TSK-ID}/
-     ├── 070-tdd-test-results.md      ← 결과서 문서
-     ├── 070-e2e-test-results.md      ← 결과서 문서
-     └── test-results/[timestamp]/    ← 아티팩트
-         ├── tdd/
-         │   ├── coverage/
-         │   └── test-results.json
-         └── e2e/
-             ├── e2e-test-report.html
-             ├── results.json
-             └── screenshots/
-     ```
-
-4. **테스트 결과 확인**:
-   - wf:test 실행 결과 수집
-   - 테스트 통과 여부 확인
-   - 실패 시 에러 메시지 전달
-
-**품질 기준**:
-- TDD 테스트 커버리지 80% 이상
-- E2E 주요 시나리오 100% 통과
-- 모든 테스트 결과서 생성 완료
-
----
-
-### 5단계: 구현 보고서 생성 및 WBS 업데이트
+### 4단계: 구현 보고서 생성 및 WBS 업데이트
 **Auto-Persona**: technical-writer
 
 **자동 실행 단계**:
@@ -385,6 +326,7 @@ parallel-processing: true
 ### 다음 단계
 
 구현 보고서 작성 완료 후:
+- `/wf:test [Task-ID]` - 테스트 실행 (TDD/E2E)
 - `/wf:audit [Task-ID]` - LLM 코드 리뷰 실행 (선택)
 - `/wf:patch [Task-ID]` - 리뷰 내용 반영 (선택)
 - `/wf:verify [Task-ID]` - 통합테스트 시작

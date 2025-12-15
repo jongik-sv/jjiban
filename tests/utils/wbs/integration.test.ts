@@ -89,7 +89,7 @@ describe('WBS Module Integration', () => {
       const result = validateWbs(parsedNodes);
 
       // ID_FORMAT 에러가 없어야 함
-      const idErrors = result.errors.filter(e => e.code === 'ID_FORMAT');
+      const idErrors = result.errors.filter(e => e.type === 'ID_FORMAT');
       expect(idErrors).toHaveLength(0);
     });
 
@@ -97,7 +97,7 @@ describe('WBS Module Integration', () => {
       const result = validateWbs(parsedNodes);
 
       // HIERARCHY_MISMATCH 에러가 없어야 함
-      const hierarchyErrors = result.errors.filter(e => e.code === 'HIERARCHY_MISMATCH');
+      const hierarchyErrors = result.errors.filter(e => e.type === 'HIERARCHY_MISMATCH');
       expect(hierarchyErrors).toHaveLength(0);
     });
   });
