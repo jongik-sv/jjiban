@@ -625,7 +625,7 @@
 
 #### TSK-06-02: Testing
 - category: development
-- status: [vf]
+- status: [xx]
 - priority: medium
 - schedule: 2026-01-23 ~ 2026-01-25
 - tags: test, unit, e2e
@@ -639,6 +639,7 @@
   - dd: 2025-12-15 22:26
   - im: 2025-12-16 08:30
   - vf: 2025-12-16 08:35
+  - xx: 2025-12-16 08:40
 
 ---
 
