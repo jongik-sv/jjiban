@@ -119,16 +119,23 @@ jjiban 워크플로우를 터미널에서 독립적으로 실행할 수 있는 N
 
 ## 5. 시스템/모듈 구조
 
+> **설계 리뷰 반영**: DIP-001(의존성 주입), SRP-001(책임 분리), SEC-001(보안 검증) 이슈 해결
+
 ### 5.1 모듈 역할 및 책임
 
 | 모듈 | 역할 | 책임 |
 |------|------|------|
-| `bin/jjiban.js` | CLI 진입점 | commander 설정, 명령어 라우팅 |
-| `cli/commands/workflow.js` | workflow 명령어 | 옵션 파싱, WorkflowRunner 호출 |
-| `cli/core/WorkflowRunner.js` | 오케스트레이터 | 단계별 실행 루프, 상태 전이 |
-| `cli/core/ClaudeExecutor.js` | Claude 실행기 | spawn으로 claude -p 호출, 출력 캡처 |
-| `cli/core/StateManager.js` | 상태 관리자 | workflow-state.json 저장/로드 |
-| `cli/core/WbsReader.js` | WBS 리더 | 기존 파서 래핑, Task 정보 조회 |
+| `bin/jjiban.js` | CLI 진입점 | commander 설정, 의존성 조립 |
+| `cli/commands/workflow.js` | workflow 명령어 | 옵션 파싱, Runner 호출 |
+| `cli/core/WorkflowRunner.js` | 오케스트레이터 | **조율만** (Planner/Executor/StateMachine 위임) |
+| `cli/core/WorkflowPlanner.js` | 계획 생성기 | 현재 상태 → 목표까지 단계 목록 생성 |
+| `cli/core/WorkflowExecutor.js` | 단계 실행기 | 각 단계 Claude 세션 실행 |
+| `cli/core/WorkflowStateMachine.js` | 상태 머신 | 상태 전이 관리, 유효성 검증 |
+| `cli/core/ClaudeExecutor.js` | Claude 실행기 | spawn으로 claude -p 호출 |
+| `cli/core/StateManager.js` | 상태 저장소 | workflow-state.json 저장/로드 |
+| `cli/core/WbsReader.js` | WBS 저장소 | 기존 파서 래핑, Task 조회 |
+| `cli/core/LockManager.js` | 락 관리자 | 동시 실행 방지 (lock 파일) |
+| `cli/validation/TaskIdValidator.js` | Task ID 검증 | 정규식 검증, 인젝션 방지 |
 | `cli/config/workflowSteps.js` | 워크플로우 설정 | 카테고리별 단계 정의 |
 
 ### 5.2 모듈 구조도 (개념)
@@ -141,10 +148,29 @@ jjiban/
 │   ├── commands/
 │   │   └── workflow.js        # workflow 명령어 핸들러
 │   ├── core/
-│   │   ├── WorkflowRunner.js  # 워크플로우 오케스트레이터
+│   │   ├── WorkflowRunner.js  # 오케스트레이터 (조율만)
+│   │   ├── WorkflowPlanner.js # 실행 계획 생성
+│   │   ├── WorkflowExecutor.js# 단계별 실행
+│   │   ├── WorkflowStateMachine.js # 상태 전이
 │   │   ├── ClaudeExecutor.js  # Claude CLI 실행기
 │   │   ├── StateManager.js    # 상태 파일 관리
-│   │   └── WbsReader.js       # WBS 파서 래퍼
+│   │   ├── WbsReader.js       # WBS 파서 래퍼
+│   │   └── LockManager.js     # 동시 실행 방지
+│   ├── validation/
+│   │   ├── TaskIdValidator.js # Task ID 검증
+│   │   └── PathValidator.js   # 경로 검증
+│   ├── interfaces/            # 추상화 인터페이스 (DI용)
+│   │   ├── IWorkflowPlanner.js
+│   │   ├── IWorkflowExecutor.js
+│   │   ├── IStateMachine.js
+│   │   ├── IStateRepository.js
+│   │   ├── IWbsRepository.js
+│   │   └── IClaudeRunner.js
+│   ├── errors/
+│   │   ├── JjibanError.js     # 기본 에러 클래스
+│   │   ├── TaskNotFoundError.js
+│   │   ├── ClaudeExecutionError.js
+│   │   └── ValidationError.js
 │   ├── config/
 │   │   └── workflowSteps.js   # 카테고리별 단계 정의
 │   └── utils/
@@ -152,7 +178,42 @@ jjiban/
 └── package.json               # bin 설정, commander 의존성
 ```
 
-### 5.3 외부 의존성
+### 5.3 의존성 주입 패턴 (DIP-001 해결)
+
+> **설계 원칙**: 모든 핵심 컴포넌트는 인터페이스에 의존하고, 구체 구현은 진입점에서 조립
+
+```
+WorkflowRunner (Orchestrator)
+├── IWorkflowPlanner     ← WorkflowPlanner
+├── IWorkflowExecutor    ← WorkflowExecutor
+│   └── IClaudeRunner    ← ClaudeExecutor
+├── IStateMachine        ← WorkflowStateMachine
+├── IStateRepository     ← StateManager
+├── IWbsRepository       ← WbsReader
+└── ILockManager         ← LockManager
+```
+
+**진입점에서 조립 (bin/jjiban.js)**:
+```
+const runner = new WorkflowRunner({
+  planner: new WorkflowPlanner(),
+  executor: new WorkflowExecutor(new ClaudeExecutor()),
+  stateMachine: new WorkflowStateMachine(),
+  stateRepo: new StateManager(),
+  wbsRepo: new WbsReader(),
+  lockManager: new LockManager()
+})
+```
+
+### 5.4 보안 검증 계층 (SEC-001, SEC-002 해결)
+
+| 검증 | 위치 | 검증 내용 |
+|------|------|----------|
+| Task ID | TaskIdValidator | 정규식: `^TSK-\d{2}(-\d{2}){1,2}$` |
+| 경로 | PathValidator | .jjiban/ 내부인지 확인 |
+| 명령어 | ClaudeExecutor | spawn 인자 배열 사용 (문자열 연결 금지) |
+
+### 5.5 외부 의존성
 
 | 의존성 | 유형 | 용도 |
 |--------|------|------|
@@ -439,30 +500,58 @@ stateDiagram-v2
 
 ## 12. 구현 체크리스트
 
+> **설계 리뷰 반영**: SRP-001, DIP-001, SEC-001 이슈 해결 항목 포함
+
 ### CLI
-- [ ] bin/jjiban.js 진입점 생성
+- [ ] bin/jjiban.js 진입점 생성 + 의존성 조립
 - [ ] commander 설정 및 workflow 명령어 등록
 - [ ] 옵션 파싱 (--until, --dry-run, --resume, --verbose)
 - [ ] package.json bin 필드 설정
 
-### Core Modules
-- [ ] WorkflowRunner 구현 (단계별 실행 루프)
+### Core Modules (SRP-001 책임 분리)
+- [ ] WorkflowRunner 구현 (**조율만**, Planner/Executor/StateMachine 위임)
+- [ ] WorkflowPlanner 구현 (실행 계획 생성)
+- [ ] WorkflowExecutor 구현 (단계별 실행)
+- [ ] WorkflowStateMachine 구현 (상태 전이)
 - [ ] ClaudeExecutor 구현 (spawn으로 claude -p 호출)
 - [ ] StateManager 구현 (JSON 저장/로드)
 - [ ] WbsReader 구현 (기존 파서 래핑)
+- [ ] LockManager 구현 (동시 실행 방지)
+
+### Interfaces (DIP-001 의존성 주입)
+- [ ] IWorkflowPlanner 인터페이스
+- [ ] IWorkflowExecutor 인터페이스
+- [ ] IStateMachine 인터페이스
+- [ ] IStateRepository 인터페이스
+- [ ] IWbsRepository 인터페이스
+- [ ] IClaudeRunner 인터페이스
+- [ ] ILockManager 인터페이스
+
+### Validation (SEC-001, SEC-002 보안)
+- [ ] TaskIdValidator 구현 (정규식: ^TSK-\d{2}(-\d{2}){1,2}$)
+- [ ] PathValidator 구현 (.jjiban/ 내부 확인)
+- [ ] spawn 인자 배열 사용 (문자열 연결 금지)
+
+### Errors
+- [ ] JjibanError 기본 클래스
+- [ ] TaskNotFoundError
+- [ ] ClaudeExecutionError
+- [ ] ValidationError
 
 ### Config
 - [ ] workflowSteps.js (카테고리별 단계 정의)
 - [ ] Target 단계 매핑
 
 ### Error Handling
-- [ ] 에러 코드 정의
 - [ ] SIGINT 핸들러 (Ctrl+C)
-- [ ] 타임아웃 처리
+- [ ] 타임아웃 처리 (30분)
+- [ ] Lock 파일 정리
 
 ### Testing
-- [ ] 단위 테스트 (Vitest)
+- [ ] 단위 테스트 (Vitest) - Mock 주입으로 테스트 가능
 - [ ] E2E 테스트
+- [ ] 경계값 테스트 (TEST-001)
+- [ ] 동시성 테스트 (TEST-002)
 
 ### Documentation
 - [ ] 사용 가이드 (080-manual.md)

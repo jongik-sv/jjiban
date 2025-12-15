@@ -32,6 +32,10 @@
   - TypeScript 설정
   - Standalone 모드 설정 (nitro preset)
 - ref: PRD 3
+- completed:
+  - ds: 2025-12-15 22:13
+  - im: 2025-12-15 22:13
+  - xx: 2025-12-15 22:13
 
 #### TSK-01-01-02: PrimeVue 4.x + TailwindCSS 설정
 - category: infrastructure
@@ -48,6 +52,10 @@
   - TailwindCSS 설치 및 nuxt.config 설정
   - Dark Blue 테마 색상 팔레트 적용
 - ref: PRD 10.1
+- completed:
+  - ds: 2025-12-15 22:13
+  - im: 2025-12-15 22:13
+  - xx: 2025-12-15 22:13
 
 #### TSK-01-01-03: Pinia 상태 관리 설정
 - category: infrastructure
@@ -63,6 +71,10 @@
   - Pinia 설치 및 설정
   - 기본 스토어 구조 생성 (project, wbs, selection, settings)
 - ref: PRD 9.3
+- completed:
+  - ds: 2025-12-15 22:13
+  - im: 2025-12-15 22:13
+  - xx: 2025-12-15 22:13
 
 #### TSK-01-01-04: 프로젝트 디렉토리 구조 설정
 - category: infrastructure
@@ -79,6 +91,10 @@
   - 공통 타입 정의 (types/)
   - 유틸리티 함수 디렉토리 (utils/)
 - ref: PRD 9
+- completed:
+  - ds: 2025-12-15 22:13
+  - im: 2025-12-15 22:13
+  - xx: 2025-12-15 22:13
 
 #### TSK-01-01-05: WBS Store API 응답 처리 버그 수정
 - category: defect
@@ -95,6 +111,11 @@
   - API 응답 `{metadata, tree}` 객체에서 tree 배열 추출
   - "nodes is not iterable" 에러 해결
 - ref: TSK-04-03 E2E 테스트 결과
+- completed:
+  - an: 2025-12-15 22:13
+  - fx: 2025-12-15 22:13
+  - vf: 2025-12-15 22:13
+  - xx: 2025-12-15 22:13
 
 ### ACT-01-02: App Layout
 - status: todo
@@ -115,6 +136,12 @@
   - 좌우 분할 패널 (WBS Tree 60% + Detail 40%)
   - 반응형 레이아웃 (최소 1200px)
 - ref: PRD 6.1
+- completed:
+  - bd: 2025-12-15 22:13
+  - dd: 2025-12-15 22:13
+  - im: 2025-12-15 22:13
+  - vf: 2025-12-15 22:13
+  - xx: 2025-12-15 22:13
 
 #### TSK-01-02-02: AppHeader 컴포넌트 구현
 - category: development
@@ -131,6 +158,12 @@
   - 네비게이션 메뉴 (대시보드, 칸반, WBS, Gantt) - WBS만 활성
   - 현재 프로젝트명 표시
 - ref: PRD 6.1
+- completed:
+  - bd: 2025-12-15 22:13
+  - dd: 2025-12-15 22:13
+  - im: 2025-12-15 22:13
+  - vf: 2025-12-15 22:13
+  - xx: 2025-12-15 22:13
 
 ---
 
@@ -159,6 +192,10 @@
   - settings/, templates/, projects/ 하위 폴더 생성
   - 최소 초기화 (폴더 구조만, 설정은 기본값 사용)
 - ref: PRD 7.1
+- completed:
+  - ds: 2025-12-15 22:13
+  - im: 2025-12-15 22:13
+  - xx: 2025-12-15 22:13
 
 #### TSK-02-01-02: 파일 읽기/쓰기 유틸리티
 - category: infrastructure
@@ -176,6 +213,10 @@
   - 파일 존재 확인 함수
   - 에러 핸들링
 - ref: PRD 7
+- completed:
+  - ds: 2025-12-15 22:13
+  - im: 2025-12-15 22:13
+  - xx: 2025-12-15 22:13
 
 ### ACT-02-02: WBS Parser
 - status: todo
@@ -197,6 +238,12 @@
   - 속성 파싱 (category, status, priority, assignee 등)
   - 4단계/3단계 구조 모두 지원
 - ref: PRD 7.2, 7.3
+- completed:
+  - bd: 2025-12-15 22:13
+  - dd: 2025-12-15 22:13
+  - im: 2025-12-15 22:13
+  - vf: 2025-12-15 22:13
+  - xx: 2025-12-15 22:13
 
 #### TSK-02-02-02: wbs.md 시리얼라이저 구현
 - category: development
@@ -213,6 +260,12 @@
   - 속성 포맷팅 (- key: value)
   - 계층별 올바른 마크다운 헤딩 생성
 - ref: PRD 7.2, 7.3
+- completed:
+  - bd: 2025-12-15 22:13
+  - dd: 2025-12-15 22:13
+  - im: 2025-12-15 22:13
+  - vf: 2025-12-15 22:13
+  - xx: 2025-12-15 22:13
 
 #### TSK-02-02-03: WBS 데이터 유효성 검증
 - category: development
@@ -230,6 +283,12 @@
   - 상태 기호 유효성 검증
   - 중복 ID 검사
 - ref: PRD 7.3, 7.4
+- completed:
+  - bd: 2025-12-15 22:13
+  - dd: 2025-12-15 22:13
+  - im: 2025-12-15 22:13
+  - vf: 2025-12-15 22:13
+  - xx: 2025-12-15 22:13
 
 ### ACT-02-03: Settings Service
 - status: todo
@@ -251,6 +310,10 @@
   - workflows.json 스키마 (워크플로우 규칙)
   - actions.json 스키마 (상태 내 액션)
 - ref: PRD 7.1
+- completed:
+  - ds: 2025-12-15 22:13
+  - im: 2025-12-15 22:13
+  - xx: 2025-12-15 22:13
 
 #### TSK-02-03-02: 설정 서비스 구현
 - category: development
@@ -267,6 +330,12 @@
   - 설정 캐싱
   - 설정 조회 API
 - ref: PRD 8.1
+- completed:
+  - bd: 2025-12-15 22:13
+  - dd: 2025-12-15 22:13
+  - im: 2025-12-15 22:13
+  - vf: 2025-12-15 22:13
+  - xx: 2025-12-15 22:13
 
 #### TSK-02-03-03: 프로젝트 메타데이터 서비스
 - category: development
@@ -283,6 +352,12 @@
   - team.json 읽기/쓰기
   - 프로젝트 목록 조회
 - ref: PRD 7.1
+- completed:
+  - bd: 2025-12-15 22:13
+  - dd: 2025-12-15 22:13
+  - im: 2025-12-15 22:13
+  - vf: 2025-12-15 22:13
+  - xx: 2025-12-15 22:13
 
 ---
 
@@ -323,6 +398,12 @@
   - PUT /api/projects/:id/wbs - WBS 저장 (유효성 검증, 롤백)
   - GET/PUT /api/tasks/:id - Task 조회/수정 (이력 기록)
 - ref: PRD 8.1, 8.2
+- completed:
+  - bd: 2025-12-15 22:13
+  - dd: 2025-12-15 22:13
+  - im: 2025-12-15 22:13
+  - vf: 2025-12-15 22:13
+  - xx: 2025-12-15 22:13
 
 ### TSK-03-03: Workflow API & Settings
 - category: development
@@ -339,6 +420,12 @@
   - GET /api/tasks/:id/documents - 문서 목록 (존재/예정 구분)
   - GET /api/settings/:type - 설정 조회 (columns, categories, workflows, actions)
 - ref: PRD 5.3, 8.1
+- completed:
+  - bd: 2025-12-15 22:13
+  - dd: 2025-12-15 22:13
+  - im: 2025-12-15 22:13
+  - vf: 2025-12-15 22:13
+  - xx: 2025-12-15 22:13
 
 ### TSK-03-04: Workflow Engine
 - category: development
@@ -356,6 +443,12 @@
   - 상태 전이 이력 관리 (기록, 저장, 조회)
   - 상태 액션 구현 (ui, review, apply, test, audit, patch)
 - ref: PRD 5.2, 5.3, 6.3.6
+- completed:
+  - bd: 2025-12-15 22:13
+  - dd: 2025-12-15 22:13
+  - im: 2025-12-15 22:13
+  - vf: 2025-12-15 22:13
+  - xx: 2025-12-15 22:13
 
 ### TSK-03-05: WBS 테스트 결과 업데이트 API
 - category: development
@@ -373,6 +466,29 @@
   - 테스트 결과 값: none (결과없음), pass (정상), fail (오류)
   - /wf:test, /wf:verify 완료 시 자동 호출
 - ref: WBS test-result 속성
+- completed:
+  - bd: 2025-12-15 22:31
+  - dd: 2025-12-15 22:48
+  - im: 2025-12-15 22:54
+  - vf: 2025-12-15 23:04
+  - xx: 2025-12-15 23:08
+
+### TSK-03-06: completed 필드 지원 (Parser/Serializer/API)
+- category: development
+- domain: backend
+- status: [ ]
+- priority: high
+- assignee: -
+- schedule: 2026-01-13 ~ 2026-01-16
+- tags: api, wbs, completed, parser, serializer
+- depends: TSK-02-02-01, TSK-02-02-02, TSK-03-03
+- test-result: none
+- requirements:
+  - WBS Parser: completed 필드 파싱 (중첩 리스트 형식)
+  - WBS Serializer: completed 필드 직렬화
+  - Transition API: 상태 전이 시 자동 타임스탬프 기록
+  - 롤백 시 이후 단계 completed 삭제
+- ref: PRD 7.4, 7.5
 
 ---
 
@@ -398,6 +514,12 @@
   - 프로젝트 카드/리스트 UI (PrimeVue Card 활용)
   - 프로젝트 선택 시 /wbs?project={id} 이동
 - ref: PRD 6.1
+- completed:
+  - bd: 2025-12-15 22:13
+  - dd: 2025-12-15 22:13
+  - im: 2025-12-15 22:13
+  - vf: 2025-12-15 22:13
+  - xx: 2025-12-15 22:13
 
 ### TSK-04-01: Tree Panel
 - category: development
@@ -415,6 +537,12 @@
   - WbsSummaryCards 컴포넌트 (WP/ACT/TSK 카운트, 진행률)
   - WbsSearchBox 컴포넌트 (필터링, debounce, 하이라이트)
 - ref: PRD 6.2, 6.2.1
+- completed:
+  - bd: 2025-12-15 22:13
+  - dd: 2025-12-15 22:13
+  - im: 2025-12-15 22:13
+  - vf: 2025-12-15 22:13
+  - xx: 2025-12-15 22:13
 
 ### TSK-04-02: Tree Node
 - category: development
@@ -432,6 +560,12 @@
   - StatusBadge + CategoryTag 컴포넌트 (상태/카테고리 표시)
   - ProgressBar 컴포넌트 (퍼센트 진행률 바)
 - ref: PRD 6.2.2, 10.1
+- completed:
+  - bd: 2025-12-15 22:13
+  - dd: 2025-12-15 22:13
+  - im: 2025-12-15 22:13
+  - vf: 2025-12-15 22:13
+  - xx: 2025-12-15 22:13
 
 ### TSK-04-03: Tree Interaction
 - category: development
@@ -448,6 +582,12 @@
   - 노드 선택 및 상세 패널 연동 (Pinia selection 스토어)
   - 키보드 네비게이션 (화살표 키, Enter, Space)
 - ref: PRD 6.2.3, 11.2
+- completed:
+  - bd: 2025-12-15 22:13
+  - dd: 2025-12-15 22:13
+  - im: 2025-12-15 22:13
+  - vf: 2025-12-15 22:13
+  - xx: 2025-12-15 22:13
 
 ---
 
@@ -472,6 +612,9 @@
   - TaskBasicInfo 컴포넌트 (ID, 제목, 카테고리, 우선순위, 담당자, 인라인 편집)
   - TaskProgress 컴포넌트 (현재 상태, 워크플로우 시각화)
 - ref: PRD 6.3, 6.3.1, 6.3.2
+- completed:
+  - bd: 2025-12-15 22:13
+  - dd: 2025-12-15 22:25
 
 ### TSK-05-02: Detail Sections
 - category: development
@@ -489,6 +632,9 @@
   - TaskDocuments 컴포넌트 (문서 목록, 존재/예정 구분, 뷰어 연동)
   - TaskHistory 컴포넌트 (상태 변경 이력, 타임라인)
 - ref: PRD 6.3.2, 6.3.3, 6.3.4, 6.3.6
+- completed:
+  - bd: 2025-12-15 22:13
+  - dd: 2025-12-15 22:13
 
 ### TSK-05-03: Detail Actions
 - category: development
@@ -544,6 +690,12 @@
   - 상태 관리 통합 (project, wbs, selection 스토어 연동)
   - 에러 핸들링 및 로딩 상태 (스피너, 빈 상태, 토스트)
 - ref: PRD 9.1, 9.3, 11
+- completed:
+  - bd: 2025-12-15 22:13
+  - dd: 2025-12-15 22:13
+  - im: 2025-12-15 22:13
+  - vf: 2025-12-15 22:13
+  - xx: 2025-12-15 22:20
 
 ### TSK-06-02: Testing
 - category: development
@@ -571,7 +723,7 @@
 ### TSK-07-01: Workflow Orchestrator CLI 구현
 - category: development
 - domain: backend
-- status: implement [im]
+- status: done [xx]
 - priority: high
 - assignee: -
 - schedule: 2026-01-25 ~ 2026-02-05
