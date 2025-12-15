@@ -241,6 +241,16 @@ mcp-servers: [playwright]
 2. updated_at 필드 업데이트
 3. Task JSON 파일 저장
 
+### 6단계: WBS 테스트 결과 업데이트 ⭐
+1. **테스트 결과 판정**:
+   - 모든 통합테스트 통과 → `pass`
+   - 하나라도 실패 → `fail`
+2. **wbs.md 업데이트**:
+   - Task의 `test-result` 필드 업데이트
+   - `test-result: none` → `test-result: pass` 또는 `test-result: fail`
+3. **업데이트 로그**:
+   - 테스트 결과 및 변경 시각 기록
+
 ---
 
 ## 출력 예시
@@ -266,6 +276,9 @@ Category: development
 생성된 문서:
 └── 070-integration-test.md
 
+WBS 테스트 결과 업데이트:
+└── test-result: none → pass ✅
+
 다음 단계: /wf:done TSK-01-01-01
 ```
 
@@ -288,6 +301,9 @@ Category: defect
 
 생성된 문서:
 └── 070-test-results.md
+
+WBS 테스트 결과 업데이트:
+└── test-result: none → pass ✅
 
 다음 단계: /wf:done TSK-02-01-01
 ```

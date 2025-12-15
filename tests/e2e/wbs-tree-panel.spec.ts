@@ -172,18 +172,27 @@ test.describe('WBS Error Handling', () => {
     // When/Then: 에러 상태 또는 빈 상태 표시
     await page.waitForTimeout(2000) // API 응답 대기
 
-    const loadingState = page.locator('[data-testid="loading-state"]')
-    await expect(loadingState).not.toBeVisible({ timeout: 10000 })
+    const loadingSpinner = page.locator('[data-testid="loading-spinner"]')
+    await expect(loadingSpinner).not.toBeVisible({ timeout: 10000 })
 
     // 에러 상태 또는 빈 상태 확인
+    // pages/wbs.vue에서 사용하는 data-testid:
+    // - error-message: 에러 발생 시
+    // - empty-state-no-project: projectId가 없거나 잘못된 경우
+    // WbsTreePanel.vue에서 사용하는 data-testid:
+    // - error-state: WBS 로딩 에러
+    const errorMessage = page.locator('[data-testid="error-message"]')
     const errorState = page.locator('[data-testid="error-state"]')
-    const emptyState = page.locator('[data-testid="empty-state"]')
+    const emptyStateNoProject = page.locator('[data-testid="empty-state-no-project"]')
+    const emptyStateNoWbs = page.locator('[data-testid="empty-state-no-wbs"]')
 
-    const hasError = await errorState.isVisible()
-    const isEmpty = await emptyState.isVisible()
+    const hasErrorMessage = await errorMessage.isVisible()
+    const hasErrorState = await errorState.isVisible()
+    const hasEmptyNoProject = await emptyStateNoProject.isVisible()
+    const hasEmptyNoWbs = await emptyStateNoWbs.isVisible()
 
     // 에러 또는 빈 상태 중 하나는 표시되어야 함
-    expect(hasError || isEmpty).toBe(true)
+    expect(hasErrorMessage || hasErrorState || hasEmptyNoProject || hasEmptyNoWbs).toBe(true)
   })
 })
 

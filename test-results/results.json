@@ -72,7 +72,7 @@
         "CHROME_CRASHPAD_PIPE_NAME": "\\\\.\\pipe\\crashpad_5320_FADUMJZPBYDKLASH",
         "CLAUDECODE": "1",
         "CLAUDE_CODE_ENTRYPOINT": "cli",
-        "CLAUDE_CODE_SESSION_ID": "1ae5c44c-057a-42db-82d6-cf88b0241293",
+        "CLAUDE_CODE_SESSION_ID": "74d6fba3-eb00-4985-b46c-f0a6927eeeb3",
         "CLAUDE_CODE_SSE_PORT": "12296",
         "COLOR": "0",
         "COLORTERM": "truecolor",
@@ -176,11 +176,12 @@
         "USERDOMAIN_ROAMINGPROFILE": "ODT-2201-0002",
         "USERNAME": "USER1",
         "USERPROFILE": "C:\\Users\\USER1",
+        "VIPSHOME": "\\\\?\\C:\\Users\\USER1\\AppData\\Roaming\\npm\\node_modules\\@anthropic-ai\\claude-code\\node_modules\\@img\\sharp-win32-x64",
         "VSCODE_GIT_ASKPASS_EXTRA_ARGS": "",
         "VSCODE_GIT_ASKPASS_MAIN": "c:\\Users\\USER1\\AppData\\Local\\Programs\\Antigravity\\resources\\app\\extensions\\git\\dist\\askpass-main.js",
         "VSCODE_GIT_ASKPASS_NODE": "C:\\Users\\USER1\\AppData\\Local\\Programs\\Antigravity\\Antigravity.exe",
         "VSCODE_GIT_IPC_HANDLE": "\\\\.\\pipe\\vscode-git-0e65852cc8-sock",
-        "VSCODE_NONCE": "1820dfd9-be61-43eb-84a5-ba0ea0bbcd7b",
+        "VSCODE_NONCE": "e8a23cef-742f-4271-ba56-912a2c08d0c9",
         "WINDIR": "C:\\Windows",
         "_": "C:/Program Files/nodejs/node.exe",
         "JJIBAN_BASE_PATH": "C:\\project\\jjiban"
@@ -203,7 +204,7 @@
           "specs": [
             {
               "title": "E2E-001: WBS 데이터가 성공적으로 로드되어 표시된다",
-              "ok": true,
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -215,17 +216,59 @@
                   "results": [
                     {
                       "workerIndex": 0,
-                      "status": "passed",
-                      "duration": 5527,
-                      "errors": [],
+                      "status": "failed",
+                      "duration": 12114,
+                      "error": {
+                        "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('[data-testid=\"wbs-tree-panel\"]')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\"wbs-tree-panel\"]')\u001b[22m\n",
+                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('[data-testid=\"wbs-tree-panel\"]')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\"wbs-tree-panel\"]')\u001b[22m\n\n    at C:\\project\\jjiban\\tests\\e2e\\wbs-tree-panel.spec.ts:21:29",
+                        "matcherResult": {
+                          "message": "\u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('[data-testid=\"wbs-tree-panel\"]')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\"wbs-tree-panel\"]')\u001b[22m\n",
+                          "pass": false,
+                          "actual": "hidden",
+                          "name": "toBeVisible",
+                          "expected": "visible",
+                          "log": [
+                            "  - expect.toBeVisible with timeout 5000ms",
+                            "  - waiting for locator('[data-testid=\"wbs-tree-panel\"]')"
+                          ],
+                          "timeout": 5000
+                        },
+                        "location": {
+                          "file": "C:\\project\\jjiban\\tests\\e2e\\wbs-tree-panel.spec.ts",
+                          "column": 29,
+                          "line": 21
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 19 |\u001b[39m     \u001b[90m// When: WBS 트리 패널 확인\u001b[39m\n \u001b[90m 20 |\u001b[39m     \u001b[36mconst\u001b[39m treePanel \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'[data-testid=\"wbs-tree-panel\"]'\u001b[39m)\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 21 |\u001b[39m     \u001b[36mawait\u001b[39m expect(treePanel)\u001b[33m.\u001b[39mtoBeVisible()\n \u001b[90m    |\u001b[39m                             \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 22 |\u001b[39m\n \u001b[90m 23 |\u001b[39m     \u001b[90m// Then: 콘텐츠 상태 표시 (loading이 끝난 후)\u001b[39m\n \u001b[90m 24 |\u001b[39m     \u001b[36mconst\u001b[39m contentState \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'[data-testid=\"content-state\"]'\u001b[39m)\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\project\\jjiban\\tests\\e2e\\wbs-tree-panel.spec.ts",
+                            "column": 29,
+                            "line": 21
+                          },
+                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('[data-testid=\"wbs-tree-panel\"]')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\"wbs-tree-panel\"]')\u001b[22m\n\n\n\u001b[0m \u001b[90m 19 |\u001b[39m     \u001b[90m// When: WBS 트리 패널 확인\u001b[39m\n \u001b[90m 20 |\u001b[39m     \u001b[36mconst\u001b[39m treePanel \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'[data-testid=\"wbs-tree-panel\"]'\u001b[39m)\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 21 |\u001b[39m     \u001b[36mawait\u001b[39m expect(treePanel)\u001b[33m.\u001b[39mtoBeVisible()\n \u001b[90m    |\u001b[39m                             \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 22 |\u001b[39m\n \u001b[90m 23 |\u001b[39m     \u001b[90m// Then: 콘텐츠 상태 표시 (loading이 끝난 후)\u001b[39m\n \u001b[90m 24 |\u001b[39m     \u001b[36mconst\u001b[39m contentState \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'[data-testid=\"content-state\"]'\u001b[39m)\u001b[0m\n    at C:\\project\\jjiban\\tests\\e2e\\wbs-tree-panel.spec.ts:21:29"
+                        }
+                      ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-12-15T05:48:53.343Z",
-                      "attachments": []
+                      "startTime": "2025-12-15T08:00:53.887Z",
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\project\\jjiban\\test-results\\artifacts\\wbs-tree-panel-WBS-Tree-Pa-331bc-01-WBS-데이터가-성공적으로-로드되어-표시된다-chromium\\test-failed-1.png"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\project\\jjiban\\tests\\e2e\\wbs-tree-panel.spec.ts",
+                        "column": 29,
+                        "line": 21
+                      }
                     }
                   ],
-                  "status": "expected"
+                  "status": "unexpected"
                 }
               ],
               "id": "f68e5d8cf893aa4419ec-0d0395313e9712d505fa",
@@ -248,7 +291,7 @@
                     {
                       "workerIndex": 1,
                       "status": "failed",
-                      "duration": 15348,
+                      "duration": 17013,
                       "error": {
                         "message": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"content-state\"]') to be visible\u001b[22m\n",
                         "stack": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"content-state\"]') to be visible\u001b[22m\n\n    at C:\\project\\jjiban\\tests\\e2e\\wbs-tree-panel.spec.ts:39:16",
@@ -272,7 +315,7 @@
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-12-15T05:48:53.325Z",
+                      "startTime": "2025-12-15T08:00:53.926Z",
                       "attachments": [
                         {
                           "name": "screenshot",
@@ -318,7 +361,7 @@
                     {
                       "workerIndex": 2,
                       "status": "failed",
-                      "duration": 15474,
+                      "duration": 17253,
                       "error": {
                         "message": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"content-state\"]') to be visible\u001b[22m\n",
                         "stack": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"content-state\"]') to be visible\u001b[22m\n\n    at C:\\project\\jjiban\\tests\\e2e\\wbs-tree-panel.spec.ts:67:16",
@@ -342,7 +385,7 @@
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-12-15T05:48:53.324Z",
+                      "startTime": "2025-12-15T08:00:53.958Z",
                       "attachments": [
                         {
                           "name": "screenshot",
@@ -380,7 +423,7 @@
                     {
                       "workerIndex": 3,
                       "status": "failed",
-                      "duration": 15472,
+                      "duration": 17184,
                       "error": {
                         "message": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"content-state\"]') to be visible\u001b[22m\n",
                         "stack": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"content-state\"]') to be visible\u001b[22m\n\n    at C:\\project\\jjiban\\tests\\e2e\\wbs-tree-panel.spec.ts:67:16",
@@ -404,7 +447,7 @@
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-12-15T05:48:53.342Z",
+                      "startTime": "2025-12-15T08:00:53.957Z",
                       "attachments": [
                         {
                           "name": "screenshot",
@@ -450,7 +493,7 @@
                     {
                       "workerIndex": 4,
                       "status": "failed",
-                      "duration": 16205,
+                      "duration": 16863,
                       "error": {
                         "message": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"content-state\"]') to be visible\u001b[22m\n",
                         "stack": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"content-state\"]') to be visible\u001b[22m\n\n    at C:\\project\\jjiban\\tests\\e2e\\wbs-tree-panel.spec.ts:108:16",
@@ -474,7 +517,7 @@
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-12-15T05:48:53.361Z",
+                      "startTime": "2025-12-15T08:00:53.940Z",
                       "attachments": [
                         {
                           "name": "screenshot",
@@ -512,7 +555,7 @@
                     {
                       "workerIndex": 5,
                       "status": "failed",
-                      "duration": 15359,
+                      "duration": 16890,
                       "error": {
                         "message": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"content-state\"]') to be visible\u001b[22m\n",
                         "stack": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"content-state\"]') to be visible\u001b[22m\n\n    at C:\\project\\jjiban\\tests\\e2e\\wbs-tree-panel.spec.ts:108:16",
@@ -536,7 +579,7 @@
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-12-15T05:48:53.384Z",
+                      "startTime": "2025-12-15T08:00:54.024Z",
                       "attachments": [
                         {
                           "name": "screenshot",
@@ -580,9 +623,9 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 6,
                       "status": "failed",
-                      "duration": 12940,
+                      "duration": 12577,
                       "error": {
                         "message": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"content-state\"]') to be visible\u001b[22m\n",
                         "stack": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"content-state\"]') to be visible\u001b[22m\n\n    at C:\\project\\jjiban\\tests\\e2e\\wbs-tree-panel.spec.ts:142:16",
@@ -606,7 +649,7 @@
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-12-15T05:48:59.132Z",
+                      "startTime": "2025-12-15T08:01:08.864Z",
                       "attachments": [
                         {
                           "name": "screenshot",
@@ -639,7 +682,7 @@
           "specs": [
             {
               "title": "E2E-008: API 에러 시 에러 메시지를 표시한다",
-              "ok": true,
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -650,18 +693,55 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 6,
-                      "status": "passed",
-                      "duration": 4348,
-                      "errors": [],
+                      "workerIndex": 8,
+                      "status": "failed",
+                      "duration": 5058,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m\n    at C:\\project\\jjiban\\tests\\e2e\\wbs-tree-panel.spec.ts:186:33",
+                        "matcherResult": {
+                          "actual": false,
+                          "expected": true,
+                          "message": "\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m",
+                          "name": "toBe",
+                          "pass": false
+                        },
+                        "location": {
+                          "file": "C:\\project\\jjiban\\tests\\e2e\\wbs-tree-panel.spec.ts",
+                          "column": 33,
+                          "line": 186
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 184 |\u001b[39m\n \u001b[90m 185 |\u001b[39m     \u001b[90m// 에러 또는 빈 상태 중 하나는 표시되어야 함\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 186 |\u001b[39m     expect(hasError \u001b[33m||\u001b[39m isEmpty)\u001b[33m.\u001b[39mtoBe(\u001b[36mtrue\u001b[39m)\n \u001b[90m     |\u001b[39m                                 \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 187 |\u001b[39m   })\n \u001b[90m 188 |\u001b[39m })\n \u001b[90m 189 |\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\project\\jjiban\\tests\\e2e\\wbs-tree-panel.spec.ts",
+                            "column": 33,
+                            "line": 186
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m\n\n\u001b[0m \u001b[90m 184 |\u001b[39m\n \u001b[90m 185 |\u001b[39m     \u001b[90m// 에러 또는 빈 상태 중 하나는 표시되어야 함\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 186 |\u001b[39m     expect(hasError \u001b[33m||\u001b[39m isEmpty)\u001b[33m.\u001b[39mtoBe(\u001b[36mtrue\u001b[39m)\n \u001b[90m     |\u001b[39m                                 \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 187 |\u001b[39m   })\n \u001b[90m 188 |\u001b[39m })\n \u001b[90m 189 |\u001b[39m\u001b[0m\n    at C:\\project\\jjiban\\tests\\e2e\\wbs-tree-panel.spec.ts:186:33"
+                        }
+                      ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-12-15T05:49:10.416Z",
-                      "attachments": []
+                      "startTime": "2025-12-15T08:01:13.991Z",
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\project\\jjiban\\test-results\\artifacts\\wbs-tree-panel-WBS-Error-H-ea3bd-E-008-API-에러-시-에러-메시지를-표시한다-chromium\\test-failed-1.png"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\project\\jjiban\\tests\\e2e\\wbs-tree-panel.spec.ts",
+                        "column": 33,
+                        "line": 186
+                      }
                     }
                   ],
-                  "status": "expected"
+                  "status": "unexpected"
                 }
               ],
               "id": "f68e5d8cf893aa4419ec-fd494aaf7a2569356b5a",
@@ -692,7 +772,7 @@
                     {
                       "workerIndex": 7,
                       "status": "failed",
-                      "duration": 12117,
+                      "duration": 12724,
                       "error": {
                         "message": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"content-state\"]') to be visible\u001b[22m\n",
                         "stack": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"content-state\"]') to be visible\u001b[22m\n\n    at C:\\project\\jjiban\\tests\\e2e\\wbs-tree-panel.spec.ts:195:16",
@@ -716,7 +796,7 @@
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-12-15T05:49:10.443Z",
+                      "startTime": "2025-12-15T08:01:13.975Z",
                       "attachments": [
                         {
                           "name": "screenshot",
@@ -746,11 +826,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2025-12-15T05:48:33.320Z",
-    "duration": 50390.342000000004,
-    "expected": 2,
+    "startTime": "2025-12-15T08:00:19.919Z",
+    "duration": 68540.382,
+    "expected": 0,
     "skipped": 0,
-    "unexpected": 7,
+    "unexpected": 9,
     "flaky": 0
   }
 }

@@ -26,6 +26,7 @@
 - schedule: 2025-12-13 ~ 2025-12-13
 - tags: nuxt, setup
 - depends: -
+- test-result: none
 - requirements:
   - Nuxt 3 프로젝트 생성 (npx nuxi init)
   - TypeScript 설정
@@ -41,6 +42,7 @@
 - schedule: 2025-12-13 ~ 2025-12-14
 - tags: primevue, tailwind, ui
 - depends: TSK-01-01-01
+- test-result: none
 - requirements:
   - PrimeVue 4.x 설치 및 Nuxt 플러그인 설정
   - TailwindCSS 설치 및 nuxt.config 설정
@@ -56,6 +58,7 @@
 - schedule: 2025-12-14 ~ 2025-12-14
 - tags: pinia, state
 - depends: TSK-01-01-01
+- test-result: none
 - requirements:
   - Pinia 설치 및 설정
   - 기본 스토어 구조 생성 (project, wbs, selection, settings)
@@ -70,6 +73,7 @@
 - schedule: 2025-12-14 ~ 2025-12-15
 - tags: structure, setup
 - depends: TSK-01-01-01
+- test-result: none
 - requirements:
   - components/, composables/, stores/, server/api/ 디렉토리 구조
   - 공통 타입 정의 (types/)
@@ -85,6 +89,7 @@
 - schedule: 2025-12-15 ~ 2025-12-15
 - tags: bug, store, api
 - depends: TSK-01-01-03
+- test-result: fail
 - requirements:
   - fetchWbs 함수의 API 응답 형식 수정
   - API 응답 `{metadata, tree}` 객체에서 tree 배열 추출
@@ -104,6 +109,7 @@
 - schedule: 2025-12-16 ~ 2025-12-17
 - tags: layout, component
 - depends: TSK-01-01-02
+- test-result: pass
 - requirements:
   - 전체 레이아웃 구조 (Header + Content)
   - 좌우 분할 패널 (WBS Tree 60% + Detail 40%)
@@ -119,6 +125,7 @@
 - schedule: 2025-12-17 ~ 2025-12-18
 - tags: header, navigation
 - depends: TSK-01-02-01
+- test-result: pass
 - requirements:
   - jjiban 로고
   - 네비게이션 메뉴 (대시보드, 칸반, WBS, Gantt) - WBS만 활성
@@ -146,6 +153,7 @@
 - schedule: 2025-12-16 ~ 2025-12-17
 - tags: init, filesystem
 - depends: TSK-01-01-04
+- test-result: none
 - requirements:
   - .jjiban/ 폴더 존재 확인 및 생성
   - settings/, templates/, projects/ 하위 폴더 생성
@@ -161,6 +169,7 @@
 - schedule: 2025-12-17 ~ 2025-12-18
 - tags: filesystem, utils
 - depends: TSK-02-01-01
+- test-result: none
 - requirements:
   - JSON 파일 읽기/쓰기 함수
   - Markdown 파일 읽기/쓰기 함수
@@ -181,6 +190,7 @@
 - schedule: 2025-12-18 ~ 2025-12-20
 - tags: parser, markdown, wbs
 - depends: TSK-02-01-02
+- test-result: pass
 - requirements:
   - Markdown → WbsNode[] 트리 변환
   - WP/ACT/TSK 계층 파싱 (## / ### / ####)
@@ -197,6 +207,7 @@
 - schedule: 2025-12-20 ~ 2025-12-22
 - tags: serializer, markdown, wbs
 - depends: TSK-02-02-01
+- test-result: pass
 - requirements:
   - WbsNode[] → Markdown 문자열 변환
   - 속성 포맷팅 (- key: value)
@@ -212,6 +223,7 @@
 - schedule: 2025-12-22 ~ 2025-12-23
 - tags: validation, wbs
 - depends: TSK-02-02-01
+- test-result: pass
 - requirements:
   - ID 형식 검증 (WP-XX, ACT-XX-XX, TSK-XX-XX-XX)
   - 필수 속성 검증 (category, status, priority)
@@ -232,6 +244,7 @@
 - schedule: 2025-12-23 ~ 2025-12-24
 - tags: schema, settings
 - depends: TSK-02-01-02
+- test-result: none
 - requirements:
   - columns.json 스키마 (칸반 컬럼)
   - categories.json 스키마 (카테고리)
@@ -248,6 +261,7 @@
 - schedule: 2025-12-24 ~ 2025-12-26
 - tags: service, settings
 - depends: TSK-02-03-01
+- test-result: pass
 - requirements:
   - 설정 파일 로드 (없으면 기본값 사용)
   - 설정 캐싱
@@ -263,6 +277,7 @@
 - schedule: 2025-12-26 ~ 2025-12-27
 - tags: service, project
 - depends: TSK-02-03-02
+- test-result: pass
 - requirements:
   - project.json 읽기/쓰기
   - team.json 읽기/쓰기
@@ -286,6 +301,7 @@
 - schedule: 2025-12-23 ~ 2025-12-27
 - tags: api, project
 - depends: TSK-02-03-03
+- test-result: pass
 - requirements:
   - GET /api/projects - 프로젝트 목록 조회
   - GET /api/projects/:id - 프로젝트 상세 (project.json, team.json 포함)
@@ -301,6 +317,7 @@
 - schedule: 2025-12-27 ~ 2025-12-31
 - tags: api, wbs
 - depends: TSK-02-02-01, TSK-02-02-02, TSK-03-01
+- test-result: pass
 - requirements:
   - GET /api/projects/:id/wbs - WBS 트리 조회 (파싱, 계층 구조, 진행률)
   - PUT /api/projects/:id/wbs - WBS 저장 (유효성 검증, 롤백)
@@ -316,6 +333,7 @@
 - schedule: 2025-12-31 ~ 2026-01-03
 - tags: api, workflow, settings
 - depends: TSK-03-02, TSK-02-03-02
+- test-result: pass
 - requirements:
   - POST /api/tasks/:id/transition - 상태 전이 API
   - GET /api/tasks/:id/documents - 문서 목록 (존재/예정 구분)
@@ -331,12 +349,30 @@
 - schedule: 2026-01-03 ~ 2026-01-10
 - tags: service, workflow, rules
 - depends: TSK-02-03-01, TSK-03-03
+- test-result: pass
 - requirements:
   - 워크플로우 규칙 정의 (development, defect, infrastructure)
   - WorkflowEngine 서비스 (getAvailableCommands, executeCommand, 검증)
   - 상태 전이 이력 관리 (기록, 저장, 조회)
   - 상태 액션 구현 (ui, review, apply, test, audit, patch)
 - ref: PRD 5.2, 5.3, 6.3.6
+
+### TSK-03-05: WBS 테스트 결과 업데이트 API
+- category: development
+- domain: backend
+- status: [ ]
+- priority: medium
+- assignee: -
+- schedule: 2026-01-10 ~ 2026-01-13
+- tags: api, wbs, test-result
+- depends: TSK-03-02, TSK-02-02-01, TSK-02-02-02
+- test-result: none
+- requirements:
+  - PUT /api/projects/:id/wbs/tasks/:taskId/test-result - 테스트 결과 업데이트 API
+  - wbs.md 파일의 test-result 필드 자동 업데이트
+  - 테스트 결과 값: none (결과없음), pass (정상), fail (오류)
+  - /wf:test, /wf:verify 완료 시 자동 호출
+- ref: WBS test-result 속성
 
 ---
 
@@ -355,6 +391,7 @@
 - schedule: 2026-01-06 ~ 2026-01-07
 - tags: page, project, list
 - depends: TSK-03-01, TSK-01-02-01
+- test-result: pass
 - requirements:
   - ProjectsPage 컴포넌트 (pages/projects.vue)
   - GET /api/projects 연동하여 프로젝트 목록 표시
@@ -371,6 +408,7 @@
 - schedule: 2026-01-06 ~ 2026-01-09
 - tags: component, tree
 - depends: TSK-01-02-01, TSK-03-02
+- test-result: pass
 - requirements:
   - WbsTreePanel 컴포넌트 (컨테이너, 데이터 로드, 상태 관리)
   - WbsTreeHeader 컴포넌트 (검색 박스, 펼치기/접기, 요약 카드)
@@ -387,6 +425,7 @@
 - schedule: 2026-01-09 ~ 2026-01-12
 - tags: component, tree, recursive
 - depends: TSK-04-01
+- test-result: pass
 - requirements:
   - WbsTreeNode 컴포넌트 (재귀 렌더링, 펼침/접힘, 선택, 들여쓰기)
   - NodeIcon 컴포넌트 (계층별 아이콘/색상, 라운드 사각형 배지)
@@ -403,6 +442,7 @@
 - schedule: 2026-01-12 ~ 2026-01-15
 - tags: state, interaction
 - depends: TSK-04-02, TSK-01-01-03
+- test-result: fail
 - requirements:
   - 트리 펼침/접힘 상태 관리 (토글, 전체 펼치기/접기, 로컬 스토리지)
   - 노드 선택 및 상세 패널 연동 (Pinia selection 스토어)
@@ -426,6 +466,7 @@
 - schedule: 2026-01-13 ~ 2026-01-15
 - tags: component, detail
 - depends: TSK-04-03
+- test-result: none
 - requirements:
   - TaskDetailPanel 컴포넌트 (컨테이너, 스크롤 콘텐츠)
   - TaskBasicInfo 컴포넌트 (ID, 제목, 카테고리, 우선순위, 담당자, 인라인 편집)
@@ -441,6 +482,7 @@
 - schedule: 2026-01-15 ~ 2026-01-18
 - tags: component, workflow
 - depends: TSK-05-01, TSK-03-03
+- test-result: none
 - requirements:
   - TaskWorkflow 컴포넌트 (워크플로우 흐름, 상태 노드, 현재 상태 강조)
   - TaskRequirements 컴포넌트 (요구사항 목록, PRD 참조, 인라인 편집)
@@ -457,6 +499,7 @@
 - schedule: 2026-01-18 ~ 2026-01-20
 - tags: component, action, edit
 - depends: TSK-05-02, TSK-03-02
+- test-result: none
 - requirements:
   - TaskActions 컴포넌트 (편집, 문서 열기, 상태 전이 버튼)
   - 인라인 편집 기능 (필드별 편집, API 연동, 낙관적 업데이트)
@@ -471,6 +514,7 @@
 - schedule: 2026-01-20 ~ 2026-01-22
 - tags: markdown, viewer, component
 - depends: TSK-01-01-02, TSK-03-03, TSK-05-02
+- test-result: none
 - requirements:
   - Markdown 렌더러 설정 (marked/markdown-it, GFM, highlight.js)
   - DocumentViewer 컴포넌트 (로드, 렌더링, 스크롤)
@@ -494,6 +538,7 @@
 - schedule: 2026-01-20 ~ 2026-01-23
 - tags: page, integration, pinia
 - depends: TSK-04-03, TSK-05-03
+- test-result: fail
 - requirements:
   - WBS 페이지 통합 (pages/wbs.vue, 패널 통합, 에러 핸들링)
   - 상태 관리 통합 (project, wbs, selection 스토어 연동)
@@ -509,6 +554,7 @@
 - schedule: 2026-01-23 ~ 2026-01-25
 - tags: test, unit, e2e
 - depends: TSK-06-01
+- test-result: none
 - requirements:
   - 단위 테스트 (WBS 파서, 워크플로우 엔진, 유틸리티)
   - E2E 테스트 (트리 렌더링, 노드 선택, 상태 전이)
@@ -522,8 +568,8 @@
 |----|------|---------|----------|
 | WP-01 | Platform Infrastructure | 6 | 12/13 ~ 12/20 |
 | WP-02 | Data Storage Layer | 9 | 12/16 ~ 12/27 |
-| WP-03 | Backend API & Workflow | 4 | 12/23 ~ 01/10 |
+| WP-03 | Backend API & Workflow | 5 | 12/23 ~ 01/13 |
 | WP-04 | WBS Tree View | 4 | 01/06 ~ 01/15 |
 | WP-05 | Task Detail & Document | 4 | 01/13 ~ 01/22 |
 | WP-06 | Integration & Testing | 2 | 01/20 ~ 01/25 |
-| **Total** | | **29** | **~6주** |
+| **Total** | | **30** | **~6주** |

@@ -8,6 +8,8 @@
  * @task TSK-06-01
  */
 
+import WbsTreePanel from '~/components/wbs/WbsTreePanel.vue'
+
 // ============================================================
 // Page Metadata
 // ============================================================
@@ -252,9 +254,8 @@ function goToDashboard() {
       </div>
 
       <!-- 4. 정상 상태: WBS 트리 패널 -->
-      <WbsWbsTreePanel
+      <WbsTreePanel
         v-else
-        data-testid="wbs-content"
         aria-label="WBS 트리 패널"
         :aria-busy="wbsStore.loading ? 'true' : 'false'"
         @node-selected="handleNodeSelected"
