@@ -423,6 +423,8 @@ flowchart TD
 ### 7단계: Frontend 감지 및 화면설계 자동 실행 (development only)
 
 > **조건**: category가 `development`이고 Task에 Frontend/UI 관련 내용이 포함된 경우
+>
+> **⚠️ 필수 실행**: Frontend 감지 시 **반드시 SlashCommand 도구로 `/wf:ui {Task-ID}` 명령어를 실행**해야 함
 
 #### 7.1 Frontend 감지 규칙
 
@@ -449,12 +451,26 @@ Frontend 포함 여부 = Task 설명에 위 키워드 중 하나 이상 포함
     ↓
 Task JSON 상태 업데이트 ([bd])
     ↓
-🎨 /wf:ui 자동 호출
+🎨 SlashCommand 도구로 "/wf:ui {Task-ID}" 실행  ← 필수!
     ↓
 화면설계 문서 생성 (011-ui-design.md + SVG)
     ↓
 완료
 ```
+
+#### 7.2.1 자동 실행 코드 (필수)
+
+**Frontend 감지 시 아래와 같이 SlashCommand 도구 호출:**
+
+```
+SlashCommand 도구 사용:
+  command: "/wf:ui {Task-ID}"
+```
+
+**실행 조건 검사:**
+1. category === "development" 확인
+2. Task 설명에 Frontend 키워드 포함 여부 확인
+3. 두 조건 모두 충족 시 → `/wf:ui` 자동 실행
 
 #### 7.3 자동 실행 출력
 

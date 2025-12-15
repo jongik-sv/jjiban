@@ -47,7 +47,7 @@ export default defineNuxtConfig({
 
   // Pinia 설정
   pinia: {
-    storesDirs: ['./stores/**']
+    storesDirs: ['stores']
   },
 
   // PrimeVue 설정

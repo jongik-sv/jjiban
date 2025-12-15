@@ -26,17 +26,7 @@ import {
   createBadRequestError,
   createConflictError,
 } from '../errors/standardError';
-
-/**
- * 상태 코드 추출 (예: "detail-design [dd]" → "dd")
- * @param status - 전체 상태 문자열
- * @returns 상태 코드 (대괄호 제외)
- */
-function extractStatusCode(status?: string): string {
-  if (!status) return '[ ]';
-  const match = status.match(/\[([^\]]+)\]/);
-  return match ? match[1] : status;
-}
+import { extractStatusCode, formatStatusCode } from './statusUtils';
 
 /**
  * 워크플로우에서 전이 규칙 찾기
@@ -107,6 +97,56 @@ async function createDocument(
   return await writeMarkdownFile(documentPath, defaultContent);
 }
 
+/** 검증 결과 타입 (내부용) */
+interface ValidationResult {
+  valid: boolean;
+  message?: string;
+  taskResult?: Awaited<ReturnType<typeof findTaskById>>;
+  transition?: WorkflowTransition;
+  currentStatus?: string;
+  statusCode?: string;
+}
+
+/**
+ * 상태 전이 가능 여부 검증 (내부용 - Task 결과 포함)
+ * @param taskId - Task ID
+ * @param command - 전이 명령어
+ * @returns 검증 결과 + Task 정보
+ */
+async function validateTransitionInternal(
+  taskId: string,
+  command: string
+): Promise<ValidationResult> {
+  // Task 검색
+  const taskResult = await findTaskById(taskId);
+  if (!taskResult) {
+    throw createNotFoundError(`Task를 찾을 수 없습니다: ${taskId}`);
+  }
+
+  const { task } = taskResult;
+  const statusCode = extractStatusCode(task.status);
+  const currentStatus = formatStatusCode(statusCode);
+  const category = task.category as TaskCategory;
+
+  // 전이 규칙 조회
+  const transition = await findTransition(category, currentStatus, command);
+
+  if (!transition) {
+    return {
+      valid: false,
+      message: `현재 상태 ${currentStatus}에서 명령어 '${command}'를 사용할 수 없습니다`,
+    };
+  }
+
+  return {
+    valid: true,
+    taskResult,
+    transition,
+    currentStatus,
+    statusCode,
+  };
+}
+
 /**
  * 상태 전이 가능 여부 검증
  * @param taskId - Task ID
@@ -117,27 +157,8 @@ export async function validateTransition(
   taskId: string,
   command: string
 ): Promise<{ valid: boolean; message?: string }> {
-  // Task 검색
-  const taskResult = await findTaskById(taskId);
-  if (!taskResult) {
-    throw createNotFoundError(`Task를 찾을 수 없습니다: ${taskId}`);
-  }
-
-  const { task } = taskResult;
-  const currentStatus = extractStatusCode(task.status);
-  const category = task.category as TaskCategory;
-
-  // 전이 규칙 조회
-  const transition = await findTransition(category, currentStatus, command);
-
-  if (!transition) {
-    return {
-      valid: false,
-      message: `현재 상태 [${currentStatus}]에서 명령어 '${command}'를 사용할 수 없습니다`,
-    };
-  }
-
-  return { valid: true };
+  const result = await validateTransitionInternal(taskId, command);
+  return { valid: result.valid, message: result.message };
 }
 
 /**
@@ -154,8 +175,8 @@ export async function executeTransition(
 ): Promise<TransitionResult> {
   const timestamp = new Date().toISOString();
 
-  // 유효성 검증
-  const validation = await validateTransition(taskId, command);
+  // 유효성 검증 (Task 조회 결과 재사용)
+  const validation = await validateTransitionInternal(taskId, command);
   if (!validation.valid) {
     throw createConflictError(
       'INVALID_TRANSITION',
@@ -163,24 +184,14 @@ export async function executeTransition(
     );
   }
 
-  // Task 정보 조회
-  const taskResult = await findTaskById(taskId);
-  if (!taskResult) {
-    throw createNotFoundError(`Task를 찾을 수 없습니다: ${taskId}`);
+  // 검증 결과에서 필요한 정보 추출
+  const { taskResult, transition, statusCode } = validation;
+  if (!taskResult || !transition || statusCode === undefined) {
+    throw createConflictError('INVALID_TRANSITION', '검증 결과가 불완전합니다');
   }
 
-  const { task, projectId } = taskResult;
-  const currentStatus = extractStatusCode(task.status);
-  const category = task.category as TaskCategory;
-
-  // 전이 규칙 조회
-  const transition = await findTransition(category, currentStatus, command);
-  if (!transition) {
-    throw createConflictError(
-      'INVALID_TRANSITION',
-      '전이 규칙을 찾을 수 없습니다'
-    );
-  }
+  const { projectId } = taskResult;
+  const newStatus = transition.to;
 
   // WBS 트리 조회
   const { metadata, tree } = await getWbsTree(projectId);
@@ -189,8 +200,8 @@ export async function executeTransition(
   function updateTaskStatus(nodes: any[]): boolean {
     for (const node of nodes) {
       if (node.id === taskId && node.type === 'task') {
-        // 상태 업데이트
-        node.status = `[${transition.to}]`;
+        // 상태 업데이트 (newStatus는 이미 '[dd]' 형태)
+        node.status = newStatus;
         return true;
       }
       if (node.children && node.children.length > 0) {
@@ -229,8 +240,8 @@ export async function executeTransition(
   return {
     success: true,
     taskId,
-    previousStatus: currentStatus,
-    newStatus: transition.to,
+    previousStatus: statusCode,
+    newStatus: extractStatusCode(transition.to),
     command,
     documentCreated,
     timestamp,
@@ -252,7 +263,8 @@ export async function getAvailableCommands(
   }
 
   const { task } = taskResult;
-  const currentStatus = extractStatusCode(task.status);
+  const statusCode = extractStatusCode(task.status);
+  const currentStatus = formatStatusCode(statusCode);
   const category = task.category as TaskCategory;
 
   // 워크플로우에서 가능한 전이 조회

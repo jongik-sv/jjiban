@@ -20,17 +20,42 @@ import {
   fileExists,
 } from '../file';
 import { createNotFoundError } from '../errors/standardError';
+import { extractStatusCode, formatStatusCode } from './statusUtils';
 
-/**
- * 상태 코드 추출 (예: "detail-design [dd]" → "dd")
- * @param status - 전체 상태 문자열
- * @returns 상태 코드 (대괄호 제외)
- */
-function extractStatusCode(status?: string): string {
-  if (!status) return '[ ]';
-  const match = status.match(/\[([^\]]+)\]/);
-  return match ? match[1] : status;
-}
+// ============================================================
+// 문서 타입 상수
+// ============================================================
+
+/** 문서 파일명 → 타입 직접 매핑 */
+const DOCUMENT_TYPE_MAPPING: Record<string, DocumentInfo['type']> = {
+  '010-basic-design.md': 'design',
+  '011-ui-design.md': 'design',
+  '020-detail-design.md': 'design',
+  '030-implementation.md': 'implementation',
+  '010-analysis.md': 'analysis',
+  '020-fix.md': 'implementation',
+  '070-integration-test.md': 'test',
+  '080-manual.md': 'manual',
+};
+
+/** 문서 번호 접두사 → 타입 매핑 */
+const PREFIX_TYPE_MAPPING: Record<string, DocumentInfo['type']> = {
+  '010': 'design',
+  '011': 'design',
+  '020': 'design',
+  '021': 'review',    // design-review
+  '030': 'implementation',
+  '031': 'review',    // code-review
+  '070': 'test',
+  '080': 'manual',
+};
+
+/** 문서 타입 기본값 */
+const DEFAULT_DOCUMENT_TYPE: DocumentInfo['type'] = 'design';
+
+// ============================================================
+// 문서 타입 결정 함수
+// ============================================================
 
 /**
  * 문서 타입 결정
@@ -38,44 +63,23 @@ function extractStatusCode(status?: string): string {
  * @returns DocumentInfo type
  */
 function determineDocumentType(fileName: string): DocumentInfo['type'] {
-  const typeMapping: Record<string, DocumentInfo['type']> = {
-    '010-basic-design.md': 'design',
-    '011-ui-design.md': 'design',
-    '020-detail-design.md': 'design',
-    '021-design-review': 'review',
-    '030-implementation.md': 'implementation',
-    '031-code-review': 'review',
-    '010-analysis.md': 'analysis',
-    '020-fix.md': 'implementation',
-    '070-integration-test.md': 'test',
-    '080-manual.md': 'manual',
-  };
-
-  // 정확한 매칭
-  if (typeMapping[fileName]) {
-    return typeMapping[fileName];
+  // 1. 정확한 매칭 우선
+  if (DOCUMENT_TYPE_MAPPING[fileName]) {
+    return DOCUMENT_TYPE_MAPPING[fileName];
   }
 
-  // 패턴 매칭 (review 파일)
+  // 2. 패턴 매칭 (review 파일)
   if (fileName.includes('review')) {
     return 'review';
   }
 
-  // 기본값
-  if (fileName.startsWith('010-') || fileName.startsWith('011-') || fileName.startsWith('020-')) {
-    return 'design';
-  }
-  if (fileName.startsWith('030-')) {
-    return 'implementation';
-  }
-  if (fileName.startsWith('070-')) {
-    return 'test';
-  }
-  if (fileName.startsWith('080-')) {
-    return 'manual';
+  // 3. 접두사 기반 매칭
+  const prefix = fileName.substring(0, 3);
+  if (PREFIX_TYPE_MAPPING[prefix]) {
+    return PREFIX_TYPE_MAPPING[prefix];
   }
 
-  return 'design';
+  return DEFAULT_DOCUMENT_TYPE;
 }
 
 /**
@@ -150,6 +154,7 @@ export async function getExpectedDocuments(
   const { task } = taskResult;
   const category = task.category as TaskCategory;
   const statusCode = extractStatusCode(currentStatus);
+  const formattedStatus = formatStatusCode(statusCode);
 
   // 워크플로우 조회
   const workflows = await getWorkflows();
@@ -165,7 +170,7 @@ export async function getExpectedDocuments(
 
   // 현재 상태에서 가능한 전이의 문서 목록
   const futureTransitions = categoryWorkflow.transitions.filter(
-    (t) => t.from === statusCode && t.document
+    (t) => t.from === formattedStatus && t.document
   );
 
   for (const transition of futureTransitions) {

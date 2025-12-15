@@ -6,8 +6,8 @@ import { join } from 'path'
  * @see https://playwright.dev/docs/test-configuration
  */
 
-// 테스트 데이터 경로 (global-setup.ts와 동일)
-const TEST_BASE = join(process.cwd(), 'tests', 'fixtures', 'projects-e2e')
+// 테스트 데이터 경로 - 실제 .jjiban 폴더 사용
+const TEST_BASE = process.cwd()
 
 export default defineConfig({
   // 테스트 파일 위치

@@ -1,9 +1,0 @@
-{
-  "id": "project",
-  "name": "Test Project",
-  "description": "Test project for unit and integration testing",
-  "created": "2025-12-15T00:00:00Z",
-  "updated": "2025-12-15T00:00:00Z",
-  "status": "active",
-  "version": "1.0.0"
-}

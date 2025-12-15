@@ -295,7 +295,7 @@
 ### TSK-03-03: Workflow API & Settings
 - category: development
 - domain: backend
-- status: done [xx]
+- status: implement [im]
 - priority: high
 - assignee: -
 - schedule: 2025-12-31 ~ 2026-01-03
@@ -310,7 +310,7 @@
 ### TSK-03-04: Workflow Engine
 - category: development
 - domain: backend
-- status: done [xx]
+- status: implement [im]
 - priority: high
 - assignee: -
 - schedule: 2026-01-03 ~ 2026-01-10
@@ -350,7 +350,7 @@
 ### TSK-04-01: Tree Panel
 - category: development
 - domain: frontend
-- status: [ ]
+- status: detail-design [dd]
 - priority: high
 - assignee: -
 - schedule: 2026-01-06 ~ 2026-01-09
@@ -366,7 +366,7 @@
 ### TSK-04-02: Tree Node
 - category: development
 - domain: frontend
-- status: [ ]
+- status: detail-design [dd]
 - priority: critical
 - assignee: -
 - schedule: 2026-01-09 ~ 2026-01-12
@@ -382,7 +382,7 @@
 ### TSK-04-03: Tree Interaction
 - category: development
 - domain: frontend
-- status: [ ]
+- status: detail-design [dd]
 - priority: high
 - assignee: -
 - schedule: 2026-01-12 ~ 2026-01-15

@@ -5,50 +5,52 @@
  * playwright.config.ts의 globalSetup에서 호출됩니다.
  */
 
-import { mkdir, writeFile, rm } from 'fs/promises';
+import { mkdir, writeFile, rm, access } from 'fs/promises';
 import { join } from 'path';
 
-export const TEST_BASE = join(process.cwd(), 'tests', 'fixtures', 'projects-e2e');
+const JJIBAN_ROOT = join(process.cwd(), '.jjiban');
+const TEST_PROJECT_ID = 'project';
 
 async function globalSetup() {
   console.log('[Global Setup] Preparing E2E test data...');
 
-  // 기존 테스트 데이터 정리
-  try {
-    await rm(TEST_BASE, { recursive: true, force: true });
-  } catch {
-    // 폴더가 없으면 무시
-  }
+  // settings 폴더 생성
+  const settingsPath = join(JJIBAN_ROOT, 'settings');
+  await mkdir(settingsPath, { recursive: true });
 
-  // 테스트 폴더 구조 생성
-  await mkdir(join(TEST_BASE, '.jjiban', 'settings'), { recursive: true });
-  await mkdir(join(TEST_BASE, '.jjiban', 'projects', 'test-project'), { recursive: true });
+  // 테스트 프로젝트 폴더 생성
+  const projectPath = join(JJIBAN_ROOT, 'projects', TEST_PROJECT_ID);
+  await mkdir(projectPath, { recursive: true });
 
-  // 초기 프로젝트 목록 설정
+  // Task 폴더 생성
+  const taskPath = join(projectPath, 'tasks', 'TSK-01-01-01');
+  await mkdir(taskPath, { recursive: true });
+
+  // projects.json 생성
   const projectsConfig = {
     version: '1.0',
     projects: [
       {
-        id: 'test-project',
+        id: TEST_PROJECT_ID,
         name: '테스트 프로젝트',
-        path: 'test-project',
+        path: TEST_PROJECT_ID,
         status: 'active',
         wbsDepth: 4,
         createdAt: '2025-12-14T00:00:00.000Z',
       },
     ],
-    defaultProject: 'test-project',
+    defaultProject: TEST_PROJECT_ID,
   };
 
   await writeFile(
-    join(TEST_BASE, '.jjiban', 'settings', 'projects.json'),
+    join(settingsPath, 'projects.json'),
     JSON.stringify(projectsConfig, null, 2),
     'utf-8'
   );
 
   // project.json 생성
   const projectConfig = {
-    id: 'test-project',
+    id: TEST_PROJECT_ID,
     name: '테스트 프로젝트',
     description: 'E2E 테스트용 프로젝트',
     version: '0.1.0',
@@ -60,7 +62,7 @@ async function globalSetup() {
   };
 
   await writeFile(
-    join(TEST_BASE, '.jjiban', 'projects', 'test-project', 'project.json'),
+    join(projectPath, 'project.json'),
     JSON.stringify(projectConfig, null, 2),
     'utf-8'
   );
@@ -70,22 +72,55 @@ async function globalSetup() {
     version: '1.0',
     members: [
       {
-        id: 'hong',
-        name: '홍길동',
-        email: 'hong@test.com',
-        role: 'Developer',
+        id: 'dev-001',
+        name: 'Developer 1',
+        email: 'dev1@test.com',
+        role: 'Backend Developer',
         active: true,
       },
     ],
   };
 
   await writeFile(
-    join(TEST_BASE, '.jjiban', 'projects', 'test-project', 'team.json'),
+    join(projectPath, 'team.json'),
     JSON.stringify(teamConfig, null, 2),
     'utf-8'
   );
 
-  console.log('[Global Setup] E2E test data prepared at:', TEST_BASE);
+  // wbs.md 생성
+  const wbsContent = `# WBS - Test Project
+
+> version: 1.0
+> depth: 4
+> updated: 2025-12-14
+> start: 2025-12-13
+
+---
+
+## WP-01: Test Work Package
+- status: planned
+- priority: high
+
+### ACT-01-01: Test Activity
+- status: todo
+
+#### TSK-01-01-01: Test Task
+- category: development
+- status: basic-design [bd]
+- priority: critical
+- assignee: dev-001
+`;
+
+  await writeFile(join(projectPath, 'wbs.md'), wbsContent, 'utf-8');
+
+  // Task 문서 생성
+  await writeFile(
+    join(taskPath, '010-basic-design.md'),
+    '# Basic Design\n\nTest content',
+    'utf-8'
+  );
+
+  console.log('[Global Setup] E2E test data prepared at:', projectPath);
 }
 
 export default globalSetup;

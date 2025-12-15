@@ -8,7 +8,7 @@ import { test, expect } from '@playwright/test';
 import { promises as fs } from 'fs';
 import { join } from 'path';
 
-const TEST_PROJECT_ID = 'test-wbs-e2e';
+const TEST_PROJECT_ID = 'project';
 const JJIBAN_ROOT = '.jjiban';
 
 test.describe('WBS API', () => {

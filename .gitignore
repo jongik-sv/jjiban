@@ -20,4 +20,9 @@ dist/
 
 .playwright-mcp/
 
+# Test artifacts
+coverage/
+test-results/
+test-results.json
+
 nul

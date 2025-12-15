@@ -8,12 +8,13 @@
 /**
  * 상태 문자열에서 상태 코드 추출
  * @param status - 상태 문자열 (예: "detail-design [dd]" 또는 "[dd]")
- * @returns 상태 코드 (예: "dd"), 없으면 빈 문자열
+ * @param defaultValue - 기본값 (기본: 빈 문자열)
+ * @returns 상태 코드 (예: "dd")
  */
-export function extractStatusCode(status?: string): string {
-  if (!status) return '';
+export function extractStatusCode(status?: string, defaultValue = ''): string {
+  if (!status) return defaultValue;
   const match = status.match(/\[([^\]]+)\]/);
-  return match ? match[1].trim() : '';
+  return match ? match[1].trim() : defaultValue;
 }
 
 /**

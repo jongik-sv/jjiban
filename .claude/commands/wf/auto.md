@@ -288,6 +288,16 @@ async function executeAutoWorkflow(taskId, options = {}) {
           return { success: true, finalStatus: currentStatus, stoppedAt: target };
         }
 
+        // ⭐ 조건부 실행: condition이 있으면 조건 검사
+        if (preAction.condition === 'codeReviewNotExist') {
+          // wf:audit이 이미 실행되었는지 확인
+          const codeReviewExists = checkCodeReviewExists(taskId);
+          if (codeReviewExists) {
+            console.log(`[INFO] 코드 리뷰가 이미 존재합니다. wf:audit 스킵`);
+            continue;  // 코드 리뷰가 있으면 스킵
+          }
+        }
+
         if (preAction.subagent) {
           await Task({ subagent_type: preAction.subagent, ... });
         } else {
@@ -397,6 +407,18 @@ function checkTestResultsExist(taskId) {
 
   // 둘 중 하나라도 존재하면 테스트가 이미 실행된 것으로 간주
   return tddResultExists || e2eResultExists;
+}
+
+// ⭐ 코드 리뷰 문서 존재 여부 확인
+// wf:audit이 이미 실행된 경우 중복 실행 방지
+function checkCodeReviewExists(taskId) {
+  const taskFolder = `.jjiban/projects/{project}/tasks/${taskId}/`;
+
+  // 코드 리뷰 문서 존재 여부 확인 (적용완료 포함)
+  const codeReviewFiles = glob(taskFolder, '031-code-review-*.md');
+
+  // 코드 리뷰 파일이 하나라도 존재하면 이미 실행된 것으로 간주
+  return codeReviewFiles.length > 0;
 }
 ```
 
@@ -524,7 +546,8 @@ const subagentMapping = {
       subagent: 'quality-engineer',
       next: '[ts]',
       preActions: [
-        { action: 'audit', subagent: 'refactoring-expert' },
+        // ⚠️ 코드 리뷰 문서가 이미 존재하면 스킵
+        { action: 'audit', subagent: 'refactoring-expert', condition: 'codeReviewNotExist' },
         { action: 'patch', subagent: null }
       ]
     },
@@ -554,7 +577,8 @@ const subagentMapping = {
       subagent: 'quality-engineer',
       next: '[ts]',
       preActions: [
-        { action: 'audit', subagent: 'refactoring-expert' },
+        // ⚠️ 코드 리뷰 문서가 이미 존재하면 스킵
+        { action: 'audit', subagent: 'refactoring-expert', condition: 'codeReviewNotExist' },
         { action: 'patch', subagent: null }
       ]
     },
@@ -580,7 +604,8 @@ const subagentMapping = {
       subagent: null,
       next: '[xx]',
       preActions: [
-        { action: 'audit', subagent: 'refactoring-expert' },
+        // ⚠️ 코드 리뷰 문서가 이미 존재하면 스킵
+        { action: 'audit', subagent: 'refactoring-expert', condition: 'codeReviewNotExist' },
         { action: 'patch', subagent: null }
       ]
     }
@@ -1137,7 +1162,14 @@ Subagent 실행 통계:
 jjiban 프로젝트 - Workflow Command
 author: 장종익
 Command: wf:auto
-Version: 2.2
+Version: 2.3
+
+Changes (v2.3):
+- wf:audit 조건부 실행 로직 추가
+  - 코드 리뷰 문서(031-code-review-*.md) 존재 시 스킵
+  - checkCodeReviewExists() 함수 추가
+  - preActions.condition 속성 추가 ('codeReviewNotExist')
+  - development/defect/infrastructure 모든 카테고리에 적용
 
 Changes (v2.2):
 - wf:test 조건부 실행 로직 추가

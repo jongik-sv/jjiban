@@ -537,4 +537,50 @@ export default defineEventHandler(async (event: H3Event) => {
 
 ---
 
-**문서 버전**: 1.0.0
+## 10. 코드 리뷰 반영 이력
+
+### 10.1 반영 일시: 2025-12-15
+### 10.2 기준 리뷰: 031-code-review-claude-1.md
+
+| # | 항목 | 우선순위 | 파일 | 상태 |
+|---|------|---------|------|------|
+| 1 | extractStatusCode() 중복 제거 | P3 | transitionService.ts | ✅ 반영 |
+| 2 | extractStatusCode() 중복 제거 | P3 | documentService.ts | ✅ 반영 |
+| 3 | transition/documents API E2E 테스트 | P3 | tests/e2e/tasks.spec.ts | ✅ 반영 |
+| 4 | findTaskById() 중복 호출 최적화 | P4 | transitionService.ts | ✅ 반영 |
+| 5 | determineDocumentType() 매직 스트링 상수화 | P4 | documentService.ts | ✅ 반영 |
+
+### 10.3 미반영 사항 (사유 포함)
+
+| # | 항목 | 우선순위 | 사유 |
+|---|------|---------|------|
+| 1 | updateTaskStatus() 별도 유틸 분리 | P4 | 현재 범위 내 충분한 캡슐화 |
+| 2 | 201 응답 setResponseStatus() 사용 | P4 | 현재 방식으로 동작 정상 |
+
+### 10.4 변경 상세
+
+#### 10.4.1 extractStatusCode() 중복 제거
+- **Before**: transitionService.ts:35, documentService.ts:29에 동일 함수 중복 정의
+- **After**: statusUtils.ts의 공통 함수 import하여 사용
+- **추가 개선**: formatStatusCode 함수 추가 활용하여 워크플로우 상태 비교 정확성 향상
+
+#### 10.4.2 findTaskById() 중복 호출 최적화
+- **Before**: executeTransition() 내부에서 validateTransition() 호출 후 다시 findTaskById() 호출 (2회)
+- **After**: validateTransitionInternal() 함수를 통해 검증 결과와 Task 정보를 함께 반환하여 재사용 (1회)
+- **효과**: I/O 감소, 응답 시간 개선
+
+#### 10.4.3 determineDocumentType() 매직 스트링 상수화
+- **Before**: 함수 내부에 하드코딩된 파일명-타입 매핑
+- **After**: DOCUMENT_TYPE_MAPPING, PREFIX_TYPE_MAPPING, DEFAULT_DOCUMENT_TYPE 상수로 분리
+- **효과**: 유지보수성 향상, 새 문서 타입 추가 용이
+
+#### 10.4.4 E2E 테스트 추가
+- 추가된 테스트:
+  - E2E-TASK-05: GET /api/tasks/:id/documents - 문서 목록 조회
+  - E2E-TASK-06: POST /api/tasks/:id/transition - 상태 전이 성공
+  - E2E-TASK-07: POST /api/tasks/:id/transition - 유효하지 않은 전이
+  - E2E-TASK-08: GET /api/tasks/:id/available-commands - 가능한 명령어 조회
+
+---
+
+**문서 버전**: 1.1.0

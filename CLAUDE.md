@@ -119,4 +119,3 @@ Todo [ ] → Design [bd] → Detail [dd] → Implement [im] → Verify [vf] → 
 
 ## TDD, E2E 테스트 시 유의사항
 -  .jjiban/jjiban 폴더는 테스트에 사용하지 말것
-- 테스트에 사용하는 프로젝트명은 project 로 하자.
