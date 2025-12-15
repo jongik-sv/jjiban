@@ -7,16 +7,16 @@
  */
 
 import type { WbsNode } from '../../../../types';
-import type { FlatNode } from './types';
-import { parseNodeHeader } from './header';
-import { parseNodeAttributes } from './attributes';
-import { buildTree, calculateProgress, determineParentId } from './tree';
+import type { FlatNode } from './_types';
+import { parseNodeHeader } from './_header';
+import { parseNodeAttributes } from './_attributes';
+import { buildTree, calculateProgress, determineParentId } from './_tree';
 
-// Re-export for testing and external use
-export { parseNodeHeader } from './header';
-export { parseNodeAttributes } from './attributes';
-export { buildTree, calculateProgress, determineParentId } from './tree';
-export type { FlatNode, NodeHeader, NodeAttributes } from './types';
+// Note: For testing, import directly from submodules:
+// - parseNodeHeader from './_header'
+// - parseNodeAttributes from './_attributes'
+// - buildTree, calculateProgress, determineParentId from './_tree'
+// - FlatNode, NodeHeader, NodeAttributes types from './_types'
 
 /**
  * wbs.md 전체 텍스트를 WbsNode[] 트리로 변환

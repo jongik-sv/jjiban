@@ -5,14 +5,14 @@
  */
 
 import type { WbsNodeType } from '../../../../types';
-import type { NodeHeader } from './types';
+import type { NodeHeader } from './_types';
 import {
   HEADER_PATTERN,
   WP_ID_PATTERN,
   ACT_ID_PATTERN,
   TSK_3LEVEL_PATTERN,
   TSK_4LEVEL_PATTERN,
-} from './patterns';
+} from './_patterns';
 
 /**
  * 헤더 라인에서 노드 정보 추출

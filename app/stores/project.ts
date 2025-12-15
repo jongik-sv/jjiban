@@ -5,12 +5,14 @@
  */
 
 import type { Project, ProjectSummary, CreateProjectInput, ProjectListResponse } from '~/types/store'
+import type { TeamMember } from '~/types'
 
 export const useProjectStore = defineStore('project', () => {
   // ============================================================
   // State
   // ============================================================
   const currentProject = ref<Project | null>(null)
+  const teamMembers = ref<TeamMember[]>([])
   const projects = ref<ProjectSummary[]>([])
   const loading = ref(false)
   const error = ref<string | null>(null)
@@ -44,14 +46,21 @@ export const useProjectStore = defineStore('project', () => {
   }
 
   /**
-   * 특정 프로젝트 로드
+   * 특정 프로젝트 로드 (프로젝트 + 팀원 정보)
    */
   async function loadProject(id: string) {
+    // 이미 로드된 프로젝트면 스킵
+    if (currentProject.value?.id === id) {
+      return
+    }
+
     loading.value = true
     error.value = null
     try {
-      const data = await $fetch<Project>(`/api/projects/${id}`)
-      currentProject.value = data
+      // GET /api/projects/:id는 ProjectDetail 반환 { project, team }
+      const data = await $fetch<{ project: Project; team: TeamMember[] }>(`/api/projects/${id}`)
+      currentProject.value = data.project
+      teamMembers.value = data.team
     } catch (e) {
       error.value = e instanceof Error ? e.message : 'Failed to load project'
       throw e
@@ -100,6 +109,7 @@ export const useProjectStore = defineStore('project', () => {
   return {
     // State
     currentProject,
+    teamMembers,
     projects,
     loading,
     error,

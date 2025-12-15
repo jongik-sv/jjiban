@@ -532,13 +532,13 @@
 ### TSK-06-01: Integration
 - category: development
 - domain: fullstack
-- status: [dd]
+- status: [im]
 - priority: high
 - assignee: -
 - schedule: 2026-01-20 ~ 2026-01-23
 - tags: page, integration, pinia
 - depends: TSK-04-03, TSK-05-03
-- test-result: fail
+- test-result: pass
 - requirements:
   - WBS 페이지 통합 (pages/wbs.vue, 패널 통합, 에러 핸들링)
   - 상태 관리 통합 (project, wbs, selection 스토어 연동)

@@ -7,7 +7,7 @@
  */
 
 import type { WbsNodeType } from '../../../../../types';
-import type { ValidationError } from '../types';
+import type { ValidationError } from '../_types';
 
 // ID 패턴 정규식 (모듈 레벨에서 컴파일하여 캐싱)
 const WP_PATTERN = /^WP-\d{2}$/;

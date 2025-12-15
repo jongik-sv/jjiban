@@ -7,7 +7,7 @@
  */
 
 import type { WbsNode, TaskCategory, Priority } from '../../../../../types';
-import type { ValidationError } from '../types';
+import type { ValidationError } from '../_types';
 import { VALID_CATEGORIES, VALID_PRIORITIES } from '../../../../../types/validation';
 
 // 필수 속성 목록

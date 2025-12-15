@@ -22,7 +22,7 @@ const route = useRoute()
 const wbsStore = useWbsStore()
 
 // Route에서 projectId 추출
-const projectId = computed(() => route.query.projectId as string)
+const projectId = computed(() => route.query.project as string)
 
 // 스토어 상태 구독
 const { loading, error, tree } = storeToRefs(wbsStore)

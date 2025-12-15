@@ -7,7 +7,7 @@
  */
 
 import type { WbsNode, WbsNodeType } from '../../../../../types';
-import type { ValidationError } from '../types';
+import type { ValidationError } from '../_types';
 
 /**
  * ID에서 접두사 추출

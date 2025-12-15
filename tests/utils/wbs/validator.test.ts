@@ -6,20 +6,14 @@
  * 추적성 매트릭스: 025-traceability-matrix.md
  */
 import { describe, it, expect, beforeEach } from 'vitest';
-import {
-  validateId,
-  validateAttributes,
-  validateStatus,
-  validateHierarchy,
-  checkDuplicates,
-  validateWbs,
-  extractPrefix,
-  getExpectedPrefix,
-  isValidStatus,
-  collectAllIds,
-} from '../../../server/utils/wbs/validation';
+import { validateWbs } from '../../../server/utils/wbs/validation';
+import { validateId } from '../../../server/utils/wbs/validation/validators/_id-validator';
+import { validateAttributes } from '../../../server/utils/wbs/validation/validators/_attribute-validator';
+import { validateStatus, isValidStatus } from '../../../server/utils/wbs/validation/validators/_status-validator';
+import { validateHierarchy, extractPrefix, getExpectedPrefix } from '../../../server/utils/wbs/validation/validators/_hierarchy-validator';
+import { checkDuplicates, collectAllIds } from '../../../server/utils/wbs/validation/validators/_duplicate-checker';
 import type { WbsNode } from '../../../types';
-import type { ValidationError } from '../../../server/utils/wbs/validation';
+import type { ValidationError } from '../../../server/utils/wbs/validation/_types';
 
 // ============================================================
 // UT-ID: IdValidator 단위 테스트

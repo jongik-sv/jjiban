@@ -43,7 +43,7 @@ const error = ref<string | null>(null)
  * - 잘못된 형식이면 null 반환
  */
 const projectId = computed<string | null>(() => {
-  const id = route.query.projectId
+  const id = route.query.project
   if (!id || typeof id !== 'string') return null
 
   // 형식 검증: 소문자, 숫자, 하이픈만 허용
@@ -254,12 +254,17 @@ function goToDashboard() {
       </div>
 
       <!-- 4. 정상 상태: WBS 트리 패널 -->
-      <WbsTreePanel
+      <div
         v-else
-        aria-label="WBS 트리 패널"
-        :aria-busy="wbsStore.loading ? 'true' : 'false'"
-        @node-selected="handleNodeSelected"
-      />
+        class="h-full"
+        data-testid="wbs-content"
+      >
+        <WbsTreePanel
+          aria-label="WBS 트리 패널"
+          :aria-busy="wbsStore.loading ? 'true' : 'false'"
+          @node-selected="handleNodeSelected"
+        />
+      </div>
     </template>
 
     <!-- Right Panel Slot -->

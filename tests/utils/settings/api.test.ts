@@ -9,7 +9,8 @@
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { readFile } from 'fs/promises';
-import { isValidSettingsType, refreshCache } from '../../../server/utils/settings';
+import { isValidSettingsType } from '../../../server/utils/settings';
+import { refreshCache } from '../../../server/utils/settings/_cache';
 import {
   DEFAULT_COLUMNS,
   DEFAULT_CATEGORIES,

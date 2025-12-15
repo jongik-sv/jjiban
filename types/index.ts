@@ -42,6 +42,7 @@ export interface WbsNode {
   taskCount?: number;
   children: WbsNode[];
   expanded?: boolean;
+  attributes?: Record<string, string>;  // TSK-03-05: 커스텀 속성 (예: test-result)
 }
 
 // 시리얼라이저 컨텍스트
@@ -175,6 +176,38 @@ export interface WorkflowRule {
   command: string;
 }
 
+// 워크플로우 단계 (TSK-05-02 R-02: 타입 정의 추출)
+export interface WorkflowStep {
+  code: string;        // 상태 코드 (예: '[ ]', '[bd]', '[dd]', '[im]', '[vf]', '[xx]')
+  name: string;        // 상태 이름 (예: 'Todo', 'Design', 'Detail', 'Implement', 'Verify', 'Done')
+  description: string; // 상태 설명 (예: '시작 전', '기본설계', '상세설계')
+}
+
+// 카테고리별 워크플로우 단계 정의
+export const WORKFLOW_STEPS: Record<TaskCategory, WorkflowStep[]> = {
+  development: [
+    { code: '[ ]', name: 'Todo', description: '시작 전' },
+    { code: '[bd]', name: 'Design', description: '기본설계' },
+    { code: '[dd]', name: 'Detail', description: '상세설계' },
+    { code: '[im]', name: 'Implement', description: '구현' },
+    { code: '[vf]', name: 'Verify', description: '검증' },
+    { code: '[xx]', name: 'Done', description: '완료' }
+  ],
+  defect: [
+    { code: '[ ]', name: 'Todo', description: '시작 전' },
+    { code: '[an]', name: 'Analysis', description: '분석' },
+    { code: '[fx]', name: 'Fix', description: '수정' },
+    { code: '[vf]', name: 'Verify', description: '검증' },
+    { code: '[xx]', name: 'Done', description: '완료' }
+  ],
+  infrastructure: [
+    { code: '[ ]', name: 'Todo', description: '시작 전' },
+    { code: '[ds]', name: 'Design', description: '설계' },
+    { code: '[im]', name: 'Implement', description: '구현' },
+    { code: '[xx]', name: 'Done', description: '완료' }
+  ]
+};
+
 // JJIBAN 디렉토리 경로 상수
 export const JJIBAN_PATHS = {
   ROOT: '.jjiban',
@@ -237,4 +270,19 @@ export interface PaginationInfo {
 // 페이징된 응답
 export interface PaginatedResponse<T> extends ApiResponse<T[]> {
   pagination: PaginationInfo;
+}
+
+// Document Viewer 타입 (TSK-05-04)
+export interface DocumentError {
+  code: string;           // 에러 코드 (DOCUMENT_NOT_FOUND, FILE_READ_ERROR 등)
+  message: string;        // 사용자 메시지
+  isRecoverable: boolean; // 복구 가능 여부 (재시도 버튼 표시 여부)
+  originalError?: Error;  // 원본 에러 (디버깅용)
+}
+
+export interface DocumentContent {
+  content: string;        // Markdown 원본 텍스트
+  filename: string;       // 파일명
+  size: number;          // 파일 크기 (bytes)
+  lastModified: string;  // 최종 수정 시각 (ISO 8601)
 }

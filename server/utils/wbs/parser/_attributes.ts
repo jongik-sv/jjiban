@@ -5,7 +5,7 @@
  */
 
 import type { TaskCategory, Priority, ScheduleRange } from '../../../../types';
-import type { NodeAttributes } from './types';
+import type { NodeAttributes } from './_types';
 import {
   ATTRIBUTE_PATTERN,
   STATUS_PATTERN,
@@ -13,7 +13,7 @@ import {
   INDENT_LIST_PATTERN,
   VALID_CATEGORIES,
   VALID_PRIORITIES,
-} from './patterns';
+} from './_patterns';
 
 /**
  * 속성 라인 배열을 파싱하여 NodeAttributes 객체 생성
@@ -23,9 +23,11 @@ import {
  *
  * FR-002: 속성 파싱 (9개 속성)
  * BR-005: 상태 코드 [xx] 형식 추출
+ * TSK-03-05: test-result 속성 추가
  */
 export function parseNodeAttributes(lines: string[]): NodeAttributes {
   const attributes: NodeAttributes = {};
+  const customAttributes: Record<string, string> = {};
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
@@ -77,10 +79,21 @@ export function parseNodeAttributes(lines: string[]): NodeAttributes {
         attributes.ref = value;
         break;
 
+      case 'test-result':
+        // TSK-03-05: test-result 속성 (none, pass, fail)
+        customAttributes['test-result'] = value.trim();
+        break;
+
       default:
-        // 알 수 없는 속성은 무시
+        // 알 수 없는 속성은 customAttributes에 저장
+        customAttributes[key] = value;
         break;
     }
+  }
+
+  // customAttributes가 있으면 attributes 객체에 추가
+  if (Object.keys(customAttributes).length > 0) {
+    attributes.customAttributes = customAttributes;
   }
 
   return attributes;

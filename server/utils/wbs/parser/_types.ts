@@ -1,23 +1,22 @@
 /**
- * WBS Parser 내부 타입 정의
+ * WBS Parser - 타입 정의
  * Task: TSK-02-02-01
- * 상세설계: 020-detail-design.md 섹션 2.2
  */
 
 import type { WbsNodeType, TaskCategory, Priority, ScheduleRange } from '../../../../types';
 
 /**
- * 파싱된 헤더 정보
+ * 노드 헤더 정보
  */
 export interface NodeHeader {
-  id: string;
-  type: WbsNodeType;
-  title: string;
-  level: number;
+  level: number;         // 헤더 레벨 (1~4)
+  id: string;            // 노드 ID (예: "WP-01", "TSK-01-01")
+  title: string;         // 노드 제목
+  type: WbsNodeType;     // 노드 타입
 }
 
 /**
- * 파싱된 속성 모음
+ * 노드 속성 정보
  */
 export interface NodeAttributes {
   category?: TaskCategory;
@@ -29,15 +28,16 @@ export interface NodeAttributes {
   depends?: string;
   requirements?: string[];
   ref?: string;
+  customAttributes?: Record<string, string>;  // TSK-03-05: 커스텀 속성 (예: test-result)
 }
 
 /**
  * 플랫 노드 (트리 빌드 전)
  */
 export interface FlatNode {
+  level: number;
   id: string;
   type: WbsNodeType;
   title: string;
-  level: number;
   attributes: NodeAttributes;
 }

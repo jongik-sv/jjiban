@@ -8,14 +8,10 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
-import {
-  parseWbsMarkdown,
-  parseNodeHeader,
-  parseNodeAttributes,
-  buildTree,
-  calculateProgress,
-  determineParentId,
-} from '../../../server/utils/wbs/parser';
+import { parseWbsMarkdown } from '../../../server/utils/wbs/parser';
+import { parseNodeHeader } from '../../../server/utils/wbs/parser/_header';
+import { parseNodeAttributes } from '../../../server/utils/wbs/parser/_attributes';
+import { buildTree, calculateProgress, determineParentId } from '../../../server/utils/wbs/parser/_tree';
 import type { WbsNode } from '../../../types';
 
 // 테스트 픽스처 경로 - 프로젝트 루트 기준

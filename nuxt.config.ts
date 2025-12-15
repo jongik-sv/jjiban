@@ -13,6 +13,16 @@ export default defineNuxtConfig({
     preset: 'node-server'
   },
 
+  // Vite 설정 - zod를 서버 빌드에 포함
+  vite: {
+    optimizeDeps: {
+      include: ['zod']
+    },
+    ssr: {
+      noExternal: ['zod']
+    }
+  },
+
   // 런타임 설정 (TSK-02-03-02: ISS-001 반영)
   runtimeConfig: {
     jjibanBasePath: process.env.JJIBAN_BASE_PATH || process.cwd(),
@@ -70,7 +80,9 @@ export default defineNuxtConfig({
   // 글로벌 CSS
   css: [
     'primeicons/primeicons.css',
-    '~/assets/css/main.css'
+    '~/assets/css/main.css',
+    '~/assets/styles/markdown.css',
+    'highlight.js/styles/atom-one-dark.css'
   ],
 
   // TailwindCSS 설정

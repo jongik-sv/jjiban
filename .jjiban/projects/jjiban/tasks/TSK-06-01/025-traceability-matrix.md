@@ -17,7 +17,7 @@
 | 작성일 | 2025-12-15 |
 | 작성자 | System Architect |
 
----
+--- 
 
 ## 1. 추적성 매트릭스 (Traceability Matrix)
 

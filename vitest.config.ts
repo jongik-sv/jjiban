@@ -1,13 +1,15 @@
 import { defineConfig } from 'vitest/config';
 import vue from '@vitejs/plugin-vue';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, URL } from 'node:url';
 
 export default defineConfig({
   plugins: [vue()],
   resolve: {
+    extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.vue'],
     alias: {
       '~': fileURLToPath(new URL('./app', import.meta.url)),
-      '~/types': fileURLToPath(new URL('./types', import.meta.url)),
+      '~/types': fileURLToPath(new URL('./types/index.ts', import.meta.url)),
+      '~/utils': fileURLToPath(new URL('./app/utils', import.meta.url)),
       '~/stores': fileURLToPath(new URL('./app/stores', import.meta.url)),
       '~/components': fileURLToPath(new URL('./app/components', import.meta.url)),
     },

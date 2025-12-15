@@ -1,21 +1,16 @@
 /**
- * WBS Parser - 트리 빌드 및 진행률 계산 함수
+ * WBS Parser - 트리 빌드 함수
  * Task: TSK-02-02-01
- * 상세설계: 020-detail-design.md 섹션 3.4, 3.5
+ * 상세설계: 020-detail-design.md 섹션 3.4
  */
 
 import type { WbsNode } from '../../../../types';
-import type { FlatNode } from './types';
+import type { FlatNode } from './_types';
 
 /**
- * 플랫 노드 배열을 부모-자식 관계의 트리로 변환
- *
+ * 플랫 노드 배열을 트리 구조로 변환
  * @param flatNodes - 플랫 노드 배열
- * @returns 루트 노드 배열 (WbsNode[])
- *
- * FR-003: 계층 구조 빌드 (트리)
- * BR-003: 3단계 구조: WP → TSK
- * BR-004: 4단계 구조: WP → ACT → TSK
+ * @returns 루트 노드 배열
  */
 export function buildTree(flatNodes: FlatNode[]): WbsNode[] {
   const nodeMap = new Map<string, WbsNode>();
@@ -40,6 +35,8 @@ export function buildTree(flatNodes: FlatNode[]): WbsNode[] {
       taskCount: 0,
       children: [],
       expanded: false,
+      // TSK-03-05: 커스텀 속성 복사
+      attributes: node.attributes.customAttributes,
     };
 
     nodeMap.set(node.id, wbsNode);
@@ -70,95 +67,87 @@ export function buildTree(flatNodes: FlatNode[]): WbsNode[] {
 
 /**
  * 노드의 부모 ID 결정
- *
- * @param node - FlatNode
- * @returns 부모 ID 또는 null (루트 노드인 경우)
- *
- * BR-003: 3단계 구조 (TSK-01-02 → WP-01)
- * BR-004: 4단계 구조 (TSK-01-02-03 → ACT-01-02)
+ * @param node - 플랫 노드
+ * @returns 부모 ID (null이면 루트 노드)
  */
 export function determineParentId(node: FlatNode): string | null {
   const idParts = node.id.split('-');
 
-  if (node.type === 'wp') {
-    return null; // WP는 루트
+  if (idParts.length === 2) {
+    // WP-XX: 루트 노드
+    return null;
   }
 
-  if (node.type === 'act') {
-    // ACT-01-02 → WP-01
+  if (idParts.length === 3) {
+    // TSK-XX-XX: 부모는 WP-XX
     return `WP-${idParts[1]}`;
   }
 
-  if (node.type === 'task') {
-    if (idParts.length === 3) {
-      // TSK-01-02 → WP-01 (3단계)
-      return `WP-${idParts[1]}`;
-    } else if (idParts.length === 4) {
-      // TSK-01-02-03 → ACT-01-02 (4단계)
-      return `ACT-${idParts[1]}-${idParts[2]}`;
-    }
+  if (idParts.length === 4 && idParts[0] === 'ACT') {
+    // ACT-XX-XX: 부모는 WP-XX
+    return `WP-${idParts[1]}`;
   }
 
+  if (idParts.length === 4 && idParts[0] === 'TSK') {
+    // TSK-XX-XX-XX: 부모는 ACT-XX-XX
+    return `ACT-${idParts[1]}-${idParts[2]}`;
+  }
+
+  // 알 수 없는 형식
   return null;
 }
 
 /**
- * 하위 Task 상태 기반으로 진행률 자동 계산 (재귀)
- *
- * @param nodes - WbsNode[] (in-place 수정)
- *
- * FR-004: 진행률 자동 계산
+ * 트리 전체의 progress와 taskCount 계산
+ * @param nodes - 루트 노드 배열
  */
 export function calculateProgress(nodes: WbsNode[]): void {
   for (const node of nodes) {
-    if (node.children.length > 0) {
-      // 재귀적으로 자식 노드 먼저 계산
-      calculateProgress(node.children);
-
-      // 하위 Task 수집
-      const allTasks = collectAllTasks(node);
-
-      // 진행률 계산
-      const totalTasks = allTasks.length;
-      const completedTasks = allTasks.filter(t => t.status === '[xx]').length;
-
-      if (totalTasks > 0) {
-        node.progress = Math.round((completedTasks / totalTasks) * 100);
-        node.taskCount = totalTasks;
-      } else {
-        // WP/ACT 노드 아래 Task가 없는 경우
-        node.progress = 0;
-        node.taskCount = 0;
-      }
-    } else {
-      // 리프 노드 (Task)
-      if (node.type === 'task') {
-        node.taskCount = 1;
-        node.progress = node.status === '[xx]' ? 100 : 0;
-      } else {
-        node.taskCount = 0;
-        node.progress = 0;
-      }
-    }
+    updateNodeMetrics(node);
   }
 }
 
 /**
- * 노드 아래의 모든 Task 수집 (DFS)
- *
- * @param node - WbsNode
- * @returns type === 'task'인 노드 배열
+ * 노드의 progress와 taskCount를 재귀적으로 계산
+ * @param node - WBS 노드
+ * @returns { progress, taskCount }
  */
-function collectAllTasks(node: WbsNode): WbsNode[] {
-  const tasks: WbsNode[] = [];
-
+function updateNodeMetrics(node: WbsNode): { progress: number; taskCount: number } {
   if (node.type === 'task') {
-    tasks.push(node);
+    // Task 노드: 상태에 따라 progress 계산
+    let progress = 0;
+    if (node.status === '[xx]') {
+      progress = 100;
+    } else if (node.status === '[vf]') {
+      progress = 80;
+    } else if (node.status === '[im]') {
+      progress = 60;
+    } else if (node.status === '[dd]') {
+      progress = 40;
+    } else if (node.status === '[bd]') {
+      progress = 20;
+    }
+
+    node.progress = progress;
+    node.taskCount = 1;
+
+    return { progress, taskCount: 1 };
   }
+
+  // WP 또는 ACT: 자식 노드의 평균 progress 계산
+  let totalProgress = 0;
+  let totalTasks = 0;
 
   for (const child of node.children) {
-    tasks.push(...collectAllTasks(child));
+    const childMetrics = updateNodeMetrics(child);
+    totalProgress += childMetrics.progress * childMetrics.taskCount;
+    totalTasks += childMetrics.taskCount;
   }
 
-  return tasks;
+  const avgProgress = totalTasks > 0 ? Math.round(totalProgress / totalTasks) : 0;
+
+  node.progress = avgProgress;
+  node.taskCount = totalTasks;
+
+  return { progress: avgProgress, taskCount: totalTasks };
 }

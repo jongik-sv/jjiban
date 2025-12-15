@@ -6,8 +6,8 @@
  * 상태 코드 유효성 검증 모듈
  */
 
-import type { ValidationError } from '../types';
-import { VALID_STATUS_CODES } from '../types';
+import type { ValidationError } from '../_types';
+import { VALID_STATUS_CODES } from '../_types';
 
 /**
  * 상태 코드가 유효한지 확인

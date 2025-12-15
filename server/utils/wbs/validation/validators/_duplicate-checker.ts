@@ -7,7 +7,7 @@
  */
 
 import type { WbsNode } from '../../../../../types';
-import type { ValidationError } from '../types';
+import type { ValidationError } from '../_types';
 
 /**
  * 트리에서 모든 ID 수집 (재귀)

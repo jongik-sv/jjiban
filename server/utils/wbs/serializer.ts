@@ -1,13 +1,13 @@
 import type { WbsNode, WbsMetadata, SerializerContext, SerializerOptions } from '../../../types';
 import { SerializationError } from '../../../types';
-import { serializeHeader } from './serializer/header';
-import { serializeAttributes } from './serializer/attributes';
-import { buildMetadataBlock } from './serializer/metadata';
+import { serializeHeader } from './serializer/_header';
+import { serializeAttributes } from './serializer/_attributes';
+import { buildMetadataBlock } from './serializer/_metadata';
 
-// Re-export for testing and external use
-export { serializeHeader } from './serializer/header';
-export { serializeAttributes } from './serializer/attributes';
-export { buildMetadataBlock } from './serializer/metadata';
+// Note: For testing, import directly from submodules:
+// - serializeHeader from './serializer/_header'
+// - serializeAttributes from './serializer/_attributes'
+// - buildMetadataBlock from './serializer/_metadata'
 
 const MAX_RECURSION_DEPTH = 10;
 const MAX_NODE_COUNT = 1000;

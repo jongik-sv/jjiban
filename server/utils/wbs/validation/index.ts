@@ -7,20 +7,20 @@
  */
 
 import type { WbsNode } from '../../../../types';
-import type { ValidationResult, ValidationError, ValidationOptions } from './types';
-import { validateId } from './validators/id-validator';
-import { validateAttributes } from './validators/attribute-validator';
-import { validateStatus, isValidStatus } from './validators/status-validator';
-import { validateHierarchy, extractPrefix, getExpectedPrefix } from './validators/hierarchy-validator';
-import { checkDuplicates, collectAllIds } from './validators/duplicate-checker';
+import type { ValidationResult, ValidationError, ValidationOptions } from './_types';
+import { validateId } from './validators/_id-validator';
+import { validateAttributes } from './validators/_attribute-validator';
+import { validateStatus, isValidStatus } from './validators/_status-validator';
+import { validateHierarchy, extractPrefix, getExpectedPrefix } from './validators/_hierarchy-validator';
+import { checkDuplicates, collectAllIds } from './validators/_duplicate-checker';
 
-// Re-export for testing and external use
-export { validateId } from './validators/id-validator';
-export { validateAttributes } from './validators/attribute-validator';
-export { validateStatus, isValidStatus } from './validators/status-validator';
-export { validateHierarchy, extractPrefix, getExpectedPrefix } from './validators/hierarchy-validator';
-export { checkDuplicates, collectAllIds } from './validators/duplicate-checker';
-export type { ValidationResult, ValidationError, ValidationOptions } from './types';
+// Note: For testing, import directly from submodules:
+// - validateId from './validators/_id-validator'
+// - validateAttributes from './validators/_attribute-validator'
+// - validateStatus, isValidStatus from './validators/_status-validator'
+// - validateHierarchy, extractPrefix, getExpectedPrefix from './validators/_hierarchy-validator'
+// - checkDuplicates, collectAllIds from './validators/_duplicate-checker'
+// - ValidationResult, ValidationError, ValidationOptions types from './_types'
 
 /**
  * 단일 노드 검증

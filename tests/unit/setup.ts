@@ -6,6 +6,7 @@
 import { vi } from 'vitest'
 import { computed, ref, reactive } from 'vue'
 import { defineStore } from 'pinia'
+import { config } from '@vue/test-utils'
 
 // Make Vue composition API globally available (like Nuxt auto-imports)
 globalThis.computed = computed
@@ -47,3 +48,17 @@ const mockToastAdd = vi.fn()
 globalThis.useToast = vi.fn(() => ({
   add: mockToastAdd
 }))
+
+// Configure Vue Test Utils to provide PrimeVue config
+config.global.mocks = {
+  $primevue: {
+    config: {
+      ripple: false,
+      inputStyle: 'outlined',
+      locale: {
+        accept: 'Yes',
+        reject: 'No'
+      }
+    }
+  }
+}

@@ -1,5 +1,8 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { serializeWbs, serializeHeader, serializeAttributes, buildMetadataBlock, calculateMaxDepth } from '../../../server/utils/wbs/serializer';
+import { serializeWbs, calculateMaxDepth } from '../../../server/utils/wbs/serializer';
+import { serializeHeader } from '../../../server/utils/wbs/serializer/_header';
+import { serializeAttributes } from '../../../server/utils/wbs/serializer/_attributes';
+import { buildMetadataBlock } from '../../../server/utils/wbs/serializer/_metadata';
 import type { WbsNode, WbsMetadata, SerializerContext } from '../../../types';
 import { SerializationError } from '../../../types';
 

@@ -30,6 +30,11 @@ export function serializeAttributes(node: WbsNode): string[] {
     lines.push(`- assignee: -`);
   }
 
+  // test-result (Task의 테스트 결과 - TSK-03-05)
+  if (node.attributes?.['test-result']) {
+    lines.push(`- test-result: ${node.attributes['test-result']}`);
+  }
+
   // schedule (start와 end가 모두 있어야 출력)
   if (node.schedule?.start && node.schedule?.end) {
     lines.push(`- schedule: ${node.schedule.start} ~ ${node.schedule.end}`);
