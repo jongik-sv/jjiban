@@ -556,6 +556,12 @@ Category: infrastructure
 
 ---
 
+## 마지막 단계: 자동 Git Commit
+
+@.claude/includes/wf-auto-commit.md
+
+---
+
 <!--
 jjiban 프로젝트 - Workflow Command
 author: 장종익

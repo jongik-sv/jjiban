@@ -29,7 +29,8 @@ const router = useRouter()
 const projectStore = useProjectStore()
 const wbsStore = useWbsStore()
 const selectionStore = useSelectionStore()
-const { loadProjectAndWbs, handleError } = useWbsPage()
+const wbsPage = useWbsPage()
+const { loadProjectAndWbs, handleError } = wbsPage
 
 // ============================================================
 // Local State
@@ -81,14 +82,15 @@ onMounted(async () => {
   loading.value = true
   error.value = null
 
-  try {
-    await loadProjectAndWbs(id)
-  } catch (e) {
-    // 에러는 useWbsPage에서 이미 처리됨 (Toast 표시)
-    error.value = handleError(e)
-  } finally {
-    loading.value = false
+  // loadProjectAndWbs는 내부에서 에러 핸들링 및 Toast 표시
+  // 반환값 false면 에러 발생 (error.value는 composable에서 설정됨)
+  const success = await loadProjectAndWbs(id)
+  if (!success) {
+    // error는 useWbsPage에서 이미 설정됨
+    error.value = wbsPage.error.value
   }
+
+  loading.value = false
 })
 
 /**
@@ -112,7 +114,7 @@ onUnmounted(() => {
  */
 watch(
   () => projectStore.currentProject,
-  (newProject, oldProject) => {
+  async (newProject, oldProject) => {
     // 가드: 동일 프로젝트 ID
     if (newProject?.id === oldProject?.id) return
     // 가드: null → null
@@ -120,7 +122,15 @@ watch(
 
     // 새 프로젝트 로드 시 WBS 자동 조회
     if (newProject) {
-      wbsStore.fetchWbs(newProject.id)
+      loading.value = true
+      try {
+        await wbsStore.fetchWbs(newProject.id)
+      } catch (e) {
+        // 에러 핸들링 및 Toast 표시
+        error.value = handleError(e)
+      } finally {
+        loading.value = false
+      }
     }
   }
 )
@@ -168,13 +178,12 @@ async function handleRetry() {
   loading.value = true
   error.value = null
 
-  try {
-    await loadProjectAndWbs(id)
-  } catch (e) {
-    error.value = handleError(e)
-  } finally {
-    loading.value = false
+  const success = await loadProjectAndWbs(id)
+  if (!success) {
+    error.value = wbsPage.error.value
   }
+
+  loading.value = false
 }
 
 /**

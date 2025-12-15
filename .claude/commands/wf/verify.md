@@ -367,9 +367,15 @@ WP 또는 ACT 단위 입력 시, 해당 범위 내 `[im]`/`[fx]` 상태 Task들�
 
 ---
 
+## 마지막 단계: 자동 Git Commit
+
+@.claude/includes/wf-auto-commit.md
+
+---
+
 <!--
 jjiban 프로젝트 - Workflow Command
-author: 장종익 
+author: 장종익
 Command: wf:verify
 Version: 1.0
 

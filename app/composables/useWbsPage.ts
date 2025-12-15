@@ -22,28 +22,47 @@ export const ERROR_MESSAGES: Record<string, string> = {
 }
 
 /**
+ * FetchError 타입 정의 (Nuxt $fetch 에러)
+ */
+interface FetchError {
+  statusCode: number
+  message: string
+}
+
+/**
+ * FetchError 타입 가드
+ */
+function isFetchError(error: unknown): error is FetchError {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'statusCode' in error &&
+    typeof (error as FetchError).statusCode === 'number'
+  )
+}
+
+/**
  * 에러에서 에러 코드 추출
  */
 function extractErrorCode(error: unknown): string {
-  if (error && typeof error === 'object') {
-    // FetchError 처리
-    if ('statusCode' in error) {
-      const statusCode = (error as any).statusCode
-      if (statusCode === 404) return 'PROJECT_NOT_FOUND'
-      if (statusCode >= 500) return 'FILE_READ_ERROR'
+  // FetchError 처리 (타입 가드 사용)
+  if (isFetchError(error)) {
+    if (error.statusCode === 404) return 'PROJECT_NOT_FOUND'
+    if (error.statusCode >= 500) return 'FILE_READ_ERROR'
+  }
+
+  // 일반 Error 객체
+  if (error instanceof Error) {
+    const message = error.message.toUpperCase()
+    if (message.includes('NETWORK') || message.includes('FETCH')) {
+      return 'NETWORK_ERROR'
     }
-    // 일반 Error 객체
-    if ('message' in error) {
-      const message = String((error as Error).message).toUpperCase()
-      if (message.includes('NETWORK') || message.includes('FETCH')) {
-        return 'NETWORK_ERROR'
-      }
-      // 메시지에서 코드 추출 시도
-      for (const code of Object.keys(ERROR_MESSAGES)) {
-        if (message.includes(code)) return code
-      }
+    // 메시지에서 코드 추출 시도
+    for (const code of Object.keys(ERROR_MESSAGES)) {
+      if (message.includes(code)) return code
     }
   }
+
   return 'UNKNOWN_ERROR'
 }
 
@@ -60,8 +79,10 @@ export function useWbsPage() {
 
   /**
    * 프로젝트 및 WBS 순차 로딩
+   * @returns true if successful, false if failed
+   * @note 에러 발생 시 내부에서 Toast 표시 및 error 상태 설정
    */
-  async function loadProjectAndWbs(projectId: string) {
+  async function loadProjectAndWbs(projectId: string): Promise<boolean> {
     loading.value = true
     error.value = null
 
@@ -72,13 +93,12 @@ export function useWbsPage() {
       // 2. WBS 로드
       await wbsStore.fetchWbs(projectId)
 
-      // 3. 성공 Toast (선택적)
-      // showToast('success', '프로젝트 로드 완료', `${projectStore.currentProject?.name} 프로젝트가 로드되었습니다.`)
+      return true
     } catch (e) {
-      // 에러 핸들링
+      // 에러 핸들링 (Toast 표시 포함)
       const errorMessage = handleError(e)
       error.value = errorMessage
-      throw e // 상위에서 처리하도록 다시 throw
+      return false // throw 대신 false 반환하여 중복 Toast 방지
     } finally {
       loading.value = false
     }
