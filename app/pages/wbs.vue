@@ -9,6 +9,7 @@
  */
 
 import WbsTreePanel from '~/components/wbs/WbsTreePanel.vue'
+import TaskDetailPanel from '~/components/wbs/detail/TaskDetailPanel.vue'
 
 // ============================================================
 // Page Metadata
@@ -279,13 +280,13 @@ function goToDashboard() {
     <!-- Right Panel Slot -->
     <template #right>
       <div
-        class="h-full p-4"
+        class="h-full"
         aria-label="Task 상세 패널"
       >
         <!-- 로딩/에러/프로젝트없음 상태에서는 빈 상태 표시 -->
         <div
           v-if="!isContentReady"
-          class="flex items-center justify-center h-full"
+          class="flex items-center justify-center h-full p-4"
           data-testid="right-panel-placeholder"
         >
           <div class="text-center text-text-muted">
@@ -294,105 +295,13 @@ function goToDashboard() {
           </div>
         </div>
 
-        <!-- Task 미선택 Empty State -->
-        <div
-          v-else-if="!selectionStore.selectedTask"
-          class="card text-center"
-          data-testid="empty-state-no-task"
-        >
-          <i class="pi pi-file text-4xl text-text-muted mb-4"></i>
-          <h3 class="text-lg font-semibold text-text mb-2">Task를 선택하세요</h3>
-          <p class="text-text-secondary text-sm">
-            좌측 WBS 트리에서 Task를 선택하면 상세 정보가 표시됩니다.
-          </p>
-        </div>
-
-        <!-- Task 상세 정보 표시 -->
-        <div v-else class="card" data-testid="task-detail-panel">
-          <div class="mb-4">
-            <span class="text-xs font-mono text-text-muted">{{ selectionStore.selectedTask.id }}</span>
-          </div>
-          <h3 class="text-lg font-semibold text-text mb-4" data-testid="task-title">
-            {{ selectionStore.selectedTask.title }}
-          </h3>
-
-          <!-- Task 기본 정보 -->
-          <div class="space-y-3">
-            <!-- 카테고리 -->
-            <div class="flex items-center gap-2">
-              <span class="text-text-secondary text-sm w-20">카테고리:</span>
-              <span
-                class="px-2 py-1 text-xs rounded"
-                :class="{
-                  'bg-blue-500/20 text-blue-400': selectionStore.selectedTask.category === 'development',
-                  'bg-red-500/20 text-red-400': selectionStore.selectedTask.category === 'defect',
-                  'bg-gray-500/20 text-gray-400': selectionStore.selectedTask.category === 'infrastructure'
-                }"
-              >
-                {{ selectionStore.selectedTask.category }}
-              </span>
-            </div>
-
-            <!-- 상태 -->
-            <div class="flex items-center gap-2">
-              <span class="text-text-secondary text-sm w-20">상태:</span>
-              <span class="px-2 py-1 text-xs rounded bg-surface text-text">
-                {{ selectionStore.selectedTask.status }}
-              </span>
-            </div>
-
-            <!-- 우선순위 -->
-            <div class="flex items-center gap-2">
-              <span class="text-text-secondary text-sm w-20">우선순위:</span>
-              <span
-                class="px-2 py-1 text-xs rounded"
-                :class="{
-                  'bg-red-500/20 text-red-400': selectionStore.selectedTask.priority === 'critical',
-                  'bg-orange-500/20 text-orange-400': selectionStore.selectedTask.priority === 'high',
-                  'bg-yellow-500/20 text-yellow-400': selectionStore.selectedTask.priority === 'medium',
-                  'bg-green-500/20 text-green-400': selectionStore.selectedTask.priority === 'low'
-                }"
-              >
-                {{ selectionStore.selectedTask.priority }}
-              </span>
-            </div>
-
-            <!-- 담당자 -->
-            <div v-if="selectionStore.selectedTask.assignee" class="flex items-center gap-2">
-              <span class="text-text-secondary text-sm w-20">담당자:</span>
-              <span class="text-text text-sm">
-                {{ selectionStore.selectedTask.assignee }}
-              </span>
-            </div>
-
-            <!-- 진행률 -->
-            <div class="flex items-center gap-2">
-              <span class="text-text-secondary text-sm w-20">진행률:</span>
-              <div class="flex-1">
-                <div class="w-full bg-surface rounded-full h-2">
-                  <div
-                    class="bg-primary h-2 rounded-full transition-all"
-                    :style="{ width: `${selectionStore.selectedTask.progress || 0}%` }"
-                  ></div>
-                </div>
-              </div>
-              <span class="text-text-muted text-xs">{{ selectionStore.selectedTask.progress || 0 }}%</span>
-            </div>
-          </div>
-
-          <!-- 참고 안내 -->
-          <p class="text-text-muted text-xs mt-6 pt-4 border-t border-border">
-            상세 Task 패널은 TSK-05-01 ~ TSK-05-04에서 완전히 구현됩니다.
-          </p>
-        </div>
+        <!-- Task 상세 정보 표시 (TSK-05-01 ~ TSK-05-03) -->
+        <TaskDetailPanel v-else />
       </div>
     </template>
   </LayoutAppLayout>
 </template>
 
 <style scoped>
-/* 추가 스타일링이 필요한 경우 여기에 작성 */
-.card {
-  @apply bg-surface rounded-lg p-6;
-}
+/* WBS 페이지 스타일 */
 </style>

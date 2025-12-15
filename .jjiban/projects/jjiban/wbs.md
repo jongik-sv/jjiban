@@ -571,7 +571,7 @@
 ### TSK-07-01: Workflow Orchestrator CLI 구현
 - category: development
 - domain: backend
-- status: basic-design [bd]
+- status: detail-design [dd]
 - priority: high
 - assignee: -
 - schedule: 2026-01-25 ~ 2026-02-05
