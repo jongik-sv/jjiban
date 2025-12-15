@@ -67,7 +67,7 @@ interface TaskSearchResult {
  * @param parentAct - 부모 ACT ID (선택)
  * @returns Task 노드 또는 null
  */
-function findTaskInTree(
+export function findTaskInTree(
   nodes: WbsNode[],
   taskId: string,
   parentWp?: string,

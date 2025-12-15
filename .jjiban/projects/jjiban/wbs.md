@@ -360,13 +360,13 @@
 ### TSK-03-05: WBS 테스트 결과 업데이트 API
 - category: development
 - domain: backend
-- status: [dd]
+- status: [im]
 - priority: medium
 - assignee: -
 - schedule: 2026-01-10 ~ 2026-01-13
 - tags: api, wbs, test-result
 - depends: TSK-03-02, TSK-02-02-01, TSK-02-02-02
-- test-result: none
+- test-result: pass
 - requirements:
   - PUT /api/projects/:id/wbs/tasks/:taskId/test-result - 테스트 결과 업데이트 API
   - wbs.md 파일의 test-result 필드 자동 업데이트
@@ -571,7 +571,7 @@
 ### TSK-07-01: Workflow Orchestrator CLI 구현
 - category: development
 - domain: backend
-- status: detail-design [dd]
+- status: implement [im]
 - priority: high
 - assignee: -
 - schedule: 2026-01-25 ~ 2026-02-05

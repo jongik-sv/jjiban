@@ -12,6 +12,7 @@ import { promises as fs } from 'fs';
 import type { WbsNode, WbsMetadata } from '../../../../../../../types';
 import { parseWbsMarkdown } from '../../../../../../utils/wbs/parser/index';
 import { serializeWbs } from '../../../../../../utils/wbs/serializer';
+import { findTaskInTree } from '../../../../../../utils/wbs/taskService';
 import {
   readMarkdownFile,
   writeMarkdownFile,
@@ -80,37 +81,6 @@ function parseMetadata(markdown: string): WbsMetadata {
   return metadata as WbsMetadata;
 }
 
-/**
- * 트리에서 Task ID로 노드 검색 (재귀)
- * @param nodes - WBS 노드 배열
- * @param taskId - 검색할 Task ID
- * @returns Task 노드 또는 null
- *
- * FR-002: Task 노드 탐색
- * BR-003: Task 존재 여부 검증
- * H-01: findTaskInTree 중복 호출 제거 (탐색 결과 재사용)
- */
-function findTaskInTree(
-  nodes: WbsNode[],
-  taskId: string
-): WbsNode | null {
-  for (const node of nodes) {
-    // Task ID와 type이 일치하는지 확인
-    if (node.id === taskId && node.type === 'task') {
-      return node;
-    }
-
-    // 자식 노드 재귀 검색
-    if (node.children && node.children.length > 0) {
-      const found = findTaskInTree(node.children, taskId);
-      if (found) {
-        return found;
-      }
-    }
-  }
-
-  return null;
-}
 
 /**
  * 프로젝트 ID 유효성 검증 (경로 순회 공격 방지)
@@ -232,8 +202,8 @@ export default defineEventHandler(async (event): Promise<TestResultUpdateRespons
   }
 
   // 10. Task 노드 탐색 (H-01: 탐색 결과 재사용)
-  const taskNode = findTaskInTree(tree, taskId);
-  if (!taskNode) {
+  const result = findTaskInTree(tree, taskId);
+  if (!result) {
     // TSK-03-05: Task not found should return TASK_NOT_FOUND, not PROJECT_NOT_FOUND
     throw createError({
       statusCode: 404,
@@ -244,6 +214,8 @@ export default defineEventHandler(async (event): Promise<TestResultUpdateRespons
       }
     });
   }
+
+  const taskNode = result.task;
 
   // 11. test-result 업데이트
   if (!taskNode.attributes) {
