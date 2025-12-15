@@ -5,6 +5,9 @@ export default defineNuxtConfig({
   // 소스 코드 디렉토리 (개발 코드 분리)
   srcDir: 'app',
 
+  // 서버 디렉토리 (srcDir과 별도로 프로젝트 루트 사용)
+  serverDir: 'server',
+
   // Standalone 모드 설정 (npx jjiban 실행용)
   nitro: {
     preset: 'node-server'

@@ -35,6 +35,13 @@ const TEST_BASE = join(process.cwd(), 'tests', 'fixtures', 'projects-api-e2e');
 
 describe('Project Metadata Service - API Integration Tests', () => {
   beforeAll(async () => {
+    // Clean up any previous test run
+    try {
+      await rm(TEST_BASE, { recursive: true, force: true });
+    } catch {
+      // Ignore cleanup errors
+    }
+
     // Set up test environment
     process.env.JJIBAN_BASE_PATH = TEST_BASE;
 
@@ -54,6 +61,14 @@ describe('Project Metadata Service - API Integration Tests', () => {
       JSON.stringify(projectsConfig, null, 2),
       'utf-8'
     );
+
+    // Pre-create the main test project for all tests to use
+    await createProjectWithRegistration({
+      id: 'e2e-test-project',
+      name: 'E2E Test Project',
+      description: 'Integration test project',
+      wbsDepth: 4,
+    });
   });
 
   afterAll(async () => {
@@ -69,11 +84,11 @@ describe('Project Metadata Service - API Integration Tests', () => {
 
   describe('E2E-003: Project Creation Flow', () => {
     it('should create project with folder structure and files', async () => {
-      // Given: Project creation request
+      // Given: Project creation request (use unique ID for this test)
       const createDto = {
-        id: 'e2e-test-project',
-        name: 'E2E Test Project',
-        description: 'Integration test project',
+        id: 'e2e-create-test',
+        name: 'E2E Create Test Project',
+        description: 'Integration test project for creation',
         wbsDepth: 4 as 3 | 4,
       };
 
@@ -81,13 +96,13 @@ describe('Project Metadata Service - API Integration Tests', () => {
       const result = await createProjectWithRegistration(createDto);
 
       // Then: Verify response
-      expect(result.project.id).toBe('e2e-test-project');
-      expect(result.project.name).toBe('E2E Test Project');
-      expect(result.project.description).toBe('Integration test project');
+      expect(result.project.id).toBe('e2e-create-test');
+      expect(result.project.name).toBe('E2E Create Test Project');
+      expect(result.project.description).toBe('Integration test project for creation');
       expect(result.team).toEqual([]);
 
       // And: Verify folder structure created (BR-004)
-      const projectDir = join(TEST_BASE, '.jjiban', 'projects', 'e2e-test-project');
+      const projectDir = join(TEST_BASE, '.jjiban', 'projects', 'e2e-create-test');
       expect(existsSync(projectDir)).toBe(true);
 
       // And: Verify project.json created
@@ -95,8 +110,8 @@ describe('Project Metadata Service - API Integration Tests', () => {
       expect(existsSync(projectJsonPath)).toBe(true);
 
       const projectJson = JSON.parse(await readFile(projectJsonPath, 'utf-8'));
-      expect(projectJson.id).toBe('e2e-test-project');
-      expect(projectJson.name).toBe('E2E Test Project');
+      expect(projectJson.id).toBe('e2e-create-test');
+      expect(projectJson.name).toBe('E2E Create Test Project');
 
       // And: Verify team.json created
       const teamJsonPath = join(projectDir, 'team.json');
@@ -109,17 +124,23 @@ describe('Project Metadata Service - API Integration Tests', () => {
       // And: Verify added to projects.json
       const projectsListPath = join(TEST_BASE, '.jjiban', 'settings', 'projects.json');
       const projectsList = JSON.parse(await readFile(projectsListPath, 'utf-8'));
-      expect(projectsList.projects).toHaveLength(1);
-      expect(projectsList.projects[0].id).toBe('e2e-test-project');
+      // Should have at least 2 projects now (e2e-test-project from beforeAll + e2e-create-test)
+      expect(projectsList.projects.length).toBeGreaterThanOrEqual(2);
+      const createdProject = projectsList.projects.find((p: any) => p.id === 'e2e-create-test');
+      expect(createdProject).toBeDefined();
     });
 
     it('should reject duplicate project ID (409 Conflict)', async () => {
-      // Given: Existing project
-      const existingId = 'e2e-test-project';
+      // Given: Create a dedicated project for duplicate test
+      const uniqueId = 'dup-test-project';
+      await createProjectWithRegistration({
+        id: uniqueId,
+        name: 'Duplicate Test Base',
+      });
 
       // When: Try to create duplicate
       const duplicateDto = {
-        id: existingId,
+        id: uniqueId,
         name: 'Duplicate Project',
       };
 
@@ -236,6 +257,13 @@ describe('Project Metadata Service - API Integration Tests', () => {
   });
 
   describe('E2E-005: Team Management Flow', () => {
+    // Reset team to empty state before team tests
+    beforeAll(async () => {
+      const projectDir = join(TEST_BASE, '.jjiban', 'projects', 'e2e-test-project');
+      const teamPath = join(projectDir, 'team.json');
+      await writeFile(teamPath, JSON.stringify({ version: '1.0', members: [] }, null, 2), 'utf-8');
+    });
+
     it('should add and update team members successfully', async () => {
       // Given: Initial team members
       const initialTeam: TeamMember[] = [
@@ -378,6 +406,24 @@ describe('Project Metadata Service - API Integration Tests', () => {
   });
 
   describe('Error Handling and Edge Cases', () => {
+    // Store original projects.json for restoration
+    let originalProjectsConfig: string;
+
+    beforeAll(async () => {
+      const projectsPath = join(TEST_BASE, '.jjiban', 'settings', 'projects.json');
+      try {
+        originalProjectsConfig = await readFile(projectsPath, 'utf-8');
+      } catch {
+        originalProjectsConfig = JSON.stringify({ version: '1.0', projects: [], defaultProject: null }, null, 2);
+      }
+    });
+
+    afterAll(async () => {
+      // Restore original projects.json
+      const projectsPath = join(TEST_BASE, '.jjiban', 'settings', 'projects.json');
+      await writeFile(projectsPath, originalProjectsConfig, 'utf-8');
+    });
+
     it('should handle empty project list gracefully', async () => {
       // Given: Empty projects.json
       await writeFile(

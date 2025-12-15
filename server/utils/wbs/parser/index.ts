@@ -10,12 +10,10 @@ import type { WbsNode } from '../../../../types';
 import type { FlatNode } from './types';
 import { parseNodeHeader } from './header';
 import { parseNodeAttributes } from './attributes';
-import { buildTree, calculateProgress, determineParentId } from './tree';
+import { buildTree, calculateProgress } from './tree';
 
-// Re-export for external use
-export { parseNodeHeader } from './header';
-export { parseNodeAttributes } from './attributes';
-export { buildTree, calculateProgress, determineParentId } from './tree';
+// Note: parseNodeHeader, parseNodeAttributes, buildTree 등은
+// Nuxt가 각 파일에서 직접 auto-import
 
 /**
  * wbs.md 전체 텍스트를 WbsNode[] 트리로 변환

@@ -75,6 +75,18 @@ Project (프로젝트) - 6~24개월
 | `defect` | 결함 수정 | `[ ]` → `[an]` → `[fx]` → `[vf]` → `[xx]` |
 | `infrastructure` | 인프라/기술 작업 | `[ ]` → `[ds]?` → `[im]` → `[xx]` |
 
+### Task domain (기술 영역)
+
+| domain | 설명 | 대표 작업 |
+|--------|------|----------|
+| `frontend` | 클라이언트 UI/UX | Vue 컴포넌트, 페이지, 스타일링, 상태관리 |
+| `backend` | 서버 비즈니스 로직 | API 엔드포인트, 서비스, 미들웨어 |
+| `database` | 데이터 계층 | 스키마, 마이그레이션, 쿼리 최적화 |
+| `infra` | 인프라/DevOps | 배포, CI/CD, 모니터링, 환경설정 |
+| `fullstack` | 전체 스택 | E2E 기능, 통합 작업 |
+| `docs` | 문서화 | API 문서, 사용자 가이드, README |
+| `test` | 테스트 전용 | 단위/통합/E2E 테스트 작성 |
+
 ---
 
 ## 프로젝트 규모 산정
@@ -217,6 +229,7 @@ Project (프로젝트) - 6~24개월
 
 ### TSK-00-01: jjiban 프로젝트 구조 초기화
 - category: infrastructure
+- domain: infra
 - status: todo [ ]
 - priority: critical
 - assignee: -
@@ -239,20 +252,22 @@ Project (프로젝트) - 6~24개월
 
 #### TSK-01-01-01: {Task명}
 - category: development
+- domain: backend
 - status: todo [ ]
 - priority: high
 - assignee: -
 - schedule: {시작일} ~ {종료일}
-- tags: api, backend
+- tags: api, crud
 - depends: -
 
 #### TSK-01-01-02: {Task명}
 - category: development
+- domain: frontend
 - status: todo [ ]
 - priority: medium
 - assignee: -
 - schedule: {시작일} ~ {종료일}
-- tags: frontend, ui
+- tags: form, validation
 - depends: TSK-01-01-01
 
 ---
@@ -265,6 +280,7 @@ Project (프로젝트) - 6~24개월
 
 ### TSK-02-01: {Task명} (3단계 예시 - ACT 생략)
 - category: development
+- domain: fullstack
 - status: todo [ ]
 - priority: high
 - assignee: -
@@ -286,11 +302,12 @@ Project (프로젝트) - 6~24개월
 | 속성 | 필수 | 설명 | 예시 |
 |------|------|------|------|
 | category | O | 작업 유형 | `development`, `defect`, `infrastructure` |
+| domain | O | 기술 영역 | `frontend`, `backend`, `database`, `infra`, `fullstack`, `docs`, `test` |
 | status | O | 상태 + 기호 | `todo [ ]`, `implement [im]`, `done [xx]` |
 | priority | O | 우선순위 | `critical`, `high`, `medium`, `low` |
 | assignee | - | 담당자 ID | `hong`, `-` (미지정) |
 | schedule | - | 일정 | `2026-01-15 ~ 2026-01-21` |
-| tags | - | 태그 목록 | `api, backend, crud` |
+| tags | - | 태그 목록 | `auth, crud, validation` |
 | depends | - | 선행 Task | `TSK-01-01-01` |
 | blocked-by | - | 차단 Task | `TSK-01-01-01` |
 | note | - | 비고 | 자유 텍스트 |

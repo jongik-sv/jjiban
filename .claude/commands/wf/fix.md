@@ -62,6 +62,10 @@ parallel-processing: true
 
 @.claude/includes/wf-common.md
 
+## 개념 충돌 해결
+
+@.claude/includes/wf-conflict-resolution.md
+
 **Task 폴더**: `.jjiban/projects/{project}/tasks/{TSK-ID}/`
 
 ---

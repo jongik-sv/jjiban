@@ -1,8 +1,20 @@
 import { promises as fs } from 'fs';
-import { join, dirname } from 'path';
+import { join, dirname, isAbsolute } from 'path';
 import { JJIBAN_PATHS, SETTINGS_FILES } from '../../types';
 
-const JJIBAN_ROOT = '.jjiban';
+/**
+ * JJIBAN 루트 경로 반환
+ * 환경 변수 JJIBAN_BASE_PATH가 설정되어 있으면 해당 경로 사용
+ */
+function initJjibanRoot(): string {
+  const basePath = process.env.JJIBAN_BASE_PATH;
+  if (basePath && isAbsolute(basePath)) {
+    return join(basePath, '.jjiban');
+  }
+  return '.jjiban';
+}
+
+const JJIBAN_ROOT = initJjibanRoot();
 
 // 커스텀 에러 타입
 export class FileNotFoundError extends Error {

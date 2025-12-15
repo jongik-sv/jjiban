@@ -14,8 +14,9 @@ export default defineEventHandler(async (event) => {
   // Zod 검증
   const validation = createProjectSchema.safeParse(body);
   if (!validation.success) {
-    const firstError = validation.error.errors[0];
-    throw createBadRequestError('VALIDATION_ERROR', firstError.message);
+    // Zod v4: .issues 사용 (v3의 .errors 대신)
+    const firstError = validation.error.issues?.[0] ?? validation.error.errors?.[0];
+    throw createBadRequestError('VALIDATION_ERROR', firstError?.message || '유효성 검증 실패');
   }
 
   const dto = validation.data;
@@ -23,5 +24,7 @@ export default defineEventHandler(async (event) => {
   // Facade를 통한 프로젝트 생성 + 목록 등록
   const result = await createProjectWithRegistration(dto);
 
+  // 201 Created 상태 코드 설정
+  setResponseStatus(event, 201);
   return result;
 });

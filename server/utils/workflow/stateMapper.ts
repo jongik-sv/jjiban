@@ -54,19 +54,30 @@ export async function statusCodeToName(
   const cleanCode = statusCode.replace(/[\[\]]/g, '').trim();
 
   // todo 상태는 빈 문자열 또는 공백
-  if (!cleanCode || cleanCode === '[ ]') {
+  if (!cleanCode || cleanCode === ' ') {
     return 'todo';
   }
 
-  // transitions에서 to 필드가 일치하는 상태명 찾기
-  const transition = workflow.transitions.find((t) => t.to === cleanCode);
+  // transitions에서 to 필드가 일치하는 상태명 찾기 (괄호 제거 후 비교)
+  const transition = workflow.transitions.find((t) => {
+    const cleanTo = t.to.replace(/[\[\]]/g, '').trim();
+    return cleanTo === cleanCode;
+  });
   if (transition) {
-    return transition.to;
+    // 괄호 제거된 상태 코드 반환
+    return transition.to.replace(/[\[\]]/g, '').trim();
   }
 
-  // states 배열에서 직접 찾기
-  const stateName = workflow.states.find((s) => s === cleanCode);
-  return stateName || null;
+  // states 배열에서 직접 찾기 (괄호 제거 후 비교)
+  const state = workflow.states.find((s) => {
+    const cleanState = s.replace(/[\[\]]/g, '').trim();
+    return cleanState === cleanCode;
+  });
+  if (state) {
+    return state.replace(/[\[\]]/g, '').trim();
+  }
+
+  return null;
 }
 
 /**
@@ -90,10 +101,13 @@ export async function nameToStatusCode(
     return '[ ]';
   }
 
-  // transitions에서 to 필드가 stateName인 전이 찾기
-  const transition = workflow.transitions.find((t) => t.to === stateName);
+  // transitions에서 to 필드가 stateName인 전이 찾기 (괄호 제거 후 비교)
+  const transition = workflow.transitions.find((t) => {
+    const cleanTo = t.to.replace(/[\[\]]/g, '').trim();
+    return cleanTo === stateName;
+  });
   if (transition) {
-    return `[${transition.to}]`;
+    return transition.to.startsWith('[') ? transition.to : `[${transition.to}]`;
   }
 
   return '[ ]';
@@ -117,9 +131,11 @@ export async function getAllStateMappings(
     '[ ]': 'todo',
   };
 
-  // transitions에서 모든 상태 추출
+  // transitions에서 모든 상태 추출 (괄호 제거된 상태명 사용)
   for (const transition of workflow.transitions) {
-    mappings[`[${transition.to}]`] = transition.to;
+    const cleanTo = transition.to.replace(/[\[\]]/g, '').trim();
+    const statusCode = transition.to.startsWith('[') ? transition.to : `[${transition.to}]`;
+    mappings[statusCode] = cleanTo;
   }
 
   return mappings;

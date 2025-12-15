@@ -73,39 +73,9 @@ export interface ProjectDetail {
 }
 
 // ============================================================
-// DTO Types (API Request/Response)
+// DTO Types - validators/projectValidators.ts에서 Zod로 정의
+// Nuxt auto-import로 직접 사용 가능
 // ============================================================
-
-/**
- * 프로젝트 생성 요청
- */
-export interface CreateProjectDto {
-  id: string;
-  name: string;
-  description?: string;
-  wbsDepth?: 3 | 4;
-  scheduledStart?: string;
-  scheduledEnd?: string;
-}
-
-/**
- * 프로젝트 수정 요청
- */
-export interface UpdateProjectDto {
-  name?: string;
-  description?: string;
-  version?: string;
-  status?: 'active' | 'archived';
-  scheduledStart?: string;
-  scheduledEnd?: string;
-}
-
-/**
- * 팀원 수정 요청
- */
-export interface UpdateTeamDto {
-  members: TeamMember[];
-}
 
 /**
  * 프로젝트 목록 응답

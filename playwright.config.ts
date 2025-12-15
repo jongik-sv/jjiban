@@ -1,12 +1,21 @@
 import { defineConfig, devices } from '@playwright/test'
+import { join } from 'path'
 
 /**
  * Playwright E2E 테스트 설정
  * @see https://playwright.dev/docs/test-configuration
  */
+
+// 테스트 데이터 경로 (global-setup.ts와 동일)
+const TEST_BASE = join(process.cwd(), 'tests', 'fixtures', 'projects-e2e')
+
 export default defineConfig({
   // 테스트 파일 위치
   testDir: './tests/e2e',
+
+  // 글로벌 설정 (서버 시작 전 테스트 데이터 준비)
+  globalSetup: './tests/e2e/global-setup.ts',
+  globalTeardown: './tests/e2e/global-teardown.ts',
 
   // 병렬 실행
   fullyParallel: true,
@@ -60,8 +69,8 @@ export default defineConfig({
     stderr: 'pipe',
     env: {
       ...process.env,
-      // 테스트 환경에서는 현재 디렉토리의 .jjiban 폴더 사용
-      JJIBAN_BASE_PATH: process.cwd(),
+      // 테스트 환경에서는 테스트 fixtures 경로 사용
+      JJIBAN_BASE_PATH: TEST_BASE,
     },
   },
 

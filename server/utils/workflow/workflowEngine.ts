@@ -96,18 +96,7 @@ export async function getWorkflowState(
   };
 }
 
-/**
- * 가능한 명령어 조회 (TransitionService 래핑)
- * @param taskId - Task ID
- * @returns 가능한 명령어 배열
- *
- * FR-001: 가능한 명령어 조회
- */
-export async function getAvailableCommands(
-  taskId: string
-): Promise<string[]> {
-  return getCommandsFromTransitionService(taskId);
-}
+// Note: getAvailableCommands는 transitionService.ts에서 직접 auto-import
 
 /**
  * 명령어 실행 및 상태 전이 (TransitionService 래핑)

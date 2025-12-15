@@ -26,6 +26,7 @@ import {
   getTeamJsonPath,
   ensureDir,
 } from '../file';
+import { getProjectsListFilePath } from '../projects/paths';
 import {
   createNotFoundError,
   createBadRequestError,
@@ -105,7 +106,7 @@ function findTaskInTree(
  */
 export async function findTaskById(taskId: string): Promise<TaskSearchResult | null> {
   // projects.json에서 프로젝트 목록 조회
-  const projectsJsonPath = join('.jjiban', 'settings', 'projects.json');
+  const projectsJsonPath = getProjectsListFilePath();
   const projectsData = await readJsonFile<{ projects: { id: string }[] }>(projectsJsonPath);
 
   if (!projectsData || !projectsData.projects) {

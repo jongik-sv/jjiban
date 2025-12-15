@@ -14,29 +14,29 @@ import type { TaskCategory } from '../../../types';
 
 describe('StateMapper', () => {
   describe('statusCodeToName', () => {
-    test('converts "bd" to "basic-design" for development', async () => {
+    test('converts "bd" to "bd" for development', async () => {
       const result = await statusCodeToName('development', 'bd');
-      expect(result).toBe('basic-design');
+      expect(result).toBe('bd');
     });
 
-    test('converts "dd" to "detail-design" for development', async () => {
+    test('converts "dd" to "dd" for development', async () => {
       const result = await statusCodeToName('development', 'dd');
-      expect(result).toBe('detail-design');
+      expect(result).toBe('dd');
     });
 
-    test('converts "im" to "implement" for development', async () => {
+    test('converts "im" to "im" for development', async () => {
       const result = await statusCodeToName('development', 'im');
-      expect(result).toBe('implement');
+      expect(result).toBe('im');
     });
 
-    test('converts "vf" to "verify" for development', async () => {
+    test('converts "vf" to "vf" for development', async () => {
       const result = await statusCodeToName('development', 'vf');
-      expect(result).toBe('verify');
+      expect(result).toBe('vf');
     });
 
-    test('converts "xx" to "done" for development', async () => {
+    test('converts "xx" to "xx" for development', async () => {
       const result = await statusCodeToName('development', 'xx');
-      expect(result).toBe('done');
+      expect(result).toBe('xx');
     });
 
     test('converts "[ ]" to "todo"', async () => {
@@ -51,17 +51,17 @@ describe('StateMapper', () => {
 
     test('handles brackets in status code "[bd]"', async () => {
       const result = await statusCodeToName('development', '[bd]');
-      expect(result).toBe('basic-design');
+      expect(result).toBe('bd');
     });
 
-    test('converts "an" to "analyze" for defect category', async () => {
+    test('converts "an" to "an" for defect category', async () => {
       const result = await statusCodeToName('defect', 'an');
-      expect(result).toBe('analyze');
+      expect(result).toBe('an');
     });
 
-    test('converts "fx" to "fix" for defect category', async () => {
+    test('converts "fx" to "fx" for defect category', async () => {
       const result = await statusCodeToName('defect', 'fx');
-      expect(result).toBe('fix');
+      expect(result).toBe('fx');
     });
 
     test('returns null for invalid category', async () => {
@@ -76,29 +76,29 @@ describe('StateMapper', () => {
   });
 
   describe('nameToStatusCode', () => {
-    test('converts "basic-design" to "[bd]" for development', async () => {
-      const result = await nameToStatusCode('development', 'basic-design');
-      expect(result).toBe('[basic-design]');
+    test('converts "bd" to "[bd]" for development', async () => {
+      const result = await nameToStatusCode('development', 'bd');
+      expect(result).toBe('[bd]');
     });
 
-    test('converts "detail-design" to "[dd]" for development', async () => {
-      const result = await nameToStatusCode('development', 'detail-design');
-      expect(result).toBe('[detail-design]');
+    test('converts "dd" to "[dd]" for development', async () => {
+      const result = await nameToStatusCode('development', 'dd');
+      expect(result).toBe('[dd]');
     });
 
-    test('converts "implement" to "[im]" for development', async () => {
-      const result = await nameToStatusCode('development', 'implement');
-      expect(result).toBe('[implement]');
+    test('converts "im" to "[im]" for development', async () => {
+      const result = await nameToStatusCode('development', 'im');
+      expect(result).toBe('[im]');
     });
 
-    test('converts "verify" to "[vf]" for development', async () => {
-      const result = await nameToStatusCode('development', 'verify');
-      expect(result).toBe('[verify]');
+    test('converts "vf" to "[vf]" for development', async () => {
+      const result = await nameToStatusCode('development', 'vf');
+      expect(result).toBe('[vf]');
     });
 
-    test('converts "done" to "[xx]" for development', async () => {
-      const result = await nameToStatusCode('development', 'done');
-      expect(result).toBe('[done]');
+    test('converts "xx" to "[xx]" for development', async () => {
+      const result = await nameToStatusCode('development', 'xx');
+      expect(result).toBe('[xx]');
     });
 
     test('converts "todo" to "[ ]"', async () => {
@@ -106,18 +106,18 @@ describe('StateMapper', () => {
       expect(result).toBe('[ ]');
     });
 
-    test('converts "analyze" to "[an]" for defect', async () => {
-      const result = await nameToStatusCode('defect', 'analyze');
-      expect(result).toBe('[analyze]');
+    test('converts "an" to "[an]" for defect', async () => {
+      const result = await nameToStatusCode('defect', 'an');
+      expect(result).toBe('[an]');
     });
 
-    test('converts "fix" to "[fx]" for defect', async () => {
-      const result = await nameToStatusCode('defect', 'fix');
-      expect(result).toBe('[fix]');
+    test('converts "fx" to "[fx]" for defect', async () => {
+      const result = await nameToStatusCode('defect', 'fx');
+      expect(result).toBe('[fx]');
     });
 
     test('returns "[ ]" for invalid category', async () => {
-      const result = await nameToStatusCode('invalid' as TaskCategory, 'basic-design');
+      const result = await nameToStatusCode('invalid' as TaskCategory, 'bd');
       expect(result).toBe('[ ]');
     });
 
@@ -133,11 +133,11 @@ describe('StateMapper', () => {
 
       expect(mappings).toBeDefined();
       expect(mappings['[ ]']).toBe('todo');
-      expect(mappings['[basic-design]']).toBe('basic-design');
-      expect(mappings['[detail-design]']).toBe('detail-design');
-      expect(mappings['[implement]']).toBe('implement');
-      expect(mappings['[verify]']).toBe('verify');
-      expect(mappings['[done]']).toBe('done');
+      expect(mappings['[bd]']).toBe('bd');
+      expect(mappings['[dd]']).toBe('dd');
+      expect(mappings['[im]']).toBe('im');
+      expect(mappings['[vf]']).toBe('vf');
+      expect(mappings['[xx]']).toBe('xx');
     });
 
     test('returns all state mappings for defect', async () => {
@@ -145,10 +145,10 @@ describe('StateMapper', () => {
 
       expect(mappings).toBeDefined();
       expect(mappings['[ ]']).toBe('todo');
-      expect(mappings['[analyze]']).toBe('analyze');
-      expect(mappings['[fix]']).toBe('fix');
-      expect(mappings['[verify]']).toBe('verify');
-      expect(mappings['[done]']).toBe('done');
+      expect(mappings['[an]']).toBe('an');
+      expect(mappings['[fx]']).toBe('fx');
+      expect(mappings['[vf]']).toBe('vf');
+      expect(mappings['[xx]']).toBe('xx');
     });
 
     test('returns all state mappings for infrastructure', async () => {
@@ -156,9 +156,9 @@ describe('StateMapper', () => {
 
       expect(mappings).toBeDefined();
       expect(mappings['[ ]']).toBe('todo');
-      expect(mappings['[design]']).toBe('design');
-      expect(mappings['[implement]']).toBe('implement');
-      expect(mappings['[done]']).toBe('done');
+      expect(mappings['[dd]']).toBe('dd');
+      expect(mappings['[im]']).toBe('im');
+      expect(mappings['[xx]']).toBe('xx');
     });
 
     test('returns empty object for invalid category', async () => {
@@ -206,7 +206,7 @@ describe('StateMapper', () => {
     });
 
     test('infrastructure: statusCode -> name -> statusCode', async () => {
-      const testCases = ['ds', 'im', 'xx'];
+      const testCases = ['dd', 'im', 'xx'];
 
       for (const code of testCases) {
         const name = await statusCodeToName('infrastructure', code);

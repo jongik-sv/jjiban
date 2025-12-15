@@ -48,6 +48,10 @@ parallel-processing: true
 | defect | `[ ]` Todo | `[an]` 분석 | `010-defect-analysis.md` |
 | infrastructure | `[ ]` Todo | `[dd]` 상세설계 | `tech-design.md` (선택) |
 
+## 개념 충돌 해결
+
+@.claude/includes/wf-conflict-resolution.md
+
 ---
 
 ## 실행 과정

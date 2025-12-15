@@ -14,27 +14,20 @@ import type {
   ActionsConfig,
 } from '../../../types/settings';
 import { SETTINGS_FILE_NAMES } from '../../../types/settings';
-import {
-  loadSettings as loadSettingsFromCache,
-  isCacheValid,
-  refreshCache,
-} from './cache';
+import { loadSettings as loadSettingsFromCache } from './cache';
 
-// Re-export from defaults
-export * from './defaults';
-
-// Re-export cache utilities
-export { isCacheValid, refreshCache };
+// Note: defaults, isCacheValid, refreshCache는 Nuxt가 개별 파일에서 직접 auto-import
 
 // ============================================================
 // 서비스 함수
 // ============================================================
 
 /**
- * 전체 설정 로드
+ * 전체 설정 로드 (캐시 사용)
+ * Note: cache.ts의 loadSettings와 중복 방지를 위해 getSettings로 노출
  * @returns Promise<Settings>
  */
-export async function loadSettings(): Promise<Settings> {
+export async function getSettings(): Promise<Settings> {
   return loadSettingsFromCache();
 }
 
@@ -43,7 +36,7 @@ export async function loadSettings(): Promise<Settings> {
  * @returns Promise<ColumnsConfig>
  */
 export async function getColumns(): Promise<ColumnsConfig> {
-  const settings = await loadSettings();
+  const settings = await getSettings();
   return settings.columns;
 }
 
@@ -52,7 +45,7 @@ export async function getColumns(): Promise<ColumnsConfig> {
  * @returns Promise<CategoriesConfig>
  */
 export async function getCategories(): Promise<CategoriesConfig> {
-  const settings = await loadSettings();
+  const settings = await getSettings();
   return settings.categories;
 }
 
@@ -61,7 +54,7 @@ export async function getCategories(): Promise<CategoriesConfig> {
  * @returns Promise<WorkflowsConfig>
  */
 export async function getWorkflows(): Promise<WorkflowsConfig> {
-  const settings = await loadSettings();
+  const settings = await getSettings();
   return settings.workflows;
 }
 
@@ -70,7 +63,7 @@ export async function getWorkflows(): Promise<WorkflowsConfig> {
  * @returns Promise<ActionsConfig>
  */
 export async function getActions(): Promise<ActionsConfig> {
-  const settings = await loadSettings();
+  const settings = await getSettings();
   return settings.actions;
 }
 
@@ -82,7 +75,7 @@ export async function getActions(): Promise<ActionsConfig> {
 export async function getSettingsByType(
   type: SettingsFileType
 ): Promise<ColumnsConfig | CategoriesConfig | WorkflowsConfig | ActionsConfig> {
-  const settings = await loadSettings();
+  const settings = await getSettings();
   return settings[type];
 }
 

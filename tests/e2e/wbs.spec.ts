@@ -13,6 +13,18 @@ const JJIBAN_ROOT = '.jjiban';
 
 test.describe('WBS API', () => {
   test.beforeEach(async () => {
+    // 설정 폴더 생성 및 projects.json 생성
+    const settingsPath = join(JJIBAN_ROOT, 'settings');
+    await fs.mkdir(settingsPath, { recursive: true });
+    const projectsJsonPath = join(settingsPath, 'projects.json');
+    await fs.writeFile(
+      projectsJsonPath,
+      JSON.stringify({
+        projects: [{ id: TEST_PROJECT_ID }],
+      }),
+      'utf-8'
+    );
+
     // 테스트 프로젝트 생성
     const projectPath = join(JJIBAN_ROOT, 'projects', TEST_PROJECT_ID);
     await fs.mkdir(projectPath, { recursive: true });
@@ -48,6 +60,10 @@ test.describe('WBS API', () => {
     // 테스트 프로젝트 삭제
     const projectPath = join(JJIBAN_ROOT, 'projects', TEST_PROJECT_ID);
     await fs.rm(projectPath, { recursive: true, force: true });
+
+    // 설정 파일 삭제
+    const settingsPath = join(JJIBAN_ROOT, 'settings');
+    await fs.rm(settingsPath, { recursive: true, force: true }).catch(() => {});
   });
 
   test('E2E-WBS-01: GET /api/projects/:id/wbs - WBS 조회 성공', async ({ request }) => {

@@ -19,6 +19,7 @@
 
 #### TSK-01-01-01: Nuxt 3 프로젝트 초기화
 - category: infrastructure
+- domain: infra
 - status: done [xx]
 - priority: critical
 - assignee: -
@@ -33,6 +34,7 @@
 
 #### TSK-01-01-02: PrimeVue 4.x + TailwindCSS 설정
 - category: infrastructure
+- domain: infra
 - status: done [xx]
 - priority: critical
 - assignee: -
@@ -47,6 +49,7 @@
 
 #### TSK-01-01-03: Pinia 상태 관리 설정
 - category: infrastructure
+- domain: infra
 - status: done [xx]
 - priority: high
 - assignee: -
@@ -60,6 +63,7 @@
 
 #### TSK-01-01-04: 프로젝트 디렉토리 구조 설정
 - category: infrastructure
+- domain: infra
 - status: done [xx]
 - priority: high
 - assignee: -
@@ -78,6 +82,7 @@
 
 #### TSK-01-02-01: AppLayout 컴포넌트 구현
 - category: development
+- domain: frontend
 - status: done [xx]
 - priority: high
 - assignee: -
@@ -92,6 +97,7 @@
 
 #### TSK-01-02-02: AppHeader 컴포넌트 구현
 - category: development
+- domain: frontend
 - status: done [xx]
 - priority: high
 - assignee: -
@@ -118,6 +124,7 @@
 
 #### TSK-02-01-01: .jjiban 디렉토리 구조 생성
 - category: infrastructure
+- domain: infra
 - status: done [xx]
 - priority: critical
 - assignee: -
@@ -132,6 +139,7 @@
 
 #### TSK-02-01-02: 파일 읽기/쓰기 유틸리티
 - category: infrastructure
+- domain: backend
 - status: done [xx]
 - priority: critical
 - assignee: -
@@ -151,6 +159,7 @@
 
 #### TSK-02-02-01: wbs.md 파서 구현
 - category: development
+- domain: backend
 - status: done [xx]
 - priority: critical
 - assignee: -
@@ -166,6 +175,7 @@
 
 #### TSK-02-02-02: wbs.md 시리얼라이저 구현
 - category: development
+- domain: backend
 - status: done [xx]
 - priority: critical
 - assignee: -
@@ -180,6 +190,7 @@
 
 #### TSK-02-02-03: WBS 데이터 유효성 검증
 - category: development
+- domain: backend
 - status: done [xx]
 - priority: high
 - assignee: -
@@ -199,6 +210,7 @@
 
 #### TSK-02-03-01: 기본 설정 JSON 스키마 정의
 - category: infrastructure
+- domain: infra
 - status: done [xx]
 - priority: high
 - assignee: -
@@ -214,6 +226,7 @@
 
 #### TSK-02-03-02: 설정 서비스 구현
 - category: development
+- domain: backend
 - status: done [xx]
 - priority: high
 - assignee: -
@@ -228,6 +241,7 @@
 
 #### TSK-02-03-03: 프로젝트 메타데이터 서비스
 - category: development
+- domain: backend
 - status: done [xx]
 - priority: medium
 - assignee: -
@@ -250,6 +264,7 @@
 
 ### TSK-03-01: Project API
 - category: development
+- domain: backend
 - status: done [xx]
 - priority: high
 - assignee: -
@@ -264,6 +279,7 @@
 
 ### TSK-03-02: WBS API
 - category: development
+- domain: backend
 - status: done [xx]
 - priority: critical
 - assignee: -
@@ -278,6 +294,7 @@
 
 ### TSK-03-03: Workflow API & Settings
 - category: development
+- domain: backend
 - status: done [xx]
 - priority: high
 - assignee: -
@@ -292,6 +309,7 @@
 
 ### TSK-03-04: Workflow Engine
 - category: development
+- domain: backend
 - status: done [xx]
 - priority: high
 - assignee: -
@@ -315,6 +333,7 @@
 
 ### TSK-04-00: Projects Page
 - category: development
+- domain: frontend
 - status: implement [im]
 - priority: high
 - assignee: -
@@ -330,6 +349,7 @@
 
 ### TSK-04-01: Tree Panel
 - category: development
+- domain: frontend
 - status: [ ]
 - priority: high
 - assignee: -
@@ -345,6 +365,7 @@
 
 ### TSK-04-02: Tree Node
 - category: development
+- domain: frontend
 - status: [ ]
 - priority: critical
 - assignee: -
@@ -360,6 +381,7 @@
 
 ### TSK-04-03: Tree Interaction
 - category: development
+- domain: frontend
 - status: [ ]
 - priority: high
 - assignee: -
@@ -382,6 +404,7 @@
 
 ### TSK-05-01: Detail Panel Structure
 - category: development
+- domain: frontend
 - status: [ ]
 - priority: high
 - assignee: -
@@ -396,6 +419,7 @@
 
 ### TSK-05-02: Detail Sections
 - category: development
+- domain: frontend
 - status: [ ]
 - priority: medium
 - assignee: -
@@ -411,6 +435,7 @@
 
 ### TSK-05-03: Detail Actions
 - category: development
+- domain: frontend
 - status: [ ]
 - priority: high
 - assignee: -
@@ -424,6 +449,7 @@
 
 ### TSK-05-04: Document Viewer
 - category: development
+- domain: frontend
 - status: [ ]
 - priority: medium
 - assignee: -
@@ -446,6 +472,7 @@
 
 ### TSK-06-01: Integration
 - category: development
+- domain: fullstack
 - status: [ ]
 - priority: high
 - assignee: -
@@ -460,6 +487,7 @@
 
 ### TSK-06-02: Testing
 - category: development
+- domain: test
 - status: [ ]
 - priority: medium
 - assignee: -

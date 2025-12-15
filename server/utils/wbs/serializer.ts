@@ -252,7 +252,4 @@ export function serializeWbs(
   return result;
 }
 
-// Re-export for external use
-export { serializeHeader } from './serializer/header';
-export { serializeAttributes } from './serializer/attributes';
-export { buildMetadataBlock } from './serializer/metadata';
+// Note: serializeHeader, serializeAttributes, buildMetadataBlock는 Nuxt가 serializer/ 폴더에서 직접 auto-import

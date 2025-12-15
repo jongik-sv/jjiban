@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { rm, mkdir, writeFile } from 'fs/promises';
+import { mkdir, writeFile } from 'fs/promises';
 import { join } from 'path';
 
 /**
@@ -14,18 +14,58 @@ import { join } from 'path';
  * - E2E-003: 프로젝트 생성 플로우
  * - E2E-004: 프로젝트 수정 플로우
  * - E2E-005: 팀원 관리 플로우
+ *
+ * Note: 테스트 데이터는 global-setup.ts에서 준비됩니다.
  */
 
 const TEST_BASE = join(process.cwd(), 'tests', 'fixtures', 'projects-e2e');
 
 test.describe('Project Metadata Service API', () => {
-  // 테스트 환경 초기화
-  test.beforeAll(async () => {
-    // 테스트 폴더 구조 생성
-    await mkdir(join(TEST_BASE, '.jjiban', 'settings'), { recursive: true });
-    await mkdir(join(TEST_BASE, '.jjiban', 'projects'), { recursive: true });
+  // 각 테스트 전 기본 데이터 리셋 (테스트 간 격리)
+  test.beforeEach(async () => {
+    // test-project 폴더 생성 (없으면 생성)
+    await mkdir(join(TEST_BASE, '.jjiban', 'projects', 'test-project'), { recursive: true });
 
-    // 초기 프로젝트 목록 설정
+    // test-project 데이터 리셋
+    const projectConfig = {
+      id: 'test-project',
+      name: '테스트 프로젝트',
+      description: 'E2E 테스트용 프로젝트',
+      version: '0.1.0',
+      status: 'active',
+      createdAt: '2025-12-14T00:00:00.000Z',
+      updatedAt: '2025-12-14T00:00:00.000Z',
+      scheduledStart: '2025-01-01',
+      scheduledEnd: '2025-12-31',
+    };
+
+    await writeFile(
+      join(TEST_BASE, '.jjiban', 'projects', 'test-project', 'project.json'),
+      JSON.stringify(projectConfig, null, 2),
+      'utf-8'
+    );
+
+    // team.json 리셋
+    const teamConfig = {
+      version: '1.0',
+      members: [
+        {
+          id: 'hong',
+          name: '홍길동',
+          email: 'hong@test.com',
+          role: 'Developer',
+          active: true,
+        },
+      ],
+    };
+
+    await writeFile(
+      join(TEST_BASE, '.jjiban', 'projects', 'test-project', 'team.json'),
+      JSON.stringify(teamConfig, null, 2),
+      'utf-8'
+    );
+
+    // projects.json 리셋 (e2e-project 제거)
     const projectsConfig = {
       version: '1.0',
       projects: [
@@ -46,61 +86,6 @@ test.describe('Project Metadata Service API', () => {
       JSON.stringify(projectsConfig, null, 2),
       'utf-8'
     );
-
-    // 테스트 프로젝트 폴더 생성
-    await mkdir(join(TEST_BASE, '.jjiban', 'projects', 'test-project'), { recursive: true });
-
-    // project.json 생성
-    const projectConfig = {
-      id: 'test-project',
-      name: '테스트 프로젝트',
-      description: 'E2E 테스트용 프로젝트',
-      version: '0.1.0',
-      status: 'active',
-      createdAt: '2025-12-14T00:00:00.000Z',
-      updatedAt: '2025-12-14T00:00:00.000Z',
-      scheduledStart: '2025-01-01',
-      scheduledEnd: '2025-12-31',
-    };
-
-    await writeFile(
-      join(TEST_BASE, '.jjiban', 'projects', 'test-project', 'project.json'),
-      JSON.stringify(projectConfig, null, 2),
-      'utf-8'
-    );
-
-    // team.json 생성
-    const teamConfig = {
-      version: '1.0',
-      members: [
-        {
-          id: 'hong',
-          name: '홍길동',
-          email: 'hong@test.com',
-          role: 'Developer',
-          active: true,
-        },
-      ],
-    };
-
-    await writeFile(
-      join(TEST_BASE, '.jjiban', 'projects', 'test-project', 'team.json'),
-      JSON.stringify(teamConfig, null, 2),
-      'utf-8'
-    );
-
-    // 환경변수 설정
-    process.env.JJIBAN_BASE_PATH = TEST_BASE;
-  });
-
-  // 테스트 후 정리
-  test.afterAll(async () => {
-    try {
-      await rm(TEST_BASE, { recursive: true, force: true });
-    } catch (error) {
-      // 정리 실패는 무시
-    }
-    delete process.env.JJIBAN_BASE_PATH;
   });
 
   /**

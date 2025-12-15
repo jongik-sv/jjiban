@@ -48,6 +48,10 @@ parallel-processing: true
 └── 🎨 Text Art - 화면 레이아웃 와이어프레임
 ```
 
+## 개념 충돌 해결
+
+@.claude/includes/wf-conflict-resolution.md
+
 ---
 
 ## 사용법

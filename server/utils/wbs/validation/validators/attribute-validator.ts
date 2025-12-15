@@ -8,7 +8,7 @@
 
 import type { WbsNode, TaskCategory, Priority } from '../../../../../types';
 import type { ValidationError } from '../types';
-import { VALID_CATEGORIES, VALID_PRIORITIES } from '../types';
+import { VALID_CATEGORIES, VALID_PRIORITIES } from '../../../../../types/validation';
 
 // 필수 속성 목록
 const REQUIRED_TASK_ATTRIBUTES = ['category', 'status', 'priority'] as const;

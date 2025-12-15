@@ -12,9 +12,9 @@
 ## 사용법
 
 ```bash
-/wf:auto [범위] [옵션]
+/wf:auto [범위] [부분실행] [옵션]
 
-# 전체 자동 실행 (다음 실행 가능 Task부터)
+# 전체 자동 실행 (다음 실행 가능 Task부터 완료까지)
 /wf:auto
 
 # 특정 범위 지정
@@ -22,12 +22,28 @@
 /wf:auto ACT-01-01      # ACT-01-01 내 Task만
 /wf:auto TSK-01-01-01   # 단일 Task만
 
-# 옵션
+# 부분 실행 (특정 단계까지만) - 영어 옵션
+/wf:auto TSK-01-01-01 --until basic-design    # 기본설계까지
+/wf:auto TSK-01-01-01 --until detail-design   # 상세설계까지
+/wf:auto TSK-01-01-01 --until apply           # 설계리뷰 반영까지
+/wf:auto TSK-01-01-01 --until build           # 구현까지
+
+# 부분 실행 - 한글 자연어 (동일하게 동작)
+/wf:auto TSK-01-01-01 기본설계까지
+/wf:auto TSK-01-01-01 상세설계까지
+/wf:auto TSK-01-01-01 리뷰반영까지
+/wf:auto TSK-01-01-01 구현까지
+
+# 일반 옵션
 /wf:auto --dry-run      # 실행 계획만 출력 (실제 실행 안함)
 /wf:auto --continue     # 실패해도 다음 Task 계속 진행
 /wf:auto --max 5        # 최대 5개 Task만 처리
 /wf:auto --skip-review  # review/apply 건너뛰기
 /wf:auto --skip-audit   # audit/patch 건너뛰기
+
+# 조합 사용
+/wf:auto WP-01 상세설계까지 --max 3
+/wf:auto TSK-01-01-01 --until build --skip-review
 ```
 
 ---
@@ -63,6 +79,125 @@
 
 ---
 
+## 부분 실행 (--until / 자연어)
+
+> **특정 단계까지만 실행**: `--until` 옵션 또는 한글 자연어로 원하는 단계까지만 워크플로우를 실행합니다.
+> 완료([xx])까지 가지 않고 중간 단계에서 멈출 수 있습니다.
+
+### Target 키워드 매핑
+
+| 영어 옵션 (`--until`) | 한글 자연어 | 상태 변화 | 실행 단계 | 산출물 |
+|----------------------|------------|----------|----------|--------|
+| `basic-design` | `기본설계까지` | `[ ]→[bd]` | start | 010-basic-design.md |
+| `ui-design` | `기본설계+UI까지`, `UI설계까지` | `[ ]→[bd]` | start + ui | 010 + 011-ui-design.md |
+| `detail-design` | `상세설계까지` | `[bd]→[dd]` | draft | 020, 025, 026 |
+| `review` | `리뷰까지`, `설계리뷰까지` | `[dd]` 유지 | review만 | 021-design-review-*.md |
+| `apply` | `리뷰반영까지`, `apply까지` | `[dd]` 유지 | review + apply | 리뷰 반영 완료 |
+| `build` | `구현까지`, `빌드까지` | `[dd]→[im]` | build + test | 030-implementation.md |
+| `audit` | `코드리뷰까지`, `audit까지` | `[im]` 유지 | audit만 | 031-code-review-*.md |
+| `patch` | `패치까지`, `코드리뷰반영까지` | `[im]` 유지 | audit + patch | 리뷰 반영 완료 |
+| `verify` | `테스트까지`, `통합테스트까지` | `[im]→[ts]` | verify | 070-integration-test.md |
+| `done` | `완료까지` (기본값) | `[ts]→[xx]` | done | 080-manual.md |
+
+### 한글 자연어 인식 패턴
+
+```javascript
+const koreanPatterns = {
+  // 기본설계 관련
+  '기본설계까지': 'basic-design',
+  '기본설계완료까지': 'basic-design',
+  'UI설계까지': 'ui-design',
+  '기본설계+UI까지': 'ui-design',
+  '화면설계까지': 'ui-design',
+
+  // 상세설계 관련
+  '상세설계까지': 'detail-design',
+  'dd까지': 'detail-design',
+
+  // 리뷰 관련
+  '리뷰까지': 'review',
+  '설계리뷰까지': 'review',
+  '리뷰반영까지': 'apply',
+  'apply까지': 'apply',
+
+  // 구현 관련
+  '구현까지': 'build',
+  '빌드까지': 'build',
+  '개발까지': 'build',
+
+  // 코드리뷰 관련
+  '코드리뷰까지': 'audit',
+  'audit까지': 'audit',
+  '패치까지': 'patch',
+  '코드리뷰반영까지': 'patch',
+
+  // 테스트 관련
+  '테스트까지': 'verify',
+  '통합테스트까지': 'verify',
+  '검증까지': 'verify',
+
+  // 완료
+  '완료까지': 'done'
+};
+```
+
+### 사용 예시
+
+```bash
+# 기본설계만 완료하고 멈춤
+/wf:auto TSK-01-01-01 기본설계까지
+/wf:auto TSK-01-01-01 --until basic-design
+
+# 상세설계 리뷰까지만 (apply 전)
+/wf:auto TSK-01-01-01 설계리뷰까지
+/wf:auto TSK-01-01-01 --until review
+
+# 구현까지 (테스트 통과, 코드리뷰 전)
+/wf:auto TSK-01-01-01 구현까지
+/wf:auto TSK-01-01-01 --until build
+
+# 여러 Task에 동일하게 적용
+/wf:auto WP-01 상세설계까지 --max 5
+```
+
+### 부분 실행 흐름 (development)
+
+```
+/wf:auto TSK-XX 상세설계까지
+
+[ ] Todo
+  ↓ /wf:start          → requirements-analyst
+[bd] 기본설계
+  ↓ /wf:draft          → system-architect
+[dd] 상세설계  ← 여기서 STOP!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+/wf:auto TSK-XX 리뷰반영까지
+
+[dd] 상세설계 (이어서)
+  ↓ /wf:review         → refactoring-expert
+  ↓ /wf:apply          → (메인 에이전트)  ← 여기서 STOP!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+/wf:auto TSK-XX (기본값: 완료까지)
+
+[dd] 상세설계 (이어서)
+  ↓ /wf:build          → backend + frontend
+  │                       └── 내부적으로 /wf:test 호출
+  ↓ /wf:test (조건부)  → quality-engineer ⚠️ 결과 없을 때만
+[im] 구현
+  ↓ /wf:audit          → refactoring-expert
+  ↓ /wf:patch          → (메인 에이전트)
+  ↓ /wf:verify         → quality-engineer
+[ts] 테스트
+  ↓ /wf:done           → (메인 에이전트)
+[xx] 완료
+```
+
+---
+
 ## 카테고리별 전체 워크플로우 (Subagent 적용)
 
 ### development (개발)
@@ -76,7 +211,8 @@
   ↓ /wf:review (1회)   → refactoring-expert (자동 포함)
   ↓ /wf:apply          → (메인 에이전트)
   ↓ /wf:build          → backend-architect + frontend-architect (병렬)
-  ↓ /wf:test           → quality-engineer (TDD 단위테스트)
+  │                       └── 내부적으로 /wf:test 호출 (TDD + E2E)
+  ↓ /wf:test (조건부)  → quality-engineer ⚠️ 테스트 결과 없을 때만 실행
 [im] 구현
   ↓ /wf:audit (1회)    → refactoring-expert (자동 포함)
   ↓ /wf:patch          → (메인 에이전트)
@@ -93,7 +229,8 @@
   ↓ /wf:start          → requirements-analyst
 [an] 분석
   ↓ /wf:fix            → backend-architect / frontend-architect
-  ↓ /wf:test           → quality-engineer (TDD 단위테스트)
+  │                       └── 내부적으로 /wf:test 호출 (TDD + E2E)
+  ↓ /wf:test (조건부)  → quality-engineer ⚠️ 테스트 결과 없을 때만 실행
 [fx] 수정
   ↓ /wf:audit (1회)    → refactoring-expert (자동 포함)
   ↓ /wf:patch          → (메인 에이전트)
@@ -119,26 +256,38 @@
 
 ---
 
-## 핵심 실행 로직 (완료까지 반복 실행)
+## 핵심 실행 로직 (Target까지 반복 실행)
 
-> **⚠️ 중요**: `/wf:auto`는 Task가 **완료([xx])될 때까지 자동으로 모든 단계를 반복 실행**합니다.
-> 한 번의 상태 전환이 아니라, **[xx] 완료 상태가 될 때까지 루프**를 돌아야 합니다.
+> **⚠️ 중요**: `/wf:auto`는 **target 단계까지 자동으로 모든 단계를 반복 실행**합니다.
+> - 기본값: `[xx]` 완료까지 실행
+> - `--until` 옵션 또는 한글 자연어로 중간 단계에서 멈출 수 있습니다.
 
 ### 반복 실행 알고리즘
 
 ```javascript
-// 핵심 로직: 완료될 때까지 반복
-async function executeAutoWorkflow(taskId) {
+// 핵심 로직: target까지 반복 (기본값: 완료)
+async function executeAutoWorkflow(taskId, options = {}) {
   const task = await loadTaskFromWbs(taskId);
   let currentStatus = task.status;
+  let currentAction = null;
 
-  // ⭐ 핵심: [xx] 완료가 될 때까지 반복
-  while (currentStatus !== '[xx]') {
+  // target 파싱 (영어 옵션 또는 한글 자연어)
+  const target = parseTarget(options.until || options.koreanTarget) || 'done';
+
+  // ⭐ 핵심: target에 도달할 때까지 반복
+  while (!isTargetReached(currentStatus, currentAction, target)) {
     const mapping = subagentMapping[task.category][currentStatus];
 
     // 1. preActions 실행 (review/apply 또는 audit/patch)
     if (mapping.preActions) {
       for (const preAction of mapping.preActions) {
+        currentAction = preAction.action;
+
+        // ⭐ target 체크: preAction에서 멈춰야 하는지
+        if (isTargetReached(currentStatus, currentAction, target)) {
+          return { success: true, finalStatus: currentStatus, stoppedAt: target };
+        }
+
         if (preAction.subagent) {
           await Task({ subagent_type: preAction.subagent, ... });
         } else {
@@ -148,15 +297,34 @@ async function executeAutoWorkflow(taskId) {
     }
 
     // 2. 메인 액션 실행 (build, verify, done)
+    currentAction = mapping.action;
+
+    // ⭐ target 체크: mainAction에서 멈춰야 하는지
+    if (isTargetReached(currentStatus, currentAction, target)) {
+      return { success: true, finalStatus: currentStatus, stoppedAt: target };
+    }
+
     if (mapping.subagent) {
       await Task({ subagent_type: mapping.subagent, ... });
     } else {
       await executeMainAgentAction(mapping.action);  // done
     }
 
-    // 3. postActions 실행 (test)
+    // 3. postActions 실행 (test) - 조건부 실행 지원
     if (mapping.postActions) {
       for (const postAction of mapping.postActions) {
+        currentAction = postAction.action;
+
+        // ⭐ 조건부 실행: condition이 있으면 조건 검사
+        if (postAction.condition === 'testResultsNotExist') {
+          // wf:build/wf:fix가 이미 wf:test를 호출했는지 확인
+          const testResultsExist = checkTestResultsExist(taskId);
+          if (testResultsExist) {
+            console.log(`[INFO] 테스트 결과가 이미 존재합니다. wf:test 스킵`);
+            continue;  // 테스트 결과가 있으면 스킵
+          }
+        }
+
         if (postAction.subagent) {
           await Task({ subagent_type: postAction.subagent, ... });
         } else {
@@ -168,11 +336,67 @@ async function executeAutoWorkflow(taskId) {
     // 4. 상태 업데이트 확인
     currentStatus = mapping.next;
 
-    // 5. 다음 루프로 진행 (currentStatus가 [xx]가 아니면 계속)
+    // 5. 다음 루프로 진행
   }
 
-  // 완료
-  return { success: true, finalStatus: '[xx]' };
+  // 완료 (target 도달)
+  return { success: true, finalStatus: currentStatus, stoppedAt: target };
+}
+
+// Target 도달 여부 확인
+function isTargetReached(status, action, target) {
+  const targetMap = {
+    'basic-design': { status: '[bd]', action: 'start' },
+    'ui-design':    { status: '[bd]', action: 'ui' },
+    'detail-design':{ status: '[dd]', action: 'draft' },
+    'review':       { status: '[dd]', action: 'review' },
+    'apply':        { status: '[dd]', action: 'apply' },
+    'build':        { status: '[im]', action: 'build' },
+    'audit':        { status: '[im]', action: 'audit' },
+    'patch':        { status: '[im]', action: 'patch' },
+    'verify':       { status: '[ts]', action: 'verify' },
+    'done':         { status: '[xx]', action: 'done' }
+  };
+
+  const t = targetMap[target];
+  if (!t) return status === '[xx]';  // 기본값
+
+  // 상태와 액션이 target에 도달했는지 확인
+  return status === t.status && action === t.action;
+}
+
+// 한글 자연어 → 영어 target 변환
+function parseTarget(input) {
+  if (!input) return null;
+
+  const koreanPatterns = {
+    '기본설계까지': 'basic-design',
+    'UI설계까지': 'ui-design',
+    '상세설계까지': 'detail-design',
+    '리뷰까지': 'review',
+    '리뷰반영까지': 'apply',
+    '구현까지': 'build',
+    '코드리뷰까지': 'audit',
+    '패치까지': 'patch',
+    '테스트까지': 'verify',
+    '완료까지': 'done'
+    // ... 더 많은 패턴은 "부분 실행" 섹션 참조
+  };
+
+  return koreanPatterns[input] || input;  // 한글이면 변환, 아니면 그대로
+}
+
+// ⭐ 테스트 결과 문서 존재 여부 확인
+// wf:build가 내부적으로 wf:test를 호출하므로, 중복 실행 방지
+function checkTestResultsExist(taskId) {
+  const taskFolder = `.jjiban/projects/{project}/tasks/${taskId}/`;
+
+  // 테스트 결과 문서 존재 여부 확인
+  const tddResultExists = fileExists(`${taskFolder}070-tdd-test-results.md`);
+  const e2eResultExists = fileExists(`${taskFolder}070-e2e-test-results.md`);
+
+  // 둘 중 하나라도 존재하면 테스트가 이미 실행된 것으로 간주
+  return tddResultExists || e2eResultExists;
 }
 ```
 
@@ -189,8 +413,9 @@ Loop 1: [dd] → [im]
   │   └── apply (메인) → 리뷰 반영, 파일명에 (적용완료) 추가
   ├── mainAction:
   │   └── build (backend-architect) → 030-implementation.md, 코드 구현
+  │       └── 내부적으로 /wf:test 호출 → 070-tdd/e2e-test-results.md 생성
   └── postActions:
-      └── test (quality-engineer) → TDD 단위테스트 및 E2E 테스트 실행
+      └── test (quality-engineer) → ⚠️ 테스트 결과 존재 시 스킵
 
 Loop 2: [im] → [ts]
   ├── preActions:
@@ -290,7 +515,8 @@ const subagentMapping = {
         { action: 'apply', subagent: null }  // 메인 에이전트
       ],
       postActions: [
-        { action: 'test', subagent: 'quality-engineer' }  // TDD 단위테스트
+        // ⚠️ wf:build가 내부적으로 wf:test를 호출하므로, 테스트 결과 문서가 없을 때만 실행
+        { action: 'test', subagent: 'quality-engineer', condition: 'testResultsNotExist' }
       ]
     },
     '[im]': {
@@ -319,7 +545,8 @@ const subagentMapping = {
       subagent: ['backend-architect', 'frontend-architect'],
       next: '[fx]',
       postActions: [
-        { action: 'test', subagent: 'quality-engineer' }  // TDD 단위테스트
+        // ⚠️ wf:fix가 내부적으로 wf:test를 호출하므로, 테스트 결과 문서가 없을 때만 실행
+        { action: 'test', subagent: 'quality-engineer', condition: 'testResultsNotExist' }
       ]
     },
     '[fx]': {
@@ -738,6 +965,64 @@ Subagent 사용 요약:
 실행하려면: /wf:auto WP-01
 ```
 
+### Dry-run 모드 (부분 실행)
+
+```
+[wf:auto] 실행 계획 (dry-run)
+
+대상: TSK-02-03-03 (development)
+목표: 상세설계까지 (--until detail-design)
+현재 상태: [ ] Todo
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+실행 계획:
+
+1. [ ] → [bd] 기본설계
+   └── start: requirements-analyst
+
+2. [bd] → [dd] 상세설계
+   └── draft: system-architect
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⏸️ 중단점: [dd] 상세설계 완료 후 멈춤
+   (review, apply, build 등은 실행하지 않음)
+
+실행하려면: /wf:auto TSK-02-03-03 상세설계까지
+```
+
+### 실행 결과 (부분 완료)
+
+```
+[wf:auto] 워크플로우 부분 실행 완료
+
+대상: TSK-02-03-03
+목표: 리뷰반영까지 (--until apply)
+실행 시간: 12분 45초
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+실행 결과:
+
+[OK] [ ] → [dd] 상세설계
+   ├── start (requirements-analyst): 완료
+   └── draft (system-architect): 완료
+
+[OK] [dd] 리뷰 및 반영
+   ├── review (refactoring-expert): 3건 지적
+   └── apply (메인): 3건 반영
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⏸️ 중단: 리뷰반영까지 완료 (apply)
+   현재 상태: [dd] 상세설계
+   남은 단계: build → test → audit → patch → verify → done
+
+이어서 실행: /wf:auto TSK-02-03-03
+또는 구현까지: /wf:auto TSK-02-03-03 구현까지
+```
+
 ### 실행 결과 (Subagent 포함)
 
 ```
@@ -800,6 +1085,8 @@ Subagent 실행 통계:
 
 | 옵션 | 설명 | 기본값 |
 |------|------|--------|
+| `--until <target>` | 특정 단계까지만 실행 (영어) | done (완료까지) |
+| `<한글>까지` | 특정 단계까지만 실행 (자연어) | done (완료까지) |
 | `--dry-run` | 실행 계획만 출력 | false |
 | `--continue` | 실패해도 다음 Task 계속 | false |
 | `--max N` | 최대 N개 Task 처리 | 무제한 |
@@ -807,6 +1094,21 @@ Subagent 실행 통계:
 | `--skip-audit` | audit/patch 건너뛰기 | false |
 | `--timeout M` | 단일 Subagent 타임아웃 (분) | 30 |
 | `--parallel N` | 병렬 Subagent 수 | 3 |
+
+### --until Target 값
+
+| Target | 한글 자연어 | 설명 |
+|--------|------------|------|
+| `basic-design` | `기본설계까지` | 기본설계 완료 후 멈춤 |
+| `ui-design` | `UI설계까지`, `기본설계+UI까지` | UI설계 완료 후 멈춤 |
+| `detail-design` | `상세설계까지` | 상세설계 완료 후 멈춤 |
+| `review` | `리뷰까지`, `설계리뷰까지` | 설계리뷰 완료 후 멈춤 |
+| `apply` | `리뷰반영까지` | 설계리뷰 반영 후 멈춤 |
+| `build` | `구현까지`, `빌드까지` | 구현+단위테스트 완료 후 멈춤 |
+| `audit` | `코드리뷰까지` | 코드리뷰 완료 후 멈춤 |
+| `patch` | `패치까지`, `코드리뷰반영까지` | 코드리뷰 반영 후 멈춤 |
+| `verify` | `테스트까지`, `통합테스트까지` | 통합테스트 완료 후 멈춤 |
+| `done` | `완료까지` (기본값) | 완료까지 실행 |
 
 ---
 
@@ -835,7 +1137,24 @@ Subagent 실행 통계:
 jjiban 프로젝트 - Workflow Command
 author: 장종익
 Command: wf:auto
-Version: 2.0
+Version: 2.2
+
+Changes (v2.2):
+- wf:test 조건부 실행 로직 추가
+  - wf:build/wf:fix가 내부적으로 wf:test를 호출하므로 중복 방지
+  - 테스트 결과 문서(070-tdd/e2e-test-results.md) 존재 시 스킵
+  - checkTestResultsExist() 함수 추가
+  - postActions.condition 속성 추가 ('testResultsNotExist')
+- 워크플로우 다이어그램 업데이트 (조건부 실행 표시)
+
+Changes (v2.1):
+- 부분 실행 기능 추가 (--until 옵션)
+- 한글 자연어 지원 ("상세설계까지", "리뷰반영까지" 등)
+- Target 키워드 매핑 테이블 추가
+- isTargetReached() 로직 추가
+- parseTarget() 한글→영어 변환 함수 추가
+- 부분 완료 출력 형식 추가
+- 옵션 정리 표에 --until 및 Target 값 추가
 
 Changes (v2.0):
 - Subagent 기반 실행으로 전면 개편
