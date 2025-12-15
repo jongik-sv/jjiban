@@ -549,8 +549,115 @@ WBS 트리 목업을 기반으로 한 다크 블루 테마.
 
 ---
 
+## 13. CLI Tools
+
+### 13.1 개요
+
+jjiban은 웹 UI 외에도 CLI 도구를 제공하여 터미널에서 직접 워크플로우를 실행할 수 있습니다.
+
+**핵심 목적**: Claude Code 등 LLM CLI의 context 제한 문제를 해결하기 위한 **외부 Orchestrator**
+
+### 13.2 Workflow Orchestrator
+
+#### 문제점
+- `/wf:auto` 명령어 실행 시 여러 단계를 연속 실행하면 context가 누적되어 세션이 중단됨
+- 각 단계(start, draft, build 등)마다 Subagent 호출 → 결과 누적 → context 폭발
+
+#### 해결책
+- Node.js 기반 외부 Orchestrator가 워크플로우를 관리
+- 각 단계마다 **새로운 Claude 세션**을 생성하여 context 초기화
+- 상태는 `wbs.md`와 `workflow-state.json`에 저장하여 재개 가능
+
+### 13.3 CLI 명령어
+
+```bash
+# 워크플로우 자동 실행 (완료까지)
+jjiban workflow TSK-03-05
+
+# 특정 단계까지만 실행
+jjiban workflow TSK-03-05 --until build
+
+# 실행 계획만 확인
+jjiban workflow TSK-03-05 --dry-run
+
+# 중단된 워크플로우 재개
+jjiban workflow TSK-03-05 --resume
+
+# 상세 로그 출력
+jjiban workflow TSK-03-05 --verbose
+```
+
+### 13.4 아키텍처
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    jjiban workflow CLI                       │
+├─────────────────────────────────────────────────────────────┤
+│  Node.js Orchestrator (상주 프로세스)                        │
+│  ├── 1. wbs.md에서 현재 상태 확인                           │
+│  ├── 2. 다음 단계 결정                                       │
+│  ├── 3. Claude CLI 호출 (새 세션)                           │
+│  │      └── claude -p "/wf:{command} {taskId}"              │
+│  ├── 4. 완료 대기 및 결과 확인                               │
+│  ├── 5. workflow-state.json 업데이트                        │
+│  └── 6. 다음 단계로 반복 또는 종료                           │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### 13.5 파일 구조
+
+```
+jjiban/
+├── bin/
+│   └── jjiban.js             # CLI 진입점
+├── cli/
+│   ├── index.ts              # CLI 메인
+│   ├── commands/
+│   │   └── workflow.ts       # workflow 명령어
+│   └── lib/
+│       ├── runner.ts         # 워크플로우 러너
+│       ├── state-manager.ts  # 상태 관리
+│       ├── wbs-reader.ts     # wbs.md 파싱
+│       ├── claude-executor.ts # Claude CLI 호출
+│       └── workflow-config.ts # 워크플로우 정의
+└── .jjiban/
+    └── projects/{project}/
+        └── workflow-state.json  # 진행 상태 추적
+```
+
+### 13.6 workflow-state.json 스키마
+
+```json
+{
+  "taskId": "TSK-03-05",
+  "currentStep": "draft",
+  "nextStep": "review",
+  "target": "done",
+  "status": "in_progress",
+  "startedAt": "2025-12-15T10:00:00Z",
+  "updatedAt": "2025-12-15T10:30:00Z",
+  "completedSteps": [
+    { "step": "start", "completedAt": "2025-12-15T10:15:00Z" },
+    { "step": "draft", "completedAt": "2025-12-15T10:30:00Z" }
+  ]
+}
+```
+
+### 13.7 장점
+
+| 항목 | 설명 |
+|------|------|
+| Context 초기화 | 각 단계마다 새 Claude 세션 → context 누적 없음 |
+| 완전 자동 | 사용자 개입 없이 처음부터 끝까지 실행 |
+| 재개 가능 | 중단 시 `--resume`으로 이어서 실행 |
+| 가시성 | 각 단계 진행 상황이 터미널에 실시간 표시 |
+| 유연성 | `--until`, `--dry-run` 등 옵션으로 세밀한 제어 |
+
+---
+
 ## 변경 이력
 
 | 버전 | 날짜 | 변경 내용 |
 |------|------|-----------|
+| 1.1 | 2025-12-15 | CLI Tools 섹션 추가 (Workflow Orchestrator) |
 | 1.0 | 2025-12-13 | 1차 범위 PRD 작성 (WBS 트리 뷰 중심) |
