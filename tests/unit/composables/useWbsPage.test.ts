@@ -133,7 +133,9 @@ describe('useWbsPage', () => {
 
       const { loadProjectAndWbs, error } = useWbsPage()
 
-      await expect(loadProjectAndWbs('test-project')).rejects.toThrow()
+      // P0-02 수정: throw 대신 false 반환
+      const result = await loadProjectAndWbs('test-project')
+      expect(result).toBe(false)
 
       expect(mockLoadProject).toHaveBeenCalled()
       expect(mockFetchWbs).not.toHaveBeenCalled()
@@ -164,7 +166,9 @@ describe('useWbsPage', () => {
 
       const { loadProjectAndWbs, error } = useWbsPage()
 
-      await expect(loadProjectAndWbs('test-project')).rejects.toThrow()
+      // P0-02 수정: throw 대신 false 반환
+      const result = await loadProjectAndWbs('test-project')
+      expect(result).toBe(false)
 
       expect(error.value).toBe('데이터를 불러올 수 없습니다. 잠시 후 다시 시도해주세요.')
     })

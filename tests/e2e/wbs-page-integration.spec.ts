@@ -8,8 +8,9 @@ import { test, expect } from '@playwright/test'
 import { promises as fs } from 'fs'
 import { join } from 'path'
 
-const TEST_PROJECT_ID = 'jjiban'
-const JJIBAN_ROOT = join(process.cwd(), '.jjiban')
+// IMPORTANT: 테스트 전용 프로젝트 ID - 실제 프로젝트명(jjiban)을 사용하면 안됨!
+const TEST_PROJECT_ID = 'e2e-wbs-integration-test'
+const JJIBAN_ROOT = '.jjiban'
 
 test.describe('WBS Page Integration', () => {
   test.beforeEach(async ({ page }) => {
@@ -79,52 +80,36 @@ test.describe('WBS Page Integration', () => {
 
     await fs.writeFile(wbsPath, wbsContent, 'utf-8')
 
-    // team.json 생성
-    const teamJsonPath = join(projectPath, 'team.json')
-    await fs.writeFile(
-      teamJsonPath,
-      JSON.stringify({
-        version: '1.0',
-        members: [
-          {
-            id: 'dev-001',
-            name: 'Developer 1',
-            email: 'dev1@test.com',
-            role: 'Backend Developer',
-            active: true
-          }
-        ]
-      }, null, 2),
-      'utf-8'
-    )
-
     // tasks 폴더 생성 및 Task 상세 정보
     const tasksPath = join(projectPath, 'tasks', 'TSK-05-03')
     await fs.mkdir(tasksPath, { recursive: true })
 
-    // history.json 생성
-    const historyJsonPath = join(tasksPath, 'history.json')
+    const taskJsonPath = join(tasksPath, 'task.json')
     await fs.writeFile(
-      historyJsonPath,
+      taskJsonPath,
       JSON.stringify({
-        version: '1.0',
-        entries: []
+        id: 'TSK-05-03',
+        title: 'Detail Actions',
+        category: 'development',
+        status: '[dd]',
+        priority: 'critical'
       }, null, 2),
       'utf-8'
     )
   })
 
   test.afterEach(async () => {
-    // 테스트 데이터 정리
+    // 테스트 데이터 정리 - 테스트 전용 프로젝트만 삭제
     const projectPath = join(JJIBAN_ROOT, 'projects', TEST_PROJECT_ID)
     await fs.rm(projectPath, { recursive: true, force: true })
 
-    const settingsPath = join(JJIBAN_ROOT, 'settings')
-    await fs.rm(settingsPath, { recursive: true, force: true }).catch(() => {})
+    // settings 폴더는 삭제하지 않음 (다른 설정 파일 보호)
+    // projects.json에서 테스트 프로젝트 항목만 제거하는 것이 이상적이지만
+    // E2E 테스트 격리를 위해 별도 처리 생략
   })
 
   test('TC-016: 페이지 초기화 → 프로젝트 → WBS → Task 선택 (Happy Path)', async ({ page }) => {
-    // 페이지 접속 (URL 쿼리 파라미터는 'project')
+    // 페이지 접속
     await page.goto(`/wbs?project=${TEST_PROJECT_ID}`)
 
     // 로딩 스피너 확인 (빠르게 지나갈 수 있음)
@@ -158,16 +143,10 @@ test.describe('WBS Page Integration', () => {
 
   test('TC-018: 프로젝트 로드 실패 → 재시도 → 성공', async ({ page, context }) => {
     // API 모킹: 첫 번째 요청은 실패, 두 번째는 성공
-    let projectRequestCount = 0
+    let requestCount = 0
     await context.route(`**/api/projects/${TEST_PROJECT_ID}`, async (route) => {
-      // WBS API도 같은 패턴을 따르므로 구분
-      if (route.request().url().includes('/wbs')) {
-        await route.continue()
-        return
-      }
-
-      projectRequestCount++
-      if (projectRequestCount === 1) {
+      requestCount++
+      if (requestCount === 1) {
         // 첫 번째 요청: 에러
         await route.fulfill({
           status: 500,
@@ -183,28 +162,26 @@ test.describe('WBS Page Integration', () => {
       }
     })
 
-    // 페이지 접속 (URL 쿼리 파라미터는 'project')
+    // 페이지 접속
     await page.goto(`/wbs?project=${TEST_PROJECT_ID}`)
 
-    // 에러 메시지 확인 (timeout 증가)
+    // 에러 메시지 확인
     const errorMessage = page.getByTestId('error-message')
-    await expect(errorMessage).toBeVisible({ timeout: 5000 })
-
-    // 에러 메시지 텍스트 확인 (500 에러는 FILE_READ_ERROR로 변환)
+    await expect(errorMessage).toBeVisible()
     await expect(errorMessage).toContainText('데이터를 불러올 수 없습니다')
 
     // Toast 에러 메시지 확인 (PrimeVue Toast)
     const toast = page.locator('.p-toast-message-error')
-    await expect(toast).toBeVisible({ timeout: 3000 })
+    await expect(toast).toBeVisible()
 
     // 재시도 버튼 클릭
     const retryButton = page.getByTestId('retry-button')
     await expect(retryButton).toBeVisible()
     await retryButton.click()
 
-    // 정상 로딩 확인 (재시도 후 성공)
+    // 정상 로딩 확인
     const wbsContent = page.getByTestId('wbs-content')
-    await expect(wbsContent).toBeVisible({ timeout: 5000 })
+    await expect(wbsContent).toBeVisible({ timeout: 2000 })
   })
 
   test('TC-020: 프로젝트 없음 → 대시보드 이동', async ({ page }) => {
@@ -226,7 +203,7 @@ test.describe('WBS Page Integration', () => {
   })
 
   test('TC-002: projectId 잘못된 형식 → Empty State', async ({ page }) => {
-    // 잘못된 형식의 project (대문자 포함)
+    // 잘못된 형식의 projectId (대문자 포함)
     await page.goto('/wbs?project=Invalid-Project')
 
     // Empty State 확인
@@ -236,7 +213,7 @@ test.describe('WBS Page Integration', () => {
   })
 
   test('TC-013: Task 미선택 Empty State', async ({ page }) => {
-    // 페이지 접속 (URL 쿼리 파라미터는 'project')
+    // 페이지 접속
     await page.goto(`/wbs?project=${TEST_PROJECT_ID}`)
 
     // WBS 콘텐츠 로딩 대기
@@ -262,7 +239,7 @@ test.describe('WBS Page Integration', () => {
       })
     })
 
-    // 페이지 접속 (URL 쿼리 파라미터는 'project')
+    // 페이지 접속
     await page.goto(`/wbs?project=${TEST_PROJECT_ID}`)
 
     // Toast 에러 메시지 표시 확인
@@ -280,7 +257,7 @@ test.describe('WBS Page Integration', () => {
     // 브라우저 너비 1200px 설정
     await page.setViewportSize({ width: 1200, height: 800 })
 
-    // 페이지 접속 (URL 쿼리 파라미터는 'project')
+    // 페이지 접속
     await page.goto(`/wbs?project=${TEST_PROJECT_ID}`)
 
     // WBS 콘텐츠 로딩 대기
@@ -303,7 +280,7 @@ test.describe('WBS Page Integration', () => {
   })
 
   test('TC-022: 키보드 네비게이션', async ({ page }) => {
-    // 페이지 접속 (URL 쿼리 파라미터는 'project')
+    // 페이지 접속
     await page.goto(`/wbs?project=${TEST_PROJECT_ID}`)
 
     // WBS 콘텐츠 로딩 대기
@@ -335,7 +312,7 @@ test.describe('WBS Page Integration', () => {
   })
 
   test('TC-023: ARIA 라벨', async ({ page }) => {
-    // 페이지 접속 (URL 쿼리 파라미터는 'project')
+    // 페이지 접속
     await page.goto(`/wbs?project=${TEST_PROJECT_ID}`)
 
     // WBS 콘텐츠 로딩 대기
@@ -353,7 +330,7 @@ test.describe('WBS Page Integration', () => {
   })
 
   test('TC-017: 노드 선택 → Task 상세 로드 성능', async ({ page }) => {
-    // 페이지 접속 (URL 쿼리 파라미터는 'project')
+    // 페이지 접속
     await page.goto(`/wbs?project=${TEST_PROJECT_ID}`)
 
     // WBS 콘텐츠 로딩 대기
