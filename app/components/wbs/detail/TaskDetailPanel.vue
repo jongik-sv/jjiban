@@ -122,7 +122,12 @@ const notification = useNotification()
 // ============================================================
 // State
 // ============================================================
-const isUpdating = ref(false)
+/**
+ * 필드별 업데이트 상태 추적 (P1-02: 동시성 제어 개선)
+ * 여러 필드를 동시에 수정할 때 race condition 방지
+ */
+const updatingFields = reactive<Record<string, boolean>>({})
+const isUpdating = computed(() => Object.values(updatingFields).some(v => v))
 const teamMembers = ref<TeamMember[]>([])
 
 // ============================================================
@@ -151,27 +156,64 @@ const ERROR_MESSAGES = {
   UPDATE_FAILED: '변경사항을 저장하는 중 오류가 발생했습니다. 다시 시도해주세요.',
   NETWORK_ERROR: '네트워크 연결을 확인해주세요.',
   REQUIREMENTS_UPDATE_FAILED: '요구사항 저장에 실패했습니다.',
+  FIELD_ALREADY_UPDATING: '이전 변경사항이 처리 중입니다. 잠시 후 다시 시도하세요.',
 } as const
+
+// ============================================================
+// Helper Functions (P1-03: 타입 안전성 향상)
+// ============================================================
+
+/**
+ * Task 필드를 타입 안전하게 업데이트
+ * @param task - 업데이트할 Task 객체
+ * @param field - 업데이트할 필드명
+ * @param value - 새 값
+ */
+function updateTaskField<T extends Record<string, unknown>, K extends keyof T>(
+  task: T,
+  field: K,
+  value: T[K]
+): void {
+  task[field] = value
+}
 
 // ============================================================
 // Methods
 // ============================================================
 
 /**
- * 공통 Task 업데이트 핸들러 (MAJ-001 리팩토링)
- * 낙관적 업데이트 + 롤백 + 에러 처리 통합
+ * 공통 Task 업데이트 핸들러 (P1-01, P1-02, P1-03 리팩토링)
+ * - P1-01: 중복 코드 제거 - 모든 업데이트 메서드가 이 함수 사용
+ * - P1-02: 필드별 동시성 제어 - 여러 필드 동시 편집 가능
+ * - P1-03: 타입 안전성 - updateTaskField 헬퍼 사용
+ *
+ * @param field - 업데이트할 필드명
+ * @param newValue - 새 값
+ * @param apiBody - API에 전송할 body
+ * @param successMessage - 성공 시 표시할 메시지
+ * @param validation - 선택적 검증 함수
  */
-async function handleUpdate<K extends keyof typeof selectedTask.value>(
+async function handleUpdate<K extends keyof NonNullable<typeof selectedTask.value>>(
   field: K,
-  newValue: (typeof selectedTask.value)[K],
+  newValue: NonNullable<typeof selectedTask.value>[K],
   apiBody: Record<string, unknown>,
   successMessage: string,
   validation?: () => string | null
 ): Promise<void> {
   if (!selectedTask.value) return
 
-  // 동시성 제어 (MIN-002)
-  if (isUpdating.value) return
+  const fieldKey = String(field)
+
+  // P1-02: 필드별 동시성 제어
+  if (updatingFields[fieldKey]) {
+    toast.add({
+      severity: 'warn',
+      summary: '처리 중',
+      detail: ERROR_MESSAGES.FIELD_ALREADY_UPDATING,
+      life: 2000,
+    })
+    return
+  }
 
   // 클라이언트 검증
   if (validation) {
@@ -187,12 +229,12 @@ async function handleUpdate<K extends keyof typeof selectedTask.value>(
     }
   }
 
-  isUpdating.value = true
+  updatingFields[fieldKey] = true
   const prevValue = selectedTask.value[field] // 백업
 
   try {
-    // 낙관적 업데이트 (FR-008)
-    ;(selectedTask.value as Record<K, unknown>)[field] = newValue
+    // P1-03: 타입 안전한 낙관적 업데이트 (FR-008)
+    updateTaskField(selectedTask.value, field, newValue)
 
     // API 호출
     const response = await $fetch<{ success: boolean; task: typeof selectedTask.value }>(
@@ -213,9 +255,9 @@ async function handleUpdate<K extends keyof typeof selectedTask.value>(
       })
     }
   } catch (e) {
-    // 롤백 (BR-004)
+    // P1-03: 타입 안전한 롤백 (BR-004)
     if (selectedTask.value) {
-      ;(selectedTask.value as Record<K, unknown>)[field] = prevValue
+      updateTaskField(selectedTask.value, field, prevValue)
     }
 
     const errorMessage = e instanceof Error ? e.message : ERROR_MESSAGES.UPDATE_FAILED
@@ -226,7 +268,7 @@ async function handleUpdate<K extends keyof typeof selectedTask.value>(
       life: 3000,
     })
   } finally {
-    isUpdating.value = false
+    updatingFields[fieldKey] = false
   }
 }
 
@@ -287,49 +329,15 @@ function handleRetry() {
 /**
  * 요구사항 수정 핸들러 (TSK-05-02)
  * FR-006
+ * P1-01: 공통 handleUpdate 메서드 사용으로 중복 코드 제거
  */
-async function handleUpdateRequirements(requirements: string[]) {
-  if (!selectedTask.value) return
-
-  // 동시성 제어
-  if (isUpdating.value) return
-
-  isUpdating.value = true
-  const prevRequirements = selectedTask.value.requirements
-
-  try {
-    // 낙관적 업데이트
-    selectedTask.value.requirements = requirements
-
-    // API 호출
-    await $fetch(`/api/tasks/${selectedTask.value.id}`, {
-      method: 'PUT',
-      body: { requirements }
-    })
-
-    await selectionStore.refreshTaskDetail()
-
-    toast.add({
-      severity: 'success',
-      summary: '저장 완료',
-      detail: '요구사항이 업데이트되었습니다.',
-      life: 2000
-    })
-  } catch (e) {
-    // 롤백
-    if (selectedTask.value) {
-      selectedTask.value.requirements = prevRequirements
-    }
-
-    toast.add({
-      severity: 'error',
-      summary: '저장 실패',
-      detail: ERROR_MESSAGES.REQUIREMENTS_UPDATE_FAILED,
-      life: 3000
-    })
-  } finally {
-    isUpdating.value = false
-  }
+function handleUpdateRequirements(requirements: string[]) {
+  handleUpdate(
+    'requirements',
+    requirements,
+    { requirements },
+    '요구사항이 업데이트되었습니다.'
+  )
 }
 
 /**

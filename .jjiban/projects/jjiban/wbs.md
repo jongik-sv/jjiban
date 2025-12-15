@@ -600,13 +600,13 @@
 ### TSK-05-01: Detail Panel Structure
 - category: development
 - domain: frontend
-- status: [im]
+- status: done [xx]
 - priority: high
 - assignee: -
 - schedule: 2026-01-13 ~ 2026-01-15
 - tags: component, detail
 - depends: TSK-04-03
-- test-result: none
+- test-result: pass
 - requirements:
   - TaskDetailPanel 컴포넌트 (컨테이너, 스크롤 콘텐츠)
   - TaskBasicInfo 컴포넌트 (ID, 제목, 카테고리, 우선순위, 담당자, 인라인 편집)
@@ -615,17 +615,19 @@
 - completed:
   - bd: 2025-12-15 22:13
   - dd: 2025-12-15 22:25
+  - im: 2025-12-15 23:30
+  - xx: 2025-12-15 23:45
 
 ### TSK-05-02: Detail Sections
 - category: development
 - domain: frontend
-- status: [im]
+- status: done [xx]
 - priority: medium
 - assignee: -
 - schedule: 2026-01-15 ~ 2026-01-18
 - tags: component, workflow
 - depends: TSK-05-01, TSK-03-03
-- test-result: none
+- test-result: pass
 - requirements:
   - TaskWorkflow 컴포넌트 (워크플로우 흐름, 상태 노드, 현재 상태 강조)
   - TaskRequirements 컴포넌트 (요구사항 목록, PRD 참조, 인라인 편집)
@@ -635,37 +637,49 @@
 - completed:
   - bd: 2025-12-15 22:13
   - dd: 2025-12-15 22:13
+  - im: 2025-12-15 23:50
+  - xx: 2025-12-15 23:55
 
 ### TSK-05-03: Detail Actions
 - category: development
 - domain: frontend
-- status: [im]
+- status: done [xx]
 - priority: high
 - assignee: -
 - schedule: 2026-01-18 ~ 2026-01-20
 - tags: component, action, edit
 - depends: TSK-05-02, TSK-03-02
-- test-result: none
+- test-result: pass
 - requirements:
   - TaskActions 컴포넌트 (편집, 문서 열기, 상태 전이 버튼)
   - 인라인 편집 기능 (필드별 편집, API 연동, 낙관적 업데이트)
 - ref: PRD 6.3.5
+- completed:
+  - bd: 2025-12-15 22:13
+  - dd: 2025-12-15 22:13
+  - im: 2025-12-15 23:50
+  - xx: 2025-12-15 23:55
 
 ### TSK-05-04: Document Viewer
 - category: development
 - domain: frontend
-- status: [im]
+- status: done [xx]
 - priority: medium
 - assignee: -
 - schedule: 2026-01-20 ~ 2026-01-22
 - tags: markdown, viewer, component
 - depends: TSK-01-01-02, TSK-03-03, TSK-05-02
-- test-result: none
+- test-result: pass
 - requirements:
   - Markdown 렌더러 설정 (marked/markdown-it, GFM, highlight.js)
   - DocumentViewer 컴포넌트 (로드, 렌더링, 스크롤)
   - 문서 API 연동 (GET /api/tasks/:id/documents/:filename)
 - ref: PRD 8.1
+- completed:
+  - bd: 2025-12-15 22:13
+  - dd: 2025-12-15 22:13
+  - im: 2025-12-15 23:50
+  - xx: 2025-12-15 23:55
 
 ---
 
@@ -711,6 +725,9 @@
   - 단위 테스트 (WBS 파서, 워크플로우 엔진, 유틸리티)
   - E2E 테스트 (트리 렌더링, 노드 선택, 상태 전이)
 - ref: PRD 11
+- completed:
+  - bd: 2025-12-15 22:13
+  - dd: 2025-12-15 22:26
 
 ---
 
@@ -740,6 +757,12 @@
   - --until, --dry-run, --resume, --verbose 옵션 지원
   - package.json bin 설정 및 commander 의존성 추가
 - ref: PRD 13
+- completed:
+  - bd: 2025-12-15 22:34
+  - dd: 2025-12-15 22:43
+  - im: 2025-12-15 22:53
+  - vf: 2025-12-15 23:02
+  - xx: 2025-12-15 23:03
 
 ---
 
@@ -749,8 +772,9 @@
 |----|------|---------|----------|
 | WP-01 | Platform Infrastructure | 6 | 12/13 ~ 12/20 |
 | WP-02 | Data Storage Layer | 9 | 12/16 ~ 12/27 |
-| WP-03 | Backend API & Workflow | 5 | 12/23 ~ 01/13 |
+| WP-03 | Backend API & Workflow | 6 | 12/23 ~ 01/16 |
 | WP-04 | WBS Tree View | 4 | 01/06 ~ 01/15 |
 | WP-05 | Task Detail & Document | 4 | 01/13 ~ 01/22 |
 | WP-06 | Integration & Testing | 2 | 01/20 ~ 01/25 |
-| **Total** | | **30** | **~6주** |
+| WP-07 | CLI Tools | 1 | 01/25 ~ 02/05 |
+| **Total** | | **32** | **~7주** |
