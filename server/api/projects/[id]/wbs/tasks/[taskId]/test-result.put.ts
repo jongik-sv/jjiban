@@ -27,10 +27,16 @@ import {
 } from '../../../../../../utils/errors/standardError';
 
 /**
+ * P1 반영: 테스트 결과 유효 값 타입 및 상수
+ */
+const VALID_TEST_RESULTS = ['none', 'pass', 'fail'] as const;
+type TestResultValue = typeof VALID_TEST_RESULTS[number];
+
+/**
  * 요청 Body 인터페이스
  */
 interface TestResultUpdateRequest {
-  testResult: string;
+  testResult: TestResultValue;
 }
 
 /**
@@ -125,12 +131,11 @@ function validateTaskId(taskId: string): void {
  * FR-003: test-result 값 검증
  * BR-002: none, pass, fail만 허용
  */
-function validateTestResult(testResult: string): void {
-  const validValues = ['none', 'pass', 'fail'];
-  if (!validValues.includes(testResult)) {
+function validateTestResult(testResult: string): asserts testResult is TestResultValue {
+  if (!VALID_TEST_RESULTS.includes(testResult as TestResultValue)) {
     throw createBadRequestError(
       'INVALID_TEST_RESULT',
-      'test-result 값은 none, pass, fail 중 하나여야 합니다'
+      `test-result 값은 ${VALID_TEST_RESULTS.join(', ')} 중 하나여야 합니다`
     );
   }
 }
