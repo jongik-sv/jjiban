@@ -360,7 +360,7 @@
 ### TSK-03-05: WBS 테스트 결과 업데이트 API
 - category: development
 - domain: backend
-- status: [ ]
+- status: [bd]
 - priority: medium
 - assignee: -
 - schedule: 2026-01-10 ~ 2026-01-13
