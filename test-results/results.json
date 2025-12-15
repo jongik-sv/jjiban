@@ -72,7 +72,7 @@
         "CHROME_CRASHPAD_PIPE_NAME": "\\\\.\\pipe\\crashpad_8180_KAEEBYQVHLGGIMFA",
         "CLAUDECODE": "1",
         "CLAUDE_CODE_ENTRYPOINT": "cli",
-        "CLAUDE_CODE_SESSION_ID": "6888b3ef-bbd3-4170-aeb1-6ba6cc9b5e27",
+        "CLAUDE_CODE_SESSION_ID": "d18f9069-c327-4386-903b-dc1df4c9d671",
         "CLAUDE_CODE_SSE_PORT": "41625",
         "COLOR": "0",
         "COLORTERM": "truecolor",
@@ -141,6 +141,7 @@
         "npm_package_name": "jjiban",
         "npm_package_version": "0.1.0",
         "NUMBER_OF_PROCESSORS": "12",
+        "OLDPWD": "C:/project/jjiban",
         "OneDrive": "C:\\Users\\sviso\\OneDrive",
         "OneDriveConsumer": "C:\\Users\\sviso\\OneDrive",
         "ORIGINAL_PATH": "C:\\Program Files\\Git\\mingw64\\bin;C:\\Program Files\\Git\\usr\\bin;C:\\Users\\sviso\\bin;C:\\Program Files\\Common Files\\Oracle\\Java\\javapath;C:\\app\\sviso\\product\\23ai\\dbhomeFree\\bin;C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.1\\bin;C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.1\\libnvvp;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0;C:\\WINDOWS\\System32\\OpenSSH;C:\\Program Files\\Bandizip;C:\\Program Files\\Git\\cmd;C:\\Program Files\\dotnet;C:\\Program Files\\NVIDIA Corporation\\Nsight Compute 2023.1.0;C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common;C:\\Program Files\\NVIDIA Corporation\\NVIDIA app\\NvDLISR;C:\\Program Files\\nodejs;C:\\Program Files\\Docker\\Docker\\resources\\bin;C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit;C:\\Users\\sviso\\AppData\\Local\\com.Langflow\\uv;C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.1\\bin;C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.1\\libnvvp;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0;C:\\WINDOWS\\System32\\OpenSSH;C:\\Program Files\\Bandizip;C:\\Program Files\\Git\\cmd;C:\\Program Files\\dotnet;C:\\Program Files\\NVIDIA Corporation\\Nsight Compute 2023.1.0;C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common;C:\\Program Files\\NVIDIA Corporation\\NVIDIA app\\NvDLISR;C:\\Program Files\\nodejs;C:\\Program Files\\Docker\\Docker\\resources\\bin;C:\\Users\\sviso\\.local\\bin;C:\\Users\\sviso\\.pyenv\\pyenv-win\\bin;C:\\Users\\sviso\\.pyenv\\pyenv-win\\shims;C:\\Users\\sviso\\AppData\\Local\\Microsoft\\WindowsApps;C:\\Users\\sviso\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\sviso\\AppData\\Local\\Programs\\Ollama;C:\\Users\\sviso\\AppData\\Local\\Microsoft\\WindowsApps;C:\\cursor\\resources\\app\\bin;C:\\Users\\sviso\\AppData\\Roaming\\npm;C:\\mcptools\\pyhub.mcptools;C:\\Users\\sviso\\.lmstudio\\bin;C:\\Users\\sviso\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python313\\Scripts;C:\\bin;C:\\Users\\sviso\\AppData\\Local\\Programs\\Antigravity\\bin",
@@ -201,20 +202,20 @@
   },
   "suites": [
     {
-      "title": "detail-sections.spec.ts",
-      "file": "detail-sections.spec.ts",
+      "title": "detail-panel.spec.ts",
+      "file": "detail-panel.spec.ts",
       "column": 0,
       "line": 0,
       "specs": [],
       "suites": [
         {
-          "title": "TSK-05-02: Detail Sections Integration",
-          "file": "detail-sections.spec.ts",
-          "line": 21,
+          "title": "TSK-05-01: Detail Panel Structure",
+          "file": "detail-panel.spec.ts",
+          "line": 19,
           "column": 6,
           "specs": [
             {
-              "title": "E2E-001: 워크플로우 흐름이 올바르게 표시된다",
+              "title": "E2E-001: Task가 선택되지 않으면 빈 상태 메시지를 표시한다",
               "ok": false,
               "tags": [],
               "tests": [
@@ -228,55 +229,67 @@
                     {
                       "workerIndex": 0,
                       "status": "failed",
-                      "duration": 6371,
+                      "duration": 7404,
                       "error": {
-                        "message": "TimeoutError: locator.waitFor: Timeout 3000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('wbs-content') to be visible\u001b[22m\n",
-                        "stack": "TimeoutError: locator.waitFor: Timeout 3000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('wbs-content') to be visible\u001b[22m\n\n    at C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts:186:43",
-                        "location": {
-                          "file": "C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts",
-                          "column": 43,
-                          "line": 186
+                        "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: getByTestId('task-detail-panel')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('task-detail-panel')\u001b[22m\n",
+                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: getByTestId('task-detail-panel')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('task-detail-panel')\u001b[22m\n\n    at C:\\project\\jjiban\\tests\\e2e\\detail-panel.spec.ts:181:31",
+                        "matcherResult": {
+                          "message": "\u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: getByTestId('task-detail-panel')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('task-detail-panel')\u001b[22m\n",
+                          "pass": false,
+                          "actual": "hidden",
+                          "name": "toBeVisible",
+                          "expected": "visible",
+                          "log": [
+                            "  - expect.toBeVisible with timeout 5000ms",
+                            "  - waiting for getByTestId('task-detail-panel')"
+                          ],
+                          "timeout": 5000
                         },
-                        "snippet": "\u001b[0m \u001b[90m 184 |\u001b[39m   test(\u001b[32m'E2E-001: 워크플로우 흐름이 올바르게 표시된다'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n \u001b[90m 185 |\u001b[39m     \u001b[90m// WBS 로딩 대기\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 186 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'wbs-content'\u001b[39m)\u001b[33m.\u001b[39mwaitFor({ state\u001b[33m:\u001b[39m \u001b[32m'visible'\u001b[39m\u001b[33m,\u001b[39m timeout\u001b[33m:\u001b[39m \u001b[35m3000\u001b[39m })\n \u001b[90m     |\u001b[39m                                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 187 |\u001b[39m\n \u001b[90m 188 |\u001b[39m     \u001b[90m// Task 선택\u001b[39m\n \u001b[90m 189 |\u001b[39m     \u001b[36mconst\u001b[39m taskNode \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'wbs-tree-node-TSK-01-01'\u001b[39m)\u001b[0m"
+                        "location": {
+                          "file": "C:\\project\\jjiban\\tests\\e2e\\detail-panel.spec.ts",
+                          "column": 31,
+                          "line": 181
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 179 |\u001b[39m     \u001b[90m// Detail Panel 확인\u001b[39m\n \u001b[90m 180 |\u001b[39m     \u001b[36mconst\u001b[39m detailPanel \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'task-detail-panel'\u001b[39m)\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 181 |\u001b[39m     \u001b[36mawait\u001b[39m expect(detailPanel)\u001b[33m.\u001b[39mtoBeVisible()\n \u001b[90m     |\u001b[39m                               \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 182 |\u001b[39m\n \u001b[90m 183 |\u001b[39m     \u001b[90m// 빈 상태 메시지 확인\u001b[39m\n \u001b[90m 184 |\u001b[39m     \u001b[36mconst\u001b[39m emptyMessage \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'empty-state-message'\u001b[39m)\u001b[0m"
                       },
                       "errors": [
                         {
                           "location": {
-                            "file": "C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts",
-                            "column": 43,
-                            "line": 186
+                            "file": "C:\\project\\jjiban\\tests\\e2e\\detail-panel.spec.ts",
+                            "column": 31,
+                            "line": 181
                           },
-                          "message": "TimeoutError: locator.waitFor: Timeout 3000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('wbs-content') to be visible\u001b[22m\n\n\n\u001b[0m \u001b[90m 184 |\u001b[39m   test(\u001b[32m'E2E-001: 워크플로우 흐름이 올바르게 표시된다'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n \u001b[90m 185 |\u001b[39m     \u001b[90m// WBS 로딩 대기\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 186 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'wbs-content'\u001b[39m)\u001b[33m.\u001b[39mwaitFor({ state\u001b[33m:\u001b[39m \u001b[32m'visible'\u001b[39m\u001b[33m,\u001b[39m timeout\u001b[33m:\u001b[39m \u001b[35m3000\u001b[39m })\n \u001b[90m     |\u001b[39m                                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 187 |\u001b[39m\n \u001b[90m 188 |\u001b[39m     \u001b[90m// Task 선택\u001b[39m\n \u001b[90m 189 |\u001b[39m     \u001b[36mconst\u001b[39m taskNode \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'wbs-tree-node-TSK-01-01'\u001b[39m)\u001b[0m\n    at C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts:186:43"
+                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: getByTestId('task-detail-panel')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('task-detail-panel')\u001b[22m\n\n\n\u001b[0m \u001b[90m 179 |\u001b[39m     \u001b[90m// Detail Panel 확인\u001b[39m\n \u001b[90m 180 |\u001b[39m     \u001b[36mconst\u001b[39m detailPanel \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'task-detail-panel'\u001b[39m)\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 181 |\u001b[39m     \u001b[36mawait\u001b[39m expect(detailPanel)\u001b[33m.\u001b[39mtoBeVisible()\n \u001b[90m     |\u001b[39m                               \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 182 |\u001b[39m\n \u001b[90m 183 |\u001b[39m     \u001b[90m// 빈 상태 메시지 확인\u001b[39m\n \u001b[90m 184 |\u001b[39m     \u001b[36mconst\u001b[39m emptyMessage \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'empty-state-message'\u001b[39m)\u001b[0m\n    at C:\\project\\jjiban\\tests\\e2e\\detail-panel.spec.ts:181:31"
                         }
                       ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-12-15T11:34:27.869Z",
+                      "startTime": "2025-12-15T13:30:14.015Z",
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "C:\\project\\jjiban\\test-results\\artifacts\\detail-sections-TSK-05-02--9c974-E2E-001-워크플로우-흐름이-올바르게-표시된다-chromium\\test-failed-1.png"
+                          "path": "C:\\project\\jjiban\\test-results\\artifacts\\detail-panel-TSK-05-01-Det-cad73-sk가-선택되지-않으면-빈-상태-메시지를-표시한다-chromium\\test-failed-1.png"
                         }
                       ],
                       "errorLocation": {
-                        "file": "C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts",
-                        "column": 43,
-                        "line": 186
+                        "file": "C:\\project\\jjiban\\tests\\e2e\\detail-panel.spec.ts",
+                        "column": 31,
+                        "line": 181
                       }
                     }
                   ],
                   "status": "unexpected"
                 }
               ],
-              "id": "5500fba8151ae3ce3ad9-ad11409b70dcaafa9a27",
-              "file": "detail-sections.spec.ts",
-              "line": 184,
+              "id": "c8a1f1d2fb170ae26453-bb23b179949463f07d8e",
+              "file": "detail-panel.spec.ts",
+              "line": 175,
               "column": 3
             },
             {
-              "title": "E2E-002: 요구사항 목록과 PRD 참조가 표시된다",
+              "title": "E2E-002: 사용자가 Task 제목을 인라인 편집할 수 있다",
               "ok": false,
               "tags": [],
               "tests": [
@@ -290,55 +303,67 @@
                     {
                       "workerIndex": 1,
                       "status": "failed",
-                      "duration": 6260,
+                      "duration": 6627,
                       "error": {
-                        "message": "TimeoutError: locator.waitFor: Timeout 3000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('wbs-content') to be visible\u001b[22m\n",
-                        "stack": "TimeoutError: locator.waitFor: Timeout 3000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('wbs-content') to be visible\u001b[22m\n\n    at C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts:214:43",
-                        "location": {
-                          "file": "C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts",
-                          "column": 43,
-                          "line": 214
+                        "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: getByTestId('task-title-display')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('task-title-display')\u001b[22m\n",
+                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: getByTestId('task-title-display')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('task-title-display')\u001b[22m\n\n    at C:\\project\\jjiban\\tests\\e2e\\detail-panel.spec.ts:202:32",
+                        "matcherResult": {
+                          "message": "\u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: getByTestId('task-title-display')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('task-title-display')\u001b[22m\n",
+                          "pass": false,
+                          "actual": "hidden",
+                          "name": "toBeVisible",
+                          "expected": "visible",
+                          "log": [
+                            "  - expect.toBeVisible with timeout 5000ms",
+                            "  - waiting for getByTestId('task-title-display')"
+                          ],
+                          "timeout": 5000
                         },
-                        "snippet": "\u001b[0m \u001b[90m 212 |\u001b[39m \u001b[90m   */\u001b[39m\n \u001b[90m 213 |\u001b[39m   test(\u001b[32m'E2E-002: 요구사항 목록과 PRD 참조가 표시된다'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 214 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'wbs-content'\u001b[39m)\u001b[33m.\u001b[39mwaitFor({ state\u001b[33m:\u001b[39m \u001b[32m'visible'\u001b[39m\u001b[33m,\u001b[39m timeout\u001b[33m:\u001b[39m \u001b[35m3000\u001b[39m })\n \u001b[90m     |\u001b[39m                                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 215 |\u001b[39m\n \u001b[90m 216 |\u001b[39m     \u001b[90m// Task 선택\u001b[39m\n \u001b[90m 217 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'wbs-tree-node-TSK-01-01'\u001b[39m)\u001b[33m.\u001b[39mclick()\u001b[0m"
+                        "location": {
+                          "file": "C:\\project\\jjiban\\tests\\e2e\\detail-panel.spec.ts",
+                          "column": 32,
+                          "line": 202
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 200 |\u001b[39m     \u001b[90m// 제목 클릭 (편집 모드)\u001b[39m\n \u001b[90m 201 |\u001b[39m     \u001b[36mconst\u001b[39m titleDisplay \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'task-title-display'\u001b[39m)\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 202 |\u001b[39m     \u001b[36mawait\u001b[39m expect(titleDisplay)\u001b[33m.\u001b[39mtoBeVisible()\n \u001b[90m     |\u001b[39m                                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 203 |\u001b[39m     \u001b[36mawait\u001b[39m titleDisplay\u001b[33m.\u001b[39mclick()\n \u001b[90m 204 |\u001b[39m\n \u001b[90m 205 |\u001b[39m     \u001b[90m// 입력 필드 확인\u001b[39m\u001b[0m"
                       },
                       "errors": [
                         {
                           "location": {
-                            "file": "C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts",
-                            "column": 43,
-                            "line": 214
+                            "file": "C:\\project\\jjiban\\tests\\e2e\\detail-panel.spec.ts",
+                            "column": 32,
+                            "line": 202
                           },
-                          "message": "TimeoutError: locator.waitFor: Timeout 3000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('wbs-content') to be visible\u001b[22m\n\n\n\u001b[0m \u001b[90m 212 |\u001b[39m \u001b[90m   */\u001b[39m\n \u001b[90m 213 |\u001b[39m   test(\u001b[32m'E2E-002: 요구사항 목록과 PRD 참조가 표시된다'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 214 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'wbs-content'\u001b[39m)\u001b[33m.\u001b[39mwaitFor({ state\u001b[33m:\u001b[39m \u001b[32m'visible'\u001b[39m\u001b[33m,\u001b[39m timeout\u001b[33m:\u001b[39m \u001b[35m3000\u001b[39m })\n \u001b[90m     |\u001b[39m                                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 215 |\u001b[39m\n \u001b[90m 216 |\u001b[39m     \u001b[90m// Task 선택\u001b[39m\n \u001b[90m 217 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'wbs-tree-node-TSK-01-01'\u001b[39m)\u001b[33m.\u001b[39mclick()\u001b[0m\n    at C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts:214:43"
+                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: getByTestId('task-title-display')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('task-title-display')\u001b[22m\n\n\n\u001b[0m \u001b[90m 200 |\u001b[39m     \u001b[90m// 제목 클릭 (편집 모드)\u001b[39m\n \u001b[90m 201 |\u001b[39m     \u001b[36mconst\u001b[39m titleDisplay \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'task-title-display'\u001b[39m)\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 202 |\u001b[39m     \u001b[36mawait\u001b[39m expect(titleDisplay)\u001b[33m.\u001b[39mtoBeVisible()\n \u001b[90m     |\u001b[39m                                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 203 |\u001b[39m     \u001b[36mawait\u001b[39m titleDisplay\u001b[33m.\u001b[39mclick()\n \u001b[90m 204 |\u001b[39m\n \u001b[90m 205 |\u001b[39m     \u001b[90m// 입력 필드 확인\u001b[39m\u001b[0m\n    at C:\\project\\jjiban\\tests\\e2e\\detail-panel.spec.ts:202:32"
                         }
                       ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-12-15T11:34:27.893Z",
+                      "startTime": "2025-12-15T13:30:14.056Z",
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "C:\\project\\jjiban\\test-results\\artifacts\\detail-sections-TSK-05-02--87f0a-E-002-요구사항-목록과-PRD-참조가-표시된다-chromium\\test-failed-1.png"
+                          "path": "C:\\project\\jjiban\\test-results\\artifacts\\detail-panel-TSK-05-01-Det-7fdde--사용자가-Task-제목을-인라인-편집할-수-있다-chromium\\test-failed-1.png"
                         }
                       ],
                       "errorLocation": {
-                        "file": "C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts",
-                        "column": 43,
-                        "line": 214
+                        "file": "C:\\project\\jjiban\\tests\\e2e\\detail-panel.spec.ts",
+                        "column": 32,
+                        "line": 202
                       }
                     }
                   ],
                   "status": "unexpected"
                 }
               ],
-              "id": "5500fba8151ae3ce3ad9-400ce8b1833786095f82",
-              "file": "detail-sections.spec.ts",
-              "line": 213,
+              "id": "c8a1f1d2fb170ae26453-1cfec499ba4c96d56290",
+              "file": "detail-panel.spec.ts",
+              "line": 193,
               "column": 3
             },
             {
-              "title": "E2E-003: 요구사항을 편집할 수 있다",
+              "title": "E2E-003: 사용자가 우선순위를 Dropdown으로 변경할 수 있다",
               "ok": false,
               "tags": [],
               "tests": [
@@ -352,55 +377,67 @@
                     {
                       "workerIndex": 2,
                       "status": "failed",
-                      "duration": 6371,
+                      "duration": 7794,
                       "error": {
-                        "message": "TimeoutError: locator.waitFor: Timeout 3000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('wbs-content') to be visible\u001b[22m\n",
-                        "stack": "TimeoutError: locator.waitFor: Timeout 3000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('wbs-content') to be visible\u001b[22m\n\n    at C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts:243:43",
-                        "location": {
-                          "file": "C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts",
-                          "column": 43,
-                          "line": 243
+                        "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: getByTestId('task-priority-dropdown')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('task-priority-dropdown')\u001b[22m\n",
+                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: getByTestId('task-priority-dropdown')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('task-priority-dropdown')\u001b[22m\n\n    at C:\\project\\jjiban\\tests\\e2e\\detail-panel.spec.ts:234:36",
+                        "matcherResult": {
+                          "message": "\u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: getByTestId('task-priority-dropdown')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('task-priority-dropdown')\u001b[22m\n",
+                          "pass": false,
+                          "actual": "hidden",
+                          "name": "toBeVisible",
+                          "expected": "visible",
+                          "log": [
+                            "  - expect.toBeVisible with timeout 5000ms",
+                            "  - waiting for getByTestId('task-priority-dropdown')"
+                          ],
+                          "timeout": 5000
                         },
-                        "snippet": "\u001b[0m \u001b[90m 241 |\u001b[39m \u001b[90m   */\u001b[39m\n \u001b[90m 242 |\u001b[39m   test(\u001b[32m'E2E-003: 요구사항을 편집할 수 있다'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 243 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'wbs-content'\u001b[39m)\u001b[33m.\u001b[39mwaitFor({ state\u001b[33m:\u001b[39m \u001b[32m'visible'\u001b[39m\u001b[33m,\u001b[39m timeout\u001b[33m:\u001b[39m \u001b[35m3000\u001b[39m })\n \u001b[90m     |\u001b[39m                                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 244 |\u001b[39m\n \u001b[90m 245 |\u001b[39m     \u001b[90m// Task 선택\u001b[39m\n \u001b[90m 246 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'wbs-tree-node-TSK-01-01'\u001b[39m)\u001b[33m.\u001b[39mclick()\u001b[0m"
+                        "location": {
+                          "file": "C:\\project\\jjiban\\tests\\e2e\\detail-panel.spec.ts",
+                          "column": 36,
+                          "line": 234
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 232 |\u001b[39m     \u001b[90m// 우선순위 Dropdown 클릭\u001b[39m\n \u001b[90m 233 |\u001b[39m     \u001b[36mconst\u001b[39m priorityDropdown \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'task-priority-dropdown'\u001b[39m)\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 234 |\u001b[39m     \u001b[36mawait\u001b[39m expect(priorityDropdown)\u001b[33m.\u001b[39mtoBeVisible()\n \u001b[90m     |\u001b[39m                                    \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 235 |\u001b[39m     \u001b[36mawait\u001b[39m priorityDropdown\u001b[33m.\u001b[39mclick()\n \u001b[90m 236 |\u001b[39m\n \u001b[90m 237 |\u001b[39m     \u001b[90m// 옵션 선택 (critical)\u001b[39m\u001b[0m"
                       },
                       "errors": [
                         {
                           "location": {
-                            "file": "C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts",
-                            "column": 43,
-                            "line": 243
+                            "file": "C:\\project\\jjiban\\tests\\e2e\\detail-panel.spec.ts",
+                            "column": 36,
+                            "line": 234
                           },
-                          "message": "TimeoutError: locator.waitFor: Timeout 3000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('wbs-content') to be visible\u001b[22m\n\n\n\u001b[0m \u001b[90m 241 |\u001b[39m \u001b[90m   */\u001b[39m\n \u001b[90m 242 |\u001b[39m   test(\u001b[32m'E2E-003: 요구사항을 편집할 수 있다'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 243 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'wbs-content'\u001b[39m)\u001b[33m.\u001b[39mwaitFor({ state\u001b[33m:\u001b[39m \u001b[32m'visible'\u001b[39m\u001b[33m,\u001b[39m timeout\u001b[33m:\u001b[39m \u001b[35m3000\u001b[39m })\n \u001b[90m     |\u001b[39m                                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 244 |\u001b[39m\n \u001b[90m 245 |\u001b[39m     \u001b[90m// Task 선택\u001b[39m\n \u001b[90m 246 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'wbs-tree-node-TSK-01-01'\u001b[39m)\u001b[33m.\u001b[39mclick()\u001b[0m\n    at C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts:243:43"
+                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: getByTestId('task-priority-dropdown')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('task-priority-dropdown')\u001b[22m\n\n\n\u001b[0m \u001b[90m 232 |\u001b[39m     \u001b[90m// 우선순위 Dropdown 클릭\u001b[39m\n \u001b[90m 233 |\u001b[39m     \u001b[36mconst\u001b[39m priorityDropdown \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'task-priority-dropdown'\u001b[39m)\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 234 |\u001b[39m     \u001b[36mawait\u001b[39m expect(priorityDropdown)\u001b[33m.\u001b[39mtoBeVisible()\n \u001b[90m     |\u001b[39m                                    \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 235 |\u001b[39m     \u001b[36mawait\u001b[39m priorityDropdown\u001b[33m.\u001b[39mclick()\n \u001b[90m 236 |\u001b[39m\n \u001b[90m 237 |\u001b[39m     \u001b[90m// 옵션 선택 (critical)\u001b[39m\u001b[0m\n    at C:\\project\\jjiban\\tests\\e2e\\detail-panel.spec.ts:234:36"
                         }
                       ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-12-15T11:34:27.860Z",
+                      "startTime": "2025-12-15T13:30:14.028Z",
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "C:\\project\\jjiban\\test-results\\artifacts\\detail-sections-TSK-05-02--466c7-tion-E2E-003-요구사항을-편집할-수-있다-chromium\\test-failed-1.png"
+                          "path": "C:\\project\\jjiban\\test-results\\artifacts\\detail-panel-TSK-05-01-Det-99cc0-가-우선순위를-Dropdown으로-변경할-수-있다-chromium\\test-failed-1.png"
                         }
                       ],
                       "errorLocation": {
-                        "file": "C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts",
-                        "column": 43,
-                        "line": 243
+                        "file": "C:\\project\\jjiban\\tests\\e2e\\detail-panel.spec.ts",
+                        "column": 36,
+                        "line": 234
                       }
                     }
                   ],
                   "status": "unexpected"
                 }
               ],
-              "id": "5500fba8151ae3ce3ad9-bb92dfbd554f4a0858b0",
-              "file": "detail-sections.spec.ts",
-              "line": 242,
+              "id": "c8a1f1d2fb170ae26453-310670647821400e93bd",
+              "file": "detail-panel.spec.ts",
+              "line": 225,
               "column": 3
             },
             {
-              "title": "E2E-004: 요구사항을 추가하고 삭제할 수 있다",
+              "title": "E2E-004: 사용자가 담당자를 Dropdown으로 변경할 수 있다",
               "ok": false,
               "tags": [],
               "tests": [
@@ -414,55 +451,67 @@
                     {
                       "workerIndex": 3,
                       "status": "failed",
-                      "duration": 6352,
+                      "duration": 7802,
                       "error": {
-                        "message": "TimeoutError: locator.waitFor: Timeout 3000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('wbs-content') to be visible\u001b[22m\n",
-                        "stack": "TimeoutError: locator.waitFor: Timeout 3000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('wbs-content') to be visible\u001b[22m\n\n    at C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts:281:43",
-                        "location": {
-                          "file": "C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts",
-                          "column": 43,
-                          "line": 281
+                        "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: getByTestId('task-assignee-dropdown')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('task-assignee-dropdown')\u001b[22m\n",
+                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: getByTestId('task-assignee-dropdown')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('task-assignee-dropdown')\u001b[22m\n\n    at C:\\project\\jjiban\\tests\\e2e\\detail-panel.spec.ts:263:36",
+                        "matcherResult": {
+                          "message": "\u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: getByTestId('task-assignee-dropdown')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('task-assignee-dropdown')\u001b[22m\n",
+                          "pass": false,
+                          "actual": "hidden",
+                          "name": "toBeVisible",
+                          "expected": "visible",
+                          "log": [
+                            "  - expect.toBeVisible with timeout 5000ms",
+                            "  - waiting for getByTestId('task-assignee-dropdown')"
+                          ],
+                          "timeout": 5000
                         },
-                        "snippet": "\u001b[0m \u001b[90m 279 |\u001b[39m \u001b[90m   */\u001b[39m\n \u001b[90m 280 |\u001b[39m   test(\u001b[32m'E2E-004: 요구사항을 추가하고 삭제할 수 있다'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 281 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'wbs-content'\u001b[39m)\u001b[33m.\u001b[39mwaitFor({ state\u001b[33m:\u001b[39m \u001b[32m'visible'\u001b[39m\u001b[33m,\u001b[39m timeout\u001b[33m:\u001b[39m \u001b[35m3000\u001b[39m })\n \u001b[90m     |\u001b[39m                                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 282 |\u001b[39m\n \u001b[90m 283 |\u001b[39m     \u001b[90m// Task 선택\u001b[39m\n \u001b[90m 284 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'wbs-tree-node-TSK-01-01'\u001b[39m)\u001b[33m.\u001b[39mclick()\u001b[0m"
+                        "location": {
+                          "file": "C:\\project\\jjiban\\tests\\e2e\\detail-panel.spec.ts",
+                          "column": 36,
+                          "line": 263
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 261 |\u001b[39m     \u001b[90m// 담당자 Dropdown 클릭\u001b[39m\n \u001b[90m 262 |\u001b[39m     \u001b[36mconst\u001b[39m assigneeDropdown \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'task-assignee-dropdown'\u001b[39m)\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 263 |\u001b[39m     \u001b[36mawait\u001b[39m expect(assigneeDropdown)\u001b[33m.\u001b[39mtoBeVisible()\n \u001b[90m     |\u001b[39m                                    \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 264 |\u001b[39m     \u001b[36mawait\u001b[39m assigneeDropdown\u001b[33m.\u001b[39mclick()\n \u001b[90m 265 |\u001b[39m\n \u001b[90m 266 |\u001b[39m     \u001b[90m// 옵션 선택 (member2)\u001b[39m\u001b[0m"
                       },
                       "errors": [
                         {
                           "location": {
-                            "file": "C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts",
-                            "column": 43,
-                            "line": 281
+                            "file": "C:\\project\\jjiban\\tests\\e2e\\detail-panel.spec.ts",
+                            "column": 36,
+                            "line": 263
                           },
-                          "message": "TimeoutError: locator.waitFor: Timeout 3000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('wbs-content') to be visible\u001b[22m\n\n\n\u001b[0m \u001b[90m 279 |\u001b[39m \u001b[90m   */\u001b[39m\n \u001b[90m 280 |\u001b[39m   test(\u001b[32m'E2E-004: 요구사항을 추가하고 삭제할 수 있다'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 281 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'wbs-content'\u001b[39m)\u001b[33m.\u001b[39mwaitFor({ state\u001b[33m:\u001b[39m \u001b[32m'visible'\u001b[39m\u001b[33m,\u001b[39m timeout\u001b[33m:\u001b[39m \u001b[35m3000\u001b[39m })\n \u001b[90m     |\u001b[39m                                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 282 |\u001b[39m\n \u001b[90m 283 |\u001b[39m     \u001b[90m// Task 선택\u001b[39m\n \u001b[90m 284 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'wbs-tree-node-TSK-01-01'\u001b[39m)\u001b[33m.\u001b[39mclick()\u001b[0m\n    at C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts:281:43"
+                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: getByTestId('task-assignee-dropdown')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('task-assignee-dropdown')\u001b[22m\n\n\n\u001b[0m \u001b[90m 261 |\u001b[39m     \u001b[90m// 담당자 Dropdown 클릭\u001b[39m\n \u001b[90m 262 |\u001b[39m     \u001b[36mconst\u001b[39m assigneeDropdown \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'task-assignee-dropdown'\u001b[39m)\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 263 |\u001b[39m     \u001b[36mawait\u001b[39m expect(assigneeDropdown)\u001b[33m.\u001b[39mtoBeVisible()\n \u001b[90m     |\u001b[39m                                    \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 264 |\u001b[39m     \u001b[36mawait\u001b[39m assigneeDropdown\u001b[33m.\u001b[39mclick()\n \u001b[90m 265 |\u001b[39m\n \u001b[90m 266 |\u001b[39m     \u001b[90m// 옵션 선택 (member2)\u001b[39m\u001b[0m\n    at C:\\project\\jjiban\\tests\\e2e\\detail-panel.spec.ts:263:36"
                         }
                       ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-12-15T11:34:27.903Z",
+                      "startTime": "2025-12-15T13:30:14.084Z",
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "C:\\project\\jjiban\\test-results\\artifacts\\detail-sections-TSK-05-02--ce56b-E2E-004-요구사항을-추가하고-삭제할-수-있다-chromium\\test-failed-1.png"
+                          "path": "C:\\project\\jjiban\\test-results\\artifacts\\detail-panel-TSK-05-01-Det-6d1e5-자가-담당자를-Dropdown으로-변경할-수-있다-chromium\\test-failed-1.png"
                         }
                       ],
                       "errorLocation": {
-                        "file": "C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts",
-                        "column": 43,
-                        "line": 281
+                        "file": "C:\\project\\jjiban\\tests\\e2e\\detail-panel.spec.ts",
+                        "column": 36,
+                        "line": 263
                       }
                     }
                   ],
                   "status": "unexpected"
                 }
               ],
-              "id": "5500fba8151ae3ce3ad9-6a12c44cd844fa75feda",
-              "file": "detail-sections.spec.ts",
-              "line": 280,
+              "id": "c8a1f1d2fb170ae26453-a2969e7ceda144d6877c",
+              "file": "detail-panel.spec.ts",
+              "line": 254,
               "column": 3
             },
             {
-              "title": "E2E-005: 문서 목록과 존재/예정 상태가 표시된다",
+              "title": "E2E-005: 카테고리별 색상이 올바르게 적용된다",
               "ok": false,
               "tags": [],
               "tests": [
@@ -475,56 +524,48 @@
                   "results": [
                     {
                       "workerIndex": 4,
-                      "status": "failed",
-                      "duration": 6356,
+                      "status": "timedOut",
+                      "duration": 60080,
                       "error": {
-                        "message": "TimeoutError: locator.waitFor: Timeout 3000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('wbs-content') to be visible\u001b[22m\n",
-                        "stack": "TimeoutError: locator.waitFor: Timeout 3000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('wbs-content') to be visible\u001b[22m\n\n    at C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts:327:43",
-                        "location": {
-                          "file": "C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts",
-                          "column": 43,
-                          "line": 327
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 325 |\u001b[39m \u001b[90m   */\u001b[39m\n \u001b[90m 326 |\u001b[39m   test(\u001b[32m'E2E-005: 문서 목록과 존재/예정 상태가 표시된다'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 327 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'wbs-content'\u001b[39m)\u001b[33m.\u001b[39mwaitFor({ state\u001b[33m:\u001b[39m \u001b[32m'visible'\u001b[39m\u001b[33m,\u001b[39m timeout\u001b[33m:\u001b[39m \u001b[35m3000\u001b[39m })\n \u001b[90m     |\u001b[39m                                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 328 |\u001b[39m\n \u001b[90m 329 |\u001b[39m     \u001b[90m// Task 선택\u001b[39m\n \u001b[90m 330 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'wbs-tree-node-TSK-01-01'\u001b[39m)\u001b[33m.\u001b[39mclick()\u001b[0m"
+                        "message": "\u001b[31mTest timeout of 60000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 60000ms exceeded.\u001b[39m"
                       },
                       "errors": [
                         {
+                          "message": "\u001b[31mTest timeout of 60000ms exceeded.\u001b[39m"
+                        },
+                        {
                           "location": {
-                            "file": "C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts",
-                            "column": 43,
-                            "line": 327
+                            "file": "C:\\project\\jjiban\\tests\\e2e\\detail-panel.spec.ts",
+                            "column": 58,
+                            "line": 287
                           },
-                          "message": "TimeoutError: locator.waitFor: Timeout 3000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('wbs-content') to be visible\u001b[22m\n\n\n\u001b[0m \u001b[90m 325 |\u001b[39m \u001b[90m   */\u001b[39m\n \u001b[90m 326 |\u001b[39m   test(\u001b[32m'E2E-005: 문서 목록과 존재/예정 상태가 표시된다'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 327 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'wbs-content'\u001b[39m)\u001b[33m.\u001b[39mwaitFor({ state\u001b[33m:\u001b[39m \u001b[32m'visible'\u001b[39m\u001b[33m,\u001b[39m timeout\u001b[33m:\u001b[39m \u001b[35m3000\u001b[39m })\n \u001b[90m     |\u001b[39m                                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 328 |\u001b[39m\n \u001b[90m 329 |\u001b[39m     \u001b[90m// Task 선택\u001b[39m\n \u001b[90m 330 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'wbs-tree-node-TSK-01-01'\u001b[39m)\u001b[33m.\u001b[39mclick()\u001b[0m\n    at C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts:327:43"
+                          "message": "Error: locator.click: Test timeout of 60000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('wbs-tree-node-TSK-TEST-DEV')\u001b[22m\n\n\n\u001b[0m \u001b[90m 285 |\u001b[39m\n \u001b[90m 286 |\u001b[39m     \u001b[90m// Development Task - 블루 (#3b82f6)\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 287 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'wbs-tree-node-TSK-TEST-DEV'\u001b[39m)\u001b[33m.\u001b[39mclick()\n \u001b[90m     |\u001b[39m                                                          \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 288 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'task-detail-panel'\u001b[39m)\u001b[33m.\u001b[39mwaitFor({ state\u001b[33m:\u001b[39m \u001b[32m'visible'\u001b[39m\u001b[33m,\u001b[39m timeout\u001b[33m:\u001b[39m \u001b[35m2000\u001b[39m })\n \u001b[90m 289 |\u001b[39m     \u001b[36mconst\u001b[39m devTag \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'task-category-tag'\u001b[39m)\n \u001b[90m 290 |\u001b[39m     \u001b[36mawait\u001b[39m expect(devTag)\u001b[33m.\u001b[39mtoBeVisible()\u001b[0m\n    at C:\\project\\jjiban\\tests\\e2e\\detail-panel.spec.ts:287:58"
                         }
                       ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-12-15T11:34:27.911Z",
+                      "startTime": "2025-12-15T13:30:14.080Z",
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "C:\\project\\jjiban\\test-results\\artifacts\\detail-sections-TSK-05-02--9e12b-E-005-문서-목록과-존재-예정-상태가-표시된다-chromium\\test-failed-1.png"
+                          "path": "C:\\project\\jjiban\\test-results\\artifacts\\detail-panel-TSK-05-01-Det-383df-E2E-005-카테고리별-색상이-올바르게-적용된다-chromium\\test-failed-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts",
-                        "column": 43,
-                        "line": 327
-                      }
+                      ]
                     }
                   ],
                   "status": "unexpected"
                 }
               ],
-              "id": "5500fba8151ae3ce3ad9-c4f4de2aa4f2ee83bcac",
-              "file": "detail-sections.spec.ts",
-              "line": 326,
+              "id": "c8a1f1d2fb170ae26453-39c637d44b0ad1065f59",
+              "file": "detail-panel.spec.ts",
+              "line": 283,
               "column": 3
             },
             {
-              "title": "E2E-006: 존재하는 문서를 클릭하면 뷰어가 열린다",
+              "title": "E2E-006: 우선순위별 색상이 올바르게 적용된다",
               "ok": false,
               "tags": [],
               "tests": [
@@ -538,55 +579,67 @@
                     {
                       "workerIndex": 5,
                       "status": "failed",
-                      "duration": 6361,
+                      "duration": 7910,
                       "error": {
-                        "message": "TimeoutError: locator.waitFor: Timeout 3000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('wbs-content') to be visible\u001b[22m\n",
-                        "stack": "TimeoutError: locator.waitFor: Timeout 3000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('wbs-content') to be visible\u001b[22m\n\n    at C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts:358:43",
-                        "location": {
-                          "file": "C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts",
-                          "column": 43,
-                          "line": 358
+                        "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: getByTestId('task-priority-dropdown')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('task-priority-dropdown')\u001b[22m\n",
+                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: getByTestId('task-priority-dropdown')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('task-priority-dropdown')\u001b[22m\n\n    at C:\\project\\jjiban\\tests\\e2e\\detail-panel.spec.ts:320:36",
+                        "matcherResult": {
+                          "message": "\u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: getByTestId('task-priority-dropdown')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('task-priority-dropdown')\u001b[22m\n",
+                          "pass": false,
+                          "actual": "hidden",
+                          "name": "toBeVisible",
+                          "expected": "visible",
+                          "log": [
+                            "  - expect.toBeVisible with timeout 5000ms",
+                            "  - waiting for getByTestId('task-priority-dropdown')"
+                          ],
+                          "timeout": 5000
                         },
-                        "snippet": "\u001b[0m \u001b[90m 356 |\u001b[39m \u001b[90m   */\u001b[39m\n \u001b[90m 357 |\u001b[39m   test(\u001b[32m'E2E-006: 존재하는 문서를 클릭하면 뷰어가 열린다'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 358 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'wbs-content'\u001b[39m)\u001b[33m.\u001b[39mwaitFor({ state\u001b[33m:\u001b[39m \u001b[32m'visible'\u001b[39m\u001b[33m,\u001b[39m timeout\u001b[33m:\u001b[39m \u001b[35m3000\u001b[39m })\n \u001b[90m     |\u001b[39m                                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 359 |\u001b[39m\n \u001b[90m 360 |\u001b[39m     \u001b[90m// Task 선택\u001b[39m\n \u001b[90m 361 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'wbs-tree-node-TSK-01-01'\u001b[39m)\u001b[33m.\u001b[39mclick()\u001b[0m"
+                        "location": {
+                          "file": "C:\\project\\jjiban\\tests\\e2e\\detail-panel.spec.ts",
+                          "column": 36,
+                          "line": 320
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 318 |\u001b[39m\n \u001b[90m 319 |\u001b[39m     \u001b[36mconst\u001b[39m priorityDropdown \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'task-priority-dropdown'\u001b[39m)\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 320 |\u001b[39m     \u001b[36mawait\u001b[39m expect(priorityDropdown)\u001b[33m.\u001b[39mtoBeVisible()\n \u001b[90m     |\u001b[39m                                    \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 321 |\u001b[39m\n \u001b[90m 322 |\u001b[39m     \u001b[90m// High 색상 확인 (앰버)\u001b[39m\n \u001b[90m 323 |\u001b[39m     \u001b[36mconst\u001b[39m priorityValue \u001b[33m=\u001b[39m priorityDropdown\u001b[33m.\u001b[39mlocator(\u001b[32m'div'\u001b[39m)\u001b[33m.\u001b[39mfirst()\u001b[0m"
                       },
                       "errors": [
                         {
                           "location": {
-                            "file": "C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts",
-                            "column": 43,
-                            "line": 358
+                            "file": "C:\\project\\jjiban\\tests\\e2e\\detail-panel.spec.ts",
+                            "column": 36,
+                            "line": 320
                           },
-                          "message": "TimeoutError: locator.waitFor: Timeout 3000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('wbs-content') to be visible\u001b[22m\n\n\n\u001b[0m \u001b[90m 356 |\u001b[39m \u001b[90m   */\u001b[39m\n \u001b[90m 357 |\u001b[39m   test(\u001b[32m'E2E-006: 존재하는 문서를 클릭하면 뷰어가 열린다'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 358 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'wbs-content'\u001b[39m)\u001b[33m.\u001b[39mwaitFor({ state\u001b[33m:\u001b[39m \u001b[32m'visible'\u001b[39m\u001b[33m,\u001b[39m timeout\u001b[33m:\u001b[39m \u001b[35m3000\u001b[39m })\n \u001b[90m     |\u001b[39m                                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 359 |\u001b[39m\n \u001b[90m 360 |\u001b[39m     \u001b[90m// Task 선택\u001b[39m\n \u001b[90m 361 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'wbs-tree-node-TSK-01-01'\u001b[39m)\u001b[33m.\u001b[39mclick()\u001b[0m\n    at C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts:358:43"
+                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: getByTestId('task-priority-dropdown')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('task-priority-dropdown')\u001b[22m\n\n\n\u001b[0m \u001b[90m 318 |\u001b[39m\n \u001b[90m 319 |\u001b[39m     \u001b[36mconst\u001b[39m priorityDropdown \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'task-priority-dropdown'\u001b[39m)\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 320 |\u001b[39m     \u001b[36mawait\u001b[39m expect(priorityDropdown)\u001b[33m.\u001b[39mtoBeVisible()\n \u001b[90m     |\u001b[39m                                    \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 321 |\u001b[39m\n \u001b[90m 322 |\u001b[39m     \u001b[90m// High 색상 확인 (앰버)\u001b[39m\n \u001b[90m 323 |\u001b[39m     \u001b[36mconst\u001b[39m priorityValue \u001b[33m=\u001b[39m priorityDropdown\u001b[33m.\u001b[39mlocator(\u001b[32m'div'\u001b[39m)\u001b[33m.\u001b[39mfirst()\u001b[0m\n    at C:\\project\\jjiban\\tests\\e2e\\detail-panel.spec.ts:320:36"
                         }
                       ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-12-15T11:34:27.935Z",
+                      "startTime": "2025-12-15T13:30:14.070Z",
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "C:\\project\\jjiban\\test-results\\artifacts\\detail-sections-TSK-05-02--82693-E-006-존재하는-문서를-클릭하면-뷰어가-열린다-chromium\\test-failed-1.png"
+                          "path": "C:\\project\\jjiban\\test-results\\artifacts\\detail-panel-TSK-05-01-Det-807f8-E2E-006-우선순위별-색상이-올바르게-적용된다-chromium\\test-failed-1.png"
                         }
                       ],
                       "errorLocation": {
-                        "file": "C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts",
-                        "column": 43,
-                        "line": 358
+                        "file": "C:\\project\\jjiban\\tests\\e2e\\detail-panel.spec.ts",
+                        "column": 36,
+                        "line": 320
                       }
                     }
                   ],
                   "status": "unexpected"
                 }
               ],
-              "id": "5500fba8151ae3ce3ad9-ef6a847baa884346bafd",
-              "file": "detail-sections.spec.ts",
-              "line": 357,
+              "id": "c8a1f1d2fb170ae26453-c1cb1c0c797288a8eb5a",
+              "file": "detail-panel.spec.ts",
+              "line": 312,
               "column": 3
             },
             {
-              "title": "E2E-007: 상태 변경 이력이 타임라인으로 표시된다",
+              "title": "E2E-007: 인라인 편집 시 낙관적 업데이트가 즉시 반영된다",
               "ok": false,
               "tags": [],
               "tests": [
@@ -599,56 +652,80 @@
                   "results": [
                     {
                       "workerIndex": 6,
-                      "status": "failed",
-                      "duration": 4094,
+                      "status": "timedOut",
+                      "duration": 60067,
                       "error": {
-                        "message": "TimeoutError: locator.waitFor: Timeout 3000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('wbs-content') to be visible\u001b[22m\n",
-                        "stack": "TimeoutError: locator.waitFor: Timeout 3000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('wbs-content') to be visible\u001b[22m\n\n    at C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts:380:43",
-                        "location": {
-                          "file": "C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts",
-                          "column": 43,
-                          "line": 380
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 378 |\u001b[39m \u001b[90m   */\u001b[39m\n \u001b[90m 379 |\u001b[39m   test(\u001b[32m'E2E-007: 상태 변경 이력이 타임라인으로 표시된다'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 380 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'wbs-content'\u001b[39m)\u001b[33m.\u001b[39mwaitFor({ state\u001b[33m:\u001b[39m \u001b[32m'visible'\u001b[39m\u001b[33m,\u001b[39m timeout\u001b[33m:\u001b[39m \u001b[35m3000\u001b[39m })\n \u001b[90m     |\u001b[39m                                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 381 |\u001b[39m\n \u001b[90m 382 |\u001b[39m     \u001b[90m// Task 선택\u001b[39m\n \u001b[90m 383 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'wbs-tree-node-TSK-01-01'\u001b[39m)\u001b[33m.\u001b[39mclick()\u001b[0m"
+                        "message": "\u001b[31mTest timeout of 60000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 60000ms exceeded.\u001b[39m"
                       },
                       "errors": [
                         {
+                          "message": "\u001b[31mTest timeout of 60000ms exceeded.\u001b[39m"
+                        },
+                        {
                           "location": {
-                            "file": "C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts",
-                            "column": 43,
-                            "line": 380
+                            "file": "C:\\project\\jjiban\\tests\\e2e\\detail-panel.spec.ts",
+                            "column": 55,
+                            "line": 335
                           },
-                          "message": "TimeoutError: locator.waitFor: Timeout 3000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('wbs-content') to be visible\u001b[22m\n\n\n\u001b[0m \u001b[90m 378 |\u001b[39m \u001b[90m   */\u001b[39m\n \u001b[90m 379 |\u001b[39m   test(\u001b[32m'E2E-007: 상태 변경 이력이 타임라인으로 표시된다'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 380 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'wbs-content'\u001b[39m)\u001b[33m.\u001b[39mwaitFor({ state\u001b[33m:\u001b[39m \u001b[32m'visible'\u001b[39m\u001b[33m,\u001b[39m timeout\u001b[33m:\u001b[39m \u001b[35m3000\u001b[39m })\n \u001b[90m     |\u001b[39m                                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 381 |\u001b[39m\n \u001b[90m 382 |\u001b[39m     \u001b[90m// Task 선택\u001b[39m\n \u001b[90m 383 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'wbs-tree-node-TSK-01-01'\u001b[39m)\u001b[33m.\u001b[39mclick()\u001b[0m\n    at C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts:380:43"
+                          "message": "Error: locator.click: Test timeout of 60000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('wbs-tree-node-TSK-05-01')\u001b[22m\n\n\n\u001b[0m \u001b[90m 333 |\u001b[39m\n \u001b[90m 334 |\u001b[39m     \u001b[90m// Task 선택\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 335 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'wbs-tree-node-TSK-05-01'\u001b[39m)\u001b[33m.\u001b[39mclick()\n \u001b[90m     |\u001b[39m                                                       \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 336 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'task-detail-panel'\u001b[39m)\u001b[33m.\u001b[39mwaitFor({ state\u001b[33m:\u001b[39m \u001b[32m'visible'\u001b[39m\u001b[33m,\u001b[39m timeout\u001b[33m:\u001b[39m \u001b[35m2000\u001b[39m })\n \u001b[90m 337 |\u001b[39m\n \u001b[90m 338 |\u001b[39m     \u001b[90m// 제목 수정\u001b[39m\u001b[0m\n    at C:\\project\\jjiban\\tests\\e2e\\detail-panel.spec.ts:335:55"
                         }
                       ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-12-15T11:34:35.724Z",
+                      "startTime": "2025-12-15T13:30:21.674Z",
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "C:\\project\\jjiban\\test-results\\artifacts\\detail-sections-TSK-05-02--cc5ee-E-007-상태-변경-이력이-타임라인으로-표시된다-chromium\\test-failed-1.png"
+                          "path": "C:\\project\\jjiban\\test-results\\artifacts\\detail-panel-TSK-05-01-Det-0e00e--인라인-편집-시-낙관적-업데이트가-즉시-반영된다-chromium\\test-failed-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts",
-                        "column": 43,
-                        "line": 380
-                      }
+                      ]
                     }
                   ],
                   "status": "unexpected"
                 }
               ],
-              "id": "5500fba8151ae3ce3ad9-e528ce75b776b8f12bc4",
-              "file": "detail-sections.spec.ts",
-              "line": 379,
+              "id": "c8a1f1d2fb170ae26453-52f759762b98a323e6e0",
+              "file": "detail-panel.spec.ts",
+              "line": 331,
               "column": 3
             },
             {
-              "title": "E2E-008: 카테고리별로 다른 워크플로우 단계가 표시된다",
+              "title": "E2E-008: Detail Panel이 스크롤 가능하다",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 7,
+                      "status": "passed",
+                      "duration": 3603,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-15T13:30:22.838Z",
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c8a1f1d2fb170ae26453-a35751a6b2c7407e112b",
+              "file": "detail-panel.spec.ts",
+              "line": 356,
+              "column": 3
+            },
+            {
+              "title": "E2E-009: Task 로드 중 Skeleton을 표시한다",
               "ok": false,
               "tags": [],
               "tests": [
@@ -662,55 +739,67 @@
                     {
                       "workerIndex": 8,
                       "status": "failed",
-                      "duration": 4906,
+                      "duration": 3634,
                       "error": {
-                        "message": "TimeoutError: locator.waitFor: Timeout 3000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('wbs-content') to be visible\u001b[22m\n",
-                        "stack": "TimeoutError: locator.waitFor: Timeout 3000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('wbs-content') to be visible\u001b[22m\n\n    at C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts:413:43",
-                        "location": {
-                          "file": "C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts",
-                          "column": 43,
-                          "line": 413
+                        "message": "Error: \u001b[31mTimed out 500ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: getByTestId('task-detail-skeleton')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 500ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('task-detail-skeleton')\u001b[22m\n",
+                        "stack": "Error: \u001b[31mTimed out 500ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: getByTestId('task-detail-skeleton')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 500ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('task-detail-skeleton')\u001b[22m\n\n    at C:\\project\\jjiban\\tests\\e2e\\detail-panel.spec.ts:396:28",
+                        "matcherResult": {
+                          "message": "\u001b[31mTimed out 500ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: getByTestId('task-detail-skeleton')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 500ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('task-detail-skeleton')\u001b[22m\n",
+                          "pass": false,
+                          "actual": "hidden",
+                          "name": "toBeVisible",
+                          "expected": "visible",
+                          "log": [
+                            "  - expect.toBeVisible with timeout 500ms",
+                            "  - waiting for getByTestId('task-detail-skeleton')"
+                          ],
+                          "timeout": 500
                         },
-                        "snippet": "\u001b[0m \u001b[90m 411 |\u001b[39m \u001b[90m   */\u001b[39m\n \u001b[90m 412 |\u001b[39m   test(\u001b[32m'E2E-008: 카테고리별로 다른 워크플로우 단계가 표시된다'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 413 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'wbs-content'\u001b[39m)\u001b[33m.\u001b[39mwaitFor({ state\u001b[33m:\u001b[39m \u001b[32m'visible'\u001b[39m\u001b[33m,\u001b[39m timeout\u001b[33m:\u001b[39m \u001b[35m3000\u001b[39m })\n \u001b[90m     |\u001b[39m                                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 414 |\u001b[39m\n \u001b[90m 415 |\u001b[39m     \u001b[90m// Development Task (6단계)\u001b[39m\n \u001b[90m 416 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'wbs-tree-node-TSK-01-01'\u001b[39m)\u001b[33m.\u001b[39mclick()\u001b[0m"
+                        "location": {
+                          "file": "C:\\project\\jjiban\\tests\\e2e\\detail-panel.spec.ts",
+                          "column": 28,
+                          "line": 396
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 394 |\u001b[39m     \u001b[90m// Skeleton 표시 확인\u001b[39m\n \u001b[90m 395 |\u001b[39m     \u001b[36mconst\u001b[39m skeleton \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'task-detail-skeleton'\u001b[39m)\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 396 |\u001b[39m     \u001b[36mawait\u001b[39m expect(skeleton)\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m500\u001b[39m })\n \u001b[90m     |\u001b[39m                            \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 397 |\u001b[39m\n \u001b[90m 398 |\u001b[39m     \u001b[90m// 로딩 완료 후 실제 콘텐츠 확인\u001b[39m\n \u001b[90m 399 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'task-basic-info-panel'\u001b[39m)\u001b[33m.\u001b[39mwaitFor({ state\u001b[33m:\u001b[39m \u001b[32m'visible'\u001b[39m\u001b[33m,\u001b[39m timeout\u001b[33m:\u001b[39m \u001b[35m3000\u001b[39m })\u001b[0m"
                       },
                       "errors": [
                         {
                           "location": {
-                            "file": "C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts",
-                            "column": 43,
-                            "line": 413
+                            "file": "C:\\project\\jjiban\\tests\\e2e\\detail-panel.spec.ts",
+                            "column": 28,
+                            "line": 396
                           },
-                          "message": "TimeoutError: locator.waitFor: Timeout 3000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('wbs-content') to be visible\u001b[22m\n\n\n\u001b[0m \u001b[90m 411 |\u001b[39m \u001b[90m   */\u001b[39m\n \u001b[90m 412 |\u001b[39m   test(\u001b[32m'E2E-008: 카테고리별로 다른 워크플로우 단계가 표시된다'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 413 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'wbs-content'\u001b[39m)\u001b[33m.\u001b[39mwaitFor({ state\u001b[33m:\u001b[39m \u001b[32m'visible'\u001b[39m\u001b[33m,\u001b[39m timeout\u001b[33m:\u001b[39m \u001b[35m3000\u001b[39m })\n \u001b[90m     |\u001b[39m                                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 414 |\u001b[39m\n \u001b[90m 415 |\u001b[39m     \u001b[90m// Development Task (6단계)\u001b[39m\n \u001b[90m 416 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'wbs-tree-node-TSK-01-01'\u001b[39m)\u001b[33m.\u001b[39mclick()\u001b[0m\n    at C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts:413:43"
+                          "message": "Error: \u001b[31mTimed out 500ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: getByTestId('task-detail-skeleton')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 500ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('task-detail-skeleton')\u001b[22m\n\n\n\u001b[0m \u001b[90m 394 |\u001b[39m     \u001b[90m// Skeleton 표시 확인\u001b[39m\n \u001b[90m 395 |\u001b[39m     \u001b[36mconst\u001b[39m skeleton \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'task-detail-skeleton'\u001b[39m)\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 396 |\u001b[39m     \u001b[36mawait\u001b[39m expect(skeleton)\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m500\u001b[39m })\n \u001b[90m     |\u001b[39m                            \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 397 |\u001b[39m\n \u001b[90m 398 |\u001b[39m     \u001b[90m// 로딩 완료 후 실제 콘텐츠 확인\u001b[39m\n \u001b[90m 399 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'task-basic-info-panel'\u001b[39m)\u001b[33m.\u001b[39mwaitFor({ state\u001b[33m:\u001b[39m \u001b[32m'visible'\u001b[39m\u001b[33m,\u001b[39m timeout\u001b[33m:\u001b[39m \u001b[35m3000\u001b[39m })\u001b[0m\n    at C:\\project\\jjiban\\tests\\e2e\\detail-panel.spec.ts:396:28"
                         }
                       ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-12-15T11:34:35.787Z",
+                      "startTime": "2025-12-15T13:30:23.320Z",
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "C:\\project\\jjiban\\test-results\\artifacts\\detail-sections-TSK-05-02--7af67-08-카테고리별로-다른-워크플로우-단계가-표시된다-chromium\\test-failed-1.png"
+                          "path": "C:\\project\\jjiban\\test-results\\artifacts\\detail-panel-TSK-05-01-Det-6e841-09-Task-로드-중-Skeleton을-표시한다-chromium\\test-failed-1.png"
                         }
                       ],
                       "errorLocation": {
-                        "file": "C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts",
-                        "column": 43,
-                        "line": 413
+                        "file": "C:\\project\\jjiban\\tests\\e2e\\detail-panel.spec.ts",
+                        "column": 28,
+                        "line": 396
                       }
                     }
                   ],
                   "status": "unexpected"
                 }
               ],
-              "id": "5500fba8151ae3ce3ad9-2e67487ad9f8b210afc5",
-              "file": "detail-sections.spec.ts",
-              "line": 412,
+              "id": "c8a1f1d2fb170ae26453-d6ca396dbb652a0313d4",
+              "file": "detail-panel.spec.ts",
+              "line": 382,
               "column": 3
             },
             {
-              "title": "E2E-PERF-01: 모든 섹션이 빠르게 렌더링된다",
+              "title": "E2E-010: 제목이 200자를 초과하면 에러 메시지를 표시한다",
               "ok": false,
               "tags": [],
               "tests": [
@@ -722,57 +811,49 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 7,
-                      "status": "failed",
-                      "duration": 4190,
+                      "workerIndex": 9,
+                      "status": "timedOut",
+                      "duration": 60066,
                       "error": {
-                        "message": "TimeoutError: locator.waitFor: Timeout 3000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('wbs-content') to be visible\u001b[22m\n",
-                        "stack": "TimeoutError: locator.waitFor: Timeout 3000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('wbs-content') to be visible\u001b[22m\n\n    at C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts:439:43",
-                        "location": {
-                          "file": "C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts",
-                          "column": 43,
-                          "line": 439
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 437 |\u001b[39m \u001b[90m   */\u001b[39m\n \u001b[90m 438 |\u001b[39m   test(\u001b[32m'E2E-PERF-01: 모든 섹션이 빠르게 렌더링된다'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 439 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'wbs-content'\u001b[39m)\u001b[33m.\u001b[39mwaitFor({ state\u001b[33m:\u001b[39m \u001b[32m'visible'\u001b[39m\u001b[33m,\u001b[39m timeout\u001b[33m:\u001b[39m \u001b[35m3000\u001b[39m })\n \u001b[90m     |\u001b[39m                                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 440 |\u001b[39m\n \u001b[90m 441 |\u001b[39m     \u001b[90m// 성능 측정 시작\u001b[39m\n \u001b[90m 442 |\u001b[39m     \u001b[36mconst\u001b[39m startTime \u001b[33m=\u001b[39m \u001b[33mDate\u001b[39m\u001b[33m.\u001b[39mnow()\u001b[0m"
+                        "message": "\u001b[31mTest timeout of 60000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 60000ms exceeded.\u001b[39m"
                       },
                       "errors": [
                         {
+                          "message": "\u001b[31mTest timeout of 60000ms exceeded.\u001b[39m"
+                        },
+                        {
                           "location": {
-                            "file": "C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts",
-                            "column": 43,
-                            "line": 439
+                            "file": "C:\\project\\jjiban\\tests\\e2e\\detail-panel.spec.ts",
+                            "column": 50,
+                            "line": 415
                           },
-                          "message": "TimeoutError: locator.waitFor: Timeout 3000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('wbs-content') to be visible\u001b[22m\n\n\n\u001b[0m \u001b[90m 437 |\u001b[39m \u001b[90m   */\u001b[39m\n \u001b[90m 438 |\u001b[39m   test(\u001b[32m'E2E-PERF-01: 모든 섹션이 빠르게 렌더링된다'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 439 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'wbs-content'\u001b[39m)\u001b[33m.\u001b[39mwaitFor({ state\u001b[33m:\u001b[39m \u001b[32m'visible'\u001b[39m\u001b[33m,\u001b[39m timeout\u001b[33m:\u001b[39m \u001b[35m3000\u001b[39m })\n \u001b[90m     |\u001b[39m                                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 440 |\u001b[39m\n \u001b[90m 441 |\u001b[39m     \u001b[90m// 성능 측정 시작\u001b[39m\n \u001b[90m 442 |\u001b[39m     \u001b[36mconst\u001b[39m startTime \u001b[33m=\u001b[39m \u001b[33mDate\u001b[39m\u001b[33m.\u001b[39mnow()\u001b[0m\n    at C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts:439:43"
+                          "message": "Error: locator.click: Test timeout of 60000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('task-title-display')\u001b[22m\n\n\n\u001b[0m \u001b[90m 413 |\u001b[39m\n \u001b[90m 414 |\u001b[39m     \u001b[90m// 제목 편집 모드\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 415 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'task-title-display'\u001b[39m)\u001b[33m.\u001b[39mclick()\n \u001b[90m     |\u001b[39m                                                  \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 416 |\u001b[39m\n \u001b[90m 417 |\u001b[39m     \u001b[90m// 201자 입력\u001b[39m\n \u001b[90m 418 |\u001b[39m     \u001b[36mconst\u001b[39m longTitle \u001b[33m=\u001b[39m \u001b[32m'A'\u001b[39m\u001b[33m.\u001b[39mrepeat(\u001b[35m201\u001b[39m)\u001b[0m\n    at C:\\project\\jjiban\\tests\\e2e\\detail-panel.spec.ts:415:50"
                         }
                       ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-12-15T11:34:35.767Z",
+                      "startTime": "2025-12-15T13:30:23.359Z",
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "C:\\project\\jjiban\\test-results\\artifacts\\detail-sections-TSK-05-02--2b3ea-2E-PERF-01-모든-섹션이-빠르게-렌더링된다-chromium\\test-failed-1.png"
+                          "path": "C:\\project\\jjiban\\test-results\\artifacts\\detail-panel-TSK-05-01-Det-49d60-제목이-200자를-초과하면-에러-메시지를-표시한다-chromium\\test-failed-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts",
-                        "column": 43,
-                        "line": 439
-                      }
+                      ]
                     }
                   ],
                   "status": "unexpected"
                 }
               ],
-              "id": "5500fba8151ae3ce3ad9-f46794aa3811e1aa268d",
-              "file": "detail-sections.spec.ts",
-              "line": 438,
+              "id": "c8a1f1d2fb170ae26453-306e240f2374c0d13c64",
+              "file": "detail-panel.spec.ts",
+              "line": 407,
               "column": 3
             },
             {
-              "title": "E2E-A11Y-01: 모든 섹션이 접근 가능하다",
+              "title": "E2E-011: 우선순위 Dropdown은 4개 옵션만 표시한다",
               "ok": false,
               "tags": [],
               "tests": [
@@ -786,55 +867,109 @@
                     {
                       "workerIndex": 10,
                       "status": "failed",
-                      "duration": 5095,
+                      "duration": 4846,
                       "error": {
-                        "message": "TimeoutError: locator.waitFor: Timeout 3000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('wbs-content') to be visible\u001b[22m\n",
-                        "stack": "TimeoutError: locator.waitFor: Timeout 3000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('wbs-content') to be visible\u001b[22m\n\n    at C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts:467:43",
+                        "message": "TimeoutError: locator.waitFor: Timeout 2000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('task-detail-panel') to be visible\u001b[22m\n",
+                        "stack": "TimeoutError: locator.waitFor: Timeout 2000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('task-detail-panel') to be visible\u001b[22m\n\n    at C:\\project\\jjiban\\tests\\e2e\\detail-panel.spec.ts:437:49",
                         "location": {
-                          "file": "C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts",
-                          "column": 43,
-                          "line": 467
+                          "file": "C:\\project\\jjiban\\tests\\e2e\\detail-panel.spec.ts",
+                          "column": 49,
+                          "line": 437
                         },
-                        "snippet": "\u001b[0m \u001b[90m 465 |\u001b[39m \u001b[90m   */\u001b[39m\n \u001b[90m 466 |\u001b[39m   test(\u001b[32m'E2E-A11Y-01: 모든 섹션이 접근 가능하다'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 467 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'wbs-content'\u001b[39m)\u001b[33m.\u001b[39mwaitFor({ state\u001b[33m:\u001b[39m \u001b[32m'visible'\u001b[39m\u001b[33m,\u001b[39m timeout\u001b[33m:\u001b[39m \u001b[35m3000\u001b[39m })\n \u001b[90m     |\u001b[39m                                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 468 |\u001b[39m\n \u001b[90m 469 |\u001b[39m     \u001b[90m// Task 선택\u001b[39m\n \u001b[90m 470 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'wbs-tree-node-TSK-01-01'\u001b[39m)\u001b[33m.\u001b[39mclick()\u001b[0m"
+                        "snippet": "\u001b[0m \u001b[90m 435 |\u001b[39m     \u001b[90m// Task 선택\u001b[39m\n \u001b[90m 436 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'wbs-tree-node-TSK-05-01'\u001b[39m)\u001b[33m.\u001b[39mclick()\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 437 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'task-detail-panel'\u001b[39m)\u001b[33m.\u001b[39mwaitFor({ state\u001b[33m:\u001b[39m \u001b[32m'visible'\u001b[39m\u001b[33m,\u001b[39m timeout\u001b[33m:\u001b[39m \u001b[35m2000\u001b[39m })\n \u001b[90m     |\u001b[39m                                                 \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 438 |\u001b[39m\n \u001b[90m 439 |\u001b[39m     \u001b[90m// Dropdown 열기\u001b[39m\n \u001b[90m 440 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'task-priority-dropdown'\u001b[39m)\u001b[33m.\u001b[39mclick()\u001b[0m"
                       },
                       "errors": [
                         {
                           "location": {
-                            "file": "C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts",
-                            "column": 43,
-                            "line": 467
+                            "file": "C:\\project\\jjiban\\tests\\e2e\\detail-panel.spec.ts",
+                            "column": 49,
+                            "line": 437
                           },
-                          "message": "TimeoutError: locator.waitFor: Timeout 3000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('wbs-content') to be visible\u001b[22m\n\n\n\u001b[0m \u001b[90m 465 |\u001b[39m \u001b[90m   */\u001b[39m\n \u001b[90m 466 |\u001b[39m   test(\u001b[32m'E2E-A11Y-01: 모든 섹션이 접근 가능하다'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 467 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'wbs-content'\u001b[39m)\u001b[33m.\u001b[39mwaitFor({ state\u001b[33m:\u001b[39m \u001b[32m'visible'\u001b[39m\u001b[33m,\u001b[39m timeout\u001b[33m:\u001b[39m \u001b[35m3000\u001b[39m })\n \u001b[90m     |\u001b[39m                                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 468 |\u001b[39m\n \u001b[90m 469 |\u001b[39m     \u001b[90m// Task 선택\u001b[39m\n \u001b[90m 470 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'wbs-tree-node-TSK-01-01'\u001b[39m)\u001b[33m.\u001b[39mclick()\u001b[0m\n    at C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts:467:43"
+                          "message": "TimeoutError: locator.waitFor: Timeout 2000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('task-detail-panel') to be visible\u001b[22m\n\n\n\u001b[0m \u001b[90m 435 |\u001b[39m     \u001b[90m// Task 선택\u001b[39m\n \u001b[90m 436 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'wbs-tree-node-TSK-05-01'\u001b[39m)\u001b[33m.\u001b[39mclick()\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 437 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'task-detail-panel'\u001b[39m)\u001b[33m.\u001b[39mwaitFor({ state\u001b[33m:\u001b[39m \u001b[32m'visible'\u001b[39m\u001b[33m,\u001b[39m timeout\u001b[33m:\u001b[39m \u001b[35m2000\u001b[39m })\n \u001b[90m     |\u001b[39m                                                 \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 438 |\u001b[39m\n \u001b[90m 439 |\u001b[39m     \u001b[90m// Dropdown 열기\u001b[39m\n \u001b[90m 440 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'task-priority-dropdown'\u001b[39m)\u001b[33m.\u001b[39mclick()\u001b[0m\n    at C:\\project\\jjiban\\tests\\e2e\\detail-panel.spec.ts:437:49"
                         }
                       ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-12-15T11:34:35.811Z",
+                      "startTime": "2025-12-15T13:30:23.502Z",
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "C:\\project\\jjiban\\test-results\\artifacts\\detail-sections-TSK-05-02--e5bae--E2E-A11Y-01-모든-섹션이-접근-가능하다-chromium\\test-failed-1.png"
+                          "path": "C:\\project\\jjiban\\test-results\\artifacts\\detail-panel-TSK-05-01-Det-482d3--우선순위-Dropdown은-4개-옵션만-표시한다-chromium\\test-failed-1.png"
                         }
                       ],
                       "errorLocation": {
-                        "file": "C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts",
-                        "column": 43,
-                        "line": 467
+                        "file": "C:\\project\\jjiban\\tests\\e2e\\detail-panel.spec.ts",
+                        "column": 49,
+                        "line": 437
                       }
                     }
                   ],
                   "status": "unexpected"
                 }
               ],
-              "id": "5500fba8151ae3ce3ad9-c23eb6577c9377b12b83",
-              "file": "detail-sections.spec.ts",
-              "line": 466,
+              "id": "c8a1f1d2fb170ae26453-b146ce3ee22c13cb317d",
+              "file": "detail-panel.spec.ts",
+              "line": 432,
               "column": 3
             },
             {
-              "title": "E2E-ERROR-01: 요구사항 편집 실패 시 롤백된다",
+              "title": "E2E-013: API 실패 시 이전 값으로 롤백한다",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 7,
+                      "status": "timedOut",
+                      "duration": 60064,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 60000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 60000ms exceeded.\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "message": "\u001b[31mTest timeout of 60000ms exceeded.\u001b[39m"
+                        },
+                        {
+                          "location": {
+                            "file": "C:\\project\\jjiban\\tests\\e2e\\detail-panel.spec.ts",
+                            "column": 55,
+                            "line": 477
+                          },
+                          "message": "Error: locator.click: Test timeout of 60000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('wbs-tree-node-TSK-05-01')\u001b[22m\n\n\n\u001b[0m \u001b[90m 475 |\u001b[39m\n \u001b[90m 476 |\u001b[39m     \u001b[90m// Task 선택\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 477 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'wbs-tree-node-TSK-05-01'\u001b[39m)\u001b[33m.\u001b[39mclick()\n \u001b[90m     |\u001b[39m                                                       \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 478 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'task-detail-panel'\u001b[39m)\u001b[33m.\u001b[39mwaitFor({ state\u001b[33m:\u001b[39m \u001b[32m'visible'\u001b[39m\u001b[33m,\u001b[39m timeout\u001b[33m:\u001b[39m \u001b[35m2000\u001b[39m })\n \u001b[90m 479 |\u001b[39m\n \u001b[90m 480 |\u001b[39m     \u001b[90m// 이전 제목 백업\u001b[39m\u001b[0m\n    at C:\\project\\jjiban\\tests\\e2e\\detail-panel.spec.ts:477:55"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-15T13:30:26.612Z",
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\project\\jjiban\\test-results\\artifacts\\detail-panel-TSK-05-01-Det-cfacc-2E-013-API-실패-시-이전-값으로-롤백한다-chromium\\test-failed-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "c8a1f1d2fb170ae26453-c85dabb622a30a664828",
+              "file": "detail-panel.spec.ts",
+              "line": 457,
+              "column": 3
+            },
+            {
+              "title": "E2E-014: 카테고리는 편집할 수 없다",
               "ok": false,
               "tags": [],
               "tests": [
@@ -847,114 +982,44 @@
                   "results": [
                     {
                       "workerIndex": 11,
-                      "status": "failed",
-                      "duration": 5007,
+                      "status": "timedOut",
+                      "duration": 60074,
                       "error": {
-                        "message": "TimeoutError: locator.waitFor: Timeout 3000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('wbs-content') to be visible\u001b[22m\n",
-                        "stack": "TimeoutError: locator.waitFor: Timeout 3000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('wbs-content') to be visible\u001b[22m\n\n    at C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts:510:43",
-                        "location": {
-                          "file": "C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts",
-                          "column": 43,
-                          "line": 510
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 508 |\u001b[39m     })\n \u001b[90m 509 |\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 510 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'wbs-content'\u001b[39m)\u001b[33m.\u001b[39mwaitFor({ state\u001b[33m:\u001b[39m \u001b[32m'visible'\u001b[39m\u001b[33m,\u001b[39m timeout\u001b[33m:\u001b[39m \u001b[35m3000\u001b[39m })\n \u001b[90m     |\u001b[39m                                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 511 |\u001b[39m\n \u001b[90m 512 |\u001b[39m     \u001b[90m// Task 선택\u001b[39m\n \u001b[90m 513 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'wbs-tree-node-TSK-01-01'\u001b[39m)\u001b[33m.\u001b[39mclick()\u001b[0m"
+                        "message": "\u001b[31mTest timeout of 60000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 60000ms exceeded.\u001b[39m"
                       },
                       "errors": [
                         {
+                          "message": "\u001b[31mTest timeout of 60000ms exceeded.\u001b[39m"
+                        },
+                        {
                           "location": {
-                            "file": "C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts",
-                            "column": 43,
-                            "line": 510
+                            "file": "C:\\project\\jjiban\\tests\\e2e\\detail-panel.spec.ts",
+                            "column": 55,
+                            "line": 505
                           },
-                          "message": "TimeoutError: locator.waitFor: Timeout 3000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('wbs-content') to be visible\u001b[22m\n\n\n\u001b[0m \u001b[90m 508 |\u001b[39m     })\n \u001b[90m 509 |\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 510 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'wbs-content'\u001b[39m)\u001b[33m.\u001b[39mwaitFor({ state\u001b[33m:\u001b[39m \u001b[32m'visible'\u001b[39m\u001b[33m,\u001b[39m timeout\u001b[33m:\u001b[39m \u001b[35m3000\u001b[39m })\n \u001b[90m     |\u001b[39m                                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 511 |\u001b[39m\n \u001b[90m 512 |\u001b[39m     \u001b[90m// Task 선택\u001b[39m\n \u001b[90m 513 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'wbs-tree-node-TSK-01-01'\u001b[39m)\u001b[33m.\u001b[39mclick()\u001b[0m\n    at C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts:510:43"
+                          "message": "Error: locator.click: Test timeout of 60000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('wbs-tree-node-TSK-05-01')\u001b[22m\n\n\n\u001b[0m \u001b[90m 503 |\u001b[39m\n \u001b[90m 504 |\u001b[39m     \u001b[90m// Task 선택\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 505 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'wbs-tree-node-TSK-05-01'\u001b[39m)\u001b[33m.\u001b[39mclick()\n \u001b[90m     |\u001b[39m                                                       \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 506 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'task-detail-panel'\u001b[39m)\u001b[33m.\u001b[39mwaitFor({ state\u001b[33m:\u001b[39m \u001b[32m'visible'\u001b[39m\u001b[33m,\u001b[39m timeout\u001b[33m:\u001b[39m \u001b[35m2000\u001b[39m })\n \u001b[90m 507 |\u001b[39m\n \u001b[90m 508 |\u001b[39m     \u001b[90m// 카테고리 Tag 확인\u001b[39m\u001b[0m\n    at C:\\project\\jjiban\\tests\\e2e\\detail-panel.spec.ts:505:55"
                         }
                       ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-12-15T11:34:35.836Z",
+                      "startTime": "2025-12-15T13:30:27.997Z",
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "C:\\project\\jjiban\\test-results\\artifacts\\detail-sections-TSK-05-02--06bd2--ERROR-01-요구사항-편집-실패-시-롤백된다-chromium\\test-failed-1.png"
+                          "path": "C:\\project\\jjiban\\test-results\\artifacts\\detail-panel-TSK-05-01-Det-c5036-ture-E2E-014-카테고리는-편집할-수-없다-chromium\\test-failed-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts",
-                        "column": 43,
-                        "line": 510
-                      }
+                      ]
                     }
                   ],
                   "status": "unexpected"
                 }
               ],
-              "id": "5500fba8151ae3ce3ad9-38cf54dad02f9ee64ef9",
-              "file": "detail-sections.spec.ts",
-              "line": 493,
-              "column": 3
-            },
-            {
-              "title": "E2E-INTEGRATION-01: WBS 페이지에서 Task 선택 시 모든 섹션이 표시된다",
-              "ok": false,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 9,
-                      "status": "failed",
-                      "duration": 5106,
-                      "error": {
-                        "message": "TimeoutError: locator.waitFor: Timeout 3000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('wbs-content') to be visible\u001b[22m\n",
-                        "stack": "TimeoutError: locator.waitFor: Timeout 3000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('wbs-content') to be visible\u001b[22m\n\n    at C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts:538:43",
-                        "location": {
-                          "file": "C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts",
-                          "column": 43,
-                          "line": 538
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 536 |\u001b[39m \u001b[90m   */\u001b[39m\n \u001b[90m 537 |\u001b[39m   test(\u001b[32m'E2E-INTEGRATION-01: WBS 페이지에서 Task 선택 시 모든 섹션이 표시된다'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 538 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'wbs-content'\u001b[39m)\u001b[33m.\u001b[39mwaitFor({ state\u001b[33m:\u001b[39m \u001b[32m'visible'\u001b[39m\u001b[33m,\u001b[39m timeout\u001b[33m:\u001b[39m \u001b[35m3000\u001b[39m })\n \u001b[90m     |\u001b[39m                                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 539 |\u001b[39m\n \u001b[90m 540 |\u001b[39m     \u001b[90m// Task 선택\u001b[39m\n \u001b[90m 541 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'wbs-tree-node-TSK-01-01'\u001b[39m)\u001b[33m.\u001b[39mclick()\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts",
-                            "column": 43,
-                            "line": 538
-                          },
-                          "message": "TimeoutError: locator.waitFor: Timeout 3000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('wbs-content') to be visible\u001b[22m\n\n\n\u001b[0m \u001b[90m 536 |\u001b[39m \u001b[90m   */\u001b[39m\n \u001b[90m 537 |\u001b[39m   test(\u001b[32m'E2E-INTEGRATION-01: WBS 페이지에서 Task 선택 시 모든 섹션이 표시된다'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 538 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'wbs-content'\u001b[39m)\u001b[33m.\u001b[39mwaitFor({ state\u001b[33m:\u001b[39m \u001b[32m'visible'\u001b[39m\u001b[33m,\u001b[39m timeout\u001b[33m:\u001b[39m \u001b[35m3000\u001b[39m })\n \u001b[90m     |\u001b[39m                                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 539 |\u001b[39m\n \u001b[90m 540 |\u001b[39m     \u001b[90m// Task 선택\u001b[39m\n \u001b[90m 541 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'wbs-tree-node-TSK-01-01'\u001b[39m)\u001b[33m.\u001b[39mclick()\u001b[0m\n    at C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts:538:43"
-                        }
-                      ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-12-15T11:34:35.797Z",
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\project\\jjiban\\test-results\\artifacts\\detail-sections-TSK-05-02--a6ebc-페이지에서-Task-선택-시-모든-섹션이-표시된다-chromium\\test-failed-1.png"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\project\\jjiban\\tests\\e2e\\detail-sections.spec.ts",
-                        "column": 43,
-                        "line": 538
-                      }
-                    }
-                  ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "5500fba8151ae3ce3ad9-24a822fca367cd40f416",
-              "file": "detail-sections.spec.ts",
-              "line": 537,
+              "id": "c8a1f1d2fb170ae26453-0279f26af353c71cbf64",
+              "file": "detail-panel.spec.ts",
+              "line": 501,
               "column": 3
             }
           ]
@@ -964,9 +1029,9 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2025-12-15T11:34:12.116Z",
-    "duration": 29395.736,
-    "expected": 0,
+    "startTime": "2025-12-15T13:30:12.593Z",
+    "duration": 75779.84300000001,
+    "expected": 1,
     "skipped": 0,
     "unexpected": 12,
     "flaky": 0

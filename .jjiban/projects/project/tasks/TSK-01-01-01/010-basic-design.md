@@ -1,3 +1,0 @@
-# Basic Design
-
-Test content

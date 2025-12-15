@@ -460,7 +460,7 @@
 ### TSK-05-01: Detail Panel Structure
 - category: development
 - domain: frontend
-- status: [dd]
+- status: [im]
 - priority: high
 - assignee: -
 - schedule: 2026-01-13 ~ 2026-01-15
@@ -476,7 +476,7 @@
 ### TSK-05-02: Detail Sections
 - category: development
 - domain: frontend
-- status: [dd]
+- status: [im]
 - priority: medium
 - assignee: -
 - schedule: 2026-01-15 ~ 2026-01-18
@@ -493,7 +493,7 @@
 ### TSK-05-03: Detail Actions
 - category: development
 - domain: frontend
-- status: [dd]
+- status: [im]
 - priority: high
 - assignee: -
 - schedule: 2026-01-18 ~ 2026-01-20
@@ -508,7 +508,7 @@
 ### TSK-05-04: Document Viewer
 - category: development
 - domain: frontend
-- status: [dd]
+- status: [im]
 - priority: medium
 - assignee: -
 - schedule: 2026-01-20 ~ 2026-01-22
@@ -548,7 +548,7 @@
 ### TSK-06-02: Testing
 - category: development
 - domain: test
-- status: [dd]
+- status: [im]
 - priority: medium
 - assignee: -
 - schedule: 2026-01-23 ~ 2026-01-25
@@ -571,7 +571,7 @@
 ### TSK-07-01: Workflow Orchestrator CLI 구현
 - category: development
 - domain: backend
-- status: [ ]
+- status: basic-design [bd]
 - priority: high
 - assignee: -
 - schedule: 2026-01-25 ~ 2026-02-05
