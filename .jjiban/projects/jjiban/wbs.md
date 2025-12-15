@@ -532,7 +532,7 @@
 ### TSK-06-01: Integration
 - category: development
 - domain: fullstack
-- status: [im]
+- status: [ts]
 - priority: high
 - assignee: -
 - schedule: 2026-01-20 ~ 2026-01-23
