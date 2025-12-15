@@ -7,7 +7,32 @@
  */
 
 import type { TaskCategory } from '../../../types';
+import type { Workflow } from '../../../types/settings';
 import { getWorkflows } from '../settings';
+import { createNotFoundError } from '../errors/standardError';
+
+/**
+ * 카테고리별 워크플로우 조회 (공통 헬퍼)
+ * @param category - Task 카테고리
+ * @param throwOnNotFound - 없을 때 에러 발생 여부 (기본: false)
+ * @returns WorkflowConfig 또는 null
+ * @throws WORKFLOW_NOT_FOUND (throwOnNotFound가 true일 때)
+ */
+async function getWorkflowByCategory(
+  category: TaskCategory,
+  throwOnNotFound = false
+): Promise<Workflow | null> {
+  const workflows = await getWorkflows();
+  const workflow = workflows.workflows.find((wf) => wf.id === category);
+
+  if (!workflow && throwOnNotFound) {
+    throw createNotFoundError(
+      `카테고리 '${category}'에 해당하는 워크플로우를 찾을 수 없습니다`
+    );
+  }
+
+  return workflow || null;
+}
 
 /**
  * 상태 코드를 상태명으로 변환
@@ -19,8 +44,7 @@ export async function statusCodeToName(
   category: TaskCategory,
   statusCode: string
 ): Promise<string | null> {
-  const workflows = await getWorkflows();
-  const workflow = workflows.workflows.find((wf) => wf.id === category);
+  const workflow = await getWorkflowByCategory(category);
 
   if (!workflow) {
     return null;
@@ -55,8 +79,7 @@ export async function nameToStatusCode(
   category: TaskCategory,
   stateName: string
 ): Promise<string> {
-  const workflows = await getWorkflows();
-  const workflow = workflows.workflows.find((wf) => wf.id === category);
+  const workflow = await getWorkflowByCategory(category);
 
   if (!workflow) {
     return '[ ]';
@@ -84,8 +107,7 @@ export async function nameToStatusCode(
 export async function getAllStateMappings(
   category: TaskCategory
 ): Promise<Record<string, string>> {
-  const workflows = await getWorkflows();
-  const workflow = workflows.workflows.find((wf) => wf.id === category);
+  const workflow = await getWorkflowByCategory(category);
 
   if (!workflow) {
     return {};

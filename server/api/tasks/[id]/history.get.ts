@@ -35,8 +35,15 @@ export default defineEventHandler(async (event) => {
     );
   }
 
-  // 이력 조회
-  const history = await queryHistory(taskId, {
+  if (offset < 0) {
+    throw createBadRequestError(
+      'INVALID_PARAMETER',
+      'offset은 0 이상이어야 합니다'
+    );
+  }
+
+  // 이력 조회 (queryHistory가 이제 QueryHistoryResult 반환)
+  const result = await queryHistory(taskId, {
     action,
     limit,
     offset,
@@ -44,8 +51,8 @@ export default defineEventHandler(async (event) => {
 
   return {
     taskId,
-    history,
-    total: history.length,
+    history: result.items,
+    total: result.totalCount,
     limit,
     offset,
   };

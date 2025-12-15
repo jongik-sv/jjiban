@@ -22,7 +22,16 @@ export interface Project {
 export interface ProjectSummary {
   id: string
   name: string
-  status: string
+  path: string
+  status: 'active' | 'archived'
+  wbsDepth: 3 | 4
+  createdAt: string
+}
+
+export interface ProjectListResponse {
+  projects: ProjectSummary[]
+  defaultProject: string | null
+  total: number
 }
 
 export interface CreateProjectInput {

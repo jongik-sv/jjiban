@@ -43,8 +43,9 @@
 | 설계리뷰 | `/wf:review` | `refactoring-expert` | 설계 품질 분석, 개선점 도출 |
 | 구현(백엔드) | `/wf:build` | `backend-architect` | API 설계, 데이터베이스, 서버 로직 구현 |
 | 구현(프론트) | `/wf:build` | `frontend-architect` | UI 컴포넌트, 화면 구현, 접근성 |
+| 단위테스트 | `/wf:test` | `quality-engineer` | TDD 단위테스트 및 E2E 테스트 실행 |
 | 코드리뷰 | `/wf:audit` | `refactoring-expert` | 코드 품질 분석, 기술 부채 식별 |
-| 테스트 | `/wf:verify` | `quality-engineer` | 테스트 전략 설계, 통합 테스트 실행 |
+| 통합테스트 | `/wf:verify` | `quality-engineer` | 테스트 전략 설계, 통합 테스트 실행 |
 | 인프라 | `/wf:build` (infra) | `devops-architect` | CI/CD, 배포, 모니터링 설정 |
 
 ### Subagent 설정 파일 위치
@@ -75,6 +76,7 @@
   ↓ /wf:review (1회)   → refactoring-expert (자동 포함)
   ↓ /wf:apply          → (메인 에이전트)
   ↓ /wf:build          → backend-architect + frontend-architect (병렬)
+  ↓ /wf:test           → quality-engineer (TDD 단위테스트)
 [im] 구현
   ↓ /wf:audit (1회)    → refactoring-expert (자동 포함)
   ↓ /wf:patch          → (메인 에이전트)
@@ -91,6 +93,7 @@
   ↓ /wf:start          → requirements-analyst
 [an] 분석
   ↓ /wf:fix            → backend-architect / frontend-architect
+  ↓ /wf:test           → quality-engineer (TDD 단위테스트)
 [fx] 수정
   ↓ /wf:audit (1회)    → refactoring-expert (자동 포함)
   ↓ /wf:patch          → (메인 에이전트)
@@ -151,10 +154,21 @@ async function executeAutoWorkflow(taskId) {
       await executeMainAgentAction(mapping.action);  // done
     }
 
-    // 3. 상태 업데이트 확인
+    // 3. postActions 실행 (test)
+    if (mapping.postActions) {
+      for (const postAction of mapping.postActions) {
+        if (postAction.subagent) {
+          await Task({ subagent_type: postAction.subagent, ... });
+        } else {
+          await executeMainAgentAction(postAction.action);
+        }
+      }
+    }
+
+    // 4. 상태 업데이트 확인
     currentStatus = mapping.next;
 
-    // 4. 다음 루프로 진행 (currentStatus가 [xx]가 아니면 계속)
+    // 5. 다음 루프로 진행 (currentStatus가 [xx]가 아니면 계속)
   }
 
   // 완료
@@ -173,8 +187,10 @@ Loop 1: [dd] → [im]
   ├── preActions:
   │   ├── review (refactoring-expert) → 021-design-review-claude-1.md
   │   └── apply (메인) → 리뷰 반영, 파일명에 (적용완료) 추가
-  └── mainAction:
-      └── build (backend-architect) → 030-implementation.md, 코드 구현
+  ├── mainAction:
+  │   └── build (backend-architect) → 030-implementation.md, 코드 구현
+  └── postActions:
+      └── test (quality-engineer) → TDD 단위테스트 및 E2E 테스트 실행
 
 Loop 2: [im] → [ts]
   ├── preActions:
@@ -272,6 +288,9 @@ const subagentMapping = {
       preActions: [
         { action: 'review', subagent: 'refactoring-expert' },
         { action: 'apply', subagent: null }  // 메인 에이전트
+      ],
+      postActions: [
+        { action: 'test', subagent: 'quality-engineer' }  // TDD 단위테스트
       ]
     },
     '[im]': {
@@ -298,7 +317,10 @@ const subagentMapping = {
     '[an]': {
       action: 'fix',
       subagent: ['backend-architect', 'frontend-architect'],
-      next: '[fx]'
+      next: '[fx]',
+      postActions: [
+        { action: 'test', subagent: 'quality-engineer' }  // TDD 단위테스트
+      ]
     },
     '[fx]': {
       action: 'verify',
@@ -604,9 +626,14 @@ const postValidation = {
   'build': {
     requiredDocs: ['030-implementation.md'],
     statusCheck: '[im]',
+    subagent: ['backend-architect', 'frontend-architect']
+  },
+  'test': {
+    requiredDocs: [],
+    statusCheck: '[im]',
     testCoverage: 80,
     e2ePassRate: 100,
-    subagent: ['backend-architect', 'frontend-architect']
+    subagent: 'quality-engineer'
   },
   'verify': {
     requiredDocs: ['070-integration-test.md'],

@@ -4,7 +4,7 @@
  * Task: TSK-01-01-03
  */
 
-import type { Project, ProjectSummary, CreateProjectInput } from '~/types/store'
+import type { Project, ProjectSummary, CreateProjectInput, ProjectListResponse } from '~/types/store'
 
 export const useProjectStore = defineStore('project', () => {
   // ============================================================
@@ -33,8 +33,8 @@ export const useProjectStore = defineStore('project', () => {
     loading.value = true
     error.value = null
     try {
-      const data = await $fetch<ProjectSummary[]>('/api/projects')
-      projects.value = data
+      const data = await $fetch<ProjectListResponse>('/api/projects')
+      projects.value = data.projects
     } catch (e) {
       error.value = e instanceof Error ? e.message : 'Failed to fetch projects'
       throw e

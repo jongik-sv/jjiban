@@ -11,7 +11,7 @@
     "grepInvert": null,
     "maxFailures": 0,
     "metadata": {
-      "actualWorkers": 4
+      "actualWorkers": 6
     },
     "preserveOutput": "always",
     "reporter": [
@@ -63,7 +63,126 @@
       "reuseExistingServer": true,
       "timeout": 120000,
       "stdout": "pipe",
-      "stderr": "pipe"
+      "stderr": "pipe",
+      "env": {
+        "ACLOCAL_PATH": "C:\\Program Files\\Git\\mingw64\\share\\aclocal;C:\\Program Files\\Git\\usr\\share\\aclocal",
+        "ALLUSERSPROFILE": "C:\\ProgramData",
+        "ANTIGRAVITY_CLI_ALIAS": "agy",
+        "APPDATA": "C:\\Users\\USER1\\AppData\\Roaming",
+        "CHROME_CRASHPAD_PIPE_NAME": "\\\\.\\pipe\\crashpad_5320_FADUMJZPBYDKLASH",
+        "CLAUDECODE": "1",
+        "CLAUDE_CODE_ENTRYPOINT": "cli",
+        "CLAUDE_CODE_SESSION_ID": "51372469-2660-430c-91a0-412dd9c275f3",
+        "COLOR": "0",
+        "COLORTERM": "truecolor",
+        "COMMONPROGRAMFILES": "C:\\Program Files\\Common Files",
+        "CommonProgramFiles(x86)": "C:\\Program Files (x86)\\Common Files",
+        "CommonProgramW6432": "C:\\Program Files\\Common Files",
+        "COMPUTERNAME": "ODT-2201-0002",
+        "COMSPEC": "C:\\Windows\\system32\\cmd.exe",
+        "CONFIG_SITE": "C:/Program Files/Git/etc/config.site",
+        "COREPACK_ENABLE_AUTO_PIN": "0",
+        "DISPLAY": "needs-to-be-defined",
+        "DriverData": "C:\\Windows\\System32\\Drivers\\DriverData",
+        "EDITOR": "C:\\Windows\\notepad.exe",
+        "ENABLE_EXPERIMENTAL_MCP_CLI": "true ",
+        "EXEPATH": "C:\\Program Files\\Git\\bin",
+        "FPS_BROWSER_APP_PROFILE_STRING": "Internet Explorer",
+        "FPS_BROWSER_USER_PROFILE_STRING": "Default",
+        "GIT_ASKPASS": "c:\\Users\\USER1\\AppData\\Local\\Programs\\Antigravity\\resources\\app\\extensions\\git\\dist\\askpass.sh",
+        "GIT_EDITOR": "true",
+        "GOPATH": "C:\\Users\\USER1\\go",
+        "HOME": "C:\\Users\\USER1",
+        "HOMEDRIVE": "C:",
+        "HOMEPATH": "\\Users\\USER1",
+        "HOSTNAME": "ODT-2201-0002",
+        "INFOPATH": "C:\\Program Files\\Git\\usr\\local\\info;C:\\Program Files\\Git\\usr\\share\\info;C:\\Program Files\\Git\\usr\\info;C:\\Program Files\\Git\\share\\info",
+        "INIT_CWD": "C:\\project\\jjiban",
+        "IntelliJ IDEA": "C:\\Program Files\\JetBrains\\IntelliJ IDEA 2022.1.1\\bin;",
+        "JAVA_HOME": "C:\\Program Files\\Zulu\\zulu-18\\",
+        "LANG": "en_US.UTF-8",
+        "LOCALAPPDATA": "C:\\Users\\USER1\\AppData\\Local",
+        "LOGONSERVER": "\\\\ODT-2201-0002",
+        "MANPATH": "C:\\Program Files\\Git\\mingw64\\local\\man;C:\\Program Files\\Git\\mingw64\\share\\man;C:\\Program Files\\Git\\usr\\local\\man;C:\\Program Files\\Git\\usr\\share\\man;C:\\Program Files\\Git\\usr\\man;C:\\Program Files\\Git\\share\\man",
+        "MINGW_CHOST": "x86_64-w64-mingw32",
+        "MINGW_PACKAGE_PREFIX": "mingw-w64-x86_64",
+        "MINGW_PREFIX": "C:/Program Files/Git/mingw64",
+        "MSYSTEM": "MINGW64",
+        "MSYSTEM_CARCH": "x86_64",
+        "MSYSTEM_CHOST": "x86_64-w64-mingw32",
+        "MSYSTEM_PREFIX": "C:/Program Files/Git/mingw64",
+        "NODE": "C:\\Program Files\\nodejs\\node.exe",
+        "NoDefaultCurrentDirectoryInExePath": "1",
+        "npm_command": "run",
+        "npm_config_cache": "C:\\Users\\USER1\\AppData\\Local\\npm-cache",
+        "npm_config_globalconfig": "C:\\Users\\USER1\\AppData\\Roaming\\npm\\etc\\npmrc",
+        "npm_config_global_prefix": "C:\\Users\\USER1\\AppData\\Roaming\\npm",
+        "npm_config_init_module": "C:\\Users\\USER1\\.npm-init.js",
+        "npm_config_local_prefix": "C:\\project\\jjiban",
+        "npm_config_node_gyp": "C:\\Users\\USER1\\AppData\\Roaming\\npm\\node_modules\\npm\\node_modules\\node-gyp\\bin\\node-gyp.js",
+        "npm_config_noproxy": "",
+        "npm_config_npm_version": "11.4.2",
+        "npm_config_prefix": "C:\\Users\\USER1\\AppData\\Roaming\\npm",
+        "npm_config_userconfig": "C:\\Users\\USER1\\.npmrc",
+        "npm_config_user_agent": "npm/11.4.2 node/v22.19.0 win32 x64 workspaces/false",
+        "npm_execpath": "C:\\Users\\USER1\\AppData\\Roaming\\npm\\node_modules\\npm\\bin\\npm-cli.js",
+        "npm_lifecycle_event": "test:e2e",
+        "npm_lifecycle_script": "playwright test",
+        "npm_node_execpath": "C:\\Program Files\\nodejs\\node.exe",
+        "npm_package_engines_node": ">=20.0.0",
+        "npm_package_json": "C:\\project\\jjiban\\package.json",
+        "npm_package_name": "jjiban",
+        "npm_package_version": "0.1.0",
+        "NUMBER_OF_PROCESSORS": "12",
+        "OLDPWD": "C:/project/jjiban",
+        "OneDrive": "C:\\Users\\USER1\\OneDrive",
+        "ORIGINAL_PATH": "C:\\Program Files\\Git\\mingw64\\bin;C:\\Program Files\\Git\\usr\\bin;C:\\Users\\USER1\\bin;C:\\Program Files\\Common Files\\Oracle\\Java\\javapath;C:\\app\\USER1\\product\\23ai\\dbhomeFree\\bin;C:\\oraclexe\\app\\oracle\\product\\11.2.0\\server\\bin;C:\\Program Files\\Zulu\\zulu-18\\bin;C:\\Windows\\system32;C:\\Windows;C:\\Windows\\System32\\Wbem;C:\\Windows\\System32\\WindowsPowerShell\\v1.0;C:\\Windows\\System32\\OpenSSH;C:\\Program Files\\Bandizip;C:\\Program Files\\dotnet;%TB_HOME%\\bin;%TB_HOME%\\client\\bin;C:\\Program Files\\Git\\cmd;C:\\Program Files\\Microsoft VS Code\\bin;C:\\Program Files\\Go\\bin;C:\\Program Files\\nodejs;C:\\bin;C:\\Program Files\\Git\\usr\\bin;C:\\Users\\USER1\\AppData\\Local\\Programs\\Python\\Python313\\Scripts;C:\\Users\\USER1\\AppData\\Local\\Programs\\Python\\Python313;C:\\Users\\USER1\\AppData\\Local\\Programs\\Python\\Launcher;C:\\Users\\USER1\\AppData\\Local\\Microsoft\\WindowsApps;C:\\Program Files\\JetBrains\\IntelliJ IDEA 2022.1.1\\bin;C:\\Users\\USER1\\go\\bin;C:\\Users\\USER1\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\USER1\\AppData\\Roaming\\npm;C:\\Users\\USER1\\AppData\\Local\\Programs\\Kiro\\bin;C:\\Users\\USER1\\AppData\\Local\\Microsoft\\WinGet\\Packages\\jqlang.jq_Microsoft.Winget.Source_8wekyb3d8bbwe;C:\\Users\\USER1\\AppData\\Local\\Programs\\Antigravity\\bin",
+        "ORIGINAL_TEMP": "C:/Users/USER1/AppData/Local/Temp",
+        "ORIGINAL_TMP": "C:/Users/USER1/AppData/Local/Temp",
+        "ORIGINAL_XDG_CURRENT_DESKTOP": "undefined",
+        "OS": "Windows_NT",
+        "OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE": "delta",
+        "PATH": "C:\\project\\jjiban\\node_modules\\.bin;C:\\project\\node_modules\\.bin;C:\\node_modules\\.bin;C:\\Users\\USER1\\AppData\\Roaming\\npm\\node_modules\\npm\\node_modules\\@npmcli\\run-script\\lib\\node-gyp-bin;C:\\Users\\USER1\\bin;C:\\Program Files\\Git\\mingw64\\bin;C:\\Program Files\\Git\\usr\\local\\bin;C:\\Program Files\\Git\\usr\\bin;C:\\Program Files\\Git\\usr\\bin;C:\\Program Files\\Git\\mingw64\\bin;C:\\Program Files\\Git\\usr\\bin;C:\\Users\\USER1\\bin;C:\\Program Files\\Common Files\\Oracle\\Java\\javapath;C:\\app\\USER1\\product\\23ai\\dbhomeFree\\bin;C:\\oraclexe\\app\\oracle\\product\\11.2.0\\server\\bin;C:\\Program Files\\Zulu\\zulu-18\\bin;C:\\Windows\\system32;C:\\Windows;C:\\Windows\\System32\\Wbem;C:\\Windows\\System32\\WindowsPowerShell\\v1.0;C:\\Windows\\System32\\OpenSSH;C:\\Program Files\\Bandizip;C:\\Program Files\\dotnet;%TB_HOME%\\bin;%TB_HOME%\\client\\bin;C:\\Program Files\\Git\\cmd;C:\\Program Files\\Microsoft VS Code\\bin;C:\\Program Files\\Go\\bin;C:\\Program Files\\nodejs;C:\\bin;C:\\Program Files\\Git\\usr\\bin;C:\\Users\\USER1\\AppData\\Local\\Programs\\Python\\Python313\\Scripts;C:\\Users\\USER1\\AppData\\Local\\Programs\\Python\\Python313;C:\\Users\\USER1\\AppData\\Local\\Programs\\Python\\Launcher;C:\\Users\\USER1\\AppData\\Local\\Microsoft\\WindowsApps;C:\\Program Files\\JetBrains\\IntelliJ IDEA 2022.1.1\\bin;C:\\Users\\USER1\\go\\bin;C:\\Users\\USER1\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\USER1\\AppData\\Roaming\\npm;C:\\Users\\USER1\\AppData\\Local\\Programs\\Kiro\\bin;C:\\Users\\USER1\\AppData\\Local\\Microsoft\\WinGet\\Packages\\jqlang.jq_Microsoft.Winget.Source_8wekyb3d8bbwe;C:\\Users\\USER1\\AppData\\Local\\Programs\\Antigravity\\bin;C:\\Program Files\\Git\\usr\\bin\\vendor_perl;C:\\Program Files\\Git\\usr\\bin\\core_perl",
+        "PATHEXT": ".COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC",
+        "PKG_CONFIG_PATH": "C:\\Program Files\\Git\\mingw64\\lib\\pkgconfig;C:\\Program Files\\Git\\mingw64\\share\\pkgconfig",
+        "PLINK_PROTOCOL": "ssh",
+        "PROCESSOR_ARCHITECTURE": "AMD64",
+        "PROCESSOR_IDENTIFIER": "Intel64 Family 6 Model 165 Stepping 5, GenuineIntel",
+        "PROCESSOR_LEVEL": "6",
+        "PROCESSOR_REVISION": "a505",
+        "ProgramData": "C:\\ProgramData",
+        "PROGRAMFILES": "C:\\Program Files",
+        "ProgramFiles(x86)": "C:\\Program Files (x86)",
+        "ProgramW6432": "C:\\Program Files",
+        "PROMPT": "$P$G",
+        "PSModulePath": "C:\\Program Files\\WindowsPowerShell\\Modules;C:\\Windows\\system32\\WindowsPowerShell\\v1.0\\Modules",
+        "PUBLIC": "C:\\Users\\Public",
+        "PWD": "C:/project/jjiban",
+        "SESSIONNAME": "Console",
+        "SHELL": "C:\\Program Files\\Git\\usr\\bin\\bash.exe",
+        "SHLVL": "2",
+        "SSH_ASKPASS": "C:/Program Files/Git/mingw64/bin/git-askpass.exe",
+        "SYSTEMDRIVE": "C:",
+        "SYSTEMROOT": "C:\\Windows",
+        "TEMP": "C:\\Users\\USER1\\AppData\\Local\\Temp",
+        "TERM": "xterm-256color",
+        "TERM_PROGRAM": "vscode",
+        "TERM_PROGRAM_VERSION": "1.104.0",
+        "TMP": "C:\\Users\\USER1\\AppData\\Local\\Temp",
+        "TMPDIR": "C:\\Users\\USER1\\AppData\\Local\\Temp",
+        "USERDOMAIN": "ODT-2201-0002",
+        "USERDOMAIN_ROAMINGPROFILE": "ODT-2201-0002",
+        "USERNAME": "USER1",
+        "USERPROFILE": "C:\\Users\\USER1",
+        "VSCODE_GIT_ASKPASS_EXTRA_ARGS": "",
+        "VSCODE_GIT_ASKPASS_MAIN": "c:\\Users\\USER1\\AppData\\Local\\Programs\\Antigravity\\resources\\app\\extensions\\git\\dist\\askpass-main.js",
+        "VSCODE_GIT_ASKPASS_NODE": "C:\\Users\\USER1\\AppData\\Local\\Programs\\Antigravity\\Antigravity.exe",
+        "VSCODE_GIT_IPC_HANDLE": "\\\\.\\pipe\\vscode-git-0e65852cc8-sock",
+        "VSCODE_NONCE": "160246ed-7e3a-4581-9354-2aa4f6cdbc44",
+        "WINDIR": "C:\\Windows",
+        "_": "C:/Program Files/nodejs/node.exe",
+        "JJIBAN_BASE_PATH": "C:\\project\\jjiban"
+      }
     }
   },
   "suites": [
@@ -77,7 +196,7 @@
         {
           "title": "E2E-001: 프로젝트 목록 렌더링",
           "file": "projects-page.spec.ts",
-          "line": 85,
+          "line": 13,
           "column": 6,
           "specs": [
             {
@@ -95,277 +214,10 @@
                     {
                       "workerIndex": 0,
                       "status": "failed",
-                      "duration": 7808,
-                      "error": {
-                        "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('h1')\nExpected string: \u001b[32m\"Projects\"\u001b[39m\nReceived string: \u001b[31m\"404\"\u001b[39m\nCall log:\n\u001b[2m  - expect.toHaveText with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h1')\u001b[22m\n\u001b[2m    8 × locator resolved to <h1 data-v-8b233afb=\"\" class=\"font-medium mb-8 sm:text-10xl text-8xl\">404</h1>\u001b[22m\n\u001b[2m      - unexpected value \"404\"\u001b[22m\n",
-                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('h1')\nExpected string: \u001b[32m\"Projects\"\u001b[39m\nReceived string: \u001b[31m\"404\"\u001b[39m\nCall log:\n\u001b[2m  - expect.toHaveText with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h1')\u001b[22m\n\u001b[2m    8 × locator resolved to <h1 data-v-8b233afb=\"\" class=\"font-medium mb-8 sm:text-10xl text-8xl\">404</h1>\u001b[22m\n\u001b[2m      - unexpected value \"404\"\u001b[22m\n\n    at C:\\project\\jjiban\\tests\\e2e\\projects-page.spec.ts:99:25",
-                        "matcherResult": {
-                          "name": "toHaveText",
-                          "expected": "Projects",
-                          "message": "\u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('h1')\nExpected string: \u001b[32m\"Projects\"\u001b[39m\nReceived string: \u001b[31m\"404\"\u001b[39m\nCall log:\n\u001b[2m  - expect.toHaveText with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h1')\u001b[22m\n\u001b[2m    8 × locator resolved to <h1 data-v-8b233afb=\"\" class=\"font-medium mb-8 sm:text-10xl text-8xl\">404</h1>\u001b[22m\n\u001b[2m      - unexpected value \"404\"\u001b[22m\n",
-                          "pass": false,
-                          "actual": "404",
-                          "log": [
-                            "  - expect.toHaveText with timeout 5000ms",
-                            "  - waiting for locator('h1')",
-                            "    8 × locator resolved to <h1 data-v-8b233afb=\"\" class=\"font-medium mb-8 sm:text-10xl text-8xl\">404</h1>",
-                            "      - unexpected value \"404\""
-                          ],
-                          "timeout": 5000
-                        },
-                        "location": {
-                          "file": "C:\\project\\jjiban\\tests\\e2e\\projects-page.spec.ts",
-                          "column": 25,
-                          "line": 99
-                        },
-                        "snippet": "\u001b[0m \u001b[90m  97 |\u001b[39m     \u001b[90m// 페이지 제목 확인\u001b[39m\n \u001b[90m  98 |\u001b[39m     \u001b[36mconst\u001b[39m title \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'h1'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m  99 |\u001b[39m     \u001b[36mawait\u001b[39m expect(title)\u001b[33m.\u001b[39mtoHaveText(\u001b[32m'Projects'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                         \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 100 |\u001b[39m\n \u001b[90m 101 |\u001b[39m     \u001b[90m// 프로젝트 카드 확인\u001b[39m\n \u001b[90m 102 |\u001b[39m     \u001b[36mconst\u001b[39m cards \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'.p-card'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\project\\jjiban\\tests\\e2e\\projects-page.spec.ts",
-                            "column": 25,
-                            "line": 99
-                          },
-                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('h1')\nExpected string: \u001b[32m\"Projects\"\u001b[39m\nReceived string: \u001b[31m\"404\"\u001b[39m\nCall log:\n\u001b[2m  - expect.toHaveText with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h1')\u001b[22m\n\u001b[2m    8 × locator resolved to <h1 data-v-8b233afb=\"\" class=\"font-medium mb-8 sm:text-10xl text-8xl\">404</h1>\u001b[22m\n\u001b[2m      - unexpected value \"404\"\u001b[22m\n\n\n\u001b[0m \u001b[90m  97 |\u001b[39m     \u001b[90m// 페이지 제목 확인\u001b[39m\n \u001b[90m  98 |\u001b[39m     \u001b[36mconst\u001b[39m title \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'h1'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m  99 |\u001b[39m     \u001b[36mawait\u001b[39m expect(title)\u001b[33m.\u001b[39mtoHaveText(\u001b[32m'Projects'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                         \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 100 |\u001b[39m\n \u001b[90m 101 |\u001b[39m     \u001b[90m// 프로젝트 카드 확인\u001b[39m\n \u001b[90m 102 |\u001b[39m     \u001b[36mconst\u001b[39m cards \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'.p-card'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m\n    at C:\\project\\jjiban\\tests\\e2e\\projects-page.spec.ts:99:25"
-                        }
-                      ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-12-14T12:01:43.755Z",
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\project\\jjiban\\test-results\\artifacts\\projects-page-E2E-001-프로젝트-1c037-r-project-list-on-page-load-chromium\\test-failed-1.png"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\project\\jjiban\\tests\\e2e\\projects-page.spec.ts",
-                        "column": 25,
-                        "line": 99
-                      }
-                    }
-                  ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "cdda7302ab5eaaaf476d-2ad614df0e30389eec72",
-              "file": "projects-page.spec.ts",
-              "line": 94,
-              "column": 3
-            }
-          ]
-        },
-        {
-          "title": "E2E-003: 카드 내용 표시",
-          "file": "projects-page.spec.ts",
-          "line": 111,
-          "column": 6,
-          "specs": [
-            {
-              "title": "should display all project information in card",
-              "ok": false,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 5,
-                      "status": "failed",
-                      "duration": 6364,
-                      "error": {
-                        "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('.p-card').first().locator('.p-card-title')\nExpected string: \u001b[32m\"project\"\u001b[39m\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toContainText with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.p-card').first().locator('.p-card-title')\u001b[22m\n",
-                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('.p-card').first().locator('.p-card-title')\nExpected string: \u001b[32m\"project\"\u001b[39m\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toContainText with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.p-card').first().locator('.p-card-title')\u001b[22m\n\n    at C:\\project\\jjiban\\tests\\e2e\\projects-page.spec.ts:126:49",
-                        "matcherResult": {
-                          "name": "toContainText",
-                          "expected": "project",
-                          "message": "\u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('.p-card').first().locator('.p-card-title')\nExpected string: \u001b[32m\"project\"\u001b[39m\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toContainText with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.p-card').first().locator('.p-card-title')\u001b[22m\n",
-                          "pass": false,
-                          "actual": "<element(s) not found>",
-                          "log": [
-                            "  - expect.toContainText with timeout 5000ms",
-                            "  - waiting for locator('.p-card').first().locator('.p-card-title')"
-                          ],
-                          "timeout": 5000
-                        },
-                        "location": {
-                          "file": "C:\\project\\jjiban\\tests\\e2e\\projects-page.spec.ts",
-                          "column": 49,
-                          "line": 126
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 124 |\u001b[39m\n \u001b[90m 125 |\u001b[39m     \u001b[90m// 프로젝트명\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 126 |\u001b[39m     \u001b[36mawait\u001b[39m expect(card\u001b[33m.\u001b[39mlocator(\u001b[32m'.p-card-title'\u001b[39m))\u001b[33m.\u001b[39mtoContainText(\u001b[32m'project'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                                 \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 127 |\u001b[39m\n \u001b[90m 128 |\u001b[39m     \u001b[90m// 상태 태그\u001b[39m\n \u001b[90m 129 |\u001b[39m     \u001b[36mconst\u001b[39m statusTag \u001b[33m=\u001b[39m card\u001b[33m.\u001b[39mlocator(\u001b[32m'.p-tag'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\project\\jjiban\\tests\\e2e\\projects-page.spec.ts",
-                            "column": 49,
-                            "line": 126
-                          },
-                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('.p-card').first().locator('.p-card-title')\nExpected string: \u001b[32m\"project\"\u001b[39m\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toContainText with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.p-card').first().locator('.p-card-title')\u001b[22m\n\n\n\u001b[0m \u001b[90m 124 |\u001b[39m\n \u001b[90m 125 |\u001b[39m     \u001b[90m// 프로젝트명\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 126 |\u001b[39m     \u001b[36mawait\u001b[39m expect(card\u001b[33m.\u001b[39mlocator(\u001b[32m'.p-card-title'\u001b[39m))\u001b[33m.\u001b[39mtoContainText(\u001b[32m'project'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                                 \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 127 |\u001b[39m\n \u001b[90m 128 |\u001b[39m     \u001b[90m// 상태 태그\u001b[39m\n \u001b[90m 129 |\u001b[39m     \u001b[36mconst\u001b[39m statusTag \u001b[33m=\u001b[39m card\u001b[33m.\u001b[39mlocator(\u001b[32m'.p-tag'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m\n    at C:\\project\\jjiban\\tests\\e2e\\projects-page.spec.ts:126:49"
-                        }
-                      ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-12-14T12:01:52.889Z",
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\project\\jjiban\\test-results\\artifacts\\projects-page-E2E-003-카드-내-76202-project-information-in-card-chromium\\test-failed-1.png"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\project\\jjiban\\tests\\e2e\\projects-page.spec.ts",
-                        "column": 49,
-                        "line": 126
-                      }
-                    }
-                  ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "cdda7302ab5eaaaf476d-50a4f89d4926373f5597",
-              "file": "projects-page.spec.ts",
-              "line": 120,
-              "column": 3
-            }
-          ]
-        },
-        {
-          "title": "E2E-004: 프로젝트 선택 네비게이션",
-          "file": "projects-page.spec.ts",
-          "line": 140,
-          "column": 6,
-          "specs": [
-            {
-              "title": "should navigate to WBS page on card click",
-              "ok": false,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 1,
-                      "status": "timedOut",
-                      "duration": 60110,
-                      "error": {
-                        "message": "\u001b[31mTest timeout of 60000ms exceeded.\u001b[39m",
-                        "stack": "\u001b[31mTest timeout of 60000ms exceeded.\u001b[39m"
-                      },
-                      "errors": [
-                        {
-                          "message": "\u001b[31mTest timeout of 60000ms exceeded.\u001b[39m"
-                        },
-                        {
-                          "location": {
-                            "file": "C:\\project\\jjiban\\tests\\e2e\\projects-page.spec.ts",
-                            "column": 16,
-                            "line": 154
-                          },
-                          "message": "Error: locator.click: Test timeout of 60000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.p-card').first()\u001b[22m\n\n\n\u001b[0m \u001b[90m 152 |\u001b[39m     \u001b[90m// 프로젝트 카드 클릭\u001b[39m\n \u001b[90m 153 |\u001b[39m     \u001b[36mconst\u001b[39m card \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'.p-card'\u001b[39m)\u001b[33m.\u001b[39mfirst()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 154 |\u001b[39m     \u001b[36mawait\u001b[39m card\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 155 |\u001b[39m\n \u001b[90m 156 |\u001b[39m     \u001b[90m// URL 확인\u001b[39m\n \u001b[90m 157 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page)\u001b[33m.\u001b[39mtoHaveURL(\u001b[35m/\\/wbs\\?project=project/\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m\n    at C:\\project\\jjiban\\tests\\e2e\\projects-page.spec.ts:154:16"
-                        }
-                      ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-12-14T12:01:43.770Z",
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\project\\jjiban\\test-results\\artifacts\\projects-page-E2E-004-프로젝트-1a5b0-e-to-WBS-page-on-card-click-chromium\\test-failed-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "cdda7302ab5eaaaf476d-521f152625732f399717",
-              "file": "projects-page.spec.ts",
-              "line": 149,
-              "column": 3
-            },
-            {
-              "title": "should pass correct project ID in query parameter",
-              "ok": false,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 7,
-                      "status": "failed",
-                      "duration": 0,
-                      "error": {
-                        "message": "Error: worker process exited unexpectedly (code=143, signal=null)"
-                      },
-                      "errors": [
-                        {
-                          "message": "Error: worker process exited unexpectedly (code=143, signal=null)"
-                        }
-                      ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-12-14T12:02:45.013Z",
-                      "attachments": []
-                    }
-                  ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "cdda7302ab5eaaaf476d-84931c937fb93ee6cb6f",
-              "file": "projects-page.spec.ts",
-              "line": 160,
-              "column": 3
-            }
-          ]
-        },
-        {
-          "title": "E2E-007: 로딩 상태 표시",
-          "file": "projects-page.spec.ts",
-          "line": 170,
-          "column": 6,
-          "specs": [
-            {
-              "title": "should show loading spinner during API call",
-              "ok": false,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 2,
-                      "status": "failed",
-                      "duration": 8632,
+                      "duration": 9349,
                       "error": {
                         "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('.p-card')\nExpected: \u001b[32m1\u001b[39m\nReceived: \u001b[31m0\u001b[39m\nCall log:\n\u001b[2m  - expect.toHaveCount with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.p-card')\u001b[22m\n\u001b[2m    9 × locator resolved to 0 elements\u001b[22m\n\u001b[2m      - unexpected value \"0\"\u001b[22m\n",
-                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('.p-card')\nExpected: \u001b[32m1\u001b[39m\nReceived: \u001b[31m0\u001b[39m\nCall log:\n\u001b[2m  - expect.toHaveCount with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.p-card')\u001b[22m\n\u001b[2m    9 × locator resolved to 0 elements\u001b[22m\n\u001b[2m      - unexpected value \"0\"\u001b[22m\n\n    at C:\\project\\jjiban\\tests\\e2e\\projects-page.spec.ts:197:25",
+                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('.p-card')\nExpected: \u001b[32m1\u001b[39m\nReceived: \u001b[31m0\u001b[39m\nCall log:\n\u001b[2m  - expect.toHaveCount with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.p-card')\u001b[22m\n\u001b[2m    9 × locator resolved to 0 elements\u001b[22m\n\u001b[2m      - unexpected value \"0\"\u001b[22m\n\n    at C:\\project\\jjiban\\tests\\e2e\\projects-page.spec.ts:49:25",
                         "matcherResult": {
                           "actual": 0,
                           "expected": 1,
@@ -383,44 +235,312 @@
                         "location": {
                           "file": "C:\\project\\jjiban\\tests\\e2e\\projects-page.spec.ts",
                           "column": 25,
-                          "line": 197
+                          "line": 49
                         },
-                        "snippet": "\u001b[0m \u001b[90m 195 |\u001b[39m     \u001b[90m// 로딩 완료 후 프로젝트 카드 표시\u001b[39m\n \u001b[90m 196 |\u001b[39m     \u001b[36mconst\u001b[39m cards \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'.p-card'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 197 |\u001b[39m     \u001b[36mawait\u001b[39m expect(cards)\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m1\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                         \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 198 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 199 |\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m 200 |\u001b[39m\u001b[0m"
+                        "snippet": "\u001b[0m \u001b[90m 47 |\u001b[39m     \u001b[90m// 프로젝트 카드 확인\u001b[39m\n \u001b[90m 48 |\u001b[39m     \u001b[36mconst\u001b[39m cards \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'.p-card'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 49 |\u001b[39m     \u001b[36mawait\u001b[39m expect(cards)\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m1\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                         \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 50 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 51 |\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m 52 |\u001b[39m\u001b[0m"
                       },
                       "errors": [
                         {
                           "location": {
                             "file": "C:\\project\\jjiban\\tests\\e2e\\projects-page.spec.ts",
                             "column": 25,
-                            "line": 197
+                            "line": 49
                           },
-                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('.p-card')\nExpected: \u001b[32m1\u001b[39m\nReceived: \u001b[31m0\u001b[39m\nCall log:\n\u001b[2m  - expect.toHaveCount with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.p-card')\u001b[22m\n\u001b[2m    9 × locator resolved to 0 elements\u001b[22m\n\u001b[2m      - unexpected value \"0\"\u001b[22m\n\n\n\u001b[0m \u001b[90m 195 |\u001b[39m     \u001b[90m// 로딩 완료 후 프로젝트 카드 표시\u001b[39m\n \u001b[90m 196 |\u001b[39m     \u001b[36mconst\u001b[39m cards \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'.p-card'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 197 |\u001b[39m     \u001b[36mawait\u001b[39m expect(cards)\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m1\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                         \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 198 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 199 |\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m 200 |\u001b[39m\u001b[0m\n    at C:\\project\\jjiban\\tests\\e2e\\projects-page.spec.ts:197:25"
+                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('.p-card')\nExpected: \u001b[32m1\u001b[39m\nReceived: \u001b[31m0\u001b[39m\nCall log:\n\u001b[2m  - expect.toHaveCount with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.p-card')\u001b[22m\n\u001b[2m    9 × locator resolved to 0 elements\u001b[22m\n\u001b[2m      - unexpected value \"0\"\u001b[22m\n\n\n\u001b[0m \u001b[90m 47 |\u001b[39m     \u001b[90m// 프로젝트 카드 확인\u001b[39m\n \u001b[90m 48 |\u001b[39m     \u001b[36mconst\u001b[39m cards \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'.p-card'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 49 |\u001b[39m     \u001b[36mawait\u001b[39m expect(cards)\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m1\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                         \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 50 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 51 |\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m 52 |\u001b[39m\u001b[0m\n    at C:\\project\\jjiban\\tests\\e2e\\projects-page.spec.ts:49:25"
                         }
                       ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-12-14T12:01:43.755Z",
+                      "startTime": "2025-12-15T00:03:49.547Z",
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "C:\\project\\jjiban\\test-results\\artifacts\\projects-page-E2E-007-로딩-상-1165a-ing-spinner-during-API-call-chromium\\test-failed-1.png"
+                          "path": "C:\\project\\jjiban\\test-results\\artifacts\\projects-page-E2E-001-프로젝트-1c037-r-project-list-on-page-load-chromium\\test-failed-1.png"
                         }
                       ],
                       "errorLocation": {
                         "file": "C:\\project\\jjiban\\tests\\e2e\\projects-page.spec.ts",
                         "column": 25,
-                        "line": 197
+                        "line": 49
                       }
                     }
                   ],
                   "status": "unexpected"
                 }
               ],
+              "id": "cdda7302ab5eaaaf476d-2ad614df0e30389eec72",
+              "file": "projects-page.spec.ts",
+              "line": 14,
+              "column": 3
+            }
+          ]
+        },
+        {
+          "title": "E2E-003: 카드 내용 표시",
+          "file": "projects-page.spec.ts",
+          "line": 53,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should display all project information in card",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "status": "failed",
+                      "duration": 9504,
+                      "error": {
+                        "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('.p-card').first().locator('.p-card-title')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.p-card').first().locator('.p-card-title')\u001b[22m\n",
+                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('.p-card').first().locator('.p-card-title')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.p-card').first().locator('.p-card-title')\u001b[22m\n\n    at C:\\project\\jjiban\\tests\\e2e\\projects-page.spec.ts:83:25",
+                        "matcherResult": {
+                          "message": "\u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('.p-card').first().locator('.p-card-title')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.p-card').first().locator('.p-card-title')\u001b[22m\n",
+                          "pass": false,
+                          "actual": "hidden",
+                          "name": "toBeVisible",
+                          "expected": "visible",
+                          "log": [
+                            "  - expect.toBeVisible with timeout 5000ms",
+                            "  - waiting for locator('.p-card').first().locator('.p-card-title')"
+                          ],
+                          "timeout": 5000
+                        },
+                        "location": {
+                          "file": "C:\\project\\jjiban\\tests\\e2e\\projects-page.spec.ts",
+                          "column": 25,
+                          "line": 83
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 81 |\u001b[39m     \u001b[90m// 카드 제목 (프로젝트명)\u001b[39m\n \u001b[90m 82 |\u001b[39m     \u001b[36mconst\u001b[39m title \u001b[33m=\u001b[39m card\u001b[33m.\u001b[39mlocator(\u001b[32m'.p-card-title'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 83 |\u001b[39m     \u001b[36mawait\u001b[39m expect(title)\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                         \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 84 |\u001b[39m\n \u001b[90m 85 |\u001b[39m     \u001b[90m// 상태 태그\u001b[39m\n \u001b[90m 86 |\u001b[39m     \u001b[36mconst\u001b[39m statusTag \u001b[33m=\u001b[39m card\u001b[33m.\u001b[39mlocator(\u001b[32m'.p-tag'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\project\\jjiban\\tests\\e2e\\projects-page.spec.ts",
+                            "column": 25,
+                            "line": 83
+                          },
+                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('.p-card').first().locator('.p-card-title')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.p-card').first().locator('.p-card-title')\u001b[22m\n\n\n\u001b[0m \u001b[90m 81 |\u001b[39m     \u001b[90m// 카드 제목 (프로젝트명)\u001b[39m\n \u001b[90m 82 |\u001b[39m     \u001b[36mconst\u001b[39m title \u001b[33m=\u001b[39m card\u001b[33m.\u001b[39mlocator(\u001b[32m'.p-card-title'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 83 |\u001b[39m     \u001b[36mawait\u001b[39m expect(title)\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                         \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 84 |\u001b[39m\n \u001b[90m 85 |\u001b[39m     \u001b[90m// 상태 태그\u001b[39m\n \u001b[90m 86 |\u001b[39m     \u001b[36mconst\u001b[39m statusTag \u001b[33m=\u001b[39m card\u001b[33m.\u001b[39mlocator(\u001b[32m'.p-tag'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m\n    at C:\\project\\jjiban\\tests\\e2e\\projects-page.spec.ts:83:25"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-15T00:03:49.534Z",
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\project\\jjiban\\test-results\\artifacts\\projects-page-E2E-003-카드-내-76202-project-information-in-card-chromium\\test-failed-1.png"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\project\\jjiban\\tests\\e2e\\projects-page.spec.ts",
+                        "column": 25,
+                        "line": 83
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "cdda7302ab5eaaaf476d-50a4f89d4926373f5597",
+              "file": "projects-page.spec.ts",
+              "line": 54,
+              "column": 3
+            }
+          ]
+        },
+        {
+          "title": "E2E-004: 프로젝트 선택 네비게이션",
+          "file": "projects-page.spec.ts",
+          "line": 97,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should navigate to WBS page on card click",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "status": "timedOut",
+                      "duration": 60099,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 60000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 60000ms exceeded.\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "message": "\u001b[31mTest timeout of 60000ms exceeded.\u001b[39m"
+                        },
+                        {
+                          "location": {
+                            "file": "C:\\project\\jjiban\\tests\\e2e\\projects-page.spec.ts",
+                            "column": 16,
+                            "line": 125
+                          },
+                          "message": "Error: locator.click: Test timeout of 60000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.p-card').first()\u001b[22m\n\n\n\u001b[0m \u001b[90m 123 |\u001b[39m     \u001b[90m// 프로젝트 카드 클릭\u001b[39m\n \u001b[90m 124 |\u001b[39m     \u001b[36mconst\u001b[39m card \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'.p-card'\u001b[39m)\u001b[33m.\u001b[39mfirst()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 125 |\u001b[39m     \u001b[36mawait\u001b[39m card\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 126 |\u001b[39m\n \u001b[90m 127 |\u001b[39m     \u001b[90m// URL 확인 - /wbs?project=nav-test 형식이어야 함\u001b[39m\n \u001b[90m 128 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page)\u001b[33m.\u001b[39mtoHaveURL(\u001b[35m/\\/wbs\\?project=nav-test/\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m\n    at C:\\project\\jjiban\\tests\\e2e\\projects-page.spec.ts:125:16"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-15T00:03:49.570Z",
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\project\\jjiban\\test-results\\artifacts\\projects-page-E2E-004-프로젝트-1a5b0-e-to-WBS-page-on-card-click-chromium\\test-failed-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "cdda7302ab5eaaaf476d-521f152625732f399717",
+              "file": "projects-page.spec.ts",
+              "line": 98,
+              "column": 3
+            }
+          ]
+        },
+        {
+          "title": "E2E-005: 필터 버튼 동작",
+          "file": "projects-page.spec.ts",
+          "line": 132,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should filter projects by status",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "status": "failed",
+                      "duration": 9507,
+                      "error": {
+                        "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('.p-card')\nExpected: \u001b[32m3\u001b[39m\nReceived: \u001b[31m0\u001b[39m\nCall log:\n\u001b[2m  - expect.toHaveCount with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.p-card')\u001b[22m\n\u001b[2m    8 × locator resolved to 0 elements\u001b[22m\n\u001b[2m      - unexpected value \"0\"\u001b[22m\n",
+                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('.p-card')\nExpected: \u001b[32m3\u001b[39m\nReceived: \u001b[31m0\u001b[39m\nCall log:\n\u001b[2m  - expect.toHaveCount with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.p-card')\u001b[22m\n\u001b[2m    8 × locator resolved to 0 elements\u001b[22m\n\u001b[2m      - unexpected value \"0\"\u001b[22m\n\n    at C:\\project\\jjiban\\tests\\e2e\\projects-page.spec.ts:155:25",
+                        "matcherResult": {
+                          "actual": 0,
+                          "expected": 3,
+                          "message": "\u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('.p-card')\nExpected: \u001b[32m3\u001b[39m\nReceived: \u001b[31m0\u001b[39m\nCall log:\n\u001b[2m  - expect.toHaveCount with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.p-card')\u001b[22m\n\u001b[2m    8 × locator resolved to 0 elements\u001b[22m\n\u001b[2m      - unexpected value \"0\"\u001b[22m\n",
+                          "name": "toHaveCount",
+                          "pass": false,
+                          "log": [
+                            "  - expect.toHaveCount with timeout 5000ms",
+                            "  - waiting for locator('.p-card')",
+                            "    8 × locator resolved to 0 elements",
+                            "      - unexpected value \"0\""
+                          ],
+                          "timeout": 5000
+                        },
+                        "location": {
+                          "file": "C:\\project\\jjiban\\tests\\e2e\\projects-page.spec.ts",
+                          "column": 25,
+                          "line": 155
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 153 |\u001b[39m     \u001b[90m// 초기 상태: 모든 프로젝트 표시\u001b[39m\n \u001b[90m 154 |\u001b[39m     \u001b[36mlet\u001b[39m cards \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'.p-card'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 155 |\u001b[39m     \u001b[36mawait\u001b[39m expect(cards)\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m3\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                         \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 156 |\u001b[39m\n \u001b[90m 157 |\u001b[39m     \u001b[90m// Active 필터 클릭\u001b[39m\n \u001b[90m 158 |\u001b[39m     \u001b[36mconst\u001b[39m activeButton \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'button'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m'Active'\u001b[39m })\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\project\\jjiban\\tests\\e2e\\projects-page.spec.ts",
+                            "column": 25,
+                            "line": 155
+                          },
+                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('.p-card')\nExpected: \u001b[32m3\u001b[39m\nReceived: \u001b[31m0\u001b[39m\nCall log:\n\u001b[2m  - expect.toHaveCount with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.p-card')\u001b[22m\n\u001b[2m    8 × locator resolved to 0 elements\u001b[22m\n\u001b[2m      - unexpected value \"0\"\u001b[22m\n\n\n\u001b[0m \u001b[90m 153 |\u001b[39m     \u001b[90m// 초기 상태: 모든 프로젝트 표시\u001b[39m\n \u001b[90m 154 |\u001b[39m     \u001b[36mlet\u001b[39m cards \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'.p-card'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 155 |\u001b[39m     \u001b[36mawait\u001b[39m expect(cards)\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m3\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                         \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 156 |\u001b[39m\n \u001b[90m 157 |\u001b[39m     \u001b[90m// Active 필터 클릭\u001b[39m\n \u001b[90m 158 |\u001b[39m     \u001b[36mconst\u001b[39m activeButton \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'button'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m'Active'\u001b[39m })\u001b[33m;\u001b[39m\u001b[0m\n    at C:\\project\\jjiban\\tests\\e2e\\projects-page.spec.ts:155:25"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-15T00:03:49.557Z",
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\project\\jjiban\\test-results\\artifacts\\projects-page-E2E-005-필터-버-5df0b-d-filter-projects-by-status-chromium\\test-failed-1.png"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\project\\jjiban\\tests\\e2e\\projects-page.spec.ts",
+                        "column": 25,
+                        "line": 155
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "cdda7302ab5eaaaf476d-295073938a130fcb4fbd",
+              "file": "projects-page.spec.ts",
+              "line": 133,
+              "column": 3
+            }
+          ]
+        },
+        {
+          "title": "E2E-007: 로딩 상태 표시",
+          "file": "projects-page.spec.ts",
+          "line": 180,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should show loading spinner during API call",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "status": "passed",
+                      "duration": 4537,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-15T00:03:49.527Z",
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
               "id": "cdda7302ab5eaaaf476d-777b5e025e8657a1d497",
               "file": "projects-page.spec.ts",
-              "line": 179,
+              "line": 181,
               "column": 3
             }
           ]
@@ -428,7 +548,7 @@
         {
           "title": "E2E-008: 에러 상태 표시",
           "file": "projects-page.spec.ts",
-          "line": 201,
+          "line": 213,
           "column": 6,
           "specs": [
             {
@@ -444,12 +564,12 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 6,
+                      "workerIndex": 5,
                       "status": "failed",
-                      "duration": 6115,
+                      "duration": 9485,
                       "error": {
                         "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('.p-inline-message-error')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.p-inline-message-error')\u001b[22m\n",
-                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('.p-inline-message-error')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.p-inline-message-error')\u001b[22m\n\n    at C:\\project\\jjiban\\tests\\e2e\\projects-page.spec.ts:220:32",
+                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('.p-inline-message-error')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.p-inline-message-error')\u001b[22m\n\n    at C:\\project\\jjiban\\tests\\e2e\\projects-page.spec.ts:224:32",
                         "matcherResult": {
                           "message": "\u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('.p-inline-message-error')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.p-inline-message-error')\u001b[22m\n",
                           "pass": false,
@@ -465,24 +585,24 @@
                         "location": {
                           "file": "C:\\project\\jjiban\\tests\\e2e\\projects-page.spec.ts",
                           "column": 32,
-                          "line": 220
+                          "line": 224
                         },
-                        "snippet": "\u001b[0m \u001b[90m 218 |\u001b[39m     \u001b[90m// 에러 메시지 표시 확인\u001b[39m\n \u001b[90m 219 |\u001b[39m     \u001b[36mconst\u001b[39m errorMessage \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'.p-inline-message-error'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 220 |\u001b[39m     \u001b[36mawait\u001b[39m expect(errorMessage)\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 221 |\u001b[39m     \u001b[36mawait\u001b[39m expect(errorMessage)\u001b[33m.\u001b[39mtoContainText(\u001b[32m'오류가 발생했습니다'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 222 |\u001b[39m\n \u001b[90m 223 |\u001b[39m     \u001b[90m// 프로젝트 카드 없음\u001b[39m\u001b[0m"
+                        "snippet": "\u001b[0m \u001b[90m 222 |\u001b[39m     \u001b[90m// 에러 메시지 표시 확인\u001b[39m\n \u001b[90m 223 |\u001b[39m     \u001b[36mconst\u001b[39m errorMessage \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'.p-inline-message-error'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 224 |\u001b[39m     \u001b[36mawait\u001b[39m expect(errorMessage)\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 225 |\u001b[39m     \u001b[36mawait\u001b[39m expect(errorMessage)\u001b[33m.\u001b[39mtoContainText(\u001b[32m'오류가 발생했습니다'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 226 |\u001b[39m\n \u001b[90m 227 |\u001b[39m     \u001b[90m// 프로젝트 카드 없음\u001b[39m\u001b[0m"
                       },
                       "errors": [
                         {
                           "location": {
                             "file": "C:\\project\\jjiban\\tests\\e2e\\projects-page.spec.ts",
                             "column": 32,
-                            "line": 220
+                            "line": 224
                           },
-                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('.p-inline-message-error')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.p-inline-message-error')\u001b[22m\n\n\n\u001b[0m \u001b[90m 218 |\u001b[39m     \u001b[90m// 에러 메시지 표시 확인\u001b[39m\n \u001b[90m 219 |\u001b[39m     \u001b[36mconst\u001b[39m errorMessage \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'.p-inline-message-error'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 220 |\u001b[39m     \u001b[36mawait\u001b[39m expect(errorMessage)\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 221 |\u001b[39m     \u001b[36mawait\u001b[39m expect(errorMessage)\u001b[33m.\u001b[39mtoContainText(\u001b[32m'오류가 발생했습니다'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 222 |\u001b[39m\n \u001b[90m 223 |\u001b[39m     \u001b[90m// 프로젝트 카드 없음\u001b[39m\u001b[0m\n    at C:\\project\\jjiban\\tests\\e2e\\projects-page.spec.ts:220:32"
+                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('.p-inline-message-error')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.p-inline-message-error')\u001b[22m\n\n\n\u001b[0m \u001b[90m 222 |\u001b[39m     \u001b[90m// 에러 메시지 표시 확인\u001b[39m\n \u001b[90m 223 |\u001b[39m     \u001b[36mconst\u001b[39m errorMessage \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'.p-inline-message-error'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 224 |\u001b[39m     \u001b[36mawait\u001b[39m expect(errorMessage)\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 225 |\u001b[39m     \u001b[36mawait\u001b[39m expect(errorMessage)\u001b[33m.\u001b[39mtoContainText(\u001b[32m'오류가 발생했습니다'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 226 |\u001b[39m\n \u001b[90m 227 |\u001b[39m     \u001b[90m// 프로젝트 카드 없음\u001b[39m\u001b[0m\n    at C:\\project\\jjiban\\tests\\e2e\\projects-page.spec.ts:224:32"
                         }
                       ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-12-14T12:01:53.771Z",
+                      "startTime": "2025-12-15T00:03:49.551Z",
                       "attachments": [
                         {
                           "name": "screenshot",
@@ -493,7 +613,7 @@
                       "errorLocation": {
                         "file": "C:\\project\\jjiban\\tests\\e2e\\projects-page.spec.ts",
                         "column": 32,
-                        "line": 220
+                        "line": 224
                       }
                     }
                   ],
@@ -502,7 +622,7 @@
               ],
               "id": "cdda7302ab5eaaaf476d-ccfe68c8ac85e5515f00",
               "file": "projects-page.spec.ts",
-              "line": 210,
+              "line": 214,
               "column": 3
             }
           ]
@@ -510,7 +630,7 @@
         {
           "title": "E2E-009: 빈 상태 표시",
           "file": "projects-page.spec.ts",
-          "line": 229,
+          "line": 233,
           "column": 6,
           "specs": [
             {
@@ -526,12 +646,12 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 4,
                       "status": "failed",
-                      "duration": 7867,
+                      "duration": 6214,
                       "error": {
                         "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('.p-inline-message-info')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.p-inline-message-info')\u001b[22m\n",
-                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('.p-inline-message-info')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.p-inline-message-info')\u001b[22m\n\n    at C:\\project\\jjiban\\tests\\e2e\\projects-page.spec.ts:251:32",
+                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('.p-inline-message-info')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.p-inline-message-info')\u001b[22m\n\n    at C:\\project\\jjiban\\tests\\e2e\\projects-page.spec.ts:248:32",
                         "matcherResult": {
                           "message": "\u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('.p-inline-message-info')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.p-inline-message-info')\u001b[22m\n",
                           "pass": false,
@@ -547,24 +667,24 @@
                         "location": {
                           "file": "C:\\project\\jjiban\\tests\\e2e\\projects-page.spec.ts",
                           "column": 32,
-                          "line": 251
+                          "line": 248
                         },
-                        "snippet": "\u001b[0m \u001b[90m 249 |\u001b[39m     \u001b[90m// 빈 상태 메시지 확인\u001b[39m\n \u001b[90m 250 |\u001b[39m     \u001b[36mconst\u001b[39m emptyMessage \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'.p-inline-message-info'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 251 |\u001b[39m     \u001b[36mawait\u001b[39m expect(emptyMessage)\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 252 |\u001b[39m     \u001b[36mawait\u001b[39m expect(emptyMessage)\u001b[33m.\u001b[39mtoContainText(\u001b[32m'프로젝트가 없습니다'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 253 |\u001b[39m\n \u001b[90m 254 |\u001b[39m     \u001b[90m// 프로젝트 카드 없음\u001b[39m\u001b[0m"
+                        "snippet": "\u001b[0m \u001b[90m 246 |\u001b[39m     \u001b[90m// 빈 상태 메시지 확인\u001b[39m\n \u001b[90m 247 |\u001b[39m     \u001b[36mconst\u001b[39m emptyMessage \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'.p-inline-message-info'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 248 |\u001b[39m     \u001b[36mawait\u001b[39m expect(emptyMessage)\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 249 |\u001b[39m     \u001b[36mawait\u001b[39m expect(emptyMessage)\u001b[33m.\u001b[39mtoContainText(\u001b[32m'프로젝트가 없습니다'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 250 |\u001b[39m\n \u001b[90m 251 |\u001b[39m     \u001b[90m// 프로젝트 카드 없음\u001b[39m\u001b[0m"
                       },
                       "errors": [
                         {
                           "location": {
                             "file": "C:\\project\\jjiban\\tests\\e2e\\projects-page.spec.ts",
                             "column": 32,
-                            "line": 251
+                            "line": 248
                           },
-                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('.p-inline-message-info')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.p-inline-message-info')\u001b[22m\n\n\n\u001b[0m \u001b[90m 249 |\u001b[39m     \u001b[90m// 빈 상태 메시지 확인\u001b[39m\n \u001b[90m 250 |\u001b[39m     \u001b[36mconst\u001b[39m emptyMessage \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'.p-inline-message-info'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 251 |\u001b[39m     \u001b[36mawait\u001b[39m expect(emptyMessage)\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 252 |\u001b[39m     \u001b[36mawait\u001b[39m expect(emptyMessage)\u001b[33m.\u001b[39mtoContainText(\u001b[32m'프로젝트가 없습니다'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 253 |\u001b[39m\n \u001b[90m 254 |\u001b[39m     \u001b[90m// 프로젝트 카드 없음\u001b[39m\u001b[0m\n    at C:\\project\\jjiban\\tests\\e2e\\projects-page.spec.ts:251:32"
+                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('.p-inline-message-info')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.p-inline-message-info')\u001b[22m\n\n\n\u001b[0m \u001b[90m 246 |\u001b[39m     \u001b[90m// 빈 상태 메시지 확인\u001b[39m\n \u001b[90m 247 |\u001b[39m     \u001b[36mconst\u001b[39m emptyMessage \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'.p-inline-message-info'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 248 |\u001b[39m     \u001b[36mawait\u001b[39m expect(emptyMessage)\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 249 |\u001b[39m     \u001b[36mawait\u001b[39m expect(emptyMessage)\u001b[33m.\u001b[39mtoContainText(\u001b[32m'프로젝트가 없습니다'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 250 |\u001b[39m\n \u001b[90m 251 |\u001b[39m     \u001b[90m// 프로젝트 카드 없음\u001b[39m\u001b[0m\n    at C:\\project\\jjiban\\tests\\e2e\\projects-page.spec.ts:248:32"
                         }
                       ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-12-14T12:01:43.760Z",
+                      "startTime": "2025-12-15T00:03:54.426Z",
                       "attachments": [
                         {
                           "name": "screenshot",
@@ -575,7 +695,7 @@
                       "errorLocation": {
                         "file": "C:\\project\\jjiban\\tests\\e2e\\projects-page.spec.ts",
                         "column": 32,
-                        "line": 251
+                        "line": 248
                       }
                     }
                   ],
@@ -584,7 +704,7 @@
               ],
               "id": "cdda7302ab5eaaaf476d-a66a0f939351c5afc63b",
               "file": "projects-page.spec.ts",
-              "line": 238,
+              "line": 234,
               "column": 3
             }
           ]
@@ -592,7 +712,7 @@
         {
           "title": "E2E-010: 기본 프로젝트 배지",
           "file": "projects-page.spec.ts",
-          "line": 260,
+          "line": 257,
           "column": 6,
           "specs": [
             {
@@ -608,45 +728,47 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 4,
+                      "workerIndex": 6,
                       "status": "failed",
-                      "duration": 6429,
+                      "duration": 6398,
                       "error": {
-                        "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('.p-card').first().locator('.p-badge')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.p-card').first().locator('.p-badge')\u001b[22m\n",
-                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('.p-card').first().locator('.p-badge')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.p-card').first().locator('.p-badge')\u001b[22m\n\n    at C:\\project\\jjiban\\tests\\e2e\\projects-page.spec.ts:277:25",
+                        "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('.p-card')\nExpected: \u001b[32m2\u001b[39m\nReceived: \u001b[31m0\u001b[39m\nCall log:\n\u001b[2m  - expect.toHaveCount with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.p-card')\u001b[22m\n\u001b[2m    8 × locator resolved to 0 elements\u001b[22m\n\u001b[2m      - unexpected value \"0\"\u001b[22m\n",
+                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('.p-card')\nExpected: \u001b[32m2\u001b[39m\nReceived: \u001b[31m0\u001b[39m\nCall log:\n\u001b[2m  - expect.toHaveCount with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.p-card')\u001b[22m\n\u001b[2m    8 × locator resolved to 0 elements\u001b[22m\n\u001b[2m      - unexpected value \"0\"\u001b[22m\n\n    at C:\\project\\jjiban\\tests\\e2e\\projects-page.spec.ts:293:25",
                         "matcherResult": {
-                          "message": "\u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('.p-card').first().locator('.p-badge')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.p-card').first().locator('.p-badge')\u001b[22m\n",
+                          "actual": 0,
+                          "expected": 2,
+                          "message": "\u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('.p-card')\nExpected: \u001b[32m2\u001b[39m\nReceived: \u001b[31m0\u001b[39m\nCall log:\n\u001b[2m  - expect.toHaveCount with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.p-card')\u001b[22m\n\u001b[2m    8 × locator resolved to 0 elements\u001b[22m\n\u001b[2m      - unexpected value \"0\"\u001b[22m\n",
+                          "name": "toHaveCount",
                           "pass": false,
-                          "actual": "hidden",
-                          "name": "toBeVisible",
-                          "expected": "visible",
                           "log": [
-                            "  - expect.toBeVisible with timeout 5000ms",
-                            "  - waiting for locator('.p-card').first().locator('.p-badge')"
+                            "  - expect.toHaveCount with timeout 5000ms",
+                            "  - waiting for locator('.p-card')",
+                            "    8 × locator resolved to 0 elements",
+                            "      - unexpected value \"0\""
                           ],
                           "timeout": 5000
                         },
                         "location": {
                           "file": "C:\\project\\jjiban\\tests\\e2e\\projects-page.spec.ts",
                           "column": 25,
-                          "line": 277
+                          "line": 293
                         },
-                        "snippet": "\u001b[0m \u001b[90m 275 |\u001b[39m     \u001b[90m// Default 배지 확인\u001b[39m\n \u001b[90m 276 |\u001b[39m     \u001b[36mconst\u001b[39m badge \u001b[33m=\u001b[39m defaultCard\u001b[33m.\u001b[39mlocator(\u001b[32m'.p-badge'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 277 |\u001b[39m     \u001b[36mawait\u001b[39m expect(badge)\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                         \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 278 |\u001b[39m     \u001b[36mawait\u001b[39m expect(badge)\u001b[33m.\u001b[39mtoContainText(\u001b[32m'Default'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 279 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 280 |\u001b[39m })\u001b[33m;\u001b[39m\u001b[0m"
+                        "snippet": "\u001b[0m \u001b[90m 291 |\u001b[39m     \u001b[90m// 카드 확인\u001b[39m\n \u001b[90m 292 |\u001b[39m     \u001b[36mconst\u001b[39m cards \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'.p-card'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 293 |\u001b[39m     \u001b[36mawait\u001b[39m expect(cards)\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m2\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                         \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 294 |\u001b[39m\n \u001b[90m 295 |\u001b[39m     \u001b[90m// Default 배지 확인\u001b[39m\n \u001b[90m 296 |\u001b[39m     \u001b[36mconst\u001b[39m badge \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'.p-badge:has-text(\"Default\")'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
                       },
                       "errors": [
                         {
                           "location": {
                             "file": "C:\\project\\jjiban\\tests\\e2e\\projects-page.spec.ts",
                             "column": 25,
-                            "line": 277
+                            "line": 293
                           },
-                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('.p-card').first().locator('.p-badge')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.p-card').first().locator('.p-badge')\u001b[22m\n\n\n\u001b[0m \u001b[90m 275 |\u001b[39m     \u001b[90m// Default 배지 확인\u001b[39m\n \u001b[90m 276 |\u001b[39m     \u001b[36mconst\u001b[39m badge \u001b[33m=\u001b[39m defaultCard\u001b[33m.\u001b[39mlocator(\u001b[32m'.p-badge'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 277 |\u001b[39m     \u001b[36mawait\u001b[39m expect(badge)\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                         \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 278 |\u001b[39m     \u001b[36mawait\u001b[39m expect(badge)\u001b[33m.\u001b[39mtoContainText(\u001b[32m'Default'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 279 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 280 |\u001b[39m })\u001b[33m;\u001b[39m\u001b[0m\n    at C:\\project\\jjiban\\tests\\e2e\\projects-page.spec.ts:277:25"
+                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('.p-card')\nExpected: \u001b[32m2\u001b[39m\nReceived: \u001b[31m0\u001b[39m\nCall log:\n\u001b[2m  - expect.toHaveCount with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.p-card')\u001b[22m\n\u001b[2m    8 × locator resolved to 0 elements\u001b[22m\n\u001b[2m      - unexpected value \"0\"\u001b[22m\n\n\n\u001b[0m \u001b[90m 291 |\u001b[39m     \u001b[90m// 카드 확인\u001b[39m\n \u001b[90m 292 |\u001b[39m     \u001b[36mconst\u001b[39m cards \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'.p-card'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 293 |\u001b[39m     \u001b[36mawait\u001b[39m expect(cards)\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m2\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                         \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 294 |\u001b[39m\n \u001b[90m 295 |\u001b[39m     \u001b[90m// Default 배지 확인\u001b[39m\n \u001b[90m 296 |\u001b[39m     \u001b[36mconst\u001b[39m badge \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'.p-badge:has-text(\"Default\")'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m\n    at C:\\project\\jjiban\\tests\\e2e\\projects-page.spec.ts:293:25"
                         }
                       ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-12-14T12:01:52.853Z",
+                      "startTime": "2025-12-15T00:04:00.588Z",
                       "attachments": [
                         {
                           "name": "screenshot",
@@ -657,7 +779,7 @@
                       "errorLocation": {
                         "file": "C:\\project\\jjiban\\tests\\e2e\\projects-page.spec.ts",
                         "column": 25,
-                        "line": 277
+                        "line": 293
                       }
                     }
                   ],
@@ -666,7 +788,47 @@
               ],
               "id": "cdda7302ab5eaaaf476d-bf327cdc20be9a6aae8f",
               "file": "projects-page.spec.ts",
-              "line": 269,
+              "line": 258,
+              "column": 3
+            }
+          ]
+        },
+        {
+          "title": "E2E-011: 반응형 레이아웃",
+          "file": "projects-page.spec.ts",
+          "line": 302,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should display correctly on different viewports",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 7,
+                      "status": "passed",
+                      "duration": 1713,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-15T00:04:00.675Z",
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "cdda7302ab5eaaaf476d-ed04fd2bced8da5eb1e4",
+              "file": "projects-page.spec.ts",
+              "line": 303,
               "column": 3
             }
           ]
@@ -676,11 +838,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2025-12-14T12:01:29.398Z",
-    "duration": 88671.27100000001,
-    "expected": 0,
+    "startTime": "2025-12-15T00:03:30.975Z",
+    "duration": 80034.539,
+    "expected": 2,
     "skipped": 0,
-    "unexpected": 8,
+    "unexpected": 7,
     "flaky": 0
   }
 }

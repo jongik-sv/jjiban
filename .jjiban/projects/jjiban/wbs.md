@@ -2,7 +2,7 @@
 
 > version: 1.0
 > depth: 4
-> updated: 2025-12-13
+> updated: 2025-12-15
 > start: 2025-12-13
 
 ---
@@ -292,7 +292,7 @@
 
 ### TSK-03-04: Workflow Engine
 - category: development
-- status: implement [im]
+- status: done [xx]
 - priority: high
 - assignee: -
 - schedule: 2026-01-03 ~ 2026-01-10

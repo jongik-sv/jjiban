@@ -27,6 +27,20 @@ import {
 } from '../errors/standardError';
 
 /**
+ * 동시성 제어를 위한 히스토리 쓰기 락 맵
+ * 동일 Task에 대한 동시 히스토리 쓰기를 순차 처리
+ */
+const historyLocks = new Map<string, Promise<void>>();
+
+/**
+ * queryHistory 반환 타입
+ */
+export interface QueryHistoryResult {
+  items: WorkflowHistory[];
+  totalCount: number;
+}
+
+/**
  * Task의 현재 워크플로우 상태 조회
  * @param taskId - Task ID
  * @returns WorkflowState
@@ -131,7 +145,7 @@ export async function executeCommand(
  * Task의 워크플로우 이력 조회
  * @param taskId - Task ID
  * @param filter - 필터링 옵션
- * @returns WorkflowHistory 배열
+ * @returns QueryHistoryResult (items, totalCount)
  *
  * FR-004: 워크플로우 이력 조회
  */
@@ -142,7 +156,7 @@ export async function queryHistory(
     limit?: number;
     offset?: number;
   }
-): Promise<WorkflowHistory[]> {
+): Promise<QueryHistoryResult> {
   // Task 존재 확인
   const taskResult = await findTaskById(taskId);
   if (!taskResult) {
@@ -162,15 +176,23 @@ export async function queryHistory(
     filtered = filtered.filter((h) => h.action === filter.action);
   }
 
+  // 전체 개수 저장 (페이징 전)
+  const totalCount = filtered.length;
+
   // 페이징
   const offset = filter?.offset || 0;
   const limit = filter?.limit || filtered.length;
 
-  return filtered.slice(offset, offset + limit);
+  return {
+    items: filtered.slice(offset, offset + limit),
+    totalCount,
+  };
 }
 
 /**
  * 이력 기록 (내부 함수)
+ * 동시성 제어: 동일 Task에 대한 동시 쓰기를 뮤텍스 패턴으로 순차 처리
+ *
  * @param taskId - Task ID
  * @param entry - 이력 엔트리
  */
@@ -180,26 +202,48 @@ async function recordHistory(
 ): Promise<void> {
   const taskResult = await findTaskById(taskId);
   if (!taskResult) {
+    console.warn(`[WorkflowEngine] Task not found for history recording: ${taskId}`);
     return;
   }
 
   const { projectId } = taskResult;
-  const taskFolderPath = getTaskFolderPath(projectId, taskId);
-  await ensureDir(taskFolderPath);
+  const lockKey = `${projectId}-${taskId}-history`;
 
-  const historyPath = join(taskFolderPath, 'workflow-history.json');
-
-  // 기존 이력 읽기
-  const history = (await readJsonFile<WorkflowHistory[]>(historyPath)) || [];
-
-  // 최신 항목을 앞에 추가
-  history.unshift(entry);
-
-  // 최대 100개 유지
-  if (history.length > 100) {
-    history.splice(100);
+  // 이전 작업 완료 대기 (동시성 제어)
+  const previousLock = historyLocks.get(lockKey);
+  if (previousLock) {
+    await previousLock;
   }
 
-  // 저장
-  await writeJsonFile(historyPath, history);
+  // 새 작업 시작 - 비동기 작업을 Promise로 래핑
+  const operation = (async () => {
+    const taskFolderPath = getTaskFolderPath(projectId, taskId);
+    await ensureDir(taskFolderPath);
+
+    const historyPath = join(taskFolderPath, 'workflow-history.json');
+
+    // 기존 이력 읽기
+    const history = (await readJsonFile<WorkflowHistory[]>(historyPath)) || [];
+
+    // 최신 항목을 앞에 추가
+    history.unshift(entry);
+
+    // 최대 100개 유지
+    if (history.length > 100) {
+      history.splice(100);
+    }
+
+    // 저장
+    await writeJsonFile(historyPath, history);
+  })();
+
+  // 락 등록
+  historyLocks.set(lockKey, operation);
+
+  try {
+    await operation;
+  } finally {
+    // 작업 완료 후 락 제거
+    historyLocks.delete(lockKey);
+  }
 }

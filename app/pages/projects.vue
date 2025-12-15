@@ -91,6 +91,8 @@
 </template>
 
 <script setup lang="ts">
+import { formatDate } from '~/utils/format';
+
 // 타입 정의 (server/utils/projects/types.ts에서 복사)
 interface ProjectListItem {
   id: string;
@@ -166,25 +168,21 @@ const filteredProjects = computed<ProjectListItem[]>(() => {
 });
 
 // ============================================================
-// 유틸리티 함수
-// ============================================================
-
-/**
- * ISO 8601 날짜를 YYYY-MM-DD 형식으로 변환
- */
-function formatDate(isoDate: string): string {
-  const date = new Date(isoDate);
-  return date.toISOString().split('T')[0];
-}
-
-// ============================================================
 // 이벤트 핸들러
 // ============================================================
 
 /**
- * WBS 페이지로 이동
+ * WBS 페이지로 이동 (M-003: 입력 검증 및 URL 인코딩 추가)
  */
 function navigateToWbs(projectId: string): void {
-  navigateTo(`/wbs?project=${projectId}`);
+  // 방어적 검증 (M-003)
+  if (!projectId || typeof projectId !== 'string') {
+    console.error('[Projects] Invalid project ID:', projectId);
+    return;
+  }
+
+  // URL 인코딩으로 특수문자 처리 (M-003)
+  const encodedId = encodeURIComponent(projectId);
+  navigateTo(`/wbs?project=${encodedId}`);
 }
 </script>
