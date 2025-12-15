@@ -562,6 +562,35 @@
 
 ---
 
+## WP-07: CLI Tools
+- status: planned
+- priority: high
+- schedule: 2026-01-25 ~ 2026-02-05
+- progress: 0%
+
+### TSK-07-01: Workflow Orchestrator CLI 구현
+- category: development
+- domain: backend
+- status: [ ]
+- priority: high
+- assignee: -
+- schedule: 2026-01-25 ~ 2026-02-05
+- tags: cli, workflow, orchestrator
+- depends: TSK-03-04
+- test-result: none
+- requirements:
+  - Node.js 기반 CLI 진입점 (bin/jjiban.js)
+  - workflow 명령어 구현 (jjiban workflow TSK-XX)
+  - 워크플로우 러너 (각 단계마다 새 Claude 세션 호출)
+  - 상태 관리자 (workflow-state.json 저장/로드)
+  - wbs.md 파서 연동 (기존 server/utils/wbs/parser 재사용)
+  - Claude CLI 실행기 (spawn으로 claude -p 호출)
+  - --until, --dry-run, --resume, --verbose 옵션 지원
+  - package.json bin 설정 및 commander 의존성 추가
+- ref: PRD 13
+
+---
+
 ## Summary
 
 | WP | 명칭 | Task 수 | 예상 기간 |
