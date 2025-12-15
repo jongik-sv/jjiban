@@ -18,13 +18,22 @@ test.describe.serial('Task API', () => {
     const settingsPath = join(JJIBAN_ROOT, 'settings');
     await fs.mkdir(settingsPath, { recursive: true });
 
-    // projects.json 생성
+    // projects.json 생성 (완전한 구조)
     const projectsJsonPath = join(settingsPath, 'projects.json');
     await fs.writeFile(
       projectsJsonPath,
       JSON.stringify({
-        projects: [{ id: TEST_PROJECT_ID }],
-      }),
+        version: '1.0',
+        projects: [{
+          id: TEST_PROJECT_ID,
+          name: '테스트 프로젝트',
+          path: TEST_PROJECT_ID,
+          status: 'active',
+          wbsDepth: 4,
+          createdAt: '2025-12-14T00:00:00.000Z',
+        }],
+        defaultProject: TEST_PROJECT_ID,
+      }, null, 2),
       'utf-8'
     );
 
@@ -32,23 +41,26 @@ test.describe.serial('Task API', () => {
     const projectPath = join(JJIBAN_ROOT, 'projects', TEST_PROJECT_ID);
     await fs.mkdir(projectPath, { recursive: true });
 
-    // team.json 생성
+    // team.json 생성 (완전한 구조)
     const teamJsonPath = join(projectPath, 'team.json');
     await fs.writeFile(
       teamJsonPath,
       JSON.stringify({
+        version: '1.0',
         members: [
           {
             id: 'dev-001',
             name: 'Developer 1',
+            email: 'dev1@test.com',
             role: 'Backend Developer',
+            active: true,
           },
         ],
-      }),
+      }, null, 2),
       'utf-8'
     );
 
-    // WBS 파일 생성
+    // WBS 파일 생성 (상태 코드 형식: [bd] - 대괄호만 사용)
     const wbsPath = join(projectPath, 'wbs.md');
     const wbsContent = `# WBS - Test Project
 
@@ -67,7 +79,7 @@ test.describe.serial('Task API', () => {
 
 #### ${TEST_TASK_ID}: Test Task
 - category: development
-- status: basic-design [bd]
+- status: [bd]
 - priority: critical
 - assignee: dev-001
 `;

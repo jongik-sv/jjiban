@@ -11,17 +11,26 @@ import { join } from 'path';
 const TEST_PROJECT_ID = 'project';
 const JJIBAN_ROOT = '.jjiban';
 
-test.describe('WBS API', () => {
+test.describe.serial('WBS API', () => {
   test.beforeEach(async () => {
-    // 설정 폴더 생성 및 projects.json 생성
+    // 설정 폴더 생성 및 projects.json 생성 (완전한 구조)
     const settingsPath = join(JJIBAN_ROOT, 'settings');
     await fs.mkdir(settingsPath, { recursive: true });
     const projectsJsonPath = join(settingsPath, 'projects.json');
     await fs.writeFile(
       projectsJsonPath,
       JSON.stringify({
-        projects: [{ id: TEST_PROJECT_ID }],
-      }),
+        version: '1.0',
+        projects: [{
+          id: TEST_PROJECT_ID,
+          name: '테스트 프로젝트',
+          path: TEST_PROJECT_ID,
+          status: 'active',
+          wbsDepth: 4,
+          createdAt: '2025-12-14T00:00:00.000Z',
+        }],
+        defaultProject: TEST_PROJECT_ID,
+      }, null, 2),
       'utf-8'
     );
 
@@ -29,7 +38,7 @@ test.describe('WBS API', () => {
     const projectPath = join(JJIBAN_ROOT, 'projects', TEST_PROJECT_ID);
     await fs.mkdir(projectPath, { recursive: true });
 
-    // WBS 파일 생성
+    // WBS 파일 생성 (상태 코드 형식: [bd] - 대괄호만 사용)
     const wbsPath = join(projectPath, 'wbs.md');
     const wbsContent = `# WBS - Test Project
 
@@ -49,7 +58,7 @@ test.describe('WBS API', () => {
 
 #### TSK-01-01-01: Test Task
 - category: development
-- status: basic-design [bd]
+- status: [bd]
 - priority: critical
 `;
 

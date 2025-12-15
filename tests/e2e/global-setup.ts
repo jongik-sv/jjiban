@@ -87,7 +87,7 @@ async function globalSetup() {
     'utf-8'
   );
 
-  // wbs.md 생성
+  // wbs.md 생성 (상태 코드 형식: [bd] - 대괄호만 사용)
   const wbsContent = `# WBS - Test Project
 
 > version: 1.0
@@ -106,7 +106,7 @@ async function globalSetup() {
 
 #### TSK-01-01-01: Test Task
 - category: development
-- status: basic-design [bd]
+- status: [bd]
 - priority: critical
 - assignee: dev-001
 `;

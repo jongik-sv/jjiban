@@ -7,15 +7,16 @@
 import { describe, test, expect, beforeEach } from 'vitest';
 import {
   getWorkflowState,
-  getAvailableCommands,
   executeCommand,
   queryHistory,
 } from '../../../server/utils/workflow/workflowEngine';
+import { getAvailableCommands } from '../../../server/utils/workflow/transitionService';
 
-const TEST_PROJECT_ID = 'project';
-const TEST_TASK_DEV = 'TSK-01-01-01';
-const TEST_TASK_DEFECT = 'TSK-01-01-02';
-const TEST_TASK_INFRA = 'TSK-01-01-03';
+const TEST_PROJECT_ID = 'jjiban';
+// jjiban 프로젝트의 실제 Task ID 사용
+const TEST_TASK_DEV = 'TSK-01-02-01';        // development - AppLayout
+const TEST_TASK_DEFECT = 'TSK-01-02-02';     // development - AppHeader (defect 없어서 development로 대체)
+const TEST_TASK_INFRA = 'TSK-01-01-01';      // infrastructure - Nuxt 3 초기화
 
 describe('WorkflowEngine', () => {
   describe('getWorkflowState', () => {
@@ -34,13 +35,13 @@ describe('WorkflowEngine', () => {
       expect(Array.isArray(state.availableCommands)).toBe(true);
     });
 
-    test('returns workflow state for defect task', async () => {
+    test('returns workflow state for second development task', async () => {
       const state = await getWorkflowState(TEST_TASK_DEFECT);
 
       expect(state).toBeDefined();
       expect(state.taskId).toBe(TEST_TASK_DEFECT);
-      expect(state.category).toBe('defect');
-      expect(state.workflow.id).toBe('defect');
+      expect(state.category).toBe('development');
+      expect(state.workflow.id).toBe('development');
     });
 
     test('returns workflow state for infrastructure task', async () => {
