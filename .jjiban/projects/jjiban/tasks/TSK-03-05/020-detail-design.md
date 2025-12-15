@@ -312,55 +312,47 @@ function parseMetadata(markdown: string): WbsMetadata {
 
 ## 3. 유틸리티 함수 확장
 
-### 3.1 파일: `server/utils/wbs/taskService.ts` (확장)
+### 3.1 파일: `server/utils/wbs/taskService.ts` (기존 함수 재사용)
 
-#### 3.1.1 findTaskInTree 함수
+#### 3.1.1 findTaskInTree 함수 (기존 함수 export 추가)
 
+> **P0 리뷰 반영**: 기존 `findTaskInTree` 함수가 이미 `taskService.ts:70`에 존재합니다.
+> 새로 만들지 않고, 기존 함수에 `export` 키워드를 추가하여 재사용합니다.
+
+**기존 함수 위치**: `server/utils/wbs/taskService.ts:70`
+
+**변경 사항**:
 ```typescript
-import type { WbsNode } from '../../../types';
+// 변경 전 (내부 함수)
+function findTaskInTree(
+  nodes: WbsNode[],
+  taskId: string,
+  parentWp?: string,
+  parentAct?: string
+): { task: WbsNode; parentWp: string; parentAct?: string } | null
 
-/**
- * WBS 트리에서 특정 Task 노드 탐색
- *
- * @param tree - WBS 노드 배열 (루트 레벨)
- * @param taskId - 찾을 Task ID (예: TSK-03-05)
- * @returns 찾은 Task 노드 또는 null
- *
- * 검색 조건:
- * - node.id === taskId
- * - node.type === 'task'
- */
-export function findTaskInTree(tree: WbsNode[], taskId: string): WbsNode | null {
-  const visited = new Set<string>();
-
-  function searchNode(nodes: WbsNode[]): WbsNode | null {
-    for (const node of nodes) {
-      // 순환 참조 방지
-      if (visited.has(node.id)) {
-        continue;
-      }
-      visited.add(node.id);
-
-      // ID와 타입 모두 일치해야 함
-      if (node.id === taskId && node.type === 'task') {
-        return node;
-      }
-
-      // 자식 노드 재귀 탐색
-      if (node.children && node.children.length > 0) {
-        const found = searchNode(node.children);
-        if (found) {
-          return found;
-        }
-      }
-    }
-
-    return null;
-  }
-
-  return searchNode(tree);
-}
+// 변경 후 (export 추가)
+export function findTaskInTree(
+  nodes: WbsNode[],
+  taskId: string,
+  parentWp?: string,
+  parentAct?: string
+): { task: WbsNode; parentWp: string; parentAct?: string } | null
 ```
+
+**API에서 사용 방법**:
+```typescript
+import { findTaskInTree } from '../../../../../utils/wbs/taskService';
+
+// 사용
+const result = findTaskInTree(tree, taskId);
+if (!result) {
+  throw createError({ statusCode: 404, statusMessage: 'TASK_NOT_FOUND' });
+}
+const taskNode = result.task;  // WbsNode 타입
+```
+
+**참고**: 기존 함수는 `{ task, parentWp, parentAct }` 객체를 반환하므로, `result.task`로 노드에 접근합니다.
 
 ---
 
