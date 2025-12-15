@@ -167,6 +167,7 @@ const koreanPatterns = {
 
 [ ] Todo
   ↓ /wf:start          → requirements-analyst
+  ↓ /wf:ui (조건부)    → frontend-architect ⚠️ UI 설계 문서 없으면 실행
 [bd] 기본설계
   ↓ /wf:draft          → system-architect
 [dd] 상세설계  ← 여기서 STOP!
@@ -205,6 +206,8 @@ const koreanPatterns = {
 ```
 [ ] Todo
   ↓ /wf:start          → requirements-analyst
+  │                       └── 내부적으로 /wf:ui 호출 시도
+  ↓ /wf:ui (조건부)    → frontend-architect ⚠️ UI 설계 문서 없을 때만 실행
 [bd] 기본설계
   ↓ /wf:draft          → system-architect
 [dd] 상세설계
@@ -335,6 +338,17 @@ async function executeAutoWorkflow(taskId, options = {}) {
           }
         }
 
+        // ⭐ UI 설계 조건부 실행: subagent에서 ui 호출 불가 대응
+        if (postAction.condition === 'uiDesignNotExist') {
+          // wf:start가 이미 wf:ui를 호출했는지 확인
+          const uiDesignExists = checkUiDesignExists(taskId);
+          if (uiDesignExists) {
+            console.log(`[INFO] UI 설계 문서가 이미 존재합니다. wf:ui 스킵`);
+            continue;  // UI 설계가 있으면 스킵
+          }
+          console.log(`[INFO] UI 설계 문서 없음. wf:ui 직접 실행`);
+        }
+
         if (postAction.subagent) {
           await Task({ subagent_type: postAction.subagent, ... });
         } else {
@@ -419,6 +433,17 @@ function checkCodeReviewExists(taskId) {
 
   // 코드 리뷰 파일이 하나라도 존재하면 이미 실행된 것으로 간주
   return codeReviewFiles.length > 0;
+}
+
+// ⭐ UI 설계 문서 존재 여부 확인
+// wf:start에서 subagent가 ui를 호출하지 못했을 때 대응
+function checkUiDesignExists(taskId) {
+  const taskFolder = `.jjiban/projects/{project}/tasks/${taskId}/`;
+
+  // UI 설계 문서 존재 여부 확인
+  const uiDesignExists = fileExists(`${taskFolder}011-ui-design.md`);
+
+  return uiDesignExists;
 }
 ```
 
@@ -521,7 +546,11 @@ const subagentMapping = {
     '[ ]':  {
       action: 'start',
       subagent: 'requirements-analyst',
-      next: '[bd]'
+      next: '[bd]',
+      // ⭐ start 완료 후 UI 설계 문서 확인 (subagent에서 ui 호출 불가 대응)
+      postActions: [
+        { action: 'ui', subagent: 'frontend-architect', condition: 'uiDesignNotExist' }
+      ]
     },
     '[bd]': {
       action: 'draft',
@@ -1162,7 +1191,15 @@ Subagent 실행 통계:
 jjiban 프로젝트 - Workflow Command
 author: 장종익
 Command: wf:auto
-Version: 2.3
+Version: 2.4
+
+Changes (v2.4):
+- wf:ui 조건부 실행 로직 추가 (nested subagent 문제 대응)
+  - wf:start에서 subagent가 wf:ui 호출 불가 시 auto에서 직접 호출
+  - UI 설계 문서(011-ui-design.md) 존재 여부 확인
+  - checkUiDesignExists() 함수 추가
+  - '[ ]' 상태에 postActions 추가 ('uiDesignNotExist' 조건)
+  - 워크플로우 다이어그램에 조건부 ui 실행 표시
 
 Changes (v2.3):
 - wf:audit 조건부 실행 로직 추가

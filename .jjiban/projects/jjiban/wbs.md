@@ -20,7 +20,7 @@
 #### TSK-01-01-01: Nuxt 3 프로젝트 초기화
 - category: infrastructure
 - domain: infra
-- status: done [xx]
+- status: [xx]
 - priority: critical
 - assignee: -
 - schedule: 2025-12-13 ~ 2025-12-13
@@ -35,7 +35,7 @@
 #### TSK-01-01-02: PrimeVue 4.x + TailwindCSS 설정
 - category: infrastructure
 - domain: infra
-- status: done [xx]
+- status: [xx]
 - priority: critical
 - assignee: -
 - schedule: 2025-12-13 ~ 2025-12-14
@@ -50,7 +50,7 @@
 #### TSK-01-01-03: Pinia 상태 관리 설정
 - category: infrastructure
 - domain: infra
-- status: done [xx]
+- status: [xx]
 - priority: high
 - assignee: -
 - schedule: 2025-12-14 ~ 2025-12-14
@@ -64,7 +64,7 @@
 #### TSK-01-01-04: 프로젝트 디렉토리 구조 설정
 - category: infrastructure
 - domain: infra
-- status: done [xx]
+- status: [xx]
 - priority: high
 - assignee: -
 - schedule: 2025-12-14 ~ 2025-12-15
@@ -83,7 +83,7 @@
 #### TSK-01-02-01: AppLayout 컴포넌트 구현
 - category: development
 - domain: frontend
-- status: done [xx]
+- status: [xx]
 - priority: high
 - assignee: -
 - schedule: 2025-12-16 ~ 2025-12-17
@@ -98,7 +98,7 @@
 #### TSK-01-02-02: AppHeader 컴포넌트 구현
 - category: development
 - domain: frontend
-- status: done [xx]
+- status: [xx]
 - priority: high
 - assignee: -
 - schedule: 2025-12-17 ~ 2025-12-18
@@ -125,7 +125,7 @@
 #### TSK-02-01-01: .jjiban 디렉토리 구조 생성
 - category: infrastructure
 - domain: infra
-- status: done [xx]
+- status: [xx]
 - priority: critical
 - assignee: -
 - schedule: 2025-12-16 ~ 2025-12-17
@@ -140,7 +140,7 @@
 #### TSK-02-01-02: 파일 읽기/쓰기 유틸리티
 - category: infrastructure
 - domain: backend
-- status: done [xx]
+- status: [xx]
 - priority: critical
 - assignee: -
 - schedule: 2025-12-17 ~ 2025-12-18
@@ -160,7 +160,7 @@
 #### TSK-02-02-01: wbs.md 파서 구현
 - category: development
 - domain: backend
-- status: done [xx]
+- status: [xx]
 - priority: critical
 - assignee: -
 - schedule: 2025-12-18 ~ 2025-12-20
@@ -176,7 +176,7 @@
 #### TSK-02-02-02: wbs.md 시리얼라이저 구현
 - category: development
 - domain: backend
-- status: done [xx]
+- status: [xx]
 - priority: critical
 - assignee: -
 - schedule: 2025-12-20 ~ 2025-12-22
@@ -191,7 +191,7 @@
 #### TSK-02-02-03: WBS 데이터 유효성 검증
 - category: development
 - domain: backend
-- status: done [xx]
+- status: [xx]
 - priority: high
 - assignee: -
 - schedule: 2025-12-22 ~ 2025-12-23
@@ -211,7 +211,7 @@
 #### TSK-02-03-01: 기본 설정 JSON 스키마 정의
 - category: infrastructure
 - domain: infra
-- status: done [xx]
+- status: [xx]
 - priority: high
 - assignee: -
 - schedule: 2025-12-23 ~ 2025-12-24
@@ -227,7 +227,7 @@
 #### TSK-02-03-02: 설정 서비스 구현
 - category: development
 - domain: backend
-- status: done [xx]
+- status: [xx]
 - priority: high
 - assignee: -
 - schedule: 2025-12-24 ~ 2025-12-26
@@ -242,7 +242,7 @@
 #### TSK-02-03-03: 프로젝트 메타데이터 서비스
 - category: development
 - domain: backend
-- status: done [xx]
+- status: [xx]
 - priority: medium
 - assignee: -
 - schedule: 2025-12-26 ~ 2025-12-27
@@ -265,7 +265,7 @@
 ### TSK-03-01: Project API
 - category: development
 - domain: backend
-- status: done [xx]
+- status: [xx]
 - priority: high
 - assignee: -
 - schedule: 2025-12-23 ~ 2025-12-27
@@ -280,7 +280,7 @@
 ### TSK-03-02: WBS API
 - category: development
 - domain: backend
-- status: done [xx]
+- status: [xx]
 - priority: critical
 - assignee: -
 - schedule: 2025-12-27 ~ 2025-12-31
@@ -295,7 +295,7 @@
 ### TSK-03-03: Workflow API & Settings
 - category: development
 - domain: backend
-- status: implement [im]
+- status: [xx]
 - priority: high
 - assignee: -
 - schedule: 2025-12-31 ~ 2026-01-03
@@ -310,7 +310,7 @@
 ### TSK-03-04: Workflow Engine
 - category: development
 - domain: backend
-- status: implement [im]
+- status: [xx]
 - priority: high
 - assignee: -
 - schedule: 2026-01-03 ~ 2026-01-10
@@ -334,7 +334,7 @@
 ### TSK-04-00: Projects Page
 - category: development
 - domain: frontend
-- status: implement [im]
+- status: [xx]
 - priority: high
 - assignee: -
 - schedule: 2026-01-06 ~ 2026-01-07
@@ -350,7 +350,7 @@
 ### TSK-04-01: Tree Panel
 - category: development
 - domain: frontend
-- status: detail-design [dd]
+- status: [dd]
 - priority: high
 - assignee: -
 - schedule: 2026-01-06 ~ 2026-01-09
@@ -366,7 +366,7 @@
 ### TSK-04-02: Tree Node
 - category: development
 - domain: frontend
-- status: detail-design [dd]
+- status: [dd]
 - priority: critical
 - assignee: -
 - schedule: 2026-01-09 ~ 2026-01-12
@@ -382,7 +382,7 @@
 ### TSK-04-03: Tree Interaction
 - category: development
 - domain: frontend
-- status: detail-design [dd]
+- status: [dd]
 - priority: high
 - assignee: -
 - schedule: 2026-01-12 ~ 2026-01-15
@@ -405,7 +405,7 @@
 ### TSK-05-01: Detail Panel Structure
 - category: development
 - domain: frontend
-- status: basic-design [bd]
+- status: [dd]
 - priority: high
 - assignee: -
 - schedule: 2026-01-13 ~ 2026-01-15
@@ -420,7 +420,7 @@
 ### TSK-05-02: Detail Sections
 - category: development
 - domain: frontend
-- status: basic-design [bd]
+- status: [dd]
 - priority: medium
 - assignee: -
 - schedule: 2026-01-15 ~ 2026-01-18
@@ -436,7 +436,7 @@
 ### TSK-05-03: Detail Actions
 - category: development
 - domain: frontend
-- status: basic-design [bd]
+- status: [dd]
 - priority: high
 - assignee: -
 - schedule: 2026-01-18 ~ 2026-01-20
@@ -450,7 +450,7 @@
 ### TSK-05-04: Document Viewer
 - category: development
 - domain: frontend
-- status: basic-design [bd]
+- status: [dd]
 - priority: medium
 - assignee: -
 - schedule: 2026-01-20 ~ 2026-01-22
