@@ -316,7 +316,7 @@
 ## WP-03: Backend API & Workflow
 - priority: high
 - schedule: 2025-12-23 ~ 2026-01-10
-- progress: 93%
+- progress: 100%
 
 #### TSK-03-01: Project API
 - category: development
@@ -411,11 +411,14 @@
 
 #### TSK-03-06: completed 필드 지원 (Parser/Serializer/API)
 - category: development
-- status: [im]
+- domain: backend
+- status: done [xx]
 - priority: high
+- assignee: -
 - schedule: 2026-01-13 ~ 2026-01-16
 - tags: api, wbs, completed, parser, serializer
 - depends: TSK-02-02-01, TSK-02-02-02, TSK-03-03
+- test-result: pass
 - requirements:
   - WBS Parser: completed 필드 파싱 (중첩 리스트 형식)
   - WBS Serializer: completed 필드 직렬화
@@ -426,6 +429,8 @@
   - bd: 2025-12-15 23:15
   - dd: 2025-12-15 23:55
   - im: 2025-12-16 00:13
+  - vf: 2025-12-16 00:43
+  - xx: 2025-12-16 00:50
 
 ---
 
