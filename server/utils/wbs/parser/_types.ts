@@ -3,7 +3,7 @@
  * Task: TSK-02-02-01
  */
 
-import type { WbsNodeType, TaskCategory, Priority, ScheduleRange } from '../../../../types';
+import type { WbsNodeType, TaskCategory, Priority, ScheduleRange, CompletedTimestamps } from '../../../../types';
 
 /**
  * 노드 헤더 정보
@@ -29,6 +29,7 @@ export interface NodeAttributes {
   requirements?: string[];
   ref?: string;
   customAttributes?: Record<string, string>;  // TSK-03-05: 커스텀 속성 (예: test-result)
+  completed?: CompletedTimestamps;  // TSK-03-06: 단계별 완료시각
 }
 
 /**

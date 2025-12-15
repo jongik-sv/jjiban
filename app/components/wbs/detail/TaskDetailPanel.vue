@@ -50,7 +50,7 @@
     <template v-else #content>
       <div class="task-detail-content overflow-y-auto" style="max-height: calc(100vh - 200px);">
         <!-- 기본 정보 (TSK-05-01) -->
-        <TaskBasicInfo
+        <WbsDetailTaskBasicInfo
           :task="selectedTask"
           :updating="isUpdating"
           @update:title="handleUpdateTitle"
@@ -59,13 +59,13 @@
         />
 
         <!-- 진행 상태 (TSK-05-01) -->
-        <TaskProgress :task="selectedTask" />
+        <WbsDetailTaskProgress :task="selectedTask" />
 
         <!-- 워크플로우 흐름 (TSK-05-02) -->
-        <TaskWorkflow :task="selectedTask" />
+        <WbsDetailTaskWorkflow :task="selectedTask" />
 
         <!-- Task 액션 (TSK-05-03) -->
-        <TaskActions
+        <WbsDetailTaskActions
           :task="selectedTask"
           :team-members="teamMembers"
           @task-updated="handleTaskUpdated"
@@ -74,19 +74,19 @@
         />
 
         <!-- 요구사항 (TSK-05-02) -->
-        <TaskRequirements
+        <WbsDetailTaskRequirements
           :task="selectedTask"
           @update:requirements="handleUpdateRequirements"
         />
 
         <!-- 관련 문서 (TSK-05-02) -->
-        <TaskDocuments
+        <WbsDetailTaskDocuments
           :documents="selectedTask.documents"
           @open-document="handleOpenDocument"
         />
 
         <!-- 이력 (TSK-05-02) -->
-        <TaskHistory :history="selectedTask.history" />
+        <WbsDetailTaskHistory :history="selectedTask.history" />
       </div>
     </template>
   </Card>

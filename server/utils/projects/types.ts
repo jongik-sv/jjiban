@@ -31,6 +31,8 @@ export interface ProjectsConfig {
 
 /**
  * 개별 프로젝트 메타데이터 (project.json)
+ * 폴더 스캔 방식으로 프로젝트 목록을 생성하므로
+ * 기존 projects.json의 정보도 여기에 통합
  */
 export interface ProjectConfig {
   id: string;
@@ -38,6 +40,7 @@ export interface ProjectConfig {
   description?: string;
   version: string;
   status: 'active' | 'archived';
+  wbsDepth: 3 | 4;  // WBS 계층 깊이 (기존 projects.json에서 이동)
   createdAt: string; // ISO 8601
   updatedAt: string; // ISO 8601
   scheduledStart?: string; // ISO date (YYYY-MM-DD)

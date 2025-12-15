@@ -63,6 +63,14 @@ export function serializeAttributes(node: WbsNode): string[] {
     lines.push(`- ref: ${node.ref}`);
   }
 
+  // TSK-03-06: completed (단계별 완료시각)
+  if (node.completed && Object.keys(node.completed).length > 0) {
+    lines.push(`- completed:`);
+    for (const [key, value] of Object.entries(node.completed)) {
+      lines.push(`  - ${key}: ${value}`);
+    }
+  }
+
   // progress (WP나 ACT 타입이고 값이 있으면)
   if ((node.type === 'wp' || node.type === 'act') && node.progress !== undefined && node.progress !== null) {
     // 숫자만 출력, % 포함 여부는 원본 형식 유지

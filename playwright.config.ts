@@ -1,13 +1,10 @@
 import { defineConfig, devices } from '@playwright/test'
-import { join } from 'path'
+import { E2E_TEST_ROOT } from './tests/e2e/test-constants'
 
 /**
  * Playwright E2E 테스트 설정
  * @see https://playwright.dev/docs/test-configuration
  */
-
-// 테스트 데이터 경로 - 실제 .jjiban 폴더 사용
-const TEST_BASE = process.cwd()
 
 export default defineConfig({
   // 테스트 파일 위치
@@ -69,8 +66,8 @@ export default defineConfig({
     stderr: 'pipe',
     env: {
       ...process.env,
-      // 테스트 환경에서는 테스트 fixtures 경로 사용
-      JJIBAN_BASE_PATH: TEST_BASE,
+      // 테스트 환경에서는 임시 디렉토리 사용 (프로덕션 데이터 보호)
+      JJIBAN_BASE_PATH: E2E_TEST_ROOT,
     },
   },
 

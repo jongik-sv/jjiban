@@ -349,6 +349,8 @@ Project
   - project.json, team.json 초기화
   - Backend: InitService 구현
 - ref: PRD 5.1
+- completed:
+  - ds: 2025-01-15 09:30
 
 ### TSK-08-02: JSON 파일 CRUD 서비스
 - category: development
@@ -379,6 +381,32 @@ Project
 | depends | - | 선행 Task ID |
 | requirements | - | 요구사항 목록 |
 | ref | - | 참조 문서 |
+| completed | - | 워크플로우 단계별 완료시각 (아래 형식) |
+
+### 7.5 completed 필드 형식
+
+각 워크플로우 단계 완료 시 자동 기록되는 타임스탬프입니다.
+
+**형식:**
+```markdown
+- completed:
+  - bd: 2025-12-15 10:30
+  - dd: 2025-12-15 14:20
+  - im: 2025-12-16 09:15
+```
+
+**카테고리별 기록 항목:**
+
+| 카테고리 | 기록 단계 |
+|---------|----------|
+| development | `bd`, `dd`, `im`, `vf`, `xx` |
+| defect | `an`, `fx`, `vf`, `xx` |
+| infrastructure | `ds`, `im`, `xx` |
+
+**동작:**
+- 상태 전이(transition) API 호출 시 자동 기록
+- 시간 형식: `YYYY-MM-DD HH:mm` (로컬 시간)
+- 이전 단계로 롤백 시 해당 단계 이후 기록 삭제
 
 ---
 
@@ -659,5 +687,6 @@ jjiban/
 
 | 버전 | 날짜 | 변경 내용 |
 |------|------|-----------|
+| 1.2 | 2025-12-15 | Task 속성에 `completed` 필드 추가 (7.4, 7.5) |
 | 1.1 | 2025-12-15 | CLI Tools 섹션 추가 (Workflow Orchestrator) |
 | 1.0 | 2025-12-13 | 1차 범위 PRD 작성 (WBS 트리 뷰 중심) |

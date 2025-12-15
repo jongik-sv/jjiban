@@ -7,36 +7,33 @@
 import { test, expect } from '@playwright/test';
 import { promises as fs } from 'fs';
 import { join } from 'path';
+import { E2E_TEST_ROOT } from './test-constants';
 
-const TEST_PROJECT_ID = 'project';
-const JJIBAN_ROOT = '.jjiban';
+// 고유 프로젝트 ID (테스트 파일별로 다른 ID 사용 → 병렬 실행 시 충돌 방지)
+const TEST_PROJECT_ID = 'test-wbs-api';
+// 임시 디렉토리의 .jjiban 폴더 사용 (프로덕션 데이터 보호)
+const JJIBAN_ROOT = join(E2E_TEST_ROOT, '.jjiban');
 
 test.describe.serial('WBS API', () => {
   test.beforeEach(async () => {
-    // 설정 폴더 생성 및 projects.json 생성 (완전한 구조)
-    const settingsPath = join(JJIBAN_ROOT, 'settings');
-    await fs.mkdir(settingsPath, { recursive: true });
-    const projectsJsonPath = join(settingsPath, 'projects.json');
+    // 테스트 프로젝트 폴더 생성
+    const projectPath = join(JJIBAN_ROOT, 'projects', TEST_PROJECT_ID);
+    await fs.mkdir(projectPath, { recursive: true });
+
+    // project.json 생성 (폴더 스캔 방식이므로 projects.json 불필요)
     await fs.writeFile(
-      projectsJsonPath,
+      join(projectPath, 'project.json'),
       JSON.stringify({
-        version: '1.0',
-        projects: [{
-          id: TEST_PROJECT_ID,
-          name: '테스트 프로젝트',
-          path: TEST_PROJECT_ID,
-          status: 'active',
-          wbsDepth: 4,
-          createdAt: '2025-12-14T00:00:00.000Z',
-        }],
-        defaultProject: TEST_PROJECT_ID,
+        id: TEST_PROJECT_ID,
+        name: 'WBS API 테스트 프로젝트',
+        version: '0.1.0',
+        status: 'active',
+        wbsDepth: 4,
+        createdAt: '2025-12-14T00:00:00.000Z',
+        updatedAt: '2025-12-14T00:00:00.000Z',
       }, null, 2),
       'utf-8'
     );
-
-    // 테스트 프로젝트 생성
-    const projectPath = join(JJIBAN_ROOT, 'projects', TEST_PROJECT_ID);
-    await fs.mkdir(projectPath, { recursive: true });
 
     // WBS 파일 생성 (상태 코드 형식: [bd] - 대괄호만 사용)
     const wbsPath = join(projectPath, 'wbs.md');
@@ -66,13 +63,9 @@ test.describe.serial('WBS API', () => {
   });
 
   test.afterEach(async () => {
-    // 테스트 프로젝트 삭제
+    // 테스트 프로젝트 삭제 (폴더 스캔 방식이므로 설정 파일 정리 불필요)
     const projectPath = join(JJIBAN_ROOT, 'projects', TEST_PROJECT_ID);
     await fs.rm(projectPath, { recursive: true, force: true });
-
-    // 설정 파일 삭제
-    const settingsPath = join(JJIBAN_ROOT, 'settings');
-    await fs.rm(settingsPath, { recursive: true, force: true }).catch(() => {});
   });
 
   test('E2E-WBS-01: GET /api/projects/:id/wbs - WBS 조회 성공', async ({ request }) => {

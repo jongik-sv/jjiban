@@ -4,7 +4,7 @@
  * 상세설계: 020-detail-design.md 섹션 3.3
  */
 
-import type { TaskCategory, Priority, ScheduleRange } from '../../../../types';
+import type { TaskCategory, Priority, ScheduleRange, CompletedTimestamps } from '../../../../types';
 import type { NodeAttributes } from './_types';
 import {
   ATTRIBUTE_PATTERN,
@@ -77,6 +77,11 @@ export function parseNodeAttributes(lines: string[]): NodeAttributes {
 
       case 'ref':
         attributes.ref = value;
+        break;
+
+      case 'completed':
+        // TSK-03-06: completed 속성 (중첩 리스트 형식)
+        attributes.completed = parseCompleted(lines, i + 1);
         break;
 
       case 'test-result':
@@ -202,4 +207,48 @@ function parseRequirements(lines: string[], startIndex: number): string[] {
   }
 
   return requirements;
+}
+
+/**
+ * completed 속성 파싱 (다중 라인)
+ * TSK-03-06: 단계별 완료시각 파싱
+ *
+ * 예:
+ * - completed:
+ *   - bd: 2025-12-15 10:30
+ *   - dd: 2025-12-15 14:20
+ *
+ * → { bd: "2025-12-15 10:30", dd: "2025-12-15 14:20" }
+ */
+function parseCompleted(lines: string[], startIndex: number): CompletedTimestamps {
+  const completed: CompletedTimestamps = {};
+
+  for (let i = startIndex; i < lines.length; i++) {
+    const line = lines[i];
+
+    // 들여쓰기 리스트 아이템인 경우 (예: "  - bd: 2025-12-15 10:30")
+    const match = line.match(INDENT_LIST_PATTERN);
+
+    if (match) {
+      const content = match[2].trim();
+      // "bd: 2025-12-15 10:30" 형태 파싱
+      const colonIndex = content.indexOf(':');
+      if (colonIndex > 0) {
+        const key = content.substring(0, colonIndex).trim();
+        const value = content.substring(colonIndex + 1).trim();
+        completed[key] = value;
+      }
+    } else if (line.match(ATTRIBUTE_PATTERN)) {
+      // 새로운 속성 시작이면 중단
+      break;
+    } else if (line.trim() === '') {
+      // 빈 줄이면 계속
+      continue;
+    } else {
+      // 그 외의 경우 중단
+      break;
+    }
+  }
+
+  return completed;
 }

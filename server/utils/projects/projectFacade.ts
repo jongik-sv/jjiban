@@ -11,12 +11,12 @@ import { rm } from 'fs/promises';
 import type {
   ProjectDetail,
   CreateProjectDto,
-  ProjectListItem,
 } from './types';
 import { createProject } from './projectService';
 import { getTeam } from './teamService';
-import { addProjectToList } from './projectsListService';
+import { isProjectIdDuplicate } from './projectsListService';
 import { getProjectDir } from './paths';
+import { createConflictError } from '../errors/standardError';
 
 /**
  * 프로젝트 생성 롤백
@@ -48,21 +48,18 @@ export async function createProjectWithRegistration(
   let projectCreated = false;
 
   try {
-    // 1. 프로젝트 생성 (폴더 + project.json + team.json)
+    // 1. 중복 확인 (폴더 생성 전에 수행)
+    const isDuplicate = await isProjectIdDuplicate(dto.id);
+    if (isDuplicate) {
+      throw createConflictError(
+        'DUPLICATE_PROJECT_ID',
+        '이미 존재하는 프로젝트 ID입니다'
+      );
+    }
+
+    // 2. 프로젝트 생성 (폴더 + project.json + team.json)
     const project = await createProject(dto);
     projectCreated = true;
-
-    // 2. 목록에 등록 (projects.json)
-    const listItem: ProjectListItem = {
-      id: project.id,
-      name: project.name,
-      path: project.id,
-      status: project.status,
-      wbsDepth: dto.wbsDepth || 4,
-      createdAt: project.createdAt,
-    };
-
-    await addProjectToList(listItem);
 
     // 3. 팀원 정보 조회 (빈 배열)
     const team = await getTeam(project.id);

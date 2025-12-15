@@ -1,70 +1,128 @@
 /**
  * 프로젝트 목록 서비스
  * Task: TSK-02-03-03
- * 상세설계: 020-detail-design.md 섹션 5.1
  *
- * 전역 프로젝트 목록 관리 (projects.json)
+ * 리팩토링: projects.json 마스터 목록 제거
+ * - projects/ 폴더를 스캔하여 프로젝트 목록 생성
+ * - 각 project.json에서 정보 읽기
+ * - settings.json에 defaultProject만 유지
+ *
+ * 장점:
+ * - 테스트 병렬 실행 시 충돌 없음
+ * - 각 테스트가 고유 프로젝트 폴더만 생성하면 됨
  */
 
-import { readFile, writeFile } from 'fs/promises';
-import type { ProjectsConfig, ProjectListItem } from './types';
-import { getProjectsListFilePath } from './paths';
-import { createInternalError, createConflictError, createNotFoundError } from '../errors/standardError';
+import { readFile, writeFile, readdir, mkdir } from 'fs/promises';
+import { join } from 'path';
+import type { ProjectsConfig, ProjectListItem, ProjectConfig } from './types';
+import { getProjectsBasePath, getBasePath, getProjectFilePath } from './paths';
+import { createConflictError, createNotFoundError, createInternalError } from '../errors/standardError';
 
-/**
- * 기본 ProjectsConfig
- */
-const DEFAULT_PROJECTS_CONFIG: ProjectsConfig = {
+// ============================================================
+// Settings (defaultProject만 관리)
+// ============================================================
+
+interface GlobalSettings {
+  version: string;
+  defaultProject: string | null;
+}
+
+const DEFAULT_SETTINGS: GlobalSettings = {
   version: '1.0',
-  projects: [],
   defaultProject: null,
 };
 
 /**
- * 프로젝트 목록 파일 읽기
- * BR-001: 파일 없으면 기본값 사용
+ * settings.json 파일 경로
  */
-async function loadProjectsList(): Promise<ProjectsConfig> {
-  const filePath = getProjectsListFilePath();
+function getSettingsFilePath(): string {
+  return join(getBasePath(), '.jjiban', 'settings', 'settings.json');
+}
+
+/**
+ * 전역 설정 파일 읽기
+ */
+async function loadSettings(): Promise<GlobalSettings> {
+  const filePath = getSettingsFilePath();
 
   try {
     const content = await readFile(filePath, 'utf-8');
-    return JSON.parse(content) as ProjectsConfig;
+    return JSON.parse(content) as GlobalSettings;
   } catch (error: unknown) {
-    // CR-002: 타입 가드를 사용한 안전한 에러 핸들링
-    // 파일 없음 - 기본값 사용
     if (error && typeof error === 'object' && 'code' in error && error.code === 'ENOENT') {
-      return DEFAULT_PROJECTS_CONFIG;
+      return DEFAULT_SETTINGS;
     }
-
-    // JSON 파싱 오류
     if (error instanceof SyntaxError) {
-      console.warn(`[ProjectsList] Failed to parse projects.json, using defaults`);
-      return DEFAULT_PROJECTS_CONFIG;
+      console.warn('[Settings] Failed to parse settings.json, using defaults');
+      return DEFAULT_SETTINGS;
     }
-
-    // 기타 오류
-    throw createInternalError(
-      'FILE_READ_ERROR',
-      '프로젝트 목록을 읽는 중 오류가 발생했습니다'
-    );
+    throw error;
   }
 }
 
 /**
- * 프로젝트 목록 파일 쓰기
+ * 전역 설정 파일 쓰기
  */
-async function saveProjectsList(config: ProjectsConfig): Promise<void> {
-  const filePath = getProjectsListFilePath();
+async function saveSettings(settings: GlobalSettings): Promise<void> {
+  const filePath = getSettingsFilePath();
+  const dirPath = join(getBasePath(), '.jjiban', 'settings');
+
+  // 폴더가 없으면 생성
+  await mkdir(dirPath, { recursive: true });
+  await writeFile(filePath, JSON.stringify(settings, null, 2), 'utf-8');
+}
+
+// ============================================================
+// 프로젝트 목록 (폴더 스캔 방식)
+// ============================================================
+
+/**
+ * 프로젝트 폴더 스캔하여 목록 생성
+ * projects/ 폴더의 하위 폴더를 스캔하고 각 project.json 읽기
+ */
+async function scanProjects(): Promise<ProjectListItem[]> {
+  const projectsBasePath = getProjectsBasePath();
+  const projects: ProjectListItem[] = [];
 
   try {
-    await writeFile(filePath, JSON.stringify(config, null, 2), 'utf-8');
-  } catch (error) {
-    throw createInternalError(
-      'FILE_WRITE_ERROR',
-      '프로젝트 목록을 저장하는 중 오류가 발생했습니다'
-    );
+    const entries = await readdir(projectsBasePath, { withFileTypes: true });
+
+    for (const entry of entries) {
+      if (!entry.isDirectory()) continue;
+
+      const projectId = entry.name;
+      const projectJsonPath = getProjectFilePath(projectId, 'project.json');
+
+      try {
+        const content = await readFile(projectJsonPath, 'utf-8');
+        const projectConfig = JSON.parse(content) as ProjectConfig;
+
+        // ProjectConfig → ProjectListItem 변환
+        projects.push({
+          id: projectConfig.id,
+          name: projectConfig.name,
+          path: projectId,  // 폴더명 = ID
+          status: projectConfig.status || 'active',
+          wbsDepth: projectConfig.wbsDepth || 4,
+          createdAt: projectConfig.createdAt,
+        });
+      } catch (error) {
+        // project.json이 없거나 읽기 실패 → 해당 폴더 무시
+        console.warn(`[ProjectsList] Skipping ${projectId}: project.json not found or invalid`);
+      }
+    }
+  } catch (error: unknown) {
+    // projects 폴더가 없으면 빈 목록 반환
+    if (error && typeof error === 'object' && 'code' in error && error.code === 'ENOENT') {
+      return [];
+    }
+    throw error;
   }
+
+  // 생성일 기준 정렬 (최신순)
+  return projects.sort((a, b) =>
+    new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  );
 }
 
 /**
@@ -74,16 +132,20 @@ async function saveProjectsList(config: ProjectsConfig): Promise<void> {
 export async function getProjectsList(
   statusFilter?: 'active' | 'archived'
 ): Promise<ProjectsConfig> {
-  const config = await loadProjectsList();
+  const [projects, settings] = await Promise.all([
+    scanProjects(),
+    loadSettings(),
+  ]);
 
-  if (statusFilter) {
-    return {
-      ...config,
-      projects: config.projects.filter(p => p.status === statusFilter),
-    };
-  }
+  const filteredProjects = statusFilter
+    ? projects.filter(p => p.status === statusFilter)
+    : projects;
 
-  return config;
+  return {
+    version: '1.0',
+    projects: filteredProjects,
+    defaultProject: settings.defaultProject,
+  };
 }
 
 /**
@@ -92,31 +154,36 @@ export async function getProjectsList(
  * @returns 중복이면 true
  */
 export async function isProjectIdDuplicate(id: string): Promise<boolean> {
-  const config = await loadProjectsList();
-  return config.projects.some(p => p.id === id);
+  const projects = await scanProjects();
+  return projects.some(p => p.id === id);
 }
 
 /**
  * 프로젝트 목록에 추가
+ * 참고: 폴더 스캔 방식에서는 실제로 폴더와 project.json을 생성하면 자동으로 목록에 포함됨
+ * 이 함수는 호환성을 위해 유지하되, 중복 확인만 수행
+ *
  * @param project 프로젝트 항목
  */
 export async function addProjectToList(project: ProjectListItem): Promise<void> {
-  const config = await loadProjectsList();
-
   // 중복 확인
-  if (config.projects.some(p => p.id === project.id)) {
+  const isDuplicate = await isProjectIdDuplicate(project.id);
+  if (isDuplicate) {
     throw createConflictError(
       'DUPLICATE_PROJECT_ID',
       '이미 존재하는 프로젝트 ID입니다'
     );
   }
 
-  config.projects.push(project);
-  await saveProjectsList(config);
+  // 실제 추가는 projectFacade에서 폴더 생성 시 수행됨
+  // 이 함수는 중복 확인 역할만 함
 }
 
 /**
  * 프로젝트 목록 항목 수정
+ * 참고: 폴더 스캔 방식에서는 project.json을 직접 수정하면 됨
+ * 이 함수는 호환성을 위해 유지
+ *
  * @param id 프로젝트 ID
  * @param updates 수정 내용
  */
@@ -124,16 +191,16 @@ export async function updateProjectInList(
   id: string,
   updates: Partial<ProjectListItem>
 ): Promise<void> {
-  const config = await loadProjectsList();
+  // 프로젝트 존재 확인
+  const projects = await scanProjects();
+  const exists = projects.some(p => p.id === id);
 
-  const index = config.projects.findIndex(p => p.id === id);
-  if (index === -1) {
-    // CR-007: PROJECT_NOT_FOUND는 404 에러로 변경
+  if (!exists) {
     throw createNotFoundError('프로젝트를 찾을 수 없습니다');
   }
 
-  config.projects[index] = { ...config.projects[index], ...updates };
-  await saveProjectsList(config);
+  // 실제 업데이트는 project.json에 직접 수행됨
+  // 이 함수는 존재 확인 역할만 함
 }
 
 /**
@@ -142,17 +209,19 @@ export async function updateProjectInList(
  * @param projectId 프로젝트 ID
  */
 export async function setDefaultProject(projectId: string | null): Promise<void> {
-  const config = await loadProjectsList();
+  const settings = await loadSettings();
 
   // null이면 기본 프로젝트 해제
   if (projectId === null) {
-    config.defaultProject = null;
-    await saveProjectsList(config);
+    settings.defaultProject = null;
+    await saveSettings(settings);
     return;
   }
 
   // BR-005: 유효한 프로젝트 ID 검증
-  const exists = config.projects.some(p => p.id === projectId);
+  const projects = await scanProjects();
+  const exists = projects.some(p => p.id === projectId);
+
   if (!exists) {
     throw createInternalError(
       'INVALID_PROJECT_ID',
@@ -160,6 +229,17 @@ export async function setDefaultProject(projectId: string | null): Promise<void>
     );
   }
 
-  config.defaultProject = projectId;
-  await saveProjectsList(config);
+  settings.defaultProject = projectId;
+  await saveSettings(settings);
+}
+
+// ============================================================
+// 하위 호환성: projects.json 관련 함수 (deprecated)
+// ============================================================
+
+/**
+ * @deprecated 폴더 스캔 방식으로 변경됨. getProjectsList() 사용 권장
+ */
+export async function loadProjectsList(): Promise<ProjectsConfig> {
+  return getProjectsList();
 }

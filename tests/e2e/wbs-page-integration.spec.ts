@@ -7,38 +7,15 @@
 import { test, expect } from '@playwright/test'
 import { promises as fs } from 'fs'
 import { join } from 'path'
+import { E2E_TEST_ROOT } from './test-constants'
 
 // IMPORTANT: 테스트 전용 프로젝트 ID - 실제 프로젝트명(jjiban)을 사용하면 안됨!
 const TEST_PROJECT_ID = 'e2e-wbs-integration-test'
-const JJIBAN_ROOT = '.jjiban'
+// 임시 디렉토리의 .jjiban 폴더 사용 (프로덕션 데이터 보호)
+const JJIBAN_ROOT = join(E2E_TEST_ROOT, '.jjiban')
 
 test.describe('WBS Page Integration', () => {
   test.beforeEach(async ({ page }) => {
-    // 설정 폴더 생성
-    const settingsPath = join(JJIBAN_ROOT, 'settings')
-    await fs.mkdir(settingsPath, { recursive: true })
-
-    // projects.json 생성
-    const projectsJsonPath = join(settingsPath, 'projects.json')
-    await fs.writeFile(
-      projectsJsonPath,
-      JSON.stringify({
-        version: '1.0',
-        projects: [
-          {
-            id: TEST_PROJECT_ID,
-            name: 'JJIBAN Project Manager',
-            path: TEST_PROJECT_ID,
-            status: 'active',
-            wbsDepth: 4,
-            createdAt: '2025-12-15T00:00:00.000Z'
-          }
-        ],
-        defaultProject: TEST_PROJECT_ID
-      }, null, 2),
-      'utf-8'
-    )
-
     // 프로젝트 폴더 생성
     const projectPath = join(JJIBAN_ROOT, 'projects', TEST_PROJECT_ID)
     await fs.mkdir(projectPath, { recursive: true })
@@ -51,6 +28,7 @@ test.describe('WBS Page Integration', () => {
         id: TEST_PROJECT_ID,
         name: 'JJIBAN Project Manager',
         status: 'active',
+        wbsDepth: 4,
         description: 'AI 기반 프로젝트 관리 도구',
         createdAt: '2025-12-15T00:00:00.000Z'
       }, null, 2),

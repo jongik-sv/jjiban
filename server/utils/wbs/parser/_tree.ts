@@ -37,6 +37,8 @@ export function buildTree(flatNodes: FlatNode[]): WbsNode[] {
       expanded: false,
       // TSK-03-05: 커스텀 속성 복사
       attributes: node.attributes.customAttributes,
+      // TSK-03-06: 단계별 완료시각 복사
+      completed: node.attributes.completed,
     };
 
     nodeMap.set(node.id, wbsNode);

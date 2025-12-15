@@ -3,58 +3,47 @@
  *
  * 서버 시작 전에 테스트 데이터를 준비합니다.
  * playwright.config.ts의 globalSetup에서 호출됩니다.
+ *
+ * 주요 변경사항:
+ * - 실제 .jjiban 폴더 대신 임시 디렉토리 사용
+ * - 테스트 간 격리 보장
+ * - 프로덕션 데이터 보호
  */
 
-import { mkdir, writeFile, rm, access } from 'fs/promises';
+import { mkdir, writeFile, rm } from 'fs/promises';
 import { join } from 'path';
-
-const JJIBAN_ROOT = join(process.cwd(), '.jjiban');
-const TEST_PROJECT_ID = 'project';
+import { E2E_TEST_ROOT, TEST_PROJECT_ID, TEST_PROJECT_NAME } from './test-constants';
 
 async function globalSetup() {
-  console.log('[Global Setup] Preparing E2E test data...');
+  console.log('[Global Setup] Preparing E2E test environment...');
 
-  // settings 폴더 생성
-  const settingsPath = join(JJIBAN_ROOT, 'settings');
-  await mkdir(settingsPath, { recursive: true });
+  // 기존 테스트 디렉토리가 있으면 삭제 (이전 테스트 잔여물 정리)
+  try {
+    await rm(E2E_TEST_ROOT, { recursive: true, force: true });
+  } catch {
+    // 폴더가 없으면 무시
+  }
+
+  const jjibanRoot = join(E2E_TEST_ROOT, '.jjiban');
+
+  console.log('[Global Setup] Test root directory:', E2E_TEST_ROOT);
 
   // 테스트 프로젝트 폴더 생성
-  const projectPath = join(JJIBAN_ROOT, 'projects', TEST_PROJECT_ID);
+  const projectPath = join(jjibanRoot, 'projects', TEST_PROJECT_ID);
   await mkdir(projectPath, { recursive: true });
 
   // Task 폴더 생성
   const taskPath = join(projectPath, 'tasks', 'TSK-01-01-01');
   await mkdir(taskPath, { recursive: true });
 
-  // projects.json 생성
-  const projectsConfig = {
-    version: '1.0',
-    projects: [
-      {
-        id: TEST_PROJECT_ID,
-        name: '테스트 프로젝트',
-        path: TEST_PROJECT_ID,
-        status: 'active',
-        wbsDepth: 4,
-        createdAt: '2025-12-14T00:00:00.000Z',
-      },
-    ],
-    defaultProject: TEST_PROJECT_ID,
-  };
-
-  await writeFile(
-    join(settingsPath, 'projects.json'),
-    JSON.stringify(projectsConfig, null, 2),
-    'utf-8'
-  );
-
-  // project.json 생성
+  // project.json 생성 (폴더 스캔 방식이므로 projects.json 불필요)
   const projectConfig = {
     id: TEST_PROJECT_ID,
-    name: '테스트 프로젝트',
+    name: TEST_PROJECT_NAME,
     description: 'E2E 테스트용 프로젝트',
     version: '0.1.0',
     status: 'active',
+    wbsDepth: 4,  // 폴더 스캔 시 필요
     createdAt: '2025-12-14T00:00:00.000Z',
     updatedAt: '2025-12-14T00:00:00.000Z',
     scheduledStart: '2025-01-01',
@@ -88,7 +77,7 @@ async function globalSetup() {
   );
 
   // wbs.md 생성 (상태 코드 형식: [bd] - 대괄호만 사용)
-  const wbsContent = `# WBS - Test Project
+  const wbsContent = `# WBS - ${TEST_PROJECT_NAME}
 
 > version: 1.0
 > depth: 4
@@ -120,7 +109,8 @@ async function globalSetup() {
     'utf-8'
   );
 
-  console.log('[Global Setup] E2E test data prepared at:', projectPath);
+  console.log('[Global Setup] E2E test data prepared at:', jjibanRoot);
+  console.log('[Global Setup] Environment ready. JJIBAN_BASE_PATH:', E2E_TEST_ROOT);
 }
 
 export default globalSetup;

@@ -1,32 +1,26 @@
-# WBS - jjiban (1차: WBS 트리 뷰)
-
 > version: 1.0
 > depth: 4
-> updated: 2025-12-15
+> updated: 2025-12-16
 > start: 2025-12-13
 
 ---
 
 ## WP-01: Platform Infrastructure
-- status: planned
 - priority: critical
 - schedule: 2025-12-13 ~ 2025-12-20
-- progress: 0%
+- progress: 100%
 
 ### ACT-01-01: Project Setup
-- status: todo
 - schedule: 2025-12-13 ~ 2025-12-16
+- progress: 100%
 
 #### TSK-01-01-01: Nuxt 3 프로젝트 초기화
 - category: infrastructure
-- domain: infra
 - status: [xx]
 - priority: critical
-- assignee: -
+- assignee: hong
 - schedule: 2025-12-13 ~ 2025-12-13
 - tags: nuxt, setup
-- depends: -
-- test-result: none
 - requirements:
   - Nuxt 3 프로젝트 생성 (npx nuxi init)
   - TypeScript 설정
@@ -39,14 +33,11 @@
 
 #### TSK-01-01-02: PrimeVue 4.x + TailwindCSS 설정
 - category: infrastructure
-- domain: infra
 - status: [xx]
 - priority: critical
-- assignee: -
 - schedule: 2025-12-13 ~ 2025-12-14
 - tags: primevue, tailwind, ui
 - depends: TSK-01-01-01
-- test-result: none
 - requirements:
   - PrimeVue 4.x 설치 및 Nuxt 플러그인 설정
   - TailwindCSS 설치 및 nuxt.config 설정
@@ -59,14 +50,11 @@
 
 #### TSK-01-01-03: Pinia 상태 관리 설정
 - category: infrastructure
-- domain: infra
 - status: [xx]
 - priority: high
-- assignee: -
 - schedule: 2025-12-14 ~ 2025-12-14
 - tags: pinia, state
 - depends: TSK-01-01-01
-- test-result: none
 - requirements:
   - Pinia 설치 및 설정
   - 기본 스토어 구조 생성 (project, wbs, selection, settings)
@@ -78,14 +66,12 @@
 
 #### TSK-01-01-04: 프로젝트 디렉토리 구조 설정
 - category: infrastructure
-- domain: infra
 - status: [xx]
 - priority: high
-- assignee: -
+- assignee: hong
 - schedule: 2025-12-14 ~ 2025-12-15
 - tags: structure, setup
 - depends: TSK-01-01-01
-- test-result: none
 - requirements:
   - components/, composables/, stores/, server/api/ 디렉토리 구조
   - 공통 타입 정의 (types/)
@@ -98,14 +84,11 @@
 
 #### TSK-01-01-05: WBS Store API 응답 처리 버그 수정
 - category: defect
-- domain: frontend
 - status: [xx]
 - priority: critical
-- assignee: -
 - schedule: 2025-12-15 ~ 2025-12-15
 - tags: bug, store, api
 - depends: TSK-01-01-03
-- test-result: fail
 - requirements:
   - fetchWbs 함수의 API 응답 형식 수정
   - API 응답 `{metadata, tree}` 객체에서 tree 배열 추출
@@ -118,19 +101,16 @@
   - xx: 2025-12-15 22:13
 
 ### ACT-01-02: App Layout
-- status: todo
 - schedule: 2025-12-16 ~ 2025-12-18
+- progress: 100%
 
 #### TSK-01-02-01: AppLayout 컴포넌트 구현
 - category: development
-- domain: frontend
 - status: [xx]
 - priority: high
-- assignee: -
 - schedule: 2025-12-16 ~ 2025-12-17
 - tags: layout, component
 - depends: TSK-01-01-02
-- test-result: pass
 - requirements:
   - 전체 레이아웃 구조 (Header + Content)
   - 좌우 분할 패널 (WBS Tree 60% + Detail 40%)
@@ -145,14 +125,11 @@
 
 #### TSK-01-02-02: AppHeader 컴포넌트 구현
 - category: development
-- domain: frontend
 - status: [xx]
 - priority: high
-- assignee: -
 - schedule: 2025-12-17 ~ 2025-12-18
 - tags: header, navigation
 - depends: TSK-01-02-01
-- test-result: pass
 - requirements:
   - jjiban 로고
   - 네비게이션 메뉴 (대시보드, 칸반, WBS, Gantt) - WBS만 활성
@@ -168,25 +145,21 @@
 ---
 
 ## WP-02: Data Storage Layer
-- status: planned
 - priority: critical
 - schedule: 2025-12-16 ~ 2025-12-27
-- progress: 0%
+- progress: 100%
 
 ### ACT-02-01: File System Service
-- status: todo
 - schedule: 2025-12-16 ~ 2025-12-20
+- progress: 100%
 
 #### TSK-02-01-01: .jjiban 디렉토리 구조 생성
 - category: infrastructure
-- domain: infra
 - status: [xx]
 - priority: critical
-- assignee: -
 - schedule: 2025-12-16 ~ 2025-12-17
 - tags: init, filesystem
 - depends: TSK-01-01-04
-- test-result: none
 - requirements:
   - .jjiban/ 폴더 존재 확인 및 생성
   - settings/, templates/, projects/ 하위 폴더 생성
@@ -199,14 +172,11 @@
 
 #### TSK-02-01-02: 파일 읽기/쓰기 유틸리티
 - category: infrastructure
-- domain: backend
 - status: [xx]
 - priority: critical
-- assignee: -
 - schedule: 2025-12-17 ~ 2025-12-18
 - tags: filesystem, utils
 - depends: TSK-02-01-01
-- test-result: none
 - requirements:
   - JSON 파일 읽기/쓰기 함수
   - Markdown 파일 읽기/쓰기 함수
@@ -219,19 +189,16 @@
   - xx: 2025-12-15 22:13
 
 ### ACT-02-02: WBS Parser
-- status: todo
 - schedule: 2025-12-18 ~ 2025-12-23
+- progress: 100%
 
 #### TSK-02-02-01: wbs.md 파서 구현
 - category: development
-- domain: backend
 - status: [xx]
 - priority: critical
-- assignee: -
 - schedule: 2025-12-18 ~ 2025-12-20
 - tags: parser, markdown, wbs
 - depends: TSK-02-01-02
-- test-result: pass
 - requirements:
   - Markdown → WbsNode[] 트리 변환
   - WP/ACT/TSK 계층 파싱 (## / ### / ####)
@@ -247,14 +214,11 @@
 
 #### TSK-02-02-02: wbs.md 시리얼라이저 구현
 - category: development
-- domain: backend
 - status: [xx]
 - priority: critical
-- assignee: -
 - schedule: 2025-12-20 ~ 2025-12-22
 - tags: serializer, markdown, wbs
 - depends: TSK-02-02-01
-- test-result: pass
 - requirements:
   - WbsNode[] → Markdown 문자열 변환
   - 속성 포맷팅 (- key: value)
@@ -269,14 +233,11 @@
 
 #### TSK-02-02-03: WBS 데이터 유효성 검증
 - category: development
-- domain: backend
 - status: [xx]
 - priority: high
-- assignee: -
 - schedule: 2025-12-22 ~ 2025-12-23
 - tags: validation, wbs
 - depends: TSK-02-02-01
-- test-result: pass
 - requirements:
   - ID 형식 검증 (WP-XX, ACT-XX-XX, TSK-XX-XX-XX)
   - 필수 속성 검증 (category, status, priority)
@@ -291,19 +252,16 @@
   - xx: 2025-12-15 22:13
 
 ### ACT-02-03: Settings Service
-- status: todo
 - schedule: 2025-12-23 ~ 2025-12-27
+- progress: 100%
 
 #### TSK-02-03-01: 기본 설정 JSON 스키마 정의
 - category: infrastructure
-- domain: infra
 - status: [xx]
 - priority: high
-- assignee: -
 - schedule: 2025-12-23 ~ 2025-12-24
 - tags: schema, settings
 - depends: TSK-02-01-02
-- test-result: none
 - requirements:
   - columns.json 스키마 (칸반 컬럼)
   - categories.json 스키마 (카테고리)
@@ -317,14 +275,11 @@
 
 #### TSK-02-03-02: 설정 서비스 구현
 - category: development
-- domain: backend
 - status: [xx]
 - priority: high
-- assignee: -
 - schedule: 2025-12-24 ~ 2025-12-26
 - tags: service, settings
 - depends: TSK-02-03-01
-- test-result: pass
 - requirements:
   - 설정 파일 로드 (없으면 기본값 사용)
   - 설정 캐싱
@@ -339,14 +294,11 @@
 
 #### TSK-02-03-03: 프로젝트 메타데이터 서비스
 - category: development
-- domain: backend
 - status: [xx]
 - priority: medium
-- assignee: -
 - schedule: 2025-12-26 ~ 2025-12-27
 - tags: service, project
 - depends: TSK-02-03-02
-- test-result: pass
 - requirements:
   - project.json 읽기/쓰기
   - team.json 읽기/쓰기
@@ -362,37 +314,30 @@
 ---
 
 ## WP-03: Backend API & Workflow
-- status: planned
 - priority: high
 - schedule: 2025-12-23 ~ 2026-01-10
-- progress: 0%
+- progress: 93%
 
-### TSK-03-01: Project API
+#### TSK-03-01: Project API
 - category: development
-- domain: backend
 - status: [xx]
 - priority: high
-- assignee: -
 - schedule: 2025-12-23 ~ 2025-12-27
 - tags: api, project
 - depends: TSK-02-03-03
-- test-result: pass
 - requirements:
   - GET /api/projects - 프로젝트 목록 조회
   - GET /api/projects/:id - 프로젝트 상세 (project.json, team.json 포함)
   - POST /api/projects - 프로젝트 생성 (폴더, 초기 파일 생성)
 - ref: PRD 8.1
 
-### TSK-03-02: WBS API
+#### TSK-03-02: WBS API
 - category: development
-- domain: backend
 - status: [xx]
 - priority: critical
-- assignee: -
 - schedule: 2025-12-27 ~ 2025-12-31
 - tags: api, wbs
 - depends: TSK-02-02-01, TSK-02-02-02, TSK-03-01
-- test-result: pass
 - requirements:
   - GET /api/projects/:id/wbs - WBS 트리 조회 (파싱, 계층 구조, 진행률)
   - PUT /api/projects/:id/wbs - WBS 저장 (유효성 검증, 롤백)
@@ -405,16 +350,13 @@
   - vf: 2025-12-15 22:13
   - xx: 2025-12-15 22:13
 
-### TSK-03-03: Workflow API & Settings
+#### TSK-03-03: Workflow API & Settings
 - category: development
-- domain: backend
 - status: [xx]
 - priority: high
-- assignee: -
 - schedule: 2025-12-31 ~ 2026-01-03
 - tags: api, workflow, settings
 - depends: TSK-03-02, TSK-02-03-02
-- test-result: pass
 - requirements:
   - POST /api/tasks/:id/transition - 상태 전이 API
   - GET /api/tasks/:id/documents - 문서 목록 (존재/예정 구분)
@@ -427,16 +369,13 @@
   - vf: 2025-12-15 22:13
   - xx: 2025-12-15 22:13
 
-### TSK-03-04: Workflow Engine
+#### TSK-03-04: Workflow Engine
 - category: development
-- domain: backend
 - status: [xx]
 - priority: high
-- assignee: -
 - schedule: 2026-01-03 ~ 2026-01-10
 - tags: service, workflow, rules
 - depends: TSK-02-03-01, TSK-03-03
-- test-result: pass
 - requirements:
   - 워크플로우 규칙 정의 (development, defect, infrastructure)
   - WorkflowEngine 서비스 (getAvailableCommands, executeCommand, 검증)
@@ -450,16 +389,13 @@
   - vf: 2025-12-15 22:13
   - xx: 2025-12-15 22:13
 
-### TSK-03-05: WBS 테스트 결과 업데이트 API
+#### TSK-03-05: WBS 테스트 결과 업데이트 API
 - category: development
-- domain: backend
 - status: [xx]
 - priority: medium
-- assignee: -
 - schedule: 2026-01-10 ~ 2026-01-13
 - tags: api, wbs, test-result
 - depends: TSK-03-02, TSK-02-02-01, TSK-02-02-02
-- test-result: pass
 - requirements:
   - PUT /api/projects/:id/wbs/tasks/:taskId/test-result - 테스트 결과 업데이트 API
   - wbs.md 파일의 test-result 필드 자동 업데이트
@@ -473,41 +409,38 @@
   - vf: 2025-12-15 23:04
   - xx: 2025-12-15 23:08
 
-### TSK-03-06: completed 필드 지원 (Parser/Serializer/API)
+#### TSK-03-06: completed 필드 지원 (Parser/Serializer/API)
 - category: development
-- domain: backend
-- status: [ ]
+- status: [im]
 - priority: high
-- assignee: -
 - schedule: 2026-01-13 ~ 2026-01-16
 - tags: api, wbs, completed, parser, serializer
 - depends: TSK-02-02-01, TSK-02-02-02, TSK-03-03
-- test-result: none
 - requirements:
   - WBS Parser: completed 필드 파싱 (중첩 리스트 형식)
   - WBS Serializer: completed 필드 직렬화
   - Transition API: 상태 전이 시 자동 타임스탬프 기록
   - 롤백 시 이후 단계 completed 삭제
 - ref: PRD 7.4, 7.5
+- completed:
+  - bd: 2025-12-15 23:15
+  - dd: 2025-12-15 23:55
+  - im: 2025-12-16 00:13
 
 ---
 
 ## WP-04: WBS Tree View (Frontend)
-- status: planned
 - priority: high
 - schedule: 2026-01-06 ~ 2026-01-15
-- progress: 0%
+- progress: 100%
 
-### TSK-04-00: Projects Page
+#### TSK-04-00: Projects Page
 - category: development
-- domain: frontend
 - status: [xx]
 - priority: high
-- assignee: -
 - schedule: 2026-01-06 ~ 2026-01-07
 - tags: page, project, list
 - depends: TSK-03-01, TSK-01-02-01
-- test-result: pass
 - requirements:
   - ProjectsPage 컴포넌트 (pages/projects.vue)
   - GET /api/projects 연동하여 프로젝트 목록 표시
@@ -521,16 +454,13 @@
   - vf: 2025-12-15 22:13
   - xx: 2025-12-15 22:13
 
-### TSK-04-01: Tree Panel
+#### TSK-04-01: Tree Panel
 - category: development
-- domain: frontend
 - status: [xx]
 - priority: high
-- assignee: -
 - schedule: 2026-01-06 ~ 2026-01-09
 - tags: component, tree
 - depends: TSK-01-02-01, TSK-03-02
-- test-result: pass
 - requirements:
   - WbsTreePanel 컴포넌트 (컨테이너, 데이터 로드, 상태 관리)
   - WbsTreeHeader 컴포넌트 (검색 박스, 펼치기/접기, 요약 카드)
@@ -544,16 +474,13 @@
   - vf: 2025-12-15 22:13
   - xx: 2025-12-15 22:13
 
-### TSK-04-02: Tree Node
+#### TSK-04-02: Tree Node
 - category: development
-- domain: frontend
 - status: [xx]
 - priority: critical
-- assignee: -
 - schedule: 2026-01-09 ~ 2026-01-12
 - tags: component, tree, recursive
 - depends: TSK-04-01
-- test-result: pass
 - requirements:
   - WbsTreeNode 컴포넌트 (재귀 렌더링, 펼침/접힘, 선택, 들여쓰기)
   - NodeIcon 컴포넌트 (계층별 아이콘/색상, 라운드 사각형 배지)
@@ -567,16 +494,13 @@
   - vf: 2025-12-15 22:13
   - xx: 2025-12-15 22:13
 
-### TSK-04-03: Tree Interaction
+#### TSK-04-03: Tree Interaction
 - category: development
-- domain: frontend
 - status: [xx]
 - priority: high
-- assignee: -
 - schedule: 2026-01-12 ~ 2026-01-15
 - tags: state, interaction
 - depends: TSK-04-02, TSK-01-01-03
-- test-result: fail
 - requirements:
   - 트리 펼침/접힘 상태 관리 (토글, 전체 펼치기/접기, 로컬 스토리지)
   - 노드 선택 및 상세 패널 연동 (Pinia selection 스토어)
@@ -592,21 +516,17 @@
 ---
 
 ## WP-05: Task Detail & Document (Frontend)
-- status: planned
 - priority: high
 - schedule: 2026-01-13 ~ 2026-01-22
-- progress: 0%
+- progress: 100%
 
-### TSK-05-01: Detail Panel Structure
+#### TSK-05-01: Detail Panel Structure
 - category: development
-- domain: frontend
-- status: done [xx]
+- status: [xx]
 - priority: high
-- assignee: -
 - schedule: 2026-01-13 ~ 2026-01-15
 - tags: component, detail
 - depends: TSK-04-03
-- test-result: pass
 - requirements:
   - TaskDetailPanel 컴포넌트 (컨테이너, 스크롤 콘텐츠)
   - TaskBasicInfo 컴포넌트 (ID, 제목, 카테고리, 우선순위, 담당자, 인라인 편집)
@@ -618,16 +538,13 @@
   - im: 2025-12-15 23:30
   - xx: 2025-12-15 23:45
 
-### TSK-05-02: Detail Sections
+#### TSK-05-02: Detail Sections
 - category: development
-- domain: frontend
-- status: done [xx]
+- status: [xx]
 - priority: medium
-- assignee: -
 - schedule: 2026-01-15 ~ 2026-01-18
 - tags: component, workflow
 - depends: TSK-05-01, TSK-03-03
-- test-result: pass
 - requirements:
   - TaskWorkflow 컴포넌트 (워크플로우 흐름, 상태 노드, 현재 상태 강조)
   - TaskRequirements 컴포넌트 (요구사항 목록, PRD 참조, 인라인 편집)
@@ -640,16 +557,13 @@
   - im: 2025-12-15 23:50
   - xx: 2025-12-15 23:55
 
-### TSK-05-03: Detail Actions
+#### TSK-05-03: Detail Actions
 - category: development
-- domain: frontend
-- status: done [xx]
+- status: [xx]
 - priority: high
-- assignee: -
 - schedule: 2026-01-18 ~ 2026-01-20
 - tags: component, action, edit
 - depends: TSK-05-02, TSK-03-02
-- test-result: pass
 - requirements:
   - TaskActions 컴포넌트 (편집, 문서 열기, 상태 전이 버튼)
   - 인라인 편집 기능 (필드별 편집, API 연동, 낙관적 업데이트)
@@ -660,16 +574,13 @@
   - im: 2025-12-15 23:50
   - xx: 2025-12-15 23:55
 
-### TSK-05-04: Document Viewer
+#### TSK-05-04: Document Viewer
 - category: development
-- domain: frontend
-- status: done [xx]
+- status: [xx]
 - priority: medium
-- assignee: -
 - schedule: 2026-01-20 ~ 2026-01-22
 - tags: markdown, viewer, component
 - depends: TSK-01-01-02, TSK-03-03, TSK-05-02
-- test-result: pass
 - requirements:
   - Markdown 렌더러 설정 (marked/markdown-it, GFM, highlight.js)
   - DocumentViewer 컴포넌트 (로드, 렌더링, 스크롤)
@@ -684,21 +595,17 @@
 ---
 
 ## WP-06: Integration & Testing
-- status: planned
 - priority: medium
 - schedule: 2026-01-20 ~ 2026-01-25
-- progress: 0%
+- progress: 80%
 
-### TSK-06-01: Integration
+#### TSK-06-01: Integration
 - category: development
-- domain: fullstack
 - status: [xx]
 - priority: high
-- assignee: -
 - schedule: 2026-01-20 ~ 2026-01-23
 - tags: page, integration, pinia
 - depends: TSK-04-03, TSK-05-03
-- test-result: pass
 - requirements:
   - WBS 페이지 통합 (pages/wbs.vue, 패널 통합, 에러 핸들링)
   - 상태 관리 통합 (project, wbs, selection 스토어 연동)
@@ -711,16 +618,13 @@
   - vf: 2025-12-15 22:13
   - xx: 2025-12-15 22:20
 
-### TSK-06-02: Testing
+#### TSK-06-02: Testing
 - category: development
-- domain: test
 - status: [im]
 - priority: medium
-- assignee: -
 - schedule: 2026-01-23 ~ 2026-01-25
 - tags: test, unit, e2e
 - depends: TSK-06-01
-- test-result: none
 - requirements:
   - 단위 테스트 (WBS 파서, 워크플로우 엔진, 유틸리티)
   - E2E 테스트 (트리 렌더링, 노드 선택, 상태 전이)
@@ -732,21 +636,17 @@
 ---
 
 ## WP-07: CLI Tools
-- status: planned
 - priority: high
 - schedule: 2026-01-25 ~ 2026-02-05
-- progress: 0%
+- progress: 100%
 
-### TSK-07-01: Workflow Orchestrator CLI 구현
+#### TSK-07-01: Workflow Orchestrator CLI 구현
 - category: development
-- domain: backend
-- status: done [xx]
+- status: [xx]
 - priority: high
-- assignee: -
 - schedule: 2026-01-25 ~ 2026-02-05
 - tags: cli, workflow, orchestrator
 - depends: TSK-03-04
-- test-result: none
 - requirements:
   - Node.js 기반 CLI 진입점 (bin/jjiban.js)
   - workflow 명령어 구현 (jjiban workflow TSK-XX)
@@ -766,15 +666,83 @@
 
 ---
 
-## Summary
+## WP-08: PrimeVue Component Migration
+- priority: medium
+- schedule: 2026-02-06 ~ 2026-02-17
+- progress: 0%
 
-| WP | 명칭 | Task 수 | 예상 기간 |
-|----|------|---------|----------|
-| WP-01 | Platform Infrastructure | 6 | 12/13 ~ 12/20 |
-| WP-02 | Data Storage Layer | 9 | 12/16 ~ 12/27 |
-| WP-03 | Backend API & Workflow | 6 | 12/23 ~ 01/16 |
-| WP-04 | WBS Tree View | 4 | 01/06 ~ 01/15 |
-| WP-05 | Task Detail & Document | 4 | 01/13 ~ 01/22 |
-| WP-06 | Integration & Testing | 2 | 01/20 ~ 01/25 |
-| WP-07 | CLI Tools | 1 | 01/25 ~ 02/05 |
-| **Total** | | **32** | **~7주** |
+#### TSK-08-01: WbsTreePanel PrimeVue Tree Migration
+- category: development
+- status: [ ]
+- priority: high
+- schedule: 2026-02-06 ~ 2026-02-09
+- tags: primevue, tree, component, migration
+- depends: TSK-06-02
+- requirements:
+  - 커스텀 트리 렌더링 (lines 143-235) → PrimeVue Tree 컴포넌트로 교체
+  - WbsNode[] → PrimeVue TreeNode[] 변환 함수 구현
+  - v-model:expandedKeys로 펼침 상태 관리
+  - 커스텀 노드 템플릿 (NodeIcon + StatusBadge)
+  - wbsStore와 상태 동기화 (expand/collapse 메서드)
+  - 접근성 유지 (ARIA 속성)
+- ref: PRD 6.2
+
+#### TSK-08-02: NodeIcon PrimeVue Integration
+- category: development
+- status: [ ]
+- priority: medium
+- schedule: 2026-02-09 ~ 2026-02-10
+- tags: primevue, icon, component, migration
+- depends: TSK-08-01
+- requirements:
+  - PrimeVue Pass-Through API로 스타일링 적용
+  - --color-level-* CSS 변수 유지
+  - PrimeIcons 활용 최적화
+- ref: PRD 10.1
+
+#### TSK-08-03: AppLayout PrimeVue Splitter Migration
+- category: development
+- status: [ ]
+- priority: high
+- schedule: 2026-02-10 ~ 2026-02-13
+- tags: primevue, splitter, layout, migration
+- depends: TSK-08-01
+- requirements:
+  - 커스텀 CSS Grid → PrimeVue Splitter + SplitterPanel 교체
+  - 60:40 기본 비율, minSize 제약 유지
+  - 슬롯 기반 콘텐츠 주입 유지 (header, left, right)
+  - 다크 테마 CSS 변수 통합
+  - 반응형 동작 유지 (min-width: 1200px)
+- ref: PRD 6.1
+
+#### TSK-08-04: AppHeader PrimeVue Menubar Migration
+- category: development
+- status: [ ]
+- priority: medium
+- schedule: 2026-02-13 ~ 2026-02-15
+- tags: primevue, menubar, navigation, migration
+- depends: TSK-08-03
+- requirements:
+  - 커스텀 네비게이션 → PrimeVue Menubar 교체
+  - MenuItem 모델로 메뉴 구성 (enabled/disabled 상태)
+  - start/end 슬롯으로 로고 및 프로젝트명 배치
+  - 활성 라우트 하이라이팅 (item 템플릿 사용)
+  - disabled 메뉴 클릭 시 "준비 중" 토스트 유지
+  - 접근성 유지 (aria-current, aria-disabled)
+- ref: PRD 6.1
+
+#### TSK-08-05: Theme Integration & Testing
+- category: development
+- status: [ ]
+- priority: high
+- schedule: 2026-02-15 ~ 2026-02-17
+- tags: theme, testing, e2e, migration
+- depends: TSK-08-01, TSK-08-02, TSK-08-03, TSK-08-04
+- requirements:
+  - PrimeVue 디자인 토큰 오버라이드 (main.css)
+  - --p-tree-*, --p-splitter-*, --p-menubar-* 변수 매핑
+  - 다크 테마 일관성 검증
+  - 기존 E2E 테스트 실행 및 회귀 수정
+  - PrimeVue 컴포넌트 상호작용 테스트 추가
+  - 접근성 검증 (WCAG 2.1)
+- ref: PRD 10.1, 11

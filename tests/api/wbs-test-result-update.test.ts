@@ -7,14 +7,17 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { promises as fs } from 'fs';
 import { join } from 'path';
+import { E2E_TEST_ROOT } from './test-constants';
 
 const TEST_PROJECT_ID = 'test-e2e-tsk-03-05';
 const API_BASE = 'http://localhost:3000';
+// 임시 디렉토리의 .jjiban 폴더 사용 (프로덕션 데이터 보호)
+const JJIBAN_ROOT = join(E2E_TEST_ROOT, '.jjiban');
 
 describe('E2E: WBS test-result Update', () => {
-  const wbsPath = join(process.cwd(), '.jjiban', 'projects', TEST_PROJECT_ID, 'wbs.md');
-  const projectJsonPath = join(process.cwd(), '.jjiban', 'projects', TEST_PROJECT_ID, 'project.json');
-  const projectsPath = join(process.cwd(), '.jjiban', 'settings', 'projects.json');
+  const wbsPath = join(JJIBAN_ROOT, 'projects', TEST_PROJECT_ID, 'wbs.md');
+  const projectJsonPath = join(JJIBAN_ROOT, 'projects', TEST_PROJECT_ID, 'project.json');
+  const projectsPath = join(JJIBAN_ROOT, 'settings', 'projects.json');
 
   const testWbsMarkdown = `# Test Project
 
@@ -52,7 +55,7 @@ describe('E2E: WBS test-result Update', () => {
 
   beforeEach(async () => {
     // 테스트 환경 구성
-    await fs.mkdir(join(process.cwd(), '.jjiban', 'projects', TEST_PROJECT_ID), { recursive: true });
+    await fs.mkdir(join(JJIBAN_ROOT, 'projects', TEST_PROJECT_ID), { recursive: true });
     await fs.writeFile(wbsPath, testWbsMarkdown, 'utf-8');
 
     const projectJson = {
@@ -68,15 +71,15 @@ describe('E2E: WBS test-result Update', () => {
         { id: TEST_PROJECT_ID, name: 'E2E Test Project' }
       ]
     };
-    await fs.mkdir(join(process.cwd(), '.jjiban', 'settings'), { recursive: true });
+    await fs.mkdir(join(JJIBAN_ROOT, 'settings'), { recursive: true });
     await fs.writeFile(projectsPath, JSON.stringify(projectsData, null, 2), 'utf-8');
   });
 
   afterEach(async () => {
     // 정리
     try {
-      await fs.rm(join(process.cwd(), '.jjiban', 'projects', TEST_PROJECT_ID), { recursive: true, force: true });
-      await fs.rm(join(process.cwd(), '.jjiban', 'settings', 'projects.json'), { force: true });
+      await fs.rm(join(JJIBAN_ROOT, 'projects', TEST_PROJECT_ID), { recursive: true, force: true });
+      await fs.rm(join(JJIBAN_ROOT, 'settings', 'projects.json'), { force: true });
     } catch (error) {
       // 정리 실패는 무시
     }

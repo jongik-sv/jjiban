@@ -26,7 +26,7 @@ import {
   getTeamJsonPath,
   ensureDir,
 } from '../file';
-import { getProjectsListFilePath } from '../projects/paths';
+import { getProjectsList } from '../projects/projectsListService';
 import {
   createNotFoundError,
   createBadRequestError,
@@ -105,16 +105,15 @@ export function findTaskInTree(
  * @returns TaskSearchResult 또는 null
  */
 export async function findTaskById(taskId: string): Promise<TaskSearchResult | null> {
-  // projects.json에서 프로젝트 목록 조회
-  const projectsJsonPath = getProjectsListFilePath();
-  const projectsData = await readJsonFile<{ projects: { id: string }[] }>(projectsJsonPath);
+  // 폴더 스캔 방식으로 프로젝트 목록 조회
+  const projectsConfig = await getProjectsList();
 
-  if (!projectsData || !projectsData.projects) {
+  if (!projectsConfig.projects || projectsConfig.projects.length === 0) {
     return null;
   }
 
   // 각 프로젝트의 WBS에서 Task 검색
-  for (const project of projectsData.projects) {
+  for (const project of projectsConfig.projects) {
     try {
       const { tree } = await getWbsTree(project.id);
       const result = findTaskInTree(tree, taskId);

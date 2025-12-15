@@ -14,37 +14,14 @@
 import { test, expect } from '@playwright/test'
 import { promises as fs } from 'fs'
 import { join } from 'path'
+import { E2E_TEST_ROOT } from './test-constants'
 
 const TEST_PROJECT_ID = 'jjiban-test-detail'
-const JJIBAN_ROOT = '.jjiban'
+// 임시 디렉토리의 .jjiban 폴더 사용 (프로덕션 데이터 보호)
+const JJIBAN_ROOT = join(E2E_TEST_ROOT, '.jjiban')
 
 test.describe('TSK-05-02: Detail Sections Integration', () => {
   test.beforeEach(async ({ page }) => {
-    // 테스트 환경 구성
-    const settingsPath = join(JJIBAN_ROOT, 'settings')
-    await fs.mkdir(settingsPath, { recursive: true })
-
-    // projects.json 생성
-    const projectsJsonPath = join(settingsPath, 'projects.json')
-    await fs.writeFile(
-      projectsJsonPath,
-      JSON.stringify({
-        version: '1.0',
-        projects: [
-          {
-            id: TEST_PROJECT_ID,
-            name: 'Test Detail Sections',
-            path: TEST_PROJECT_ID,
-            status: 'active',
-            wbsDepth: 3,
-            createdAt: '2025-12-15T00:00:00.000Z'
-          }
-        ],
-        defaultProject: TEST_PROJECT_ID
-      }, null, 2),
-      'utf-8'
-    )
-
     // 프로젝트 폴더 생성
     const projectPath = join(JJIBAN_ROOT, 'projects', TEST_PROJECT_ID)
     await fs.mkdir(projectPath, { recursive: true })
@@ -57,6 +34,7 @@ test.describe('TSK-05-02: Detail Sections Integration', () => {
         id: TEST_PROJECT_ID,
         name: 'Test Detail Sections',
         status: 'active',
+        wbsDepth: 3,
         description: 'Detail Sections Integration Test',
         createdAt: '2025-12-15T00:00:00.000Z'
       }, null, 2),
@@ -188,9 +166,6 @@ test.describe('TSK-05-02: Detail Sections Integration', () => {
     // 테스트 데이터 정리
     const projectPath = join(JJIBAN_ROOT, 'projects', TEST_PROJECT_ID)
     await fs.rm(projectPath, { recursive: true, force: true })
-
-    const settingsPath = join(JJIBAN_ROOT, 'settings', 'projects.json')
-    await fs.rm(settingsPath, { force: true }).catch(() => {})
   })
 
   /**

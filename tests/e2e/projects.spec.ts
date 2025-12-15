@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
-import { mkdir, writeFile, rm, readFile } from 'fs/promises';
+import { mkdir, writeFile, rm } from 'fs/promises';
 import { join } from 'path';
+import { E2E_TEST_ROOT } from './test-constants';
 
 /**
  * Project Metadata Service E2E Tests
@@ -14,17 +15,22 @@ import { join } from 'path';
  * - E2E-003: 프로젝트 생성 플로우
  * - E2E-004: 프로젝트 수정 플로우
  * - E2E-005: 팀원 관리 플로우
- *
- * 수정: 실제 API가 읽는 .jjiban/ 경로 사용 (기존 tests/fixtures/ 경로 문제 해결)
  */
 
-// 실제 API가 읽는 경로 사용 (tasks.spec.ts, wbs.spec.ts와 동일)
-const JJIBAN_ROOT = '.jjiban';
-const TEST_PROJECT_ID = 'test-project';
+// 임시 디렉토리의 .jjiban 폴더 사용 (프로덕션 데이터 보호)
+const JJIBAN_ROOT = join(E2E_TEST_ROOT, '.jjiban');
+// 고유 프로젝트 ID (테스트 파일별로 다른 ID 사용 → 병렬 실행 시 충돌 방지)
+const TEST_PROJECT_ID = 'test-project-api';
 
 test.describe.serial('Project Metadata Service API', () => {
   // 각 테스트 전 기본 데이터 리셋 (테스트 간 격리)
   test.beforeEach(async () => {
+    // 이전 테스트 잔여물 정리
+    const existingProjectPath = join(JJIBAN_ROOT, 'projects', TEST_PROJECT_ID);
+    await rm(existingProjectPath, { recursive: true, force: true });
+    const existingE2eProjectPath = join(JJIBAN_ROOT, 'projects', 'e2e-create-project');
+    await rm(existingE2eProjectPath, { recursive: true, force: true });
+
     // settings 폴더 생성
     const settingsPath = join(JJIBAN_ROOT, 'settings');
     await mkdir(settingsPath, { recursive: true });
@@ -40,6 +46,7 @@ test.describe.serial('Project Metadata Service API', () => {
       description: 'E2E 테스트용 프로젝트',
       version: '0.1.0',
       status: 'active',
+      wbsDepth: 4,
       createdAt: '2025-12-14T00:00:00.000Z',
       updatedAt: '2025-12-14T00:00:00.000Z',
       scheduledStart: '2025-01-01',
@@ -72,27 +79,7 @@ test.describe.serial('Project Metadata Service API', () => {
       'utf-8'
     );
 
-    // projects.json 생성 (완전한 구조)
-    const projectsConfig = {
-      version: '1.0',
-      projects: [
-        {
-          id: TEST_PROJECT_ID,
-          name: '테스트 프로젝트',
-          path: TEST_PROJECT_ID,
-          status: 'active',
-          wbsDepth: 4,
-          createdAt: '2025-12-14T00:00:00.000Z',
-        },
-      ],
-      defaultProject: TEST_PROJECT_ID,
-    };
-
-    await writeFile(
-      join(settingsPath, 'projects.json'),
-      JSON.stringify(projectsConfig, null, 2),
-      'utf-8'
-    );
+    // 폴더 스캔 방식이므로 projects.json 불필요 - project.json에 wbsDepth 추가 필요
   });
 
   // 각 테스트 후 데이터 정리
@@ -101,23 +88,11 @@ test.describe.serial('Project Metadata Service API', () => {
     const projectPath = join(JJIBAN_ROOT, 'projects', TEST_PROJECT_ID);
     await rm(projectPath, { recursive: true, force: true });
 
-    // e2e-project 폴더도 삭제 (E2E-003에서 생성)
-    const e2eProjectPath = join(JJIBAN_ROOT, 'projects', 'e2e-project');
+    // e2e-create-project 폴더도 삭제 (E2E-003에서 생성)
+    const e2eProjectPath = join(JJIBAN_ROOT, 'projects', 'e2e-create-project');
     await rm(e2eProjectPath, { recursive: true, force: true });
 
-    // projects.json에서 테스트 프로젝트 제거
-    const settingsPath = join(JJIBAN_ROOT, 'settings');
-    const projectsJsonPath = join(settingsPath, 'projects.json');
-    try {
-      const existing = await readFile(projectsJsonPath, 'utf-8');
-      const projectsConfig = JSON.parse(existing);
-      projectsConfig.projects = projectsConfig.projects.filter(
-        (p: any) => p.id !== TEST_PROJECT_ID && p.id !== 'e2e-project'
-      );
-      await writeFile(projectsJsonPath, JSON.stringify(projectsConfig, null, 2), 'utf-8');
-    } catch {
-      // 무시
-    }
+    // 폴더 스캔 방식이므로 projects.json 정리 불필요
   });
 
   /**
@@ -140,12 +115,13 @@ test.describe.serial('Project Metadata Service API', () => {
     expect(Array.isArray(data.projects)).toBe(true);
     expect(data.total).toBeGreaterThan(0);
 
-    // 프로젝트 필드 검증
-    const project = data.projects[0];
+    // 테스트 프로젝트 찾기
+    const project = data.projects.find((p: { id: string }) => p.id === TEST_PROJECT_ID);
+    expect(project).toBeTruthy();
     expect(project).toHaveProperty('id');
     expect(project).toHaveProperty('name');
     expect(project).toHaveProperty('status');
-    expect(project.id).toBe('test-project');
+    expect(project.id).toBe(TEST_PROJECT_ID);
   });
 
   /**
@@ -153,7 +129,7 @@ test.describe.serial('Project Metadata Service API', () => {
    * @requirement FR-002
    */
   test('E2E-002: GET /api/projects/:id returns project detail with team', async ({ request }) => {
-    const response = await request.get('/api/projects/test-project');
+    const response = await request.get(`/api/projects/${TEST_PROJECT_ID}`);
 
     expect(response.status()).toBe(200);
 
@@ -164,7 +140,7 @@ test.describe.serial('Project Metadata Service API', () => {
     expect(data).toHaveProperty('team');
 
     // project 객체 검증
-    expect(data.project.id).toBe('test-project');
+    expect(data.project.id).toBe(TEST_PROJECT_ID);
     expect(data.project.name).toBe('테스트 프로젝트');
     expect(data.project).toHaveProperty('description');
     expect(data.project).toHaveProperty('createdAt');
@@ -184,7 +160,7 @@ test.describe.serial('Project Metadata Service API', () => {
     request,
   }) => {
     const newProject = {
-      id: 'e2e-project',
+      id: 'e2e-create-project',
       name: 'E2E 테스트 프로젝트',
       description: '생성 테스트',
       wbsDepth: 4,
@@ -199,16 +175,16 @@ test.describe.serial('Project Metadata Service API', () => {
     const data = await response.json();
 
     // 생성된 프로젝트 검증
-    expect(data.project.id).toBe('e2e-project');
+    expect(data.project.id).toBe('e2e-create-project');
     expect(data.project.name).toBe('E2E 테스트 프로젝트');
     expect(data.team).toEqual([]);
 
     // 생성된 프로젝트 조회 확인
-    const getResponse = await request.get('/api/projects/e2e-project');
+    const getResponse = await request.get('/api/projects/e2e-create-project');
     expect(getResponse.status()).toBe(200);
 
     const getData = await getResponse.json();
-    expect(getData.project.id).toBe('e2e-project');
+    expect(getData.project.id).toBe('e2e-create-project');
   });
 
   /**
@@ -221,7 +197,7 @@ test.describe.serial('Project Metadata Service API', () => {
       description: '수정된 설명',
     };
 
-    const response = await request.put('/api/projects/test-project', {
+    const response = await request.put(`/api/projects/${TEST_PROJECT_ID}`, {
       data: updateData,
     });
 
@@ -232,10 +208,10 @@ test.describe.serial('Project Metadata Service API', () => {
     // 수정 내용 검증
     expect(data.project.name).toBe('수정된 프로젝트명');
     expect(data.project.description).toBe('수정된 설명');
-    expect(data.project.id).toBe('test-project'); // ID는 불변
+    expect(data.project.id).toBe(TEST_PROJECT_ID); // ID는 불변
 
     // 수정 후 조회로 확인
-    const getResponse = await request.get('/api/projects/test-project');
+    const getResponse = await request.get(`/api/projects/${TEST_PROJECT_ID}`);
     const getData = await getResponse.json();
     expect(getData.project.name).toBe('수정된 프로젝트명');
   });
@@ -246,7 +222,7 @@ test.describe.serial('Project Metadata Service API', () => {
    */
   test('E2E-005: team CRUD operations work correctly', async ({ request }) => {
     // 1. 팀원 목록 조회
-    const getResponse = await request.get('/api/projects/test-project/team');
+    const getResponse = await request.get(`/api/projects/${TEST_PROJECT_ID}/team`);
     expect(getResponse.status()).toBe(200);
 
     const getData = await getResponse.json();
@@ -272,7 +248,7 @@ test.describe.serial('Project Metadata Service API', () => {
       },
     ];
 
-    const putResponse = await request.put('/api/projects/test-project/team', {
+    const putResponse = await request.put(`/api/projects/${TEST_PROJECT_ID}/team`, {
       data: { members: newTeam },
     });
     expect(putResponse.status()).toBe(200);
@@ -281,7 +257,7 @@ test.describe.serial('Project Metadata Service API', () => {
     expect(putData.total).toBe(2);
 
     // 3. 수정 확인
-    const verifyResponse = await request.get('/api/projects/test-project/team');
+    const verifyResponse = await request.get(`/api/projects/${TEST_PROJECT_ID}/team`);
     const verifyData = await verifyResponse.json();
     expect(verifyData.total).toBe(2);
     expect(verifyData.members[1].name).toBe('김철수');
@@ -331,7 +307,7 @@ test.describe.serial('Project Metadata Service API', () => {
    */
   test('E2E-008: POST /api/projects rejects duplicate project ID', async ({ request }) => {
     const duplicateProject = {
-      id: 'test-project', // 이미 존재하는 ID
+      id: TEST_PROJECT_ID, // 이미 존재하는 ID
       name: 'Duplicate Project',
     };
 
@@ -357,7 +333,7 @@ test.describe.serial('Project Metadata Service API', () => {
       name: 'New Name',
     };
 
-    const response = await request.put('/api/projects/test-project', {
+    const response = await request.put(`/api/projects/${TEST_PROJECT_ID}`, {
       data: updateWithId,
     });
 
@@ -377,7 +353,7 @@ test.describe.serial('Project Metadata Service API', () => {
       { id: 'user1', name: 'User 1 Duplicate', active: true }, // 중복 ID
     ];
 
-    const response = await request.put('/api/projects/test-project/team', {
+    const response = await request.put(`/api/projects/${TEST_PROJECT_ID}/team`, {
       data: { members: duplicateMembers },
     });
 
