@@ -5,8 +5,10 @@
 > **핵심 기능**:
 > - 의존성 기반 Task 자동 선택
 > - **각 단계별 전문 Subagent 위임**
-> - 상세설계 단계: review → apply 자동 수행
-> - 구현 단계: audit → patch 자동 수행
+> - 모든 워크플로우 명령어를 명시적으로 순차 실행
+>   - development: start → ui → draft → review → apply → build → test → audit → patch → verify → done
+>   - defect: start → fix → test → audit → patch → verify → done
+>   - infrastructure: start/skip → build → audit → patch → done
 > - 모든 카테고리 지원 (development, defect, infrastructure)
 
 ## 사용법
@@ -277,7 +279,7 @@ async function executeAutoWorkflow(taskId, options = {}) {
   while (!isTargetReached(currentStatus, currentAction, target)) {
     const mapping = subagentMapping[task.category][currentStatus];
 
-    // 1. preActions 실행 (review/apply 또는 audit/patch)
+    // 1. preActions 실행 (ui, review/apply, test, audit/patch 등)
     if (mapping.preActions) {
       for (const preAction of mapping.preActions) {
         currentAction = preAction.action;
@@ -287,16 +289,7 @@ async function executeAutoWorkflow(taskId, options = {}) {
           return { success: true, finalStatus: currentStatus, stoppedAt: target };
         }
 
-        // ⭐ 조건부 실행: condition이 있으면 조건 검사
-        if (preAction.condition === 'codeReviewNotExist') {
-          // wf:audit이 이미 실행되었는지 확인
-          const codeReviewExists = checkCodeReviewExists(taskId);
-          if (codeReviewExists) {
-            console.log(`[INFO] 코드 리뷰가 이미 존재합니다. wf:audit 스킵`);
-            continue;  // 코드 리뷰가 있으면 스킵
-          }
-        }
-
+        // preAction 실행 (각 명령어는 독립적으로 자기 역할만 수행)
         if (preAction.subagent) {
           await Task({ subagent_type: preAction.subagent, ... });
         } else {
@@ -319,39 +312,7 @@ async function executeAutoWorkflow(taskId, options = {}) {
       await executeMainAgentAction(mapping.action);  // done
     }
 
-    // 3. postActions 실행 (test) - 조건부 실행 지원
-    if (mapping.postActions) {
-      for (const postAction of mapping.postActions) {
-        currentAction = postAction.action;
-
-        // ⭐ 조건부 실행: condition이 있으면 조건 검사
-        if (postAction.condition === 'testResultsNotExist') {
-          // wf:build/wf:fix가 이미 wf:test를 호출했는지 확인
-          const testResultsExist = checkTestResultsExist(taskId);
-          if (testResultsExist) {
-            console.log(`[INFO] 테스트 결과가 이미 존재합니다. wf:test 스킵`);
-            continue;  // 테스트 결과가 있으면 스킵
-          }
-        }
-
-        // ⭐ UI 설계 조건부 실행: subagent에서 ui 호출 불가 대응
-        if (postAction.condition === 'uiDesignNotExist') {
-          // wf:start가 이미 wf:ui를 호출했는지 확인
-          const uiDesignExists = checkUiDesignExists(taskId);
-          if (uiDesignExists) {
-            console.log(`[INFO] UI 설계 문서가 이미 존재합니다. wf:ui 스킵`);
-            continue;  // UI 설계가 있으면 스킵
-          }
-          console.log(`[INFO] UI 설계 문서 없음. wf:ui 직접 실행`);
-        }
-
-        if (postAction.subagent) {
-          await Task({ subagent_type: postAction.subagent, ... });
-        } else {
-          await executeMainAgentAction(postAction.action);
-        }
-      }
-    }
+    // 3. postActions 실행 (현재 미사용 - 모든 액션은 preActions로 통합됨)
 
     // 4. 상태 업데이트 확인
     currentStatus = mapping.next;
@@ -419,28 +380,6 @@ function checkTestResultsExist(taskId) {
   return tddResultExists || e2eResultExists;
 }
 
-// ⭐ 코드 리뷰 문서 존재 여부 확인
-// wf:audit이 이미 실행된 경우 중복 실행 방지
-function checkCodeReviewExists(taskId) {
-  const taskFolder = `.jjiban/projects/{project}/tasks/${taskId}/`;
-
-  // 코드 리뷰 문서 존재 여부 확인 (적용완료 포함)
-  const codeReviewFiles = glob(taskFolder, '031-code-review-*.md');
-
-  // 코드 리뷰 파일이 하나라도 존재하면 이미 실행된 것으로 간주
-  return codeReviewFiles.length > 0;
-}
-
-// ⭐ UI 설계 문서 존재 여부 확인
-// wf:start에서 subagent가 ui를 호출하지 못했을 때 대응
-function checkUiDesignExists(taskId) {
-  const taskFolder = `.jjiban/projects/{project}/tasks/${taskId}/`;
-
-  // UI 설계 문서 존재 여부 확인
-  const uiDesignExists = fileExists(`${taskFolder}011-ui-design.md`);
-
-  return uiDesignExists;
-}
 ```
 
 ### 전체 실행 예시 (development 카테고리)
@@ -479,12 +418,14 @@ Loop 3: [ts] → [xx]
 
 | 시작 상태 | 필요 루프 | 실행 단계 |
 |----------|----------|----------|
-| `[ ]` Todo | 5회 | start → draft → build → verify → done |
-| `[bd]` 기본설계 | 4회 | draft → build → verify → done |
-| `[dd]` 상세설계 | 3회 | build → verify → done |
-| `[im]` 구현 | 2회 | verify → done |
+| `[ ]` Todo | 5회 | start → [ui] → draft → [review, apply] → build → [test, audit, patch] → verify → done |
+| `[bd]` 기본설계 | 4회 | [ui] → draft → [review, apply] → build → [test, audit, patch] → verify → done |
+| `[dd]` 상세설계 | 3회 | [review, apply] → build → [test, audit, patch] → verify → done |
+| `[im]` 구현 | 2회 | [test, audit, patch] → verify → done |
 | `[ts]` 테스트 | 1회 | done |
 | `[xx]` 완료 | 0회 | 이미 완료 |
+
+> **참고**: `[]` 안의 명령어는 preActions로 해당 상태에서 메인 액션 전에 실행됩니다.
 
 ---
 
@@ -541,39 +482,34 @@ const subagentMapping = {
     '[ ]':  {
       action: 'start',
       subagent: 'requirements-analyst',
-      next: '[bd]',
-      // ⭐ start 완료 후 UI 설계 문서 확인 (subagent에서 ui 호출 불가 대응)
-      postActions: [
-        { action: 'ui', subagent: 'frontend-architect', condition: 'uiDesignNotExist' }
-      ]
+      next: '[bd]'
     },
     '[bd]': {
+      preActions: [
+        { action: 'ui', subagent: 'frontend-architect' }  // Frontend 포함 시
+      ],
       action: 'draft',
       subagent: 'system-architect',
       next: '[dd]'
     },
     '[dd]': {
-      action: 'build',
-      subagent: ['backend-architect', 'frontend-architect'], // 병렬
-      next: '[im]',
       preActions: [
         { action: 'review', subagent: 'refactoring-expert' },
         { action: 'apply', subagent: null }  // 메인 에이전트
       ],
-      postActions: [
-        // ⚠️ wf:build가 내부적으로 wf:test를 호출하므로, 테스트 결과 문서가 없을 때만 실행
-        { action: 'test', subagent: 'quality-engineer', condition: 'testResultsNotExist' }
-      ]
+      action: 'build',
+      subagent: ['backend-architect', 'frontend-architect'], // 병렬
+      next: '[im]'
     },
     '[im]': {
+      preActions: [
+        { action: 'test', subagent: 'quality-engineer' },
+        { action: 'audit', subagent: 'refactoring-expert' },
+        { action: 'patch', subagent: null }  // 메인 에이전트
+      ],
       action: 'verify',
       subagent: 'quality-engineer',
-      next: '[ts]',
-      preActions: [
-        // ⚠️ 코드 리뷰 문서가 이미 존재하면 스킵
-        { action: 'audit', subagent: 'refactoring-expert', condition: 'codeReviewNotExist' },
-        { action: 'patch', subagent: null }
-      ]
+      next: '[ts]'
     },
     '[ts]': {
       action: 'done',
@@ -590,21 +526,17 @@ const subagentMapping = {
     '[an]': {
       action: 'fix',
       subagent: ['backend-architect', 'frontend-architect'],
-      next: '[fx]',
-      postActions: [
-        // ⚠️ wf:fix가 내부적으로 wf:test를 호출하므로, 테스트 결과 문서가 없을 때만 실행
-        { action: 'test', subagent: 'quality-engineer', condition: 'testResultsNotExist' }
-      ]
+      next: '[fx]'
     },
     '[fx]': {
+      preActions: [
+        { action: 'test', subagent: 'quality-engineer' },
+        { action: 'audit', subagent: 'refactoring-expert' },
+        { action: 'patch', subagent: null }  // 메인 에이전트
+      ],
       action: 'verify',
       subagent: 'quality-engineer',
-      next: '[ts]',
-      preActions: [
-        // ⚠️ 코드 리뷰 문서가 이미 존재하면 스킵
-        { action: 'audit', subagent: 'refactoring-expert', condition: 'codeReviewNotExist' },
-        { action: 'patch', subagent: null }
-      ]
+      next: '[ts]'
     },
     '[ts]': {
       action: 'done',

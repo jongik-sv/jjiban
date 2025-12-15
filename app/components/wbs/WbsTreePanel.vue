@@ -14,6 +14,7 @@ import { useWbsStore } from '~/stores/wbs'
 import { useRoute } from 'vue-router'
 import ProgressSpinner from 'primevue/progressspinner'
 import Message from 'primevue/message'
+import Button from 'primevue/button'
 import WbsTreeHeader from './WbsTreeHeader.vue'
 // WbsTreeNode는 TSK-04-02에서 구현
 
@@ -26,8 +27,11 @@ const projectId = computed(() => route.query.projectId as string)
 // 스토어 상태 구독
 const { loading, error, tree } = storeToRefs(wbsStore)
 
-// 컴포넌트 마운트 시 WBS 데이터 로드
-onMounted(async () => {
+/**
+ * WBS 데이터 로드 함수
+ * 에러 발생 시 리트라이 가능하도록 분리
+ */
+async function loadWbs() {
   if (!projectId.value) {
     console.error('Project ID is required')
     return
@@ -38,7 +42,10 @@ onMounted(async () => {
   } catch (e) {
     console.error('Failed to load WBS:', e)
   }
-})
+}
+
+// 컴포넌트 마운트 시 WBS 데이터 로드
+onMounted(loadWbs)
 
 // 컴포넌트 언마운트 시 클린업
 onUnmounted(() => {
@@ -73,14 +80,24 @@ onUnmounted(() => {
     <div
       v-else-if="error"
       data-testid="error-state"
-      class="p-4"
+      class="p-4 flex flex-col items-center justify-center h-full"
     >
       <Message
         severity="error"
         :closable="false"
+        class="mb-4"
       >
         {{ error }}
       </Message>
+      <Button
+        data-testid="retry-button"
+        label="다시 시도"
+        icon="pi pi-refresh"
+        severity="secondary"
+        outlined
+        @click="loadWbs"
+        aria-label="WBS 데이터 다시 로드"
+      />
     </div>
 
     <!-- 정상 상태 -->

@@ -11,7 +11,7 @@
     "grepInvert": null,
     "maxFailures": 0,
     "metadata": {
-      "actualWorkers": 1
+      "actualWorkers": 6
     },
     "preserveOutput": "always",
     "reporter": [
@@ -72,7 +72,7 @@
         "CHROME_CRASHPAD_PIPE_NAME": "\\\\.\\pipe\\crashpad_5320_FADUMJZPBYDKLASH",
         "CLAUDECODE": "1",
         "CLAUDE_CODE_ENTRYPOINT": "cli",
-        "CLAUDE_CODE_SESSION_ID": "8045116b-7fcf-4d5b-b243-0ab0d46527d9",
+        "CLAUDE_CODE_SESSION_ID": "1ae5c44c-057a-42db-82d6-cf88b0241293",
         "CLAUDE_CODE_SSE_PORT": "12296",
         "COLOR": "0",
         "COLORTERM": "truecolor",
@@ -180,7 +180,7 @@
         "VSCODE_GIT_ASKPASS_MAIN": "c:\\Users\\USER1\\AppData\\Local\\Programs\\Antigravity\\resources\\app\\extensions\\git\\dist\\askpass-main.js",
         "VSCODE_GIT_ASKPASS_NODE": "C:\\Users\\USER1\\AppData\\Local\\Programs\\Antigravity\\Antigravity.exe",
         "VSCODE_GIT_IPC_HANDLE": "\\\\.\\pipe\\vscode-git-0e65852cc8-sock",
-        "VSCODE_NONCE": "e8a23cef-742f-4271-ba56-912a2c08d0c9",
+        "VSCODE_NONCE": "1820dfd9-be61-43eb-84a5-ba0ea0bbcd7b",
         "WINDIR": "C:\\Windows",
         "_": "C:/Program Files/nodejs/node.exe",
         "JJIBAN_BASE_PATH": "C:\\project\\jjiban"
@@ -189,20 +189,20 @@
   },
   "suites": [
     {
-      "title": "tasks.spec.ts",
-      "file": "tasks.spec.ts",
+      "title": "wbs-tree-panel.spec.ts",
+      "file": "wbs-tree-panel.spec.ts",
       "column": 0,
       "line": 0,
       "specs": [],
       "suites": [
         {
-          "title": "Task API",
-          "file": "tasks.spec.ts",
-          "line": 15,
-          "column": 15,
+          "title": "WBS Tree Panel",
+          "file": "wbs-tree-panel.spec.ts",
+          "line": 9,
+          "column": 6,
           "specs": [
             {
-              "title": "E2E-TASK-01: GET /api/tasks/:id - Task 조회 성공",
+              "title": "E2E-001: WBS 데이터가 성공적으로 로드되어 표시된다",
               "ok": true,
               "tags": [],
               "tests": [
@@ -216,26 +216,26 @@
                     {
                       "workerIndex": 0,
                       "status": "passed",
-                      "duration": 80,
+                      "duration": 5527,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-12-15T04:03:06.428Z",
+                      "startTime": "2025-12-15T05:48:53.343Z",
                       "attachments": []
                     }
                   ],
                   "status": "expected"
                 }
               ],
-              "id": "d2d3f88df070d751ab05-97c4dfff4beaa3fa880e",
-              "file": "tasks.spec.ts",
-              "line": 103,
+              "id": "f68e5d8cf893aa4419ec-0d0395313e9712d505fa",
+              "file": "wbs-tree-panel.spec.ts",
+              "line": 17,
               "column": 3
             },
             {
-              "title": "E2E-TASK-02: PUT /api/tasks/:id - Task 수정 및 이력 기록",
-              "ok": true,
+              "title": "E2E-002: 헤더에 타이틀, 버튼, 검색, 카드가 모두 표시된다",
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -246,28 +246,330 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "status": "passed",
-                      "duration": 85,
-                      "errors": [],
+                      "workerIndex": 1,
+                      "status": "failed",
+                      "duration": 15348,
+                      "error": {
+                        "message": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"content-state\"]') to be visible\u001b[22m\n",
+                        "stack": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"content-state\"]') to be visible\u001b[22m\n\n    at C:\\project\\jjiban\\tests\\e2e\\wbs-tree-panel.spec.ts:39:16",
+                        "location": {
+                          "file": "C:\\project\\jjiban\\tests\\e2e\\wbs-tree-panel.spec.ts",
+                          "column": 16,
+                          "line": 39
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 37 |\u001b[39m   test(\u001b[32m'E2E-002: 헤더에 타이틀, 버튼, 검색, 카드가 모두 표시된다'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n \u001b[90m 38 |\u001b[39m     \u001b[90m// Given: 페이지 로드 완료, 콘텐츠 표시됨\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 39 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m'[data-testid=\"content-state\"]'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 40 |\u001b[39m\n \u001b[90m 41 |\u001b[39m     \u001b[90m// When: 헤더 요소 확인\u001b[39m\n \u001b[90m 42 |\u001b[39m     \u001b[36mconst\u001b[39m header \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'[data-testid=\"wbs-tree-header\"]'\u001b[39m)\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\project\\jjiban\\tests\\e2e\\wbs-tree-panel.spec.ts",
+                            "column": 16,
+                            "line": 39
+                          },
+                          "message": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"content-state\"]') to be visible\u001b[22m\n\n\n\u001b[0m \u001b[90m 37 |\u001b[39m   test(\u001b[32m'E2E-002: 헤더에 타이틀, 버튼, 검색, 카드가 모두 표시된다'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n \u001b[90m 38 |\u001b[39m     \u001b[90m// Given: 페이지 로드 완료, 콘텐츠 표시됨\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 39 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m'[data-testid=\"content-state\"]'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 40 |\u001b[39m\n \u001b[90m 41 |\u001b[39m     \u001b[90m// When: 헤더 요소 확인\u001b[39m\n \u001b[90m 42 |\u001b[39m     \u001b[36mconst\u001b[39m header \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'[data-testid=\"wbs-tree-header\"]'\u001b[39m)\u001b[0m\n    at C:\\project\\jjiban\\tests\\e2e\\wbs-tree-panel.spec.ts:39:16"
+                        }
+                      ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-12-15T04:03:06.523Z",
-                      "attachments": []
+                      "startTime": "2025-12-15T05:48:53.325Z",
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\project\\jjiban\\test-results\\artifacts\\wbs-tree-panel-WBS-Tree-Pa-60766-2-헤더에-타이틀-버튼-검색-카드가-모두-표시된다-chromium\\test-failed-1.png"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\project\\jjiban\\tests\\e2e\\wbs-tree-panel.spec.ts",
+                        "column": 16,
+                        "line": 39
+                      }
                     }
                   ],
-                  "status": "expected"
+                  "status": "unexpected"
                 }
               ],
-              "id": "d2d3f88df070d751ab05-bd7f877daf72373c5c97",
-              "file": "tasks.spec.ts",
+              "id": "f68e5d8cf893aa4419ec-a962fc580a76f4dd493a",
+              "file": "wbs-tree-panel.spec.ts",
+              "line": 37,
+              "column": 3
+            }
+          ]
+        },
+        {
+          "title": "WBS Search",
+          "file": "wbs-tree-panel.spec.ts",
+          "line": 63,
+          "column": 6,
+          "specs": [
+            {
+              "title": "E2E-003: 검색어 입력 시 X 버튼이 표시된다",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "status": "failed",
+                      "duration": 15474,
+                      "error": {
+                        "message": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"content-state\"]') to be visible\u001b[22m\n",
+                        "stack": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"content-state\"]') to be visible\u001b[22m\n\n    at C:\\project\\jjiban\\tests\\e2e\\wbs-tree-panel.spec.ts:67:16",
+                        "location": {
+                          "file": "C:\\project\\jjiban\\tests\\e2e\\wbs-tree-panel.spec.ts",
+                          "column": 16,
+                          "line": 67
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 65 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/wbs?projectId=jjiban'\u001b[39m)\n \u001b[90m 66 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 67 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m'[data-testid=\"content-state\"]'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 68 |\u001b[39m   })\n \u001b[90m 69 |\u001b[39m\n \u001b[90m 70 |\u001b[39m   test(\u001b[32m'E2E-003: 검색어 입력 시 X 버튼이 표시된다'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\project\\jjiban\\tests\\e2e\\wbs-tree-panel.spec.ts",
+                            "column": 16,
+                            "line": 67
+                          },
+                          "message": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"content-state\"]') to be visible\u001b[22m\n\n\n\u001b[0m \u001b[90m 65 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/wbs?projectId=jjiban'\u001b[39m)\n \u001b[90m 66 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 67 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m'[data-testid=\"content-state\"]'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 68 |\u001b[39m   })\n \u001b[90m 69 |\u001b[39m\n \u001b[90m 70 |\u001b[39m   test(\u001b[32m'E2E-003: 검색어 입력 시 X 버튼이 표시된다'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m\n    at C:\\project\\jjiban\\tests\\e2e\\wbs-tree-panel.spec.ts:67:16"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-15T05:48:53.324Z",
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\project\\jjiban\\test-results\\artifacts\\wbs-tree-panel-WBS-Search-E2E-003-검색어-입력-시-X-버튼이-표시된다-chromium\\test-failed-1.png"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\project\\jjiban\\tests\\e2e\\wbs-tree-panel.spec.ts",
+                        "column": 16,
+                        "line": 67
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "f68e5d8cf893aa4419ec-23a7b5b60f8927b6c8cd",
+              "file": "wbs-tree-panel.spec.ts",
+              "line": 70,
+              "column": 3
+            },
+            {
+              "title": "E2E-004: X 버튼 클릭 시 검색어가 초기화된다",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "status": "failed",
+                      "duration": 15472,
+                      "error": {
+                        "message": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"content-state\"]') to be visible\u001b[22m\n",
+                        "stack": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"content-state\"]') to be visible\u001b[22m\n\n    at C:\\project\\jjiban\\tests\\e2e\\wbs-tree-panel.spec.ts:67:16",
+                        "location": {
+                          "file": "C:\\project\\jjiban\\tests\\e2e\\wbs-tree-panel.spec.ts",
+                          "column": 16,
+                          "line": 67
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 65 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/wbs?projectId=jjiban'\u001b[39m)\n \u001b[90m 66 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 67 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m'[data-testid=\"content-state\"]'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 68 |\u001b[39m   })\n \u001b[90m 69 |\u001b[39m\n \u001b[90m 70 |\u001b[39m   test(\u001b[32m'E2E-003: 검색어 입력 시 X 버튼이 표시된다'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\project\\jjiban\\tests\\e2e\\wbs-tree-panel.spec.ts",
+                            "column": 16,
+                            "line": 67
+                          },
+                          "message": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"content-state\"]') to be visible\u001b[22m\n\n\n\u001b[0m \u001b[90m 65 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/wbs?projectId=jjiban'\u001b[39m)\n \u001b[90m 66 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 67 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m'[data-testid=\"content-state\"]'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 68 |\u001b[39m   })\n \u001b[90m 69 |\u001b[39m\n \u001b[90m 70 |\u001b[39m   test(\u001b[32m'E2E-003: 검색어 입력 시 X 버튼이 표시된다'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m\n    at C:\\project\\jjiban\\tests\\e2e\\wbs-tree-panel.spec.ts:67:16"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-15T05:48:53.342Z",
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\project\\jjiban\\test-results\\artifacts\\wbs-tree-panel-WBS-Search-E2E-004-X-버튼-클릭-시-검색어가-초기화된다-chromium\\test-failed-1.png"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\project\\jjiban\\tests\\e2e\\wbs-tree-panel.spec.ts",
+                        "column": 16,
+                        "line": 67
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "f68e5d8cf893aa4419ec-eb3b8f1db8ffbf86838c",
+              "file": "wbs-tree-panel.spec.ts",
+              "line": 86,
+              "column": 3
+            }
+          ]
+        },
+        {
+          "title": "WBS Tree Actions",
+          "file": "wbs-tree-panel.spec.ts",
+          "line": 104,
+          "column": 6,
+          "specs": [
+            {
+              "title": "E2E-005: 전체 펼치기 버튼이 클릭 가능하다",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "status": "failed",
+                      "duration": 16205,
+                      "error": {
+                        "message": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"content-state\"]') to be visible\u001b[22m\n",
+                        "stack": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"content-state\"]') to be visible\u001b[22m\n\n    at C:\\project\\jjiban\\tests\\e2e\\wbs-tree-panel.spec.ts:108:16",
+                        "location": {
+                          "file": "C:\\project\\jjiban\\tests\\e2e\\wbs-tree-panel.spec.ts",
+                          "column": 16,
+                          "line": 108
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 106 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/wbs?projectId=jjiban'\u001b[39m)\n \u001b[90m 107 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 108 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m'[data-testid=\"content-state\"]'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 109 |\u001b[39m   })\n \u001b[90m 110 |\u001b[39m\n \u001b[90m 111 |\u001b[39m   test(\u001b[32m'E2E-005: 전체 펼치기 버튼이 클릭 가능하다'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\project\\jjiban\\tests\\e2e\\wbs-tree-panel.spec.ts",
+                            "column": 16,
+                            "line": 108
+                          },
+                          "message": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"content-state\"]') to be visible\u001b[22m\n\n\n\u001b[0m \u001b[90m 106 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/wbs?projectId=jjiban'\u001b[39m)\n \u001b[90m 107 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 108 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m'[data-testid=\"content-state\"]'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 109 |\u001b[39m   })\n \u001b[90m 110 |\u001b[39m\n \u001b[90m 111 |\u001b[39m   test(\u001b[32m'E2E-005: 전체 펼치기 버튼이 클릭 가능하다'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m\n    at C:\\project\\jjiban\\tests\\e2e\\wbs-tree-panel.spec.ts:108:16"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-15T05:48:53.361Z",
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\project\\jjiban\\test-results\\artifacts\\wbs-tree-panel-WBS-Tree-Actions-E2E-005-전체-펼치기-버튼이-클릭-가능하다-chromium\\test-failed-1.png"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\project\\jjiban\\tests\\e2e\\wbs-tree-panel.spec.ts",
+                        "column": 16,
+                        "line": 108
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "f68e5d8cf893aa4419ec-2d2f1fb0f3f4f85ce74d",
+              "file": "wbs-tree-panel.spec.ts",
+              "line": 111,
+              "column": 3
+            },
+            {
+              "title": "E2E-006: 전체 접기 버튼이 클릭 가능하다",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "status": "failed",
+                      "duration": 15359,
+                      "error": {
+                        "message": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"content-state\"]') to be visible\u001b[22m\n",
+                        "stack": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"content-state\"]') to be visible\u001b[22m\n\n    at C:\\project\\jjiban\\tests\\e2e\\wbs-tree-panel.spec.ts:108:16",
+                        "location": {
+                          "file": "C:\\project\\jjiban\\tests\\e2e\\wbs-tree-panel.spec.ts",
+                          "column": 16,
+                          "line": 108
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 106 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/wbs?projectId=jjiban'\u001b[39m)\n \u001b[90m 107 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 108 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m'[data-testid=\"content-state\"]'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 109 |\u001b[39m   })\n \u001b[90m 110 |\u001b[39m\n \u001b[90m 111 |\u001b[39m   test(\u001b[32m'E2E-005: 전체 펼치기 버튼이 클릭 가능하다'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\project\\jjiban\\tests\\e2e\\wbs-tree-panel.spec.ts",
+                            "column": 16,
+                            "line": 108
+                          },
+                          "message": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"content-state\"]') to be visible\u001b[22m\n\n\n\u001b[0m \u001b[90m 106 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/wbs?projectId=jjiban'\u001b[39m)\n \u001b[90m 107 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 108 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m'[data-testid=\"content-state\"]'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 109 |\u001b[39m   })\n \u001b[90m 110 |\u001b[39m\n \u001b[90m 111 |\u001b[39m   test(\u001b[32m'E2E-005: 전체 펼치기 버튼이 클릭 가능하다'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m\n    at C:\\project\\jjiban\\tests\\e2e\\wbs-tree-panel.spec.ts:108:16"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-15T05:48:53.384Z",
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\project\\jjiban\\test-results\\artifacts\\wbs-tree-panel-WBS-Tree-Actions-E2E-006-전체-접기-버튼이-클릭-가능하다-chromium\\test-failed-1.png"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\project\\jjiban\\tests\\e2e\\wbs-tree-panel.spec.ts",
+                        "column": 16,
+                        "line": 108
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "f68e5d8cf893aa4419ec-1dd3a26b2e2f15bff388",
+              "file": "wbs-tree-panel.spec.ts",
               "line": 124,
               "column": 3
-            },
+            }
+          ]
+        },
+        {
+          "title": "WBS Summary Cards",
+          "file": "wbs-tree-panel.spec.ts",
+          "line": 138,
+          "column": 6,
+          "specs": [
             {
-              "title": "E2E-TASK-03: GET /api/tasks/:id - 존재하지 않는 Task",
-              "ok": true,
+              "title": "E2E-007: 통계 카드가 정확한 값을 표시한다",
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -279,26 +581,64 @@
                   "results": [
                     {
                       "workerIndex": 0,
-                      "status": "passed",
-                      "duration": 237,
-                      "errors": [],
+                      "status": "failed",
+                      "duration": 12940,
+                      "error": {
+                        "message": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"content-state\"]') to be visible\u001b[22m\n",
+                        "stack": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"content-state\"]') to be visible\u001b[22m\n\n    at C:\\project\\jjiban\\tests\\e2e\\wbs-tree-panel.spec.ts:142:16",
+                        "location": {
+                          "file": "C:\\project\\jjiban\\tests\\e2e\\wbs-tree-panel.spec.ts",
+                          "column": 16,
+                          "line": 142
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 140 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/wbs?projectId=jjiban'\u001b[39m)\n \u001b[90m 141 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 142 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m'[data-testid=\"content-state\"]'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 143 |\u001b[39m   })\n \u001b[90m 144 |\u001b[39m\n \u001b[90m 145 |\u001b[39m   test(\u001b[32m'E2E-007: 통계 카드가 정확한 값을 표시한다'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\project\\jjiban\\tests\\e2e\\wbs-tree-panel.spec.ts",
+                            "column": 16,
+                            "line": 142
+                          },
+                          "message": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"content-state\"]') to be visible\u001b[22m\n\n\n\u001b[0m \u001b[90m 140 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/wbs?projectId=jjiban'\u001b[39m)\n \u001b[90m 141 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 142 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m'[data-testid=\"content-state\"]'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 143 |\u001b[39m   })\n \u001b[90m 144 |\u001b[39m\n \u001b[90m 145 |\u001b[39m   test(\u001b[32m'E2E-007: 통계 카드가 정확한 값을 표시한다'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m\n    at C:\\project\\jjiban\\tests\\e2e\\wbs-tree-panel.spec.ts:142:16"
+                        }
+                      ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-12-15T04:03:06.613Z",
-                      "attachments": []
+                      "startTime": "2025-12-15T05:48:59.132Z",
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\project\\jjiban\\test-results\\artifacts\\wbs-tree-panel-WBS-Summary-Cards-E2E-007-통계-카드가-정확한-값을-표시한다-chromium\\test-failed-1.png"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\project\\jjiban\\tests\\e2e\\wbs-tree-panel.spec.ts",
+                        "column": 16,
+                        "line": 142
+                      }
                     }
                   ],
-                  "status": "expected"
+                  "status": "unexpected"
                 }
               ],
-              "id": "d2d3f88df070d751ab05-3938a3a49a241da46552",
-              "file": "tasks.spec.ts",
-              "line": 158,
+              "id": "f68e5d8cf893aa4419ec-86feb8781f8b6e50185d",
+              "file": "wbs-tree-panel.spec.ts",
+              "line": 145,
               "column": 3
-            },
+            }
+          ]
+        },
+        {
+          "title": "WBS Error Handling",
+          "file": "wbs-tree-panel.spec.ts",
+          "line": 166,
+          "column": 6,
+          "specs": [
             {
-              "title": "E2E-TASK-04: PUT /api/tasks/:id - 유효성 검증 실패",
+              "title": "E2E-008: API 에러 시 에러 메시지를 표시한다",
               "ok": true,
               "tags": [],
               "tests": [
@@ -310,28 +650,36 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 6,
                       "status": "passed",
-                      "duration": 187,
+                      "duration": 4348,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-12-15T04:03:06.854Z",
+                      "startTime": "2025-12-15T05:49:10.416Z",
                       "attachments": []
                     }
                   ],
                   "status": "expected"
                 }
               ],
-              "id": "d2d3f88df070d751ab05-c0ffc603ef1baa41ed98",
-              "file": "tasks.spec.ts",
-              "line": 169,
+              "id": "f68e5d8cf893aa4419ec-fd494aaf7a2569356b5a",
+              "file": "wbs-tree-panel.spec.ts",
+              "line": 167,
               "column": 3
-            },
+            }
+          ]
+        },
+        {
+          "title": "WBS Performance",
+          "file": "wbs-tree-panel.spec.ts",
+          "line": 190,
+          "column": 6,
+          "specs": [
             {
-              "title": "E2E-TASK-05: GET /api/tasks/:id/documents - 문서 목록 조회",
-              "ok": true,
+              "title": "PERF-001: 검색 응답 시간이 500ms 이하이다",
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -342,119 +690,53 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "status": "passed",
-                      "duration": 45,
-                      "errors": [],
+                      "workerIndex": 7,
+                      "status": "failed",
+                      "duration": 12117,
+                      "error": {
+                        "message": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"content-state\"]') to be visible\u001b[22m\n",
+                        "stack": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"content-state\"]') to be visible\u001b[22m\n\n    at C:\\project\\jjiban\\tests\\e2e\\wbs-tree-panel.spec.ts:195:16",
+                        "location": {
+                          "file": "C:\\project\\jjiban\\tests\\e2e\\wbs-tree-panel.spec.ts",
+                          "column": 16,
+                          "line": 195
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 193 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/wbs?projectId=jjiban'\u001b[39m)\n \u001b[90m 194 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 195 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m'[data-testid=\"content-state\"]'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 196 |\u001b[39m\n \u001b[90m 197 |\u001b[39m     \u001b[90m// When: 검색어 입력 및 시간 측정\u001b[39m\n \u001b[90m 198 |\u001b[39m     \u001b[36mconst\u001b[39m searchInput \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'[data-testid=\"search-input\"]'\u001b[39m)\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\project\\jjiban\\tests\\e2e\\wbs-tree-panel.spec.ts",
+                            "column": 16,
+                            "line": 195
+                          },
+                          "message": "TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"content-state\"]') to be visible\u001b[22m\n\n\n\u001b[0m \u001b[90m 193 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/wbs?projectId=jjiban'\u001b[39m)\n \u001b[90m 194 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 195 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m'[data-testid=\"content-state\"]'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 196 |\u001b[39m\n \u001b[90m 197 |\u001b[39m     \u001b[90m// When: 검색어 입력 및 시간 측정\u001b[39m\n \u001b[90m 198 |\u001b[39m     \u001b[36mconst\u001b[39m searchInput \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'[data-testid=\"search-input\"]'\u001b[39m)\u001b[0m\n    at C:\\project\\jjiban\\tests\\e2e\\wbs-tree-panel.spec.ts:195:16"
+                        }
+                      ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-12-15T04:03:07.047Z",
-                      "attachments": []
+                      "startTime": "2025-12-15T05:49:10.443Z",
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\project\\jjiban\\test-results\\artifacts\\wbs-tree-panel-WBS-Performance-PERF-001-검색-응답-시간이-500ms-이하이다-chromium\\test-failed-1.png"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\project\\jjiban\\tests\\e2e\\wbs-tree-panel.spec.ts",
+                        "column": 16,
+                        "line": 195
+                      }
                     }
                   ],
-                  "status": "expected"
+                  "status": "unexpected"
                 }
               ],
-              "id": "d2d3f88df070d751ab05-50cb8c1f0fa595708a0d",
-              "file": "tasks.spec.ts",
-              "line": 183,
-              "column": 3
-            },
-            {
-              "title": "E2E-TASK-06: POST /api/tasks/:id/transition - 상태 전이 성공",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "status": "passed",
-                      "duration": 78,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-12-15T04:03:07.096Z",
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "d2d3f88df070d751ab05-a896ae334ce2f3e68942",
-              "file": "tasks.spec.ts",
-              "line": 211,
-              "column": 3
-            },
-            {
-              "title": "E2E-TASK-07: POST /api/tasks/:id/transition - 유효하지 않은 전이",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "status": "passed",
-                      "duration": 222,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-12-15T04:03:07.177Z",
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "d2d3f88df070d751ab05-1c816f5041f9976b8af5",
-              "file": "tasks.spec.ts",
-              "line": 234,
-              "column": 3
-            },
-            {
-              "title": "E2E-TASK-08: GET /api/tasks/:id/available-commands - 가능한 명령어 조회",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "status": "passed",
-                      "duration": 35,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-12-15T04:03:07.403Z",
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "d2d3f88df070d751ab05-353d0e3cbdc8cd8a9b6e",
-              "file": "tasks.spec.ts",
-              "line": 247,
+              "id": "f68e5d8cf893aa4419ec-1c84e03e121ebb316fbb",
+              "file": "wbs-tree-panel.spec.ts",
+              "line": 191,
               "column": 3
             }
           ]
@@ -464,11 +746,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2025-12-15T04:02:45.744Z",
-    "duration": 21905.051,
-    "expected": 8,
+    "startTime": "2025-12-15T05:48:33.320Z",
+    "duration": 50390.342000000004,
+    "expected": 2,
     "skipped": 0,
-    "unexpected": 0,
+    "unexpected": 7,
     "flaky": 0
   }
 }

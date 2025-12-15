@@ -72,13 +72,6 @@ export interface ProjectDetail {
   team: TeamMember[];
 }
 
-// ============================================================
-// DTO Types - validators/projectValidators.ts에서 Zod로 정의
-// ============================================================
-
-// Re-export from validators for backward compatibility
-export type { CreateProjectDto, UpdateProjectDto, UpdateTeamDto } from '../validators/projectValidators';
-
 /**
  * 프로젝트 목록 응답
  */

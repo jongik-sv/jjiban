@@ -42,23 +42,10 @@ export interface CreateProjectInput {
 }
 
 // ============================================================
-// WBS 관련 타입
+// WBS 관련 타입 (ISS-CR-009: types/index.ts에서 re-export)
 // ============================================================
 
-export type WbsNodeType = 'project' | 'wp' | 'act' | 'task'
-
-export interface WbsNode {
-  id: string
-  type: WbsNodeType
-  title: string
-  status?: string
-  category?: string
-  priority?: string
-  progress: number
-  taskCount: number
-  children: WbsNode[]
-  expanded?: boolean
-}
+export { type WbsNode, type WbsNodeType } from '~/types/index'
 
 // ============================================================
 // Task 상세 타입

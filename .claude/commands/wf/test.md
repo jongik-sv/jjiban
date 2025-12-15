@@ -711,7 +711,16 @@ WP/ACT 내 Task 필터링:
 jjiban 프로젝트 - Workflow Command
 author: 장종익
 Command: wf:test
-Version: 1.0
+Version: 1.1
+
+Changes (v1.1):
+- 모든 카테고리 지원 (development, defect, infrastructure)
+- 구현 완료 상태 이후에만 실행 가능하도록 조건 추가
+  - development: [im], [vf], [xx]
+  - defect: [fx], [vf], [xx]
+  - infrastructure: [im], [xx]
+- WP/ACT 단위 실행 시 구현 완료 상태 필터링 로직 추가
+- 에러 케이스에 상태 미달 에러 추가
 
 Changes (v1.0):
 - 생성

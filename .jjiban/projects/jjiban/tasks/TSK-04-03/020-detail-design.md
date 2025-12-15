@@ -147,9 +147,12 @@ function toggleNode(nodeId: string): void {
 }
 ```
 
-**2) selectNode 구현**
+**2) selectNode 구현 (ISS-DR-008 적용: Race Condition 방지)**
 
 ```typescript
+// 요청 중 플래그 (Race Condition 방지)
+const isSelecting = ref(false)
+
 async function selectNode(nodeId: string): Promise<void> {
   const selectionStore = useSelectionStore()
 
@@ -159,12 +162,12 @@ async function selectNode(nodeId: string): Promise<void> {
     return
   }
 
-  // 중복 선택 방지
-  if (selectionStore.selectedNodeId === nodeId) {
+  // 중복 선택 및 진행 중 요청 방지 (ISS-DR-008)
+  if (selectionStore.selectedNodeId === nodeId || isSelecting.value) {
     return
   }
 
-  // 스토어 액션 호출 (Task인 경우 자동 로드)
+  isSelecting.value = true
   try {
     await selectionStore.selectNode(nodeId)
   } catch (error) {
@@ -172,6 +175,8 @@ async function selectNode(nodeId: string): Promise<void> {
     // 에러 발생 시 선택 해제 (일관성 유지)
     selectionStore.clearSelection()
     throw error
+  } finally {
+    isSelecting.value = false
   }
 }
 ```
@@ -413,10 +418,17 @@ function clearExpandedState(): void {
 }
 ```
 
-**5) 자동 저장 (Watch)**
+**5) 자동 저장 (Watch) (ISS-DR-003 적용: Debounce 추가)**
 
 ```typescript
+import { useDebounceFn } from '@vueuse/core'
+
 const autoSave = ref(true)
+
+// Debounce 적용 (300ms) - ISS-DR-003
+const debouncedSave = useDebounceFn((expandedNodes: Set<string>) => {
+  saveExpandedState(expandedNodes)
+}, 300)
 
 // WbsStore의 expandedNodes 변경 감지
 const wbsStore = useWbsStore()
@@ -424,7 +436,7 @@ watch(
   () => wbsStore.expandedNodes,
   (expandedNodes) => {
     if (autoSave.value) {
-      saveExpandedState(expandedNodes)
+      debouncedSave(expandedNodes)  // debounce 적용
     }
   },
   { deep: true }

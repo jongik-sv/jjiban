@@ -350,7 +350,7 @@
 ### TSK-04-01: Tree Panel
 - category: development
 - domain: frontend
-- status: [im]
+- status: [xx]
 - priority: high
 - assignee: -
 - schedule: 2026-01-06 ~ 2026-01-09
@@ -366,7 +366,7 @@
 ### TSK-04-02: Tree Node
 - category: development
 - domain: frontend
-- status: [dd]
+- status: [xx]
 - priority: critical
 - assignee: -
 - schedule: 2026-01-09 ~ 2026-01-12
@@ -382,7 +382,7 @@
 ### TSK-04-03: Tree Interaction
 - category: development
 - domain: frontend
-- status: [dd]
+- status: [xx]
 - priority: high
 - assignee: -
 - schedule: 2026-01-12 ~ 2026-01-15
