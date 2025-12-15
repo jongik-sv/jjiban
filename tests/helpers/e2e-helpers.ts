@@ -1,10 +1,11 @@
 import { Page, expect } from '@playwright/test';
+import { TEST_TIMEOUTS, VALID_ARIA_ROLES } from './constants';
 
 /**
  * 페이지 로드 및 안정화 대기
  */
 export async function waitForPageReady(page: Page): Promise<void> {
-  await page.waitForLoadState('networkidle', { timeout: 30000 });
+  await page.waitForLoadState('networkidle', { timeout: TEST_TIMEOUTS.PAGE_READY });
   await page.waitForLoadState('domcontentloaded');
 }
 
@@ -15,7 +16,7 @@ export async function waitForWbsLoaded(
   page: Page,
   options: { timeout?: number } = {}
 ): Promise<void> {
-  const { timeout = 15000 } = options;
+  const { timeout = TEST_TIMEOUTS.WBS_LOAD } = options;
 
   try {
     // 1. 로딩 스피너 사라질 때까지 대기
@@ -53,7 +54,7 @@ export async function waitForWbsLoaded(
     ]);
 
     // 4. 렌더링 안정화 대기 (애니메이션)
-    await page.waitForTimeout(100);
+    await page.waitForTimeout(TEST_TIMEOUTS.RENDER_STABILIZATION);
   } catch (error) {
     console.error('waitForWbsLoaded failed:', error);
     throw error;
@@ -95,34 +96,137 @@ export async function mockWbsApiError(
 }
 
 /**
- * 접근성 검증 (기본 ARIA 체크)
+ * 접근성 검증 (강화된 ARIA 체크)
  */
 export async function checkAccessibility(page: Page): Promise<void> {
-  // 기본 ARIA 체크
-  const landmarks = await page.locator('[role]').count();
-  expect(landmarks).toBeGreaterThan(0);
+  // 1. ARIA role 존재 여부 확인
+  await checkAriaRoles(page);
 
-  // 필수 ARIA 속성 체크 (버튼)
+  // 2. 버튼 레이블 엄격 검증
+  await checkButtonLabels(page);
+
+  // 3. 폼 요소 레이블 검증
+  await checkInputLabels(page);
+
+  // 4. 포커스 가능 요소 존재 확인
+  await checkFocusableElements(page);
+}
+
+/**
+ * ARIA role 유효성 검증
+ */
+async function checkAriaRoles(page: Page): Promise<void> {
+  const elementsWithRole = await page.locator('[role]').all();
+
+  // role 속성이 있는 요소가 최소 1개 이상 존재해야 함
+  expect(elementsWithRole.length).toBeGreaterThan(0);
+
+  // 유효하지 않은 role 검증
+  for (const element of elementsWithRole) {
+    const role = await element.getAttribute('role');
+    if (role) {
+      const isValidRole = VALID_ARIA_ROLES.includes(role as any);
+      expect(isValidRole, `Invalid ARIA role: ${role}`).toBe(true);
+    }
+  }
+}
+
+/**
+ * 버튼 레이블 엄격 검증
+ */
+async function checkButtonLabels(page: Page): Promise<void> {
   const buttons = await page.locator('button').all();
-  for (const button of buttons) {
-    const hasLabel = await button.evaluate((el) => {
-      return el.hasAttribute('aria-label') ||
-             (el.textContent?.trim() || '').length > 0;
-    });
-    expect(hasLabel).toBe(true);
-  }
 
-  // 폼 요소 레이블 체크
-  const inputs = await page.locator('input[type="text"], input[type="search"]').all();
-  for (const input of inputs) {
-    const hasLabel = await input.evaluate((el) => {
-      const id = el.id;
-      return el.hasAttribute('aria-label') ||
-             el.hasAttribute('placeholder') ||
-             (id && document.querySelector(`label[for="${id}"]`));
+  for (const button of buttons) {
+    const hasValidLabel = await button.evaluate((el) => {
+      const ariaLabel = el.getAttribute('aria-label');
+      const textContent = el.textContent?.trim();
+      const ariaLabelledBy = el.getAttribute('aria-labelledby');
+
+      // aria-label이 존재하고 비어있지 않음
+      if (ariaLabel && ariaLabel.trim().length > 0) {
+        return true;
+      }
+
+      // aria-labelledby가 존재하고 참조하는 요소가 있음
+      if (ariaLabelledBy) {
+        const labelElement = document.getElementById(ariaLabelledBy);
+        if (labelElement && labelElement.textContent?.trim().length) {
+          return true;
+        }
+      }
+
+      // textContent가 존재하고 의미있는 값임
+      if (textContent && textContent.length > 0) {
+        return true;
+      }
+
+      // 아이콘 버튼의 경우 title 속성 확인
+      if (el.hasAttribute('title') && el.getAttribute('title')?.trim().length) {
+        return true;
+      }
+
+      return false;
     });
-    expect(hasLabel).toBe(true);
+
+    expect(hasValidLabel, 'Button must have accessible label').toBe(true);
   }
+}
+
+/**
+ * 입력 요소 레이블 검증
+ */
+async function checkInputLabels(page: Page): Promise<void> {
+  const inputs = await page.locator('input[type="text"], input[type="search"], input[type="email"], input[type="password"], textarea').all();
+
+  for (const input of inputs) {
+    const hasValidLabel = await input.evaluate((el) => {
+      const id = el.id;
+      const ariaLabel = el.getAttribute('aria-label');
+      const ariaLabelledBy = el.getAttribute('aria-labelledby');
+      const placeholder = el.getAttribute('placeholder');
+
+      // aria-label이 존재하고 비어있지 않음
+      if (ariaLabel && ariaLabel.trim().length > 0) {
+        return true;
+      }
+
+      // aria-labelledby가 존재하고 참조하는 요소가 있음
+      if (ariaLabelledBy) {
+        const labelElement = document.getElementById(ariaLabelledBy);
+        if (labelElement && labelElement.textContent?.trim().length) {
+          return true;
+        }
+      }
+
+      // 연결된 label 요소가 존재
+      if (id) {
+        const labelElement = document.querySelector(`label[for="${id}"]`);
+        if (labelElement && labelElement.textContent?.trim().length) {
+          return true;
+        }
+      }
+
+      // placeholder가 존재 (차선책)
+      if (placeholder && placeholder.trim().length > 0) {
+        return true;
+      }
+
+      return false;
+    });
+
+    expect(hasValidLabel, 'Input must have accessible label').toBe(true);
+  }
+}
+
+/**
+ * 포커스 가능 요소 존재 확인
+ */
+async function checkFocusableElements(page: Page): Promise<void> {
+  const focusableSelector = 'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])';
+  const focusableElements = await page.locator(focusableSelector).all();
+
+  expect(focusableElements.length, 'Page should have focusable elements').toBeGreaterThan(0);
 }
 
 /**
@@ -137,7 +241,7 @@ export async function testKeyboardNavigation(
   await page.keyboard.press('Tab');
 
   // 포커스 확인 (약간의 대기 후)
-  await page.waitForTimeout(100);
+  await page.waitForTimeout(TEST_TIMEOUTS.RENDER_STABILIZATION);
 
   const focused = await page.locator(targetSelector).evaluate(
     el => el === document.activeElement

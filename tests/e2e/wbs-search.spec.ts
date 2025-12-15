@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { waitForPageReady, waitForWbsLoaded } from '../helpers/e2e-helpers';
+import { TEST_TIMEOUTS } from '../helpers/constants';
 
 test.describe('WBS Search E2E', () => {
   test.beforeEach(async ({ page }) => {
@@ -15,8 +16,8 @@ test.describe('WBS Search E2E', () => {
     // When: 검색어 입력
     await searchInput.fill('TSK-01');
 
-    // Wait: debounce (350ms)
-    await page.waitForTimeout(400);
+    // Wait: debounce (350ms + safety margin)
+    await page.waitForTimeout(TEST_TIMEOUTS.DEBOUNCE_WAIT + TEST_TIMEOUTS.DEBOUNCE_SAFETY_MARGIN);
 
     // Then: 필터링된 결과 (TSK-01-01-01이 보여야 함)
     const taskNode = page.locator('text=TSK-01-01-01');
@@ -27,7 +28,7 @@ test.describe('WBS Search E2E', () => {
     // Given: 검색어 입력
     const searchInput = page.locator('[data-testid="search-input"]');
     await searchInput.fill('Search');
-    await page.waitForTimeout(400);
+    await page.waitForTimeout(TEST_TIMEOUTS.DEBOUNCE_WAIT + TEST_TIMEOUTS.DEBOUNCE_SAFETY_MARGIN);
 
     // When: X 버튼 클릭
     const clearBtn = page.locator('[data-testid="search-clear"]');
@@ -45,7 +46,7 @@ test.describe('WBS Search E2E', () => {
 
     // When: 소문자 검색어
     await searchInput.fill('test task');
-    await page.waitForTimeout(400);
+    await page.waitForTimeout(TEST_TIMEOUTS.DEBOUNCE_WAIT + TEST_TIMEOUTS.DEBOUNCE_SAFETY_MARGIN);
 
     // Then: 'Test Task' 매칭 (대소문자 무시)
     const taskNode = page.locator('text=Test Task');

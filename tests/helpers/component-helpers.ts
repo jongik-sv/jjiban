@@ -2,6 +2,7 @@ import { mount, VueWrapper } from '@vue/test-utils';
 import { createPinia, setActivePinia } from 'pinia';
 import PrimeVue from 'primevue/config';
 import Aura from '@primevue/themes/aura';
+import { POLLING } from './constants';
 
 /**
  * Vue 컴포넌트 마운트 헬퍼
@@ -63,7 +64,7 @@ export async function waitUntil(
   fn: () => boolean | Promise<boolean>,
   options: { timeout?: number; interval?: number } = {}
 ): Promise<void> {
-  const { timeout = 5000, interval = 50 } = options;
+  const { timeout = POLLING.DEFAULT_TIMEOUT, interval = POLLING.DEFAULT_INTERVAL } = options;
   const start = Date.now();
 
   while (Date.now() - start < timeout) {

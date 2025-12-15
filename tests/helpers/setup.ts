@@ -1,4 +1,5 @@
 import { beforeAll, afterAll, beforeEach } from 'vitest';
+import { SUPPRESSED_WARNINGS, SUPPRESSED_ERRORS } from './constants';
 
 // Pinia Mock Setup
 beforeEach(() => {
@@ -14,9 +15,7 @@ beforeAll(() => {
     const msg = args[0];
     if (
       typeof msg === 'string' &&
-      (msg.includes('Extraneous non-props') ||
-       msg.includes('Hydration') ||
-       msg.includes('experimental'))
+      SUPPRESSED_WARNINGS.some(pattern => msg.includes(pattern))
     ) {
       return;
     }
@@ -27,8 +26,7 @@ beforeAll(() => {
     const msg = args[0];
     if (
       typeof msg === 'string' &&
-      (msg.includes('Not implemented: HTMLFormElement.prototype.submit') ||
-       msg.includes('Not implemented: navigation'))
+      SUPPRESSED_ERRORS.some(pattern => msg.includes(pattern))
     ) {
       return;
     }
