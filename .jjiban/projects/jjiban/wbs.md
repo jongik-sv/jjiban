@@ -705,7 +705,7 @@
 
 #### TSK-08-02: WBS UI Components Migration
 - category: development
-- status: [ ]
+- status: basic-design [bd]
 - priority: medium
 - schedule: 2026-02-09 ~ 2026-02-11
 - tags: primevue, badge, tag, progress, migration
@@ -717,6 +717,8 @@
   - main.css에 통합 스타일 클래스 정의
   - CSS 클래스 중앙화 원칙 준수 (TRD 2.3.6)
 - ref: PRD 10.1, TRD 2.3.6
+- completed:
+  - bd: 2025-12-16 10:25
 
 #### TSK-08-03: AppLayout PrimeVue Splitter Migration
 - category: development
