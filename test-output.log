@@ -3084,3 +3084,44 @@ Call log:
   ✘  97 [chromium] › wbs-page-integration.spec.ts:260:3 › WBS Page Integration › TC-022: 키보드 네비게이션 (3.3s)
   ✘  98 [chromium] › wbs-page-integration.spec.ts:292:3 › WBS Page Integration › TC-023: ARIA 라벨 (3.6s)
   ✘  99 [chromium] › wbs-page-integration.spec.ts:310:3 › WBS Page Integration › TC-017: 노드 선택 → Task 상세 로드 성능 (6.5s)
+waitForWbsLoaded failed: page.waitForSelector: Timeout 15000ms exceeded.
+Call log:
+[2m  - waiting for locator('[data-testid="wbs-tree-content"]') to be visible[22m
+
+    at waitForWbsLoaded [90m(C:\project\jjiban\[39mtests\helpers\e2e-helpers.ts:43:12[90m)[39m
+    at [90mC:\project\jjiban\[39mtests\e2e\wbs-search.spec.ts:9:5 {
+  name: [32m'TimeoutError'[39m,
+  [[32mSymbol(step)[39m]: {
+    stepId: [32m'pw:api@14'[39m,
+    location: {
+      file: [32m'C:\\project\\jjiban\\tests\\helpers\\e2e-helpers.ts'[39m,
+      line: [33m43[39m,
+      column: [33m12[39m,
+      function: [32m'waitForWbsLoaded'[39m
+    },
+    category: [32m'pw:api'[39m,
+    title: [32m'page.waitForSelector([data-testid="wbs-tree-content"])'[39m,
+    apiName: [32m'page.waitForSelector'[39m,
+    params: {
+      selector: [32m'[data-testid="wbs-tree-content"]'[39m,
+      state: [32m'visible'[39m,
+      timeout: [33m15000[39m
+    },
+    boxedStack: [90mundefined[39m,
+    steps: [],
+    complete: [36m[Function: complete][39m,
+    endWallTime: [33m1765864779778[39m,
+    error: {
+      message: [32m'TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.\n'[39m +
+        [32m'Call log:\n'[39m +
+        [32m`\x1B[2m  - waiting for locator('[data-testid="wbs-tree-content"]') to be visible\x1B[22m\n`[39m,
+      stack: [32m'TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.\n'[39m +
+        [32m'Call log:\n'[39m +
+        [32m`\x1B[2m  - waiting for locator('[data-testid="wbs-tree-content"]') to be visible\x1B[22m\n`[39m +
+        [32m'\n'[39m +
+        [32m'    at waitForWbsLoaded (C:\\project\\jjiban\\tests\\helpers\\e2e-helpers.ts:43:12)\n'[39m +
+        [32m'    at C:\\project\\jjiban\\tests\\e2e\\wbs-search.spec.ts:9:5'[39m,
+      cause: [90mundefined[39m
+    }
+  }
+}
