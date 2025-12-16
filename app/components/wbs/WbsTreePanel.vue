@@ -11,6 +11,8 @@
  * @see 020-detail-design.md
  */
 
+import { computed, onMounted } from 'vue'
+import { storeToRefs } from 'pinia'
 import { useWbsStore } from '~/stores/wbs'
 import { useRoute } from 'vue-router'
 import type { WbsNode } from '~/types'
@@ -114,10 +116,12 @@ const expandedKeys = computed({
  * - PrimeVue Tree의 @node-expand, @node-collapse 이벤트 처리
  * - wbsStore.expandedNodes 동기화
  *
- * @param event PrimeVue Tree 노드 이벤트
+ * PrimeVue Tree의 이벤트 시그니처: (node: TreeNode) => void
+ *
+ * @param node 확장/축소된 TreeNode
  */
-function updateExpandedKeys(event: { node: TreeNode }) {
-  const nodeKey = event.node.key as string
+function updateExpandedKeys(node: TreeNode) {
+  const nodeKey = node.key as string
 
   // 현재 상태 확인 후 토글
   if (expandedNodes.value.has(nodeKey)) {

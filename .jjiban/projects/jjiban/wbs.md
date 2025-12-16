@@ -681,11 +681,12 @@
 
 #### TSK-08-01: WbsTreePanel + NodeIcon Migration
 - category: development
-- status: detail-design [dd]
+- status: done [xx]
 - priority: high
 - schedule: 2026-02-06 ~ 2026-02-09
 - tags: primevue, tree, component, migration
 - depends: TSK-06-02
+- test-result: pass
 - requirements:
   - 커스텀 트리 렌더링 → PrimeVue Tree 컴포넌트로 교체
   - WbsNode[] → PrimeVue TreeNode[] 변환 함수 구현
@@ -695,6 +696,12 @@
   - wbsStore와 상태 동기화 (expand/collapse 메서드)
   - 접근성 유지 (ARIA 속성)
 - ref: PRD 6.2, TRD 2.3.6
+- completed:
+  - bd: 2025-12-16 09:00
+  - dd: 2025-12-16 09:30
+  - im: 2025-12-16 10:00
+  - vf: 2025-12-16 10:30
+  - xx: 2025-12-16 11:00
 
 #### TSK-08-02: WBS UI Components Migration
 - category: development
