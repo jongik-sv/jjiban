@@ -705,7 +705,7 @@ start: 2025-12-13
 
 #### TSK-08-02: WBS UI Components Migration
 - category: development
-- status: test [ts]
+- status: done [xx]
 - priority: medium
 - schedule: 2026-02-09 ~ 2026-02-11
 - tags: primevue, badge, tag, progress, migration
@@ -723,6 +723,7 @@ start: 2025-12-13
   - dd: 2025-12-16 10:35
   - im: 2025-12-16 10:51
   - vf: 2025-12-16 11:07
+  - xx: 2025-12-16 11:15
 
 #### TSK-08-03: AppLayout PrimeVue Splitter Migration
 - category: development
