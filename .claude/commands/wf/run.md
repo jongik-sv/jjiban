@@ -285,14 +285,7 @@ Subagent 호출: 5회
 
 ## 공통 모듈 참조
 
-@.claude/includes/wf-hierarchy-input.md
-@.claude/includes/wf-common.md
-
----
-
-## 마지막 단계: 자동 Git Commit
-
-@.claude/includes/wf-auto-commit.md
+@.claude/includes/wf-common-lite.md
 
 ---
 

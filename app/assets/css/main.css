@@ -276,3 +276,37 @@ pre code {
 .wbs-tree-node-progress {
   @apply text-xs text-text-muted ml-auto mr-2;
 }
+
+/* ============================================
+ * CategoryTag 컴포넌트 스타일 (TSK-08-02)
+ * CSS 클래스 중앙화 원칙 준수
+ * ============================================ */
+
+.category-tag-development {
+  @apply bg-primary/20 border border-primary/30 rounded-xl px-2 py-1;
+}
+
+.category-tag-defect {
+  @apply bg-danger/20 border border-danger/30 rounded-xl px-2 py-1;
+}
+
+.category-tag-infrastructure {
+  @apply bg-level-project/20 border border-level-project/30 rounded-xl px-2 py-1;
+}
+
+/* ============================================
+ * ProgressBar 컴포넌트 스타일 (TSK-08-02)
+ * CSS 클래스 중앙화 원칙 준수
+ * ============================================ */
+
+.progress-bar-low {
+  @apply bg-danger;
+}
+
+.progress-bar-medium {
+  @apply bg-warning;
+}
+
+.progress-bar-high {
+  @apply bg-success;
+}

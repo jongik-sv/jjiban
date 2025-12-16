@@ -1,7 +1,7 @@
-> version: 1.0
-> depth: 4
-> updated: 2025-12-16
-> start: 2025-12-13
+version: 1.0
+depth: 4
+updated: 2025-12-16
+start: 2025-12-13
 
 ---
 
@@ -705,11 +705,12 @@
 
 #### TSK-08-02: WBS UI Components Migration
 - category: development
-- status: basic-design [bd]
+- status: test [ts]
 - priority: medium
 - schedule: 2026-02-09 ~ 2026-02-11
 - tags: primevue, badge, tag, progress, migration
 - depends: TSK-08-01
+- test-result: pass
 - requirements:
   - StatusBadge: HEX 하드코딩 제거 → CSS 클래스 (.status-*) 적용
   - CategoryTag: HEX 하드코딩 제거 → CSS 클래스 (.category-*) 적용
@@ -719,6 +720,9 @@
 - ref: PRD 10.1, TRD 2.3.6
 - completed:
   - bd: 2025-12-16 10:25
+  - dd: 2025-12-16 10:35
+  - im: 2025-12-16 10:51
+  - vf: 2025-12-16 11:07
 
 #### TSK-08-03: AppLayout PrimeVue Splitter Migration
 - category: development

@@ -132,3 +132,4 @@ main.css → tailwind.config.ts → 컴포넌트 (:class만 사용)
 ## TDD, E2E 테스트 시 유의사항
 - .jjiban/jjiban 폴더는 테스트에 사용하지 말것
 - 요청에 좋은 대안이 있으면 제시해
+- 슬래쉬('/') 명령어 수정과 생성은 100%의미를 함축하여 compact 하게 할 것

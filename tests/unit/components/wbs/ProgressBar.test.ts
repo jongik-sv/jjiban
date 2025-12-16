@@ -10,12 +10,12 @@ import WbsProgressBar from '~/components/wbs/ProgressBar.vue'
 import PrimeProgressBar from 'primevue/progressbar'
 
 describe('ProgressBar', () => {
-  // UT-008: 진행률 색상 매핑 검증
+  // UT-008: 진행률 색상 매핑 검증 (CSS 클래스 중앙화 적용)
   it.each<[number, string]>([
-    [15, '#ef4444'],  // 0-30% 구간 (빨강)
-    [50, '#f59e0b'],  // 30-70% 구간 (황색)
-    [85, '#22c55e']   // 70-100% 구간 (초록)
-  ])('should apply correct color for %i%%', (value, expectedColor) => {
+    [15, 'progress-bar-low'],     // 0-30% 구간 (빨강)
+    [50, 'progress-bar-medium'],  // 30-70% 구간 (황색)
+    [85, 'progress-bar-high']     // 70-100% 구간 (초록)
+  ])('should apply correct color for %i%%', (value, expectedClass) => {
     const wrapper = mount(WbsProgressBar, {
       props: { value },
       global: {
@@ -27,19 +27,19 @@ describe('ProgressBar', () => {
     expect(progressBar.exists()).toBe(true)
     expect(progressBar.props('value')).toBe(value)
 
-    // Check Pass Through API for color
+    // Check Pass Through API for CSS class instead of inline style
     const pt = progressBar.props('pt')
     expect(pt).toBeDefined()
-    expect(pt.value?.style?.backgroundColor).toBe(expectedColor)
+    expect(pt.value?.class).toBe(expectedClass)
   })
 
-  // UT-009: 진행률 범위 경계 테스트
+  // UT-009: 진행률 범위 경계 테스트 (CSS 클래스 중앙화 적용)
   it.each<[number, string]>([
-    [0, '#ef4444'],    // 경계: 0% → 빨강
-    [30, '#f59e0b'],   // 경계: 30% → 황색
-    [70, '#22c55e'],   // 경계: 70% → 초록
-    [100, '#22c55e']   // 경계: 100% → 초록
-  ])('should handle boundary value %i%% correctly', (value, expectedColor) => {
+    [0, 'progress-bar-low'],      // 경계: 0% → 빨강
+    [30, 'progress-bar-medium'],  // 경계: 30% → 황색
+    [70, 'progress-bar-high'],    // 경계: 70% → 초록
+    [100, 'progress-bar-high']    // 경계: 100% → 초록
+  ])('should handle boundary value %i%% correctly', (value, expectedClass) => {
     const wrapper = mount(WbsProgressBar, {
       props: { value },
       global: {
@@ -48,7 +48,7 @@ describe('ProgressBar', () => {
     })
 
     const pt = wrapper.findComponent(PrimeProgressBar).props('pt')
-    expect(pt.value?.style?.backgroundColor).toBe(expectedColor)
+    expect(pt.value?.class).toBe(expectedClass)
   })
 
   it('should show value by default', () => {

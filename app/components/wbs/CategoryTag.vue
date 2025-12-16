@@ -1,5 +1,9 @@
 <template>
-  <div :data-testid="`category-tag-${category}`" :style="{ backgroundColor: categoryColor }" class="category-tag-wrapper">
+  <div
+    :data-testid="`category-tag-${category}`"
+    :class="`category-tag-${category}`"
+    class="category-tag-wrapper"
+  >
     <Tag
       :value="categoryLabel"
       :icon="categoryIcon"
@@ -21,24 +25,29 @@ const props = defineProps<Props>()
 
 interface CategoryConfig {
   icon: string
-  color: string
   label: string
 }
 
 /**
- * 카테고리 → 아이콘/색상/레이블 매핑
+ * 카테고리 → 아이콘/레이블 매핑
+ * CSS 클래스 중앙화: color 필드 제거, main.css에서 관리
  */
 const categoryConfig = computed((): CategoryConfig => {
   const configs: Record<TaskCategory, CategoryConfig> = {
-    development: { icon: 'pi-code', color: '#3b82f6', label: 'Dev' },
-    defect: { icon: 'pi-exclamation-triangle', color: '#ef4444', label: 'Defect' },
-    infrastructure: { icon: 'pi-cog', color: '#8b5cf6', label: 'Infra' }
+    development: { icon: 'pi-code', label: 'Dev' },
+    defect: { icon: 'pi-exclamation-triangle', label: 'Defect' },
+    infrastructure: { icon: 'pi-cog', label: 'Infra' }
   }
-  return configs[props.category]
+
+  const config = configs[props.category]
+  if (!config) {
+    console.warn(`Invalid category: ${props.category}`)
+    return { icon: 'pi-code', label: 'Unknown' }
+  }
+  return config
 })
 
 const categoryIcon = computed(() => `pi ${categoryConfig.value.icon}`)
-const categoryColor = computed(() => categoryConfig.value.color)
 const categoryLabel = computed(() => categoryConfig.value.label)
 </script>
 

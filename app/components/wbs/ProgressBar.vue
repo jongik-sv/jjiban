@@ -26,30 +26,35 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 /**
+ * 진행률 임계값 상수
+ * CSS 클래스 중앙화: HEX 제거, main.css에서 관리
+ */
+const PROGRESS_THRESHOLDS = { LOW: 30, MEDIUM: 70 } as const
+
+/**
  * 값 클램핑: 0-100 범위로 제한
  */
 const clampedValue = computed(() => Math.min(100, Math.max(0, props.value)))
 
 /**
- * 진행률 구간별 색상 계산
- * 0-30%: 빨강 (#ef4444)
- * 30-70%: 황색 (#f59e0b)
- * 70-100%: 초록 (#22c55e)
+ * 진행률 구간별 CSS 클래스 계산
+ * 0-29%: progress-bar-low (빨강)
+ * 30-69%: progress-bar-medium (황색)
+ * 70-100%: progress-bar-high (초록)
  */
-const barColor = computed(() => {
-  if (clampedValue.value < 30) return '#ef4444'
-  if (clampedValue.value < 70) return '#f59e0b'
-  return '#22c55e'
+const barClass = computed(() => {
+  if (clampedValue.value < PROGRESS_THRESHOLDS.LOW) return 'progress-bar-low'
+  if (clampedValue.value < PROGRESS_THRESHOLDS.MEDIUM) return 'progress-bar-medium'
+  return 'progress-bar-high'
 })
 
 /**
  * PrimeVue Pass Through API 설정
+ * CSS 클래스 주입 (style → class 변경)
  */
 const passThrough = computed((): ProgressBarPassThroughOptions => ({
   value: {
-    style: {
-      backgroundColor: barColor.value
-    }
+    class: barClass.value
   }
 }))
 </script>

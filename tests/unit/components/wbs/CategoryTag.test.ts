@@ -11,12 +11,12 @@ import Tag from 'primevue/tag'
 import type { TaskCategory } from '~/types'
 
 describe('CategoryTag', () => {
-  // UT-007: 카테고리 매핑 검증
+  // UT-007: 카테고리 매핑 검증 (CSS 클래스 중앙화 적용)
   it.each<[TaskCategory, string, string, string]>([
-    ['development', 'pi-code', '#3b82f6', 'Dev'],
-    ['defect', 'pi-exclamation-triangle', '#ef4444', 'Defect'],
-    ['infrastructure', 'pi-cog', '#8b5cf6', 'Infra']
-  ])('should display correct tag for %s', (category, expectedIcon, expectedColor, expectedLabel) => {
+    ['development', 'pi-code', 'category-tag-development', 'Dev'],
+    ['defect', 'pi-exclamation-triangle', 'category-tag-defect', 'Defect'],
+    ['infrastructure', 'pi-cog', 'category-tag-infrastructure', 'Infra']
+  ])('should display correct tag for %s', (category, expectedIcon, expectedClass, expectedLabel) => {
     const wrapper = mount(CategoryTag, {
       props: { category },
       global: {
@@ -29,9 +29,9 @@ describe('CategoryTag', () => {
     expect(tag.props('value')).toBe(expectedLabel)
     expect(tag.props('icon')).toBe(`pi ${expectedIcon}`)
 
-    // Check background color in style
-    const styleAttr = wrapper.find(`[data-testid="category-tag-${category}"]`).attributes('style')
-    expect(styleAttr).toContain(`background-color: ${expectedColor}`)
+    // Check CSS class instead of inline style (CSS 클래스 중앙화)
+    const wrapperElement = wrapper.find(`[data-testid="category-tag-${category}"]`)
+    expect(wrapperElement.classes()).toContain(expectedClass)
   })
 
   it('should have rounded attribute', () => {
