@@ -217,4 +217,26 @@ test.describe('AppHeader 컴포넌트', () => {
     const header = page.locator('[data-testid="app-header"]')
     await expect(header).toHaveAttribute('role', 'banner')
   })
+
+  /**
+   * E2E-011: Menubar가 올바른 다크 테마 스타일을 가진다
+   * @requirement TSK-08-06 Theme Integration
+   */
+  test('E2E-011: Menubar가 올바른 다크 테마 스타일을 가진다', async ({ page }) => {
+    await page.goto('/wbs')
+
+    const menubar = page.locator('.p-menubar')
+    await expect(menubar).toBeVisible()
+
+    // Menubar 배경색 검증
+    await expect(menubar).toHaveCSS('background-color', 'rgb(22, 33, 62)')
+
+    // 활성 메뉴 항목 스타일 검증
+    const activeMenu = page.locator('.p-menuitem-link.router-link-active').first()
+
+    if (await activeMenu.count() > 0) {
+      // 활성 메뉴 텍스트 색상
+      await expect(activeMenu).toHaveCSS('color', 'rgb(59, 130, 246)')
+    }
+  })
 })

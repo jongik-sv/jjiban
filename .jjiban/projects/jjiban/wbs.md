@@ -794,7 +794,7 @@ start: 2025-12-13
 
 #### TSK-08-06: Theme Integration & E2E Testing
 - category: development
-- status: detail-design [dd]
+- status: implement [im]
 - priority: high
 - schedule: 2026-02-17 ~ 2026-02-20
 - tags: theme, testing, e2e, migration
@@ -811,3 +811,4 @@ start: 2025-12-13
 - completed:
   - bd: 2025-12-16
   - dd: 2025-12-16
+  - im: 2025-12-16

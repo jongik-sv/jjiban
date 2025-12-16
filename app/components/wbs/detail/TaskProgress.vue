@@ -228,17 +228,8 @@ const progressPercentage = computed(() => {
   transition: all 0.3s ease-in-out;
 }
 
-.workflow-step-current {
-  @apply workflow-step-current;
-}
-
-.workflow-step-completed {
-  @apply workflow-step-completed;
-}
-
-.workflow-step-pending {
-  @apply workflow-step-pending;
-}
+/* workflow-step-current, workflow-step-completed, workflow-step-pending
+   클래스는 main.css에서 전역으로 정의됨 (TSK-08-05 CSS 중앙화 원칙) */
 
 /* 워크플로우 연결선 */
 .workflow-connector {

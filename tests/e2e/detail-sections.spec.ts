@@ -46,7 +46,17 @@ test.describe('TSK-05-02: Detail Sections Integration', () => {
     // Task 선택 (beforeEach에서 전체 펼침 완료)
     const taskNode = page.getByTestId('wbs-tree-node-TSK-01-01-02')
     await taskNode.waitFor({ state: 'visible', timeout: 3000 })
+
+    // 디버그: 클릭 전 스크린샷
+    await page.screenshot({ path: 'test-results/artifacts/debug-before-click.png' })
+
     await taskNode.click({ force: true })
+
+    // 클릭 후 대기
+    await page.waitForTimeout(1000)
+
+    // 디버그: 클릭 후 스크린샷
+    await page.screenshot({ path: 'test-results/artifacts/debug-after-click.png' })
 
     // Task 상세 패널 표시 대기
     await page.getByTestId('task-detail-panel').waitFor({ state: 'visible', timeout: 5000 })
@@ -409,5 +419,26 @@ test.describe('TSK-05-02: Detail Sections Integration', () => {
     // 빈 상태 메시지가 없는지 확인
     const emptyState = page.getByTestId('empty-state-message')
     await expect(emptyState).not.toBeVisible()
+  })
+
+  /**
+   * E2E-THEME-01: TaskWorkflow 현재 단계가 강조 표시된다
+   * @requirement TSK-08-06 Theme Integration
+   */
+  test('E2E-THEME-01: TaskWorkflow 현재 단계가 강조 표시된다', async ({ page }) => {
+    // Task 선택 (beforeEach에서 ACT-01-01 펼침 완료)
+    await page.getByTestId('wbs-tree-node-TSK-01-01-02').click()
+    await page.getByTestId('task-detail-panel').waitFor({ state: 'visible', timeout: 2000 })
+
+    // 워크플로우 패널 확인
+    const workflowPanel = page.getByTestId('task-workflow-panel')
+    await expect(workflowPanel).toBeVisible()
+
+    // 현재 단계 노드 확인
+    const currentStep = page.getByTestId('workflow-node-current')
+    await expect(currentStep).toBeVisible()
+
+    // 배경색 검증
+    await expect(currentStep).toHaveCSS('background-color', 'rgb(59, 130, 246)')
   })
 })
