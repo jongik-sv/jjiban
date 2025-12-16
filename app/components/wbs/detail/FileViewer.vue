@@ -266,13 +266,13 @@ function formatFileSize(bytes: number): string {
 
 <style scoped>
 .file-viewer-content {
-  max-height: calc(85vh - 6rem);
+  height: calc(80vh - 4rem);
   overflow-y: auto;
 }
 
 .code-editor {
-  height: 500px;
-  min-height: 300px;
+  height: 100%;
+  min-height: 400px;
 }
 
 /* Markdown 스타일 */
