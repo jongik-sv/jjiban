@@ -727,11 +727,12 @@ start: 2025-12-13
 
 #### TSK-08-03: AppLayout PrimeVue Splitter Migration
 - category: development
-- status: [ ]
+- status: done [xx]
 - priority: high
 - schedule: 2026-02-11 ~ 2026-02-13
 - tags: primevue, splitter, layout, migration
 - depends: TSK-08-01
+- test-result: pass
 - requirements:
   - 커스텀 CSS Grid → PrimeVue Splitter + SplitterPanel 교체
   - 60:40 기본 비율, minSize 제약 유지
@@ -739,6 +740,12 @@ start: 2025-12-13
   - 다크 테마 CSS 변수 통합
   - 반응형 동작 유지 (min-width: 1200px)
 - ref: PRD 6.1
+- completed:
+  - bd: 2025-12-16
+  - dd: 2025-12-16
+  - im: 2025-12-16
+  - vf: 2025-12-16
+  - xx: 2025-12-16
 
 #### TSK-08-04: AppHeader PrimeVue Menubar Migration
 - category: development
@@ -758,7 +765,7 @@ start: 2025-12-13
 
 #### TSK-08-05: TaskDetailPanel Dialog Migration
 - category: development
-- status: [ ]
+- status: [dd]
 - priority: medium
 - schedule: 2026-02-15 ~ 2026-02-17
 - tags: primevue, dialog, detail, migration
@@ -770,6 +777,8 @@ start: 2025-12-13
   - TaskDocuments: 인라인 스타일 제거 → CSS 클래스 (.doc-card-*) 적용
   - themeConfig.ts 의존성 완전 제거
 - ref: PRD 6.3, TRD 2.3.6
+- completed:
+  - bd: 2025-12-16
 
 #### TSK-08-06: Theme Integration & E2E Testing
 - category: development

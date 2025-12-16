@@ -310,3 +310,57 @@ pre code {
 .progress-bar-high {
   @apply bg-success;
 }
+
+/* ============================================
+ * AppLayout Splitter 스타일 (TSK-08-03)
+ * CSS 클래스 중앙화 원칙 준수
+ * [M-03] CSS 변수: 위 :root 섹션에 정의됨
+ * ============================================ */
+
+/* Splitter 루트 컨테이너 */
+.app-layout-splitter {
+  @apply h-full;
+  min-width: 1200px; /* 반응형 최소 너비 */
+}
+
+/* Gutter (구분선) - 기본 상태 */
+.app-layout-gutter {
+  @apply transition-colors duration-200;
+  width: 4px;
+  background-color: var(--color-border);
+  cursor: col-resize;
+}
+
+/* Gutter - Hover 상태 */
+.app-layout-gutter:hover {
+  background-color: var(--color-border-light);
+}
+
+/* Gutter - Active (드래그 중) 상태 */
+.app-layout-gutter:active {
+  background-color: var(--color-primary);
+}
+
+/* Gutter - 포커스 상태 (키보드 탐색) */
+.app-layout-gutter:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Gutter Handle (드래그 핸들 시각 표시) */
+.app-layout-gutter-handle {
+  @apply rounded-full bg-primary/30;
+  width: 2px;
+  height: 24px;
+  margin: auto; /* 중앙 정렬 */
+}
+
+/* Gutter Handle - Hover 상태 */
+.app-layout-gutter:hover .app-layout-gutter-handle {
+  @apply bg-primary/50;
+}
+
+/* Gutter Handle - Active (드래그 중) 상태 */
+.app-layout-gutter:active .app-layout-gutter-handle {
+  @apply bg-primary/80;
+}
