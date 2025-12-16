@@ -676,43 +676,46 @@
 
 ## WP-08: PrimeVue Component Migration
 - priority: medium
-- schedule: 2026-02-06 ~ 2026-02-17
+- schedule: 2026-02-06 ~ 2026-02-20
 - progress: 0%
 
-#### TSK-08-01: WbsTreePanel PrimeVue Tree Migration
+#### TSK-08-01: WbsTreePanel + NodeIcon Migration
 - category: development
-- status: [ ]
+- status: detail-design [dd]
 - priority: high
 - schedule: 2026-02-06 ~ 2026-02-09
 - tags: primevue, tree, component, migration
 - depends: TSK-06-02
 - requirements:
-  - 커스텀 트리 렌더링 (lines 143-235) → PrimeVue Tree 컴포넌트로 교체
+  - 커스텀 트리 렌더링 → PrimeVue Tree 컴포넌트로 교체
   - WbsNode[] → PrimeVue TreeNode[] 변환 함수 구현
   - v-model:expandedKeys로 펼침 상태 관리
   - 커스텀 노드 템플릿 (NodeIcon + StatusBadge)
+  - NodeIcon: HEX 하드코딩 제거 → CSS 클래스 (.node-icon-*) 적용
   - wbsStore와 상태 동기화 (expand/collapse 메서드)
   - 접근성 유지 (ARIA 속성)
-- ref: PRD 6.2
+- ref: PRD 6.2, TRD 2.3.6
 
-#### TSK-08-02: NodeIcon PrimeVue Integration
+#### TSK-08-02: WBS UI Components Migration
 - category: development
 - status: [ ]
 - priority: medium
-- schedule: 2026-02-09 ~ 2026-02-10
-- tags: primevue, icon, component, migration
+- schedule: 2026-02-09 ~ 2026-02-11
+- tags: primevue, badge, tag, progress, migration
 - depends: TSK-08-01
 - requirements:
-  - PrimeVue Pass-Through API로 스타일링 적용
-  - --color-level-* CSS 변수 유지
-  - PrimeIcons 활용 최적화
-- ref: PRD 10.1
+  - StatusBadge: HEX 하드코딩 제거 → CSS 클래스 (.status-*) 적용
+  - CategoryTag: HEX 하드코딩 제거 → CSS 클래스 (.category-*) 적용
+  - ProgressBar: PrimeVue ProgressBar 컴포넌트로 교체
+  - main.css에 통합 스타일 클래스 정의
+  - CSS 클래스 중앙화 원칙 준수 (TRD 2.3.6)
+- ref: PRD 10.1, TRD 2.3.6
 
 #### TSK-08-03: AppLayout PrimeVue Splitter Migration
 - category: development
 - status: [ ]
 - priority: high
-- schedule: 2026-02-10 ~ 2026-02-13
+- schedule: 2026-02-11 ~ 2026-02-13
 - tags: primevue, splitter, layout, migration
 - depends: TSK-08-01
 - requirements:
@@ -739,18 +742,34 @@
   - 접근성 유지 (aria-current, aria-disabled)
 - ref: PRD 6.1
 
-#### TSK-08-05: Theme Integration & Testing
+#### TSK-08-05: TaskDetailPanel Dialog Migration
+- category: development
+- status: [ ]
+- priority: medium
+- schedule: 2026-02-15 ~ 2026-02-17
+- tags: primevue, dialog, detail, migration
+- depends: TSK-08-02
+- requirements:
+  - TaskDetailPanel: 인라인 스타일 제거 → PrimeVue Dialog 활용
+  - TaskWorkflow: WORKFLOW_THEME 제거 → CSS 클래스 (.workflow-*) 적용
+  - TaskHistory: HISTORY_THEME 제거 → CSS 클래스 (.history-marker-*) 적용
+  - TaskDocuments: 인라인 스타일 제거 → CSS 클래스 (.doc-card-*) 적용
+  - themeConfig.ts 의존성 완전 제거
+- ref: PRD 6.3, TRD 2.3.6
+
+#### TSK-08-06: Theme Integration & E2E Testing
 - category: development
 - status: [ ]
 - priority: high
-- schedule: 2026-02-15 ~ 2026-02-17
+- schedule: 2026-02-17 ~ 2026-02-20
 - tags: theme, testing, e2e, migration
-- depends: TSK-08-01, TSK-08-02, TSK-08-03, TSK-08-04
+- depends: TSK-08-01, TSK-08-02, TSK-08-03, TSK-08-04, TSK-08-05
 - requirements:
   - PrimeVue 디자인 토큰 오버라이드 (main.css)
   - --p-tree-*, --p-splitter-*, --p-menubar-* 변수 매핑
+  - themeConfig.ts 삭제 및 의존성 정리
   - 다크 테마 일관성 검증
   - 기존 E2E 테스트 실행 및 회귀 수정
   - PrimeVue 컴포넌트 상호작용 테스트 추가
   - 접근성 검증 (WCAG 2.1)
-- ref: PRD 10.1, 11
+- ref: PRD 10.1, PRD 11, TRD 2.3.6

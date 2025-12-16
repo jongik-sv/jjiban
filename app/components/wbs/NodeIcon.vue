@@ -2,7 +2,6 @@
   <div
     class="node-icon"
     :class="`node-icon-${type}`"
-    :style="{ backgroundColor: iconColor }"
     :data-testid="`node-icon-${type}`"
   >
     <i :class="`pi ${iconClass}`" />
@@ -10,6 +9,17 @@
 </template>
 
 <script setup lang="ts">
+/**
+ * NodeIcon 컴포넌트
+ * WBS 노드 타입별 아이콘 표시
+ *
+ * CSS 클래스 중앙화 원칙 준수 (TSK-08-01)
+ * - :style 인라인 스타일 제거
+ * - 배경색은 main.css의 .node-icon-* 클래스로 관리
+ *
+ * @see 020-detail-design.md 섹션 9.7
+ * @see main.css (.node-icon-project, .node-icon-wp, .node-icon-act, .node-icon-task)
+ */
 import type { WbsNodeType } from '~/types'
 
 interface Props {
@@ -20,43 +30,20 @@ const props = defineProps<Props>()
 
 interface IconConfig {
   icon: string
-  color: string
   label: string
 }
 
 const iconConfig = computed((): IconConfig => {
   const configs: Record<WbsNodeType, IconConfig> = {
-    project: { icon: 'pi-folder', color: '#6366f1', label: 'P' },
-    wp: { icon: 'pi-briefcase', color: '#3b82f6', label: 'WP' },
-    act: { icon: 'pi-list', color: '#10b981', label: 'ACT' },
-    task: { icon: 'pi-check-square', color: '#f59e0b', label: 'TSK' }
+    project: { icon: 'pi-folder', label: 'P' },
+    wp: { icon: 'pi-briefcase', label: 'WP' },
+    act: { icon: 'pi-list', label: 'ACT' },
+    task: { icon: 'pi-check-square', label: 'TSK' }
   }
   return configs[props.type]
 })
 
 const iconClass = computed(() => iconConfig.value.icon)
-const iconColor = computed(() => iconConfig.value.color)
 </script>
 
-<style scoped>
-.node-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  border-radius: 4px;
-  color: #ffffff;
-  font-size: 14px;
-  flex-shrink: 0;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-}
-
-@media (max-width: 767px) {
-  .node-icon {
-    width: 20px;
-    height: 20px;
-    font-size: 12px;
-  }
-}
-</style>
+<!-- 스타일은 main.css로 완전 이전 (CSS 클래스 중앙화 원칙) -->

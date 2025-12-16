@@ -127,6 +127,41 @@ primevue: {
 | Activity | `--jjiban-act` | `#22c55e` | Activity 아이콘/배지 |
 | Task | `--jjiban-task` | `#f59e0b` | Task 아이콘/배지 |
 
+#### 2.3.6 CSS 클래스 중앙화 원칙
+
+> **핵심 원칙**: 컴포넌트 내 인라인 스타일(`:style`) 및 HEX 하드코딩 금지. 모든 스타일은 `main.css`의 Tailwind 클래스로 중앙 관리.
+
+**Single Source of Truth**:
+```
+main.css (CSS 변수 + Tailwind 클래스)
+    ↓
+tailwind.config.ts (CSS 변수 참조)
+    ↓
+컴포넌트 (:class 바인딩만 사용)
+```
+
+**금지 패턴**:
+```vue
+<!-- ❌ 금지: 인라인 스타일 -->
+:style="{ backgroundColor: '#3b82f6' }"
+:style="{ color: getColor() }"
+
+<!-- ❌ 금지: 컴포넌트 내 HEX 하드코딩 -->
+const color = '#3b82f6'
+```
+
+**권장 패턴**:
+```vue
+<!-- ✅ 권장: CSS 클래스 바인딩 -->
+:class="`node-icon-${type}`"
+:class="{ 'workflow-completed': isCompleted }"
+```
+
+**예외 허용 케이스** (동적 계산 필수):
+- `paddingLeft` (트리 들여쓰기: depth × 단위)
+- 패널 크기 (드래그 리사이즈)
+- Props로 전달된 동적 값 (`maxHeight` 등)
+
 ### 2.4 특수 기능 스택
 
 | 기능 | 기술 | 버전 | 선정 근거 |

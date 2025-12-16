@@ -106,6 +106,18 @@ Todo [ ] → Design [bd] → Detail [dd] → Implement [im] → Verify [vf] → 
 - TypeScript 필수
 - Pinia로 상태 관리
 
+### CSS 클래스 중앙화 원칙
+
+> **핵심**: 컴포넌트 내 `:style` 및 HEX 하드코딩 금지. `main.css` Tailwind 클래스로 통일.
+
+```
+main.css → tailwind.config.ts → 컴포넌트 (:class만 사용)
+```
+
+**금지**: `:style="{ backgroundColor: '#3b82f6' }"`, `const color = '#3b82f6'`
+**권장**: `:class="\`node-icon-${type}\`"`, `:class="{ 'status-done': isDone }"`
+**예외**: 동적 계산 필수 (paddingLeft, 드래그 리사이즈, Props 동적값)
+
 ---
 
 ## 주요 화면
@@ -118,4 +130,5 @@ Todo [ ] → Design [bd] → Detail [dd] → Implement [im] → Verify [vf] → 
 
 
 ## TDD, E2E 테스트 시 유의사항
--  .jjiban/jjiban 폴더는 테스트에 사용하지 말것
+- .jjiban/jjiban 폴더는 테스트에 사용하지 말것
+- 요청에 좋은 대안이 있으면 제시해

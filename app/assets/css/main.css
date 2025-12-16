@@ -167,3 +167,112 @@ pre code {
 .category-infra {
   @apply bg-level-project/20 text-level-project border border-level-project/30;
 }
+
+/* ============================================
+ * NodeIcon 컴포넌트 스타일 (TSK-08-01)
+ * CSS 클래스 중앙화 원칙 준수
+ * ============================================ */
+
+/* 노드 아이콘 기본 스타일 */
+.node-icon {
+  @apply flex items-center justify-center w-6 h-6 rounded text-white text-sm flex-shrink-0;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* 노드 타입별 배경색 (CSS 클래스로 중앙 관리) */
+.node-icon-project {
+  @apply bg-level-project;
+}
+
+.node-icon-wp {
+  @apply bg-level-wp;
+}
+
+.node-icon-act {
+  @apply bg-level-act;
+}
+
+.node-icon-task {
+  @apply bg-level-task;
+}
+
+/* 반응형: 모바일 노드 아이콘 */
+@media (max-width: 767px) {
+  .node-icon {
+    @apply w-5 h-5 text-xs;
+  }
+}
+
+/* ============================================
+ * PrimeVue Tree 커스텀 스타일 (TSK-08-01)
+ * ============================================ */
+
+/* WBS Tree 컨테이너 */
+.wbs-tree {
+  @apply p-2;
+}
+
+/* 노드 콘텐츠 기본 스타일 */
+.wbs-tree :deep(.p-tree-node-content) {
+  @apply rounded-lg transition-colors duration-150 py-1.5 px-2 cursor-pointer;
+}
+
+/* 노드 호버 상태 */
+.wbs-tree :deep(.p-tree-node-content:hover) {
+  @apply bg-bg-header;
+}
+
+/* 노드 선택 상태 */
+.wbs-tree :deep(.p-tree-node-content.p-tree-node-selected) {
+  @apply bg-primary/20;
+}
+
+/* 노드 포커스 상태 */
+.wbs-tree :deep(.p-tree-node-content:focus) {
+  @apply ring-2 ring-primary ring-offset-2 ring-offset-bg-sidebar;
+}
+
+/* 토글 아이콘 스타일 */
+.wbs-tree :deep(.p-tree-node-toggle-button) {
+  @apply text-text-secondary hover:text-text hover:bg-border/30 rounded transition-colors;
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+/* 토글 아이콘 비활성화 (자식 없음) */
+.wbs-tree :deep(.p-tree-node-leaf > .p-tree-node-content > .p-tree-node-toggle-button) {
+  visibility: hidden;
+}
+
+/* 자식 노드 들여쓰기 */
+.wbs-tree :deep(.p-tree-node-children) {
+  @apply ml-4 border-l border-border/30 pl-2;
+}
+
+/* 노드 라벨 컨테이너 */
+.wbs-tree-node-label {
+  @apply flex items-center gap-2 flex-1;
+}
+
+/* 노드 제목 텍스트 */
+.wbs-tree-node-title {
+  @apply text-sm truncate;
+}
+
+/* 노드 타입별 텍스트 색상 */
+.wbs-tree-node-title-wp {
+  @apply text-text font-medium;
+}
+
+.wbs-tree-node-title-act {
+  @apply text-text-secondary;
+}
+
+.wbs-tree-node-title-task {
+  @apply text-text-muted text-xs;
+}
+
+/* 진행률 표시 */
+.wbs-tree-node-progress {
+  @apply text-xs text-text-muted ml-auto mr-2;
+}

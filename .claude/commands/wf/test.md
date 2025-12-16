@@ -172,7 +172,7 @@ personas: [backend-architect, frontend-architect, quality-engineer]
    │   tddAttempt++                                          │
    │                                                         │
    │   1️⃣ Vitest 단위테스트 실행                            │
-   │      - npm run test:unit -- --coverage --reporter=json  │
+   │      - npm run test -- --reporter=json                  │
    │      - 결과 JSON 파싱                                   │
    │                                                         │
    │   2️⃣ 결과 분석                                          │

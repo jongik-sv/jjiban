@@ -215,8 +215,8 @@ const koreanPatterns = {
   ↓ /wf:review         → refactoring-expert
   ↓ /wf:apply          → (메인 에이전트)
   ↓ /wf:build          → backend-architect + frontend-architect (병렬)
+  ↓ /wf:test           → quality-engineer (TDD + E2E) ← build 직후 실행
 [im] 구현
-  ↓ /wf:test           → quality-engineer (TDD + E2E)
   ↓ /wf:audit          → refactoring-expert
   ↓ /wf:patch          → (메인 에이전트)
   ↓ /wf:verify         → quality-engineer
@@ -232,8 +232,8 @@ const koreanPatterns = {
   ↓ /wf:start          → requirements-analyst
 [an] 분석
   ↓ /wf:fix            → backend-architect / frontend-architect
+  ↓ /wf:test           → quality-engineer (TDD + E2E) ← fix 직후 실행
 [fx] 수정
-  ↓ /wf:test           → quality-engineer (TDD + E2E)
   ↓ /wf:audit          → refactoring-expert
   ↓ /wf:patch          → (메인 에이전트)
   ↓ /wf:verify         → quality-engineer
@@ -425,7 +425,22 @@ async function executeAutoWorkflow(taskId, options = {}) {
       await executeMainAgentAction(mapping.action);  // done
     }
 
-    // 3. postActions 실행 (현재 미사용 - 모든 액션은 preActions로 통합됨)
+    // 3. postActions 실행 (build/fix 직후 test 실행)
+    if (mapping.postActions) {
+      for (const postAction of mapping.postActions) {
+        currentAction = postAction.action;
+
+        // ⭐ target 체크: postAction에서 멈춰야 하는지
+        if (isTargetReached(currentStatus, currentAction, target)) {
+          return { success: true, finalStatus: currentStatus, stoppedAt: target };
+        }
+
+        // postAction 실행 (test)
+        if (postAction.subagent) {
+          await Task({ subagent_type: postAction.subagent, ... });
+        }
+      }
+    }
 
     // 4. 상태 업데이트 확인
     currentStatus = mapping.next;
@@ -509,7 +524,7 @@ Loop 1: [dd] → [im]
   ├── mainAction:
   │   └── build (backend-architect) → 030-implementation.md, 코드 구현
   └── postActions:
-      └── test (quality-engineer) → 070-tdd/e2e-test-results.md 생성
+      └── test (quality-engineer) → 070-tdd/e2e-test-results.md ⭐ build 직후!
 
 Loop 2: [im] → [ts]
   ├── preActions:
@@ -531,14 +546,17 @@ Loop 3: [ts] → [xx]
 
 | 시작 상태 | 필요 루프 | 실행 단계 |
 |----------|----------|----------|
-| `[ ]` Todo | 5회 | start → [ui] → draft → [review, apply] → build → [test, audit, patch] → verify → done |
-| `[bd]` 기본설계 | 4회 | [ui] → draft → [review, apply] → build → [test, audit, patch] → verify → done |
-| `[dd]` 상세설계 | 3회 | [review, apply] → build → [test, audit, patch] → verify → done |
-| `[im]` 구현 | 2회 | [test, audit, patch] → verify → done |
+| `[ ]` Todo | 5회 | start → [ui] → draft → [review, apply] → build → (test) → [audit, patch] → verify → done |
+| `[bd]` 기본설계 | 4회 | [ui] → draft → [review, apply] → build → (test) → [audit, patch] → verify → done |
+| `[dd]` 상세설계 | 3회 | [review, apply] → build → (test) → [audit, patch] → verify → done |
+| `[im]` 구현 | 2회 | [audit, patch] → verify → done |
 | `[ts]` 테스트 | 1회 | done |
 | `[xx]` 완료 | 0회 | 이미 완료 |
 
-> **참고**: `[]` 안의 명령어는 preActions로 해당 상태에서 메인 액션 전에 실행됩니다.
+> **참고**:
+> - `[]` 안의 명령어는 preActions로 해당 상태에서 메인 액션 전에 실행
+> - `()` 안의 명령어는 postActions로 메인 액션 직후에 실행 (build/fix → test)
+> - infrastructure 카테고리는 test 불필요 (postActions 없음)
 
 ---
 
@@ -612,11 +630,13 @@ const subagentMapping = {
       ],
       action: 'build',
       subagent: ['backend-architect', 'frontend-architect'], // 병렬
+      postActions: [
+        { action: 'test', subagent: 'quality-engineer' }  // build 직후 TDD/E2E 실행
+      ],
       next: '[im]'
     },
     '[im]': {
       preActions: [
-        { action: 'test', subagent: 'quality-engineer' },
         { action: 'audit', subagent: 'refactoring-expert' },
         { action: 'patch', subagent: null }  // 메인 에이전트
       ],
@@ -639,11 +659,13 @@ const subagentMapping = {
     '[an]': {
       action: 'fix',
       subagent: ['backend-architect', 'frontend-architect'],
+      postActions: [
+        { action: 'test', subagent: 'quality-engineer' }  // fix 직후 TDD/E2E 실행
+      ],
       next: '[fx]'
     },
     '[fx]': {
       preActions: [
-        { action: 'test', subagent: 'quality-engineer' },
         { action: 'audit', subagent: 'refactoring-expert' },
         { action: 'patch', subagent: null }  // 메인 에이전트
       ],
@@ -1237,7 +1259,16 @@ Subagent 실행 통계:
 jjiban 프로젝트 - Workflow Command
 author: 장종익
 Command: wf:auto
-Version: 2.5
+Version: 2.6
+
+Changes (v2.6):
+- test 실행 위치 변경: preActions → postActions
+  - development: build 직후 test 실행 (postActions)
+  - defect: fix 직후 test 실행 (postActions)
+  - infrastructure: test 불필요 (postActions 없음)
+- postActions 실행 로직 추가 (핵심 실행 로직 섹션)
+- 상태별 루프 횟수 표 업데이트 ([] vs () 표기 구분)
+- 워크플로우 다이어그램 업데이트 (build/fix → test 위치 명시)
 
 Changes (v2.5):
 - 인자 없이 실행 시 동작 명시화

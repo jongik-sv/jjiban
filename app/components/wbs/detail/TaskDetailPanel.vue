@@ -1,4 +1,24 @@
 <template>
+  <!-- 문서 뷰어 다이얼로그 (Card 외부에 배치) -->
+  <Dialog
+    v-model:visible="documentViewerVisible"
+    :header="currentDocument?.name || '문서 보기'"
+    :style="{ width: '80vw', maxWidth: '1200px' }"
+    :modal="true"
+    :closable="true"
+    :dismissableMask="true"
+    data-testid="document-viewer-dialog"
+  >
+    <TaskDocumentViewer
+      v-if="currentDocument && selectedTask"
+      :task-id="selectedTask.id"
+      :filename="currentDocument.name"
+      :max-height="550"
+      @loaded="handleDocumentLoaded"
+      @error="handleDocumentError"
+    />
+  </Dialog>
+
   <Card
     class="task-detail-panel h-full"
     data-testid="task-detail-panel"
@@ -129,6 +149,12 @@ const notification = useNotification()
 const updatingFields = reactive<Record<string, boolean>>({})
 const isUpdating = computed(() => Object.values(updatingFields).some(v => v))
 const teamMembers = ref<TeamMember[]>([])
+
+/**
+ * TSK-05-04: Document Viewer 상태
+ */
+const documentViewerVisible = ref(false)
+const currentDocument = ref<DocumentInfo | null>(null)
 
 // ============================================================
 // Lifecycle
@@ -341,19 +367,31 @@ function handleUpdateRequirements(requirements: string[]) {
 }
 
 /**
- * 문서 열기 핸들러 (TSK-05-02)
+ * 문서 열기 핸들러 (TSK-05-04)
  * FR-009
- * TODO: TSK-05-04에서 DocumentViewer 스토어 연동
+ * Document Viewer 다이얼로그 열기
  */
 function handleOpenDocument(doc: DocumentInfo) {
-  // TSK-05-04: documentViewerStore.openDocument(doc)
-  console.log('문서 열기:', doc.name)
+  currentDocument.value = doc
+  documentViewerVisible.value = true
+}
 
+/**
+ * 문서 로드 완료 핸들러 (TSK-05-04)
+ */
+function handleDocumentLoaded(content: string) {
+  console.log('문서 로드 완료:', currentDocument.value?.name, `(${content.length} bytes)`)
+}
+
+/**
+ * 문서 로드 에러 핸들러 (TSK-05-04)
+ */
+function handleDocumentError(error: Error) {
   toast.add({
-    severity: 'info',
-    summary: '문서 뷰어',
-    detail: `${doc.name} 문서 뷰어는 TSK-05-04에서 구현됩니다.`,
-    life: 3000
+    severity: 'error',
+    summary: '문서 로드 실패',
+    detail: error.message,
+    life: 5000
   })
 }
 
@@ -379,10 +417,13 @@ function handleTransitionCompleted(command: string) {
 
 /**
  * 문서 목록 열기 핸들러
+ * TaskDocuments 섹션으로 스크롤
  */
 function handleOpenDocuments() {
-  // TaskDocuments 컴포넌트로 스크롤 또는 TSK-05-04 뷰어 열기
-  notification.info('문서 뷰어는 TSK-05-04에서 구현됩니다.')
+  const docsPanel = document.querySelector('[data-testid="task-documents-panel"]')
+  if (docsPanel) {
+    docsPanel.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
 }
 </script>
 
