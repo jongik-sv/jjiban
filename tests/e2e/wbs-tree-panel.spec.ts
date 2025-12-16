@@ -1,15 +1,20 @@
 /**
  * WBS Tree Panel E2E 테스트
- * Task: TSK-04-01
+ * Task: TSK-04-01, TSK-08-01
  * 테스트 명세: 026-test-specification.md 섹션 3.1
+ *
+ * TSK-08-01 업데이트: URL 파라미터 및 프로젝트 ID 수정
+ * - projectId → project (wbs.vue의 route.query.project 사용)
+ * - TEST_PROJECT_ID 상수 사용으로 일관성 확보
  */
 
 import { test, expect } from '@playwright/test'
+import { TEST_PROJECT_ID } from './test-constants'
 
 test.describe('WBS Tree Panel', () => {
   test.beforeEach(async ({ page }) => {
-    // WBS 페이지로 이동
-    await page.goto('/wbs?projectId=jjiban')
+    // WBS 페이지로 이동 (project 파라미터 사용 - wbs.vue에서 route.query.project 사용)
+    await page.goto(`/wbs?project=${TEST_PROJECT_ID}`)
     // 페이지 로드 대기
     await page.waitForLoadState('networkidle')
   })
@@ -62,7 +67,7 @@ test.describe('WBS Tree Panel', () => {
 
 test.describe('WBS Search', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/wbs?projectId=jjiban')
+    await page.goto(`/wbs?project=${TEST_PROJECT_ID}`)
     await page.waitForLoadState('networkidle')
     await page.waitForSelector('[data-testid="content-state"]', { timeout: 10000 })
   })
@@ -103,7 +108,7 @@ test.describe('WBS Search', () => {
 
 test.describe('WBS Tree Actions', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/wbs?projectId=jjiban')
+    await page.goto(`/wbs?project=${TEST_PROJECT_ID}`)
     await page.waitForLoadState('networkidle')
     await page.waitForSelector('[data-testid="content-state"]', { timeout: 10000 })
   })
@@ -137,7 +142,7 @@ test.describe('WBS Tree Actions', () => {
 
 test.describe('WBS Summary Cards', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/wbs?projectId=jjiban')
+    await page.goto(`/wbs?project=${TEST_PROJECT_ID}`)
     await page.waitForLoadState('networkidle')
     await page.waitForSelector('[data-testid="content-state"]', { timeout: 10000 })
   })
@@ -199,7 +204,7 @@ test.describe('WBS Error Handling', () => {
 test.describe('WBS Performance', () => {
   test('PERF-001: 검색 응답 시간이 500ms 이하이다', async ({ page }) => {
     // Given: 페이지 로드 완료
-    await page.goto('/wbs?projectId=jjiban')
+    await page.goto(`/wbs?project=${TEST_PROJECT_ID}`)
     await page.waitForLoadState('networkidle')
     await page.waitForSelector('[data-testid="content-state"]', { timeout: 10000 })
 
@@ -215,5 +220,25 @@ test.describe('WBS Performance', () => {
 
     // Then: 응답 시간 확인 (500ms 이하)
     expect(responseTime).toBeLessThan(500)
+  })
+})
+
+test.describe('WBS Theme Integration', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto(`/wbs?project=${TEST_PROJECT_ID}`)
+    await page.waitForLoadState('networkidle')
+    await page.waitForSelector('[data-testid="content-state"]', { timeout: 10000 })
+  })
+
+  test('THEME-001: Tree 컴포넌트가 올바른 다크 테마 스타일을 가진다', async ({ page }) => {
+    const tree = page.locator('.p-tree').first()
+    await expect(tree).toBeVisible()
+
+    // Tree 배경색 검증
+    await expect(tree).toHaveCSS('background-color', 'rgb(15, 15, 35)')
+
+    // 노드 텍스트 색상 검증
+    const nodeLabel = page.locator('.p-treenode-label').first()
+    await expect(nodeLabel).toHaveCSS('color', 'rgb(232, 232, 232)')
   })
 })

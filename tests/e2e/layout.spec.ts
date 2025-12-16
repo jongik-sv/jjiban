@@ -174,4 +174,22 @@ test.describe('AppLayout 컴포넌트', () => {
     expect(await rightPanel.evaluate(el => el.tagName.toLowerCase())).toBe('section')
     expect(await rightPanel.getAttribute('role')).toBe('region')
   })
+
+  /**
+   * E2E-007: Splitter Gutter가 올바른 다크 테마 스타일을 가진다
+   * @requirement TSK-08-06 Theme Integration
+   */
+  test('E2E-007: Splitter Gutter가 올바른 다크 테마 스타일을 가진다', async ({ page }) => {
+    await page.setViewportSize({ width: 1920, height: 1080 })
+    await page.goto('/wbs')
+
+    const gutter = page.locator('.p-splitter-gutter').first()
+    await expect(gutter).toBeVisible()
+
+    // Gutter 기본 배경색 검증
+    await expect(gutter).toHaveCSS('background-color', 'rgb(61, 61, 92)')
+
+    // Cursor 스타일 검증
+    await expect(gutter).toHaveCSS('cursor', 'col-resize')
+  })
 })

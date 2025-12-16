@@ -1,27 +1,52 @@
 /**
  * ProjectsListService Unit Tests
  *
- * @see TSK-02-03-03
+ * @see TSK-03-01
  * @see 026-test-specification.md
+ *
+ * 리팩토링됨: 폴더 스캔 방식 테스트
+ * - projects.json 마스터 목록 제거됨
+ * - projects/ 폴더 스캔하여 프로젝트 목록 생성
+ * - settings.json에 defaultProject만 유지
  *
  * Test Coverage:
  * - UT-001: getProjectsList 정상 조회
  * - UT-009: setDefaultProject 유효하지 않은 ID
  */
 
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach, type Mock } from 'vitest';
+import type { Dirent } from 'fs';
 import * as fs from 'fs/promises';
 import * as projectsListService from '../../../server/utils/projects/projectsListService';
-import * as paths from '../../../server/utils/projects/paths';
 
 // Mock fs/promises
 vi.mock('fs/promises');
 
-// Mock paths module
+// Mock paths module - 폴더 스캔 방식에 필요한 모든 함수 mock
 vi.mock('../../../server/utils/projects/paths', () => ({
   getProjectsListFilePath: vi.fn(() => '/test/.jjiban/settings/projects.json'),
   getBasePath: vi.fn(() => '/test'),
+  getProjectsBasePath: vi.fn(() => '/test/.jjiban/projects'),
+  getProjectFilePath: vi.fn((projectId: string, fileName: string) => `/test/.jjiban/projects/${projectId}/${fileName}`),
 }));
+
+/**
+ * Dirent mock 생성 헬퍼
+ */
+function createMockDirent(name: string, isDir: boolean): Dirent {
+  return {
+    name,
+    isDirectory: () => isDir,
+    isFile: () => !isDir,
+    isBlockDevice: () => false,
+    isCharacterDevice: () => false,
+    isFIFO: () => false,
+    isSocket: () => false,
+    isSymbolicLink: () => false,
+    path: `/test/.jjiban/projects/${name}`,
+    parentPath: '/test/.jjiban/projects',
+  } as Dirent;
+}
 
 describe('ProjectsListService', () => {
   beforeEach(() => {
@@ -36,33 +61,56 @@ describe('ProjectsListService', () => {
     /**
      * UT-001: ProjectsListService.getList 정상 조회
      * @requirement FR-001
+     *
+     * 폴더 스캔 방식:
+     * 1. readdir로 projects/ 폴더 스캔
+     * 2. 각 프로젝트 폴더의 project.json 읽기
+     * 3. settings.json에서 defaultProject 읽기
      */
     it('UT-001: should return project list with default config', async () => {
-      // Arrange: Mock 데이터 설정
-      const mockProjectsConfig = {
+      // Arrange: 폴더 스캔 mock
+      const mockDirents = [
+        createMockDirent('test-project', true),
+        createMockDirent('archived-project', true),
+      ];
+
+      // project.json 내용 mock
+      const testProjectConfig = {
+        id: 'test-project',
+        name: '테스트 프로젝트',
+        status: 'active',
+        wbsDepth: 4,
+        createdAt: '2025-01-01',
+      };
+
+      const archivedProjectConfig = {
+        id: 'archived-project',
+        name: '아카이브 프로젝트',
+        status: 'archived',
+        wbsDepth: 3,
+        createdAt: '2024-06-01',
+      };
+
+      // settings.json 내용 mock
+      const settingsConfig = {
         version: '1.0',
-        projects: [
-          {
-            id: 'test-project',
-            name: '테스트 프로젝트',
-            path: 'test-project',
-            status: 'active',
-            wbsDepth: 4,
-            createdAt: '2025-01-01',
-          },
-          {
-            id: 'archived-project',
-            name: '아카이브 프로젝트',
-            path: 'archived-project',
-            status: 'archived',
-            wbsDepth: 3,
-            createdAt: '2024-06-01',
-          },
-        ],
         defaultProject: 'test-project',
       };
 
-      vi.mocked(fs.readFile).mockResolvedValue(JSON.stringify(mockProjectsConfig));
+      vi.mocked(fs.readdir).mockResolvedValue(mockDirents as unknown as Dirent[]);
+      vi.mocked(fs.readFile).mockImplementation(async (path) => {
+        const pathStr = String(path);
+        if (pathStr.includes('test-project/project.json')) {
+          return JSON.stringify(testProjectConfig);
+        }
+        if (pathStr.includes('archived-project/project.json')) {
+          return JSON.stringify(archivedProjectConfig);
+        }
+        if (pathStr.includes('settings.json')) {
+          return JSON.stringify(settingsConfig);
+        }
+        throw new Error(`Unexpected path: ${pathStr}`);
+      });
 
       // Act: 프로젝트 목록 조회
       const result = await projectsListService.getProjectsList();
@@ -72,13 +120,15 @@ describe('ProjectsListService', () => {
       expect(result).toHaveProperty('defaultProject');
       expect(result.projects).toHaveLength(2);
       expect(result.defaultProject).toBe('test-project');
+      // 최신순 정렬 (2025-01-01 > 2024-06-01)
       expect(result.projects[0].id).toBe('test-project');
     });
 
-    it('UT-001a: should return empty list when no projects.json exists', async () => {
-      // Arrange: 파일 없음 시뮬레이션
+    it('UT-001a: should return empty list when no projects folder exists', async () => {
+      // Arrange: projects 폴더 없음 시뮬레이션
       const error = new Error('ENOENT') as NodeJS.ErrnoException;
       error.code = 'ENOENT';
+      vi.mocked(fs.readdir).mockRejectedValue(error);
       vi.mocked(fs.readFile).mockRejectedValue(error);
 
       // Act
@@ -90,17 +140,47 @@ describe('ProjectsListService', () => {
     });
 
     it('UT-001b: should filter by status when statusFilter is provided', async () => {
-      // Arrange
-      const mockProjectsConfig = {
+      // Arrange: 폴더 스캔 mock
+      const mockDirents = [
+        createMockDirent('active-1', true),
+        createMockDirent('archived-1', true),
+      ];
+
+      const activeConfig = {
+        id: 'active-1',
+        name: 'Active 1',
+        status: 'active',
+        wbsDepth: 4,
+        createdAt: '2025-01-01',
+      };
+
+      const archivedConfig = {
+        id: 'archived-1',
+        name: 'Archived 1',
+        status: 'archived',
+        wbsDepth: 3,
+        createdAt: '2024-06-01',
+      };
+
+      const settingsConfig = {
         version: '1.0',
-        projects: [
-          { id: 'active-1', name: 'Active 1', path: 'active-1', status: 'active', wbsDepth: 4, createdAt: '2025-01-01' },
-          { id: 'archived-1', name: 'Archived 1', path: 'archived-1', status: 'archived', wbsDepth: 3, createdAt: '2024-06-01' },
-        ],
         defaultProject: 'active-1',
       };
 
-      vi.mocked(fs.readFile).mockResolvedValue(JSON.stringify(mockProjectsConfig));
+      vi.mocked(fs.readdir).mockResolvedValue(mockDirents as unknown as Dirent[]);
+      vi.mocked(fs.readFile).mockImplementation(async (path) => {
+        const pathStr = String(path);
+        if (pathStr.includes('active-1/project.json')) {
+          return JSON.stringify(activeConfig);
+        }
+        if (pathStr.includes('archived-1/project.json')) {
+          return JSON.stringify(archivedConfig);
+        }
+        if (pathStr.includes('settings.json')) {
+          return JSON.stringify(settingsConfig);
+        }
+        throw new Error(`Unexpected path: ${pathStr}`);
+      });
 
       // Act: active 필터
       const result = await projectsListService.getProjectsList('active');
@@ -113,13 +193,25 @@ describe('ProjectsListService', () => {
 
   describe('isProjectIdDuplicate', () => {
     it('should return true for existing project ID', async () => {
-      // Arrange
-      const mockConfig = {
-        version: '1.0',
-        projects: [{ id: 'existing-project', name: 'Existing', path: 'existing-project', status: 'active', wbsDepth: 4, createdAt: '2025-01-01' }],
-        defaultProject: null,
+      // Arrange: 폴더에 프로젝트 존재
+      const mockDirents = [createMockDirent('existing-project', true)];
+
+      const projectConfig = {
+        id: 'existing-project',
+        name: 'Existing',
+        status: 'active',
+        wbsDepth: 4,
+        createdAt: '2025-01-01',
       };
-      vi.mocked(fs.readFile).mockResolvedValue(JSON.stringify(mockConfig));
+
+      vi.mocked(fs.readdir).mockResolvedValue(mockDirents as unknown as Dirent[]);
+      vi.mocked(fs.readFile).mockImplementation(async (path) => {
+        const pathStr = String(path);
+        if (pathStr.includes('existing-project/project.json')) {
+          return JSON.stringify(projectConfig);
+        }
+        throw new Error(`Unexpected path: ${pathStr}`);
+      });
 
       // Act
       const result = await projectsListService.isProjectIdDuplicate('existing-project');
@@ -129,13 +221,8 @@ describe('ProjectsListService', () => {
     });
 
     it('should return false for non-existing project ID', async () => {
-      // Arrange
-      const mockConfig = {
-        version: '1.0',
-        projects: [],
-        defaultProject: null,
-      };
-      vi.mocked(fs.readFile).mockResolvedValue(JSON.stringify(mockConfig));
+      // Arrange: 빈 프로젝트 폴더
+      vi.mocked(fs.readdir).mockResolvedValue([]);
 
       // Act
       const result = await projectsListService.isProjectIdDuplicate('new-project');
@@ -146,15 +233,9 @@ describe('ProjectsListService', () => {
   });
 
   describe('addProjectToList', () => {
-    it('should add project to list successfully', async () => {
-      // Arrange
-      const mockConfig = {
-        version: '1.0',
-        projects: [],
-        defaultProject: null,
-      };
-      vi.mocked(fs.readFile).mockResolvedValue(JSON.stringify(mockConfig));
-      vi.mocked(fs.writeFile).mockResolvedValue(undefined);
+    it('should add project to list successfully (중복 확인만 수행)', async () => {
+      // Arrange: 빈 프로젝트 폴더 (중복 없음)
+      vi.mocked(fs.readdir).mockResolvedValue([]);
 
       const newProject = {
         id: 'new-project',
@@ -165,19 +246,32 @@ describe('ProjectsListService', () => {
         createdAt: '2025-01-01',
       };
 
-      // Act & Assert: 에러 없이 완료
+      // Act & Assert: 에러 없이 완료 (실제 폴더 생성은 projectFacade에서 수행)
       await expect(projectsListService.addProjectToList(newProject)).resolves.not.toThrow();
-      expect(fs.writeFile).toHaveBeenCalled();
+      // 폴더 스캔 방식에서는 writeFile 호출하지 않음
+      expect(fs.writeFile).not.toHaveBeenCalled();
     });
 
     it('should throw error on duplicate project ID', async () => {
-      // Arrange
-      const mockConfig = {
-        version: '1.0',
-        projects: [{ id: 'existing', name: 'Existing', path: 'existing', status: 'active', wbsDepth: 4, createdAt: '2025-01-01' }],
-        defaultProject: null,
+      // Arrange: 이미 프로젝트 존재
+      const mockDirents = [createMockDirent('existing', true)];
+
+      const projectConfig = {
+        id: 'existing',
+        name: 'Existing',
+        status: 'active',
+        wbsDepth: 4,
+        createdAt: '2025-01-01',
       };
-      vi.mocked(fs.readFile).mockResolvedValue(JSON.stringify(mockConfig));
+
+      vi.mocked(fs.readdir).mockResolvedValue(mockDirents as unknown as Dirent[]);
+      vi.mocked(fs.readFile).mockImplementation(async (path) => {
+        const pathStr = String(path);
+        if (pathStr.includes('existing/project.json')) {
+          return JSON.stringify(projectConfig);
+        }
+        throw new Error(`Unexpected path: ${pathStr}`);
+      });
 
       const duplicateProject = {
         id: 'existing',
@@ -199,27 +293,68 @@ describe('ProjectsListService', () => {
      * @requirement BR-005
      */
     it('UT-009: should throw on invalid (non-existent) project ID', async () => {
-      // Arrange
-      const mockConfig = {
+      // Arrange: 다른 프로젝트만 존재
+      const mockDirents = [createMockDirent('existing', true)];
+
+      const projectConfig = {
+        id: 'existing',
+        name: 'Existing',
+        status: 'active',
+        wbsDepth: 4,
+        createdAt: '2025-01-01',
+      };
+
+      const settingsConfig = {
         version: '1.0',
-        projects: [{ id: 'existing', name: 'Existing', path: 'existing', status: 'active', wbsDepth: 4, createdAt: '2025-01-01' }],
         defaultProject: null,
       };
-      vi.mocked(fs.readFile).mockResolvedValue(JSON.stringify(mockConfig));
+
+      vi.mocked(fs.readdir).mockResolvedValue(mockDirents as unknown as Dirent[]);
+      vi.mocked(fs.readFile).mockImplementation(async (path) => {
+        const pathStr = String(path);
+        if (pathStr.includes('existing/project.json')) {
+          return JSON.stringify(projectConfig);
+        }
+        if (pathStr.includes('settings.json')) {
+          return JSON.stringify(settingsConfig);
+        }
+        throw new Error(`Unexpected path: ${pathStr}`);
+      });
 
       // Act & Assert: 존재하지 않는 프로젝트 ID로 설정 시도
       await expect(projectsListService.setDefaultProject('non-existent')).rejects.toThrow();
     });
 
     it('should set default project successfully for valid ID', async () => {
-      // Arrange
-      const mockConfig = {
+      // Arrange: 유효한 프로젝트 존재
+      const mockDirents = [createMockDirent('valid-project', true)];
+
+      const projectConfig = {
+        id: 'valid-project',
+        name: 'Valid',
+        status: 'active',
+        wbsDepth: 4,
+        createdAt: '2025-01-01',
+      };
+
+      const settingsConfig = {
         version: '1.0',
-        projects: [{ id: 'valid-project', name: 'Valid', path: 'valid-project', status: 'active', wbsDepth: 4, createdAt: '2025-01-01' }],
         defaultProject: null,
       };
-      vi.mocked(fs.readFile).mockResolvedValue(JSON.stringify(mockConfig));
+
+      vi.mocked(fs.readdir).mockResolvedValue(mockDirents as unknown as Dirent[]);
+      vi.mocked(fs.readFile).mockImplementation(async (path) => {
+        const pathStr = String(path);
+        if (pathStr.includes('valid-project/project.json')) {
+          return JSON.stringify(projectConfig);
+        }
+        if (pathStr.includes('settings.json')) {
+          return JSON.stringify(settingsConfig);
+        }
+        throw new Error(`Unexpected path: ${pathStr}`);
+      });
       vi.mocked(fs.writeFile).mockResolvedValue(undefined);
+      vi.mocked(fs.mkdir).mockResolvedValue(undefined);
 
       // Act & Assert
       await expect(projectsListService.setDefaultProject('valid-project')).resolves.not.toThrow();
@@ -228,13 +363,20 @@ describe('ProjectsListService', () => {
 
     it('should allow setting default to null', async () => {
       // Arrange
-      const mockConfig = {
+      const settingsConfig = {
         version: '1.0',
-        projects: [],
         defaultProject: 'some-project',
       };
-      vi.mocked(fs.readFile).mockResolvedValue(JSON.stringify(mockConfig));
+
+      vi.mocked(fs.readFile).mockImplementation(async (path) => {
+        const pathStr = String(path);
+        if (pathStr.includes('settings.json')) {
+          return JSON.stringify(settingsConfig);
+        }
+        throw new Error(`Unexpected path: ${pathStr}`);
+      });
       vi.mocked(fs.writeFile).mockResolvedValue(undefined);
+      vi.mocked(fs.mkdir).mockResolvedValue(undefined);
 
       // Act & Assert
       await expect(projectsListService.setDefaultProject(null)).resolves.not.toThrow();

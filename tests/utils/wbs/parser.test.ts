@@ -437,8 +437,9 @@ describe('calculateProgress', () => {
     expect(nodes[0].taskCount).toBe(4);
   });
 
-  // TC-004-003: 모든 Task 미완료
-  it('TC-004-003: should calculate 0% when no tasks are completed', () => {
+  // TC-004-003: 진행 중 Task 포함 (상태별 가중치 적용)
+  // 상태별 가중치: [ ]=0%, [bd]=20%, [dd]=40%, [im]=60%, [vf]=80%, [xx]=100%
+  it('TC-004-003: should calculate weighted progress for in-progress tasks', () => {
     const nodes: WbsNode[] = [{
       id: 'WP-01',
       type: 'wp',
@@ -452,7 +453,8 @@ describe('calculateProgress', () => {
 
     calculateProgress(nodes);
 
-    expect(nodes[0].progress).toBe(0);
+    // (0 + 20 + 60) / 3 = 26.67% → 27% (반올림)
+    expect(nodes[0].progress).toBe(27);
     expect(nodes[0].taskCount).toBe(3);
   });
 

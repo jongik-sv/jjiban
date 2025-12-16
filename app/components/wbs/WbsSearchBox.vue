@@ -53,13 +53,13 @@ const handleKeydown = (event: KeyboardEvent) => {
   >
     <IconField iconPosition="left">
       <InputIcon>
-        <i class="pi pi-search text-[#888888]" />
+        <i class="pi pi-search text-text-secondary" />
       </InputIcon>
       <InputText
         v-model="searchQuery"
         data-testid="search-input"
         placeholder="Task ID 또는 제목으로 검색..."
-        class="w-full bg-[#1e1e38] border-[#3d3d5c] text-[#e8e8e8]
+        class="w-full bg-bg-card border-border text-text
                placeholder:text-gray-500
                focus:border-blue-500 focus:ring-1 focus:ring-blue-500
                transition-colors duration-200"

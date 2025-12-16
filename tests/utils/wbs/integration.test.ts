@@ -39,11 +39,11 @@ describe('WBS Module Integration', () => {
     it('should parse all Work Packages (WP)', () => {
       const wpNodes = parsedNodes.filter(n => n.type === 'wp');
 
-      // 실제 wbs.md에는 WP-01 ~ WP-06이 있음
-      expect(wpNodes.length).toBe(6);
+      // 실제 wbs.md에는 WP-01 ~ WP-08이 있음
+      expect(wpNodes.length).toBe(8);
       expect(wpNodes.map(n => n.id)).toContain('WP-01');
       expect(wpNodes.map(n => n.id)).toContain('WP-02');
-      expect(wpNodes.map(n => n.id)).toContain('WP-06');
+      expect(wpNodes.map(n => n.id)).toContain('WP-08');
     });
 
     it('should parse nested ACT and TSK nodes', () => {

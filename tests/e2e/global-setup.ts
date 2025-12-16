@@ -32,9 +32,13 @@ async function globalSetup() {
   const projectPath = join(jjibanRoot, 'projects', TEST_PROJECT_ID);
   await mkdir(projectPath, { recursive: true });
 
-  // Task 폴더 생성
+  // Task 폴더 생성 (TSK-01-01-01)
   const taskPath = join(projectPath, 'tasks', 'TSK-01-01-01');
   await mkdir(taskPath, { recursive: true });
+
+  // Detail Sections 테스트용 Task 폴더 생성 (TSK-01-01-02)
+  const detailTaskPath = join(projectPath, 'tasks', 'TSK-01-01-02');
+  await mkdir(detailTaskPath, { recursive: true });
 
   // project.json 생성 (폴더 스캔 방식이므로 projects.json 불필요)
   const projectConfig = {
@@ -77,6 +81,7 @@ async function globalSetup() {
   );
 
   // wbs.md 생성 (상태 코드 형식: [bd] - 대괄호만 사용)
+  // detail-sections 테스트를 위해 Task들을 ACT-01-01 아래에 배치 (4단계 구조)
   const wbsContent = `# WBS - ${TEST_PROJECT_NAME}
 
 > version: 1.0
@@ -98,14 +103,89 @@ async function globalSetup() {
 - status: [bd]
 - priority: critical
 - assignee: dev-001
+
+#### TSK-01-01-02: Development Task
+- category: development
+- domain: frontend
+- status: [dd]
+- priority: high
+- assignee: dev-001
+- schedule: 2025-12-15 ~ 2025-12-16
+- tags: test, detail
+- depends: -
+- test-result: none
+- requirements:
+  - TaskWorkflow 컴포넌트 (워크플로우 흐름 시각화)
+  - TaskRequirements 컴포넌트 (요구사항 목록, 인라인 편집)
+  - TaskDocuments 컴포넌트 (문서 목록, 존재/예정 구분)
+  - TaskHistory 컴포넌트 (상태 변경 이력, 타임라인)
+- ref: PRD 6.3.2, 6.3.3, 6.3.4, 6.3.6
+
+#### TSK-01-01-03: Defect Task
+- category: defect
+- domain: backend
+- status: [an]
+- priority: medium
+- assignee: -
+- test-result: none
+- requirements:
+  - Defect workflow test requirement
+
+#### TSK-01-01-04: Infrastructure Task
+- category: infrastructure
+- domain: infra
+- status: [im]
+- priority: low
+- assignee: -
+- test-result: none
+- requirements:
+  - Infrastructure workflow test requirement
 `;
 
   await writeFile(join(projectPath, 'wbs.md'), wbsContent, 'utf-8');
 
-  // Task 문서 생성
+  // Task 문서 생성 (TSK-01-01-01)
   await writeFile(
     join(taskPath, '010-basic-design.md'),
     '# Basic Design\n\nTest content',
+    'utf-8'
+  );
+
+  // Detail Sections 테스트용 문서 및 이력 생성 (TSK-01-01)
+  await writeFile(
+    join(detailTaskPath, '010-basic-design.md'),
+    '# 기본설계\n\nThis is a test basic design document.',
+    'utf-8'
+  );
+
+  // history.json 생성
+  const historyData = {
+    version: '1.0',
+    taskId: 'TSK-01-01-02',
+    entries: [
+      {
+        timestamp: '2025-12-15T09:00:00.000Z',
+        action: 'transition',
+        previousStatus: '[ ]',
+        newStatus: '[bd]',
+        command: '/wf:start',
+        documentCreated: '010-basic-design.md',
+        userId: 'dev-001'
+      },
+      {
+        timestamp: '2025-12-15T13:12:00.000Z',
+        action: 'transition',
+        previousStatus: '[bd]',
+        newStatus: '[dd]',
+        command: '/wf:draft',
+        documentCreated: '020-detail-design.md',
+        userId: 'dev-001'
+      }
+    ]
+  };
+  await writeFile(
+    join(detailTaskPath, 'history.json'),
+    JSON.stringify(historyData, null, 2),
     'utf-8'
   );
 

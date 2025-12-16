@@ -91,12 +91,26 @@
 @.jjiban\projects\jjiban\tasks\TSK-01-02-01\ui-assets\ @.jjiban\projects\jjiban\tasks\TSK-01-02-02\ui-assets\ 안의 설계 이미지가 전체 생각하고 있는 모습인 @.jjiban\projects\jjiban\wbs-tree-mockup-compact.svg 를 잘 반영하고 잇는지 확인해줘.
 
 
-  3. 실패하는 테스트들 (❌)
 
-  | 파일                    | 실패 원인                                         | projects.json 관련 |
-  |-------------------------|---------------------------------------------------|--------------------|
-  | completed-field.spec.ts | WBS 메타데이터 형식 문제 (- version vs > version) | ❌ 무관            |
-  | detail-panel.spec.ts    | UI 요소 타임아웃 (드롭다운 등)                    | ❌ 무관            |
-  | detail-sections.spec.ts | UI 컴포넌트 미구현/변경                           | ❌ 무관            |
-  | wbs-tree-panel.spec.ts  | UI 요소 셀렉터 불일치                             | ❌ 무관            |
-  | wbs-search.spec.ts      | UI 요소 셀렉터 불일치                             | ❌ 무관            |
+
+  | 실패 테스트 파일                       | 실패 원인                                        | 담당 Task                                     |
+  |----------------------------------------|--------------------------------------------------|-----------------------------------------------|
+  | NodeIcon.test.ts (4 failed)            | icon 클래스 assertion 방식 오류                  | TSK-08-01 (WbsTreePanel + NodeIcon Migration) |
+  | projectsListService.test.ts (7 failed) | getProjectsBasePath mock 누락                    | TSK-03-01 (Project API)                       |
+  | service.test.ts (Settings, 9 failed)   | refreshCache is not a function                   | TSK-02-03-02 (설정 서비스 구현)               |
+  | parser.test.ts (1 failed)              | progress 계산 로직 변경됨 (expected 0%, got 27%) | TSK-02-02-01 (wbs.md 파서 구현)               |
+  | TaskDocuments.test.ts (4 failed)       | CSS 클래스 마이그레이션 후 style 함수 제거됨     | TSK-08-02 (WBS UI Components Migration)       |
+  | integration.test.ts (1 failed)         | WP 개수 변경 (expected 6, got 8)                 | TSK-02-02-01 (테스트 데이터 업데이트 필요)    |
+  | TaskHistory.test.ts (5 failed)         | getEntryColor 함수 제거, icon 변경               | TSK-08-05 (TaskDetailPanel Dialog Migration)  |
+  | taskService.test.ts (2 failed)         | 테스트 데이터 Task ID 불일치                     | TSK-03-02 (WBS API)                           |
+
+
+ | 담당 Task    | 실패 테스트                                 | 원인                    |
+  |--------------|---------------------------------------------|-------------------------|
+  | TSK-08-01    | NodeIcon.test.ts (4)                        | CSS 클래스 마이그레이션 |
+  | TSK-08-02    | TaskDocuments.test.ts (4)                   | style 함수 제거         |
+  | TSK-08-05    | TaskHistory.test.ts (5)                     | getEntryColor 함수 제거 |
+  | TSK-03-01    | projectsListService.test.ts (7)             | mock 함수 누락          |
+  | TSK-02-03-02 | service.test.ts (9)                         | refreshCache 함수 변경  |
+  | TSK-02-02-01 | parser.test.ts (1), integration.test.ts (1) | 로직/데이터 변경        |
+  | TSK-03-02    | taskService.test.ts (2)                     | 테스트 데이터 불일치    |

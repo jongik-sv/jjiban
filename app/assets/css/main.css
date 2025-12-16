@@ -169,6 +169,137 @@ pre code {
 }
 
 /* ============================================
+ * PrimeVue 디자인 토큰 오버라이드 (TSK-08-06)
+ * jjiban 다크 테마와 통합
+ * ============================================ */
+
+/* PrimeVue Tree 컴포넌트 (WbsTreePanel - TSK-08-01) */
+:root {
+  /* Tree 배경 및 텍스트 */
+  --p-tree-background: var(--color-sidebar);                    /* #0f0f23 */
+  --p-tree-color: var(--color-text);                            /* #e8e8e8 */
+  --p-tree-padding: 0.5rem;                                     /* 8px */
+
+  /* Tree 노드 상태별 배경색 */
+  --p-tree-node-background: transparent;
+  --p-tree-node-hover-background: var(--color-header);          /* #16213e */
+  --p-tree-node-selected-background: rgba(59, 130, 246, 0.2);   /* primary/20 */
+  --p-tree-node-focus-background: var(--color-header);          /* #16213e */
+
+  /* Tree 노드 텍스트 색상 */
+  --p-tree-node-color: var(--color-text);                       /* #e8e8e8 */
+  --p-tree-node-hover-color: var(--color-text);                 /* #e8e8e8 */
+  --p-tree-node-selected-color: var(--color-text);              /* #e8e8e8 */
+  --p-tree-node-focus-color: var(--color-text);                 /* #e8e8e8 */
+
+  /* Tree 토글 아이콘 */
+  --p-tree-node-icon-color: var(--color-text-secondary);        /* #888888 */
+  --p-tree-node-icon-hover-color: var(--color-text);            /* #e8e8e8 */
+
+  /* Tree 들여쓰기 */
+  --p-tree-indent-size: 1rem;                                   /* 16px */
+
+  /* Tree 경계선 */
+  --p-tree-border-color: var(--color-border);                   /* #3d3d5c */
+
+  /* Tree 로딩 아이콘 */
+  --p-tree-loading-icon-color: var(--color-primary);            /* #3b82f6 */
+}
+
+/* PrimeVue Splitter 컴포넌트 (AppLayout - TSK-08-03) */
+:root {
+  /* Splitter Gutter 상태별 배경색 */
+  --p-splitter-gutter-background: var(--color-border);          /* #3d3d5c */
+  --p-splitter-gutter-hover-background: var(--color-border-light); /* #4d4d6c */
+  --p-splitter-gutter-active-background: var(--color-primary);  /* #3b82f6 */
+
+  /* Splitter Gutter 크기 */
+  --p-splitter-gutter-size: 4px;
+
+  /* Splitter Handle (드래그 핸들) */
+  --p-splitter-handle-background: var(--color-primary);         /* #3b82f6 */
+  --p-splitter-handle-size: 24px;
+}
+
+/* PrimeVue Menubar 컴포넌트 (AppHeader - TSK-08-04) */
+:root {
+  /* Menubar 배경 및 텍스트 */
+  --p-menubar-background: var(--color-header);                  /* #16213e */
+  --p-menubar-border-color: transparent;
+  --p-menubar-padding: 0.75rem 1rem;                            /* 12px 16px */
+
+  /* Menubar 아이템 기본 상태 */
+  --p-menubar-item-color: var(--color-text);                    /* #e8e8e8 */
+  --p-menubar-item-hover-color: var(--color-text);              /* #e8e8e8 */
+  --p-menubar-item-active-color: var(--color-primary);          /* #3b82f6 */
+  --p-menubar-item-focus-color: var(--color-text);              /* #e8e8e8 */
+
+  /* Menubar 아이템 배경색 */
+  --p-menubar-item-background: transparent;
+  --p-menubar-item-hover-background: rgba(255, 255, 255, 0.05); /* surface-50 */
+  --p-menubar-item-active-background: rgba(59, 130, 246, 0.2);  /* primary/20 */
+  --p-menubar-item-focus-background: rgba(59, 130, 246, 0.1);   /* primary/10 */
+
+  /* Menubar 아이템 패딩 및 간격 */
+  --p-menubar-item-padding: 0.5rem 1rem;                        /* 8px 16px */
+  --p-menubar-item-gap: 0.5rem;                                 /* 8px */
+
+  /* Menubar Submenu (현재 미사용, 향후 확장) */
+  --p-menubar-submenu-background: var(--color-card);            /* #1e1e38 */
+  --p-menubar-submenu-border-color: var(--color-border);        /* #3d3d5c */
+}
+
+/* PrimeVue Dialog 컴포넌트 (TaskDetailPanel - TSK-08-05) */
+:root {
+  /* Dialog 배경 및 텍스트 */
+  --p-dialog-background: var(--color-card);                     /* #1e1e38 */
+  --p-dialog-color: var(--color-text);                          /* #e8e8e8 */
+  --p-dialog-border-color: var(--color-border);                 /* #3d3d5c */
+  --p-dialog-border-radius: 1rem;                               /* 16px */
+  --p-dialog-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5),
+                     0 10px 10px -5px rgba(0, 0, 0, 0.4);
+
+  /* Dialog 헤더 */
+  --p-dialog-header-background: var(--color-header);            /* #16213e */
+  --p-dialog-header-color: var(--color-text);                   /* #e8e8e8 */
+  --p-dialog-header-padding: 1rem 1.5rem;                       /* 16px 24px */
+  --p-dialog-header-border-width: 0 0 1px 0;
+  --p-dialog-header-border-color: var(--color-border);          /* #3d3d5c */
+
+  /* Dialog 콘텐츠 */
+  --p-dialog-content-padding: 1.5rem;                           /* 24px */
+  --p-dialog-content-background: var(--color-card);             /* #1e1e38 */
+
+  /* Dialog 푸터 */
+  --p-dialog-footer-padding: 1rem 1.5rem;                       /* 16px 24px */
+  --p-dialog-footer-background: var(--color-card);              /* #1e1e38 */
+  --p-dialog-footer-border-width: 1px 0 0 0;
+  --p-dialog-footer-border-color: var(--color-border);          /* #3d3d5c */
+
+  /* Dialog Mask (오버레이) */
+  --p-dialog-mask-background: rgba(0, 0, 0, 0.6);
+}
+
+/* PrimeVue ProgressBar 컴포넌트 (ProgressBar - TSK-08-02) */
+:root {
+  /* ProgressBar 배경 및 높이 */
+  --p-progressbar-background: var(--color-border);              /* #3d3d5c */
+  --p-progressbar-height: 0.5rem;                               /* 8px */
+  --p-progressbar-border-radius: 0.25rem;                       /* 4px */
+
+  /* ProgressBar 값 배경색 (기본값 - 중간 진행률) */
+  --p-progressbar-value-background: var(--color-warning);       /* #f59e0b */
+
+  /* 동적 클래스로 오버라이드 가능:
+   * .progress-bar-low, .progress-bar-medium, .progress-bar-high
+   * 이 클래스들이 적용되면 background-color가 재정의됨 */
+
+  /* ProgressBar 라벨 (현재 미사용) */
+  --p-progressbar-label-color: var(--color-text);               /* #e8e8e8 */
+  --p-progressbar-label-font-size: 0.75rem;                     /* 12px */
+}
+
+/* ============================================
  * NodeIcon 컴포넌트 스타일 (TSK-08-01)
  * CSS 클래스 중앙화 원칙 준수
  * ============================================ */

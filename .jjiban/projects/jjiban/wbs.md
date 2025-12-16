@@ -794,7 +794,7 @@ start: 2025-12-13
 
 #### TSK-08-06: Theme Integration & E2E Testing
 - category: development
-- status: [ ]
+- status: detail-design [dd]
 - priority: high
 - schedule: 2026-02-17 ~ 2026-02-20
 - tags: theme, testing, e2e, migration
@@ -808,3 +808,6 @@ start: 2025-12-13
   - PrimeVue 컴포넌트 상호작용 테스트 추가
   - 접근성 검증 (WCAG 2.1)
 - ref: PRD 10.1, PRD 11, TRD 2.3.6
+- completed:
+  - bd: 2025-12-16
+  - dd: 2025-12-16

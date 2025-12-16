@@ -368,73 +368,65 @@ wbs.md 마크다운 파일의 텍스트 구조를 파싱하여 WbsNode[] 계층 
 
 | 함수명 | calculateProgress |
 |--------|-------------------|
-| **목적** | 하위 Task 상태 기반으로 진행률 자동 계산 (재귀) |
+| **목적** | 하위 Task 상태 기반으로 진행률 자동 계산 (재귀, 상태별 가중치 적용) |
 | **입력** | nodes: WbsNode[] (in-place 수정) |
 | **출력** | void (노드 객체 직접 수정) |
 | **시그니처** | `calculateProgress(nodes: WbsNode[]): void` |
+
+**상태별 가중치 정의**:
+
+| 상태 코드 | 가중치 | 설명 |
+|----------|--------|------|
+| `[ ]` | 0% | Todo (미시작) |
+| `[bd]` | 20% | 기본설계 진행 중 |
+| `[dd]` | 40% | 상세설계 진행 중 |
+| `[im]` | 60% | 구현 진행 중 |
+| `[vf]` | 80% | 검증 진행 중 |
+| `[xx]` | 100% | 완료 |
 
 **알고리즘**:
 
 ```
 함수 calculateProgress(nodes):
     for node in nodes:
-        if node.children.length > 0:
-            // 재귀적으로 자식 노드 먼저 계산
-            calculateProgress(node.children)
+        updateNodeMetrics(node)
 
-            // 하위 Task 수집
-            allTasks = collectAllTasks(node)
-
-            // 진행률 계산
-            totalTasks = allTasks.length
-            completedTasks = allTasks에서 status == "[xx]"인 개수
-
-            // 0으로 나누기 방지: totalTasks가 0인 경우 명시적으로 0 할당
-            if totalTasks > 0:
-                node.progress = Math.round((completedTasks / totalTasks) * 100)
-                node.taskCount = totalTasks
-            else:
-                // WP/ACT 노드 아래 Task가 없는 경우 (모두 WP/ACT인 경우)
-                node.progress = 0
-                node.taskCount = 0
-        else:
-            // 리프 노드 (Task)
-            if node.type == "task":
-                node.taskCount = 1
-                node.progress = node.status == "[xx]" ? 100 : 0
-            else:
-                node.taskCount = 0
-                node.progress = 0
-```
-
-**하위 Task 수집 함수**:
-
-| 함수명 | collectAllTasks |
-|--------|-----------------|
-| **입력** | node: WbsNode |
-| **출력** | WbsNode[] (type == 'task'인 노드들) |
-| **로직** | DFS로 모든 하위 Task 수집 |
-
-```
-함수 collectAllTasks(node):
-    tasks = []
-
+함수 updateNodeMetrics(node):
     if node.type == "task":
-        tasks.push(node)
+        // Task 노드: 상태별 가중치로 progress 계산
+        progress = 상태별_가중치(node.status)  // 위 표 참조
+        node.progress = progress
+        node.taskCount = 1
+        return { progress, taskCount: 1 }
+
+    // WP 또는 ACT: 자식 노드의 가중 평균 progress 계산
+    totalProgress = 0
+    totalTasks = 0
 
     for child in node.children:
-        tasks = tasks.concat(collectAllTasks(child))
+        childMetrics = updateNodeMetrics(child)
+        totalProgress += childMetrics.progress * childMetrics.taskCount
+        totalTasks += childMetrics.taskCount
 
-    return tasks
+    // 0으로 나누기 방지
+    avgProgress = totalTasks > 0 ? Math.round(totalProgress / totalTasks) : 0
+
+    node.progress = avgProgress
+    node.taskCount = totalTasks
+
+    return { progress: avgProgress, taskCount: totalTasks }
 ```
 
 **진행률 계산 규칙**:
 
 | 조건 | 진행률 계산 | taskCount |
 |------|-----------|-----------|
-| 하위 Task 있음 | (완료 Task 수 / 전체 Task 수) × 100 | 전체 하위 Task 수 |
-| 하위 Task 없음 (Task 노드) | status == "[xx]" ? 100 : 0 | 1 |
-| 하위 Task 없음 (WP/ACT) | 0 | 0 |
+| Task 노드 | 상태별 가중치 (0%, 20%, 40%, 60%, 80%, 100%) | 1 |
+| WP/ACT (자식 있음) | Σ(자식 progress × 자식 taskCount) / Σ(자식 taskCount) | 하위 전체 Task 수 |
+| WP/ACT (자식 없음) | 0 | 0 |
+
+**계산 예시**:
+- 3개 Task: `[ ]`=0%, `[bd]`=20%, `[im]`=60% → (0+20+60)/3 = 26.67% → **27%** (반올림)
 
 ---
 

@@ -10,7 +10,7 @@ import {
   loadSettings,
   isCacheValid,
   refreshCache,
-} from '../../../server/utils/settings/cache';
+} from '../../../server/utils/settings/_cache';
 import {
   DEFAULT_SETTINGS,
   DEFAULT_COLUMNS,

@@ -217,7 +217,7 @@ const progressPercentage = computed(() => {
   margin-bottom: 0;
 }
 
-/* 워크플로우 단계 원형 */
+/* 워크플로우 단계 원형 (TSK-08-06: HEX 하드코딩 제거) */
 .workflow-step-circle {
   width: 32px;
   height: 32px;
@@ -229,17 +229,15 @@ const progressPercentage = computed(() => {
 }
 
 .workflow-step-current {
-  background-color: #3b82f6; /* blue-500 */
-  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+  @apply workflow-step-current;
 }
 
 .workflow-step-completed {
-  background-color: #22c55e; /* green-500 */
+  @apply workflow-step-completed;
 }
 
 .workflow-step-pending {
-  background-color: #e5e7eb; /* gray-200 */
-  border: 2px solid #d1d5db; /* gray-300 */
+  @apply workflow-step-pending;
 }
 
 /* 워크플로우 연결선 */
@@ -250,10 +248,10 @@ const progressPercentage = computed(() => {
 }
 
 .workflow-connector-completed {
-  background-color: #22c55e; /* green-500 */
+  @apply bg-success;
 }
 
 .workflow-connector-pending {
-  background-color: #d1d5db; /* gray-300 */
+  @apply bg-gray-300;
 }
 </style>

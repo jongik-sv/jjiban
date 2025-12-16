@@ -488,4 +488,25 @@ test.describe('TSK-05-01: Detail Panel Structure', () => {
     const categoryDropdown = page.getByTestId('task-category-dropdown')
     await expect(categoryDropdown).not.toBeVisible()
   })
+
+  /**
+   * E2E-015: Dialog가 올바른 다크 테마 스타일을 가진다
+   * 요구사항: TSK-08-06 Theme Integration
+   */
+  test('E2E-015: Dialog가 올바른 다크 테마 스타일을 가진다', async ({ page }) => {
+    await page.getByTestId('wbs-content').waitFor({ state: 'visible', timeout: 3000 })
+
+    const firstTask = page.getByTestId('wbs-tree-node-TSK-05-01')
+    await firstTask.click()
+
+    const dialog = page.locator('[role="dialog"]')
+    await expect(dialog).toBeVisible()
+
+    // Dialog 배경색 검증
+    await expect(dialog).toHaveCSS('background-color', 'rgb(30, 30, 56)')
+
+    // Dialog 헤더 배경색 검증
+    const dialogHeader = page.locator('.p-dialog-header')
+    await expect(dialogHeader).toHaveCSS('background-color', 'rgb(22, 33, 62)')
+  })
 })

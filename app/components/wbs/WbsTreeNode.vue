@@ -140,13 +140,11 @@ const handleSelectNode = () => {
 }
 
 .wbs-tree-node.selected {
-  background-color: rgba(59, 130, 246, 0.15); /* blue-500 with low opacity */
-  border-left: 3px solid #3b82f6; /* blue-500 accent border */
+  @apply bg-primary/15 border-l-[3px] border-primary;
 }
 
 .wbs-tree-node:focus-visible {
-  outline: 2px solid #3b82f6;
-  outline-offset: 2px;
+  @apply outline-2 outline-primary outline-offset-2;
 }
 
 .expand-placeholder {
@@ -165,7 +163,7 @@ const handleSelectNode = () => {
 .node-title {
   font-size: 14px;
   font-weight: 500;
-  color: #ffffff;
+  @apply text-white;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

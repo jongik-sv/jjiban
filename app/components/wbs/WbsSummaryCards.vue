@@ -73,7 +73,7 @@ const cards = computed<CardData[]>(() => [
       v-for="card in cards"
       :key="card.label"
       :data-testid="card.testId"
-      class="bg-[#1e1e38] border border-[#3d3d5c]"
+      class="bg-bg-card border border-border"
       :aria-label="card.ariaLabel"
     >
       <template #content>
@@ -87,7 +87,7 @@ const cards = computed<CardData[]>(() => [
           </div>
 
           <!-- 카드 레이블 -->
-          <div class="text-sm text-[#888888] mt-1 uppercase">
+          <div class="text-sm text-text-secondary mt-1 uppercase">
             {{ card.label }}
           </div>
         </div>

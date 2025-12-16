@@ -12,160 +12,30 @@
  */
 
 import { test, expect } from '@playwright/test'
-import { promises as fs } from 'fs'
-import { join } from 'path'
-import { E2E_TEST_ROOT } from './test-constants'
+import { TEST_PROJECT_ID } from './test-constants'
 
-const TEST_PROJECT_ID = 'jjiban-test-detail'
-// 임시 디렉토리의 .jjiban 폴더 사용 (프로덕션 데이터 보호)
-const JJIBAN_ROOT = join(E2E_TEST_ROOT, '.jjiban')
+// global-setup.ts에서 생성한 TEST_PROJECT_ID 사용
+// TSK-01-01, TSK-01-02, TSK-01-03 데이터가 global-setup에서 준비됨
 
 test.describe('TSK-05-02: Detail Sections Integration', () => {
   test.beforeEach(async ({ page }) => {
-    // 프로젝트 폴더 생성
-    const projectPath = join(JJIBAN_ROOT, 'projects', TEST_PROJECT_ID)
-    await fs.mkdir(projectPath, { recursive: true })
-
-    // project.json 생성
-    const projectJsonPath = join(projectPath, 'project.json')
-    await fs.writeFile(
-      projectJsonPath,
-      JSON.stringify({
-        id: TEST_PROJECT_ID,
-        name: 'Test Detail Sections',
-        status: 'active',
-        wbsDepth: 3,
-        description: 'Detail Sections Integration Test',
-        createdAt: '2025-12-15T00:00:00.000Z'
-      }, null, 2),
-      'utf-8'
-    )
-
-    // team.json 생성
-    const teamJsonPath = join(projectPath, 'team.json')
-    await fs.writeFile(
-      teamJsonPath,
-      JSON.stringify({
-        version: '1.0',
-        members: [
-          {
-            id: 'test-user',
-            name: 'Test User',
-            email: 'test@test.com',
-            role: 'Developer',
-            active: true
-          }
-        ]
-      }, null, 2),
-      'utf-8'
-    )
-
-    // WBS 파일 생성 (3단계 구조)
-    const wbsPath = join(projectPath, 'wbs.md')
-    const wbsContent = `# WBS - Test Detail Sections
-
-> version: 1.0
-> depth: 3
-> updated: 2025-12-15
-> start: 2025-12-15
-
----
-
-## WP-01: Test Work Package
-- status: planned
-- priority: high
-
-### TSK-01-01: Development Task
-- category: development
-- domain: frontend
-- status: [dd]
-- priority: high
-- assignee: -
-- schedule: 2025-12-15 ~ 2025-12-16
-- tags: test, detail
-- depends: -
-- test-result: none
-- requirements:
-  - TaskWorkflow 컴포넌트 (워크플로우 흐름 시각화)
-  - TaskRequirements 컴포넌트 (요구사항 목록, 인라인 편집)
-  - TaskDocuments 컴포넌트 (문서 목록, 존재/예정 구분)
-  - TaskHistory 컴포넌트 (상태 변경 이력, 타임라인)
-- ref: PRD 6.3.2, 6.3.3, 6.3.4, 6.3.6
-
-### TSK-01-02: Defect Task
-- category: defect
-- domain: backend
-- status: [an]
-- priority: medium
-- assignee: -
-- test-result: none
-- requirements:
-  - Defect workflow test requirement
-
-### TSK-01-03: Infrastructure Task
-- category: infrastructure
-- domain: infra
-- status: [im]
-- priority: low
-- assignee: -
-- test-result: none
-- requirements:
-  - Infrastructure workflow test requirement
-`
-
-    await fs.writeFile(wbsPath, wbsContent, 'utf-8')
-
-    // tasks 폴더 및 문서 생성
-    const tasksPath = join(projectPath, 'tasks', 'TSK-01-01')
-    await fs.mkdir(tasksPath, { recursive: true })
-
-    // history.json 생성
-    const historyJsonPath = join(tasksPath, 'history.json')
-    await fs.writeFile(
-      historyJsonPath,
-      JSON.stringify({
-        version: '1.0',
-        taskId: 'TSK-01-01',
-        entries: [
-          {
-            timestamp: '2025-12-15T09:00:00.000Z',
-            action: 'transition',
-            previousStatus: '[ ]',
-            newStatus: '[bd]',
-            command: '/wf:start',
-            documentCreated: '010-basic-design.md',
-            userId: 'test-user'
-          },
-          {
-            timestamp: '2025-12-15T13:12:00.000Z',
-            action: 'transition',
-            previousStatus: '[bd]',
-            newStatus: '[dd]',
-            command: '/wf:draft',
-            documentCreated: '020-detail-design.md',
-            userId: 'test-user'
-          }
-        ]
-      }, null, 2),
-      'utf-8'
-    )
-
-    // 존재하는 문서 생성
-    const basicDesignPath = join(tasksPath, '010-basic-design.md')
-    await fs.writeFile(
-      basicDesignPath,
-      '# 기본설계\n\nThis is a test basic design document.',
-      'utf-8'
-    )
-
-    // Page setup
+    // global-setup에서 이미 테스트 데이터가 준비되어 있음
     await page.goto(`/wbs?project=${TEST_PROJECT_ID}`)
-  })
 
-  test.afterEach(async () => {
-    // 테스트 데이터 정리
-    const projectPath = join(JJIBAN_ROOT, 'projects', TEST_PROJECT_ID)
-    await fs.rm(projectPath, { recursive: true, force: true })
+    // WBS 로딩 대기
+    await page.getByTestId('wbs-content').waitFor({ state: 'visible', timeout: 5000 })
+
+    // WBS 트리 노드 로딩 대기 (WP-01 노드가 보일 때까지)
+    await page.getByTestId('wbs-tree-node-WP-01').waitFor({ state: 'visible', timeout: 5000 })
+
+    // "전체 펼치기" 버튼 클릭하여 모든 노드 펼치기
+    const expandAllBtn = page.getByTestId('expand-all-button')
+    await expandAllBtn.waitFor({ state: 'visible', timeout: 3000 })
+    await expandAllBtn.click()
+
+    // 펼침 애니메이션 대기 후 Task 노드 표시 확인
+    await page.waitForTimeout(1000)
+    await page.getByTestId('wbs-tree-node-TSK-01-01-02').waitFor({ state: 'visible', timeout: 10000 })
   })
 
   /**
@@ -173,15 +43,13 @@ test.describe('TSK-05-02: Detail Sections Integration', () => {
    * 요구사항: FR-001, FR-002, FR-003, BR-WF-01
    */
   test('E2E-001: 워크플로우 흐름이 올바르게 표시된다', async ({ page }) => {
-    // WBS 로딩 대기
-    await page.getByTestId('wbs-content').waitFor({ state: 'visible', timeout: 3000 })
-
-    // Task 선택
-    const taskNode = page.getByTestId('wbs-tree-node-TSK-01-01')
-    await taskNode.click()
+    // Task 선택 (beforeEach에서 전체 펼침 완료)
+    const taskNode = page.getByTestId('wbs-tree-node-TSK-01-01-02')
+    await taskNode.waitFor({ state: 'visible', timeout: 3000 })
+    await taskNode.click({ force: true })
 
     // Task 상세 패널 표시 대기
-    await page.getByTestId('task-detail-panel').waitFor({ state: 'visible', timeout: 2000 })
+    await page.getByTestId('task-detail-panel').waitFor({ state: 'visible', timeout: 5000 })
 
     // 워크플로우 패널 확인
     const workflowPanel = page.getByTestId('task-workflow-panel')
@@ -202,10 +70,8 @@ test.describe('TSK-05-02: Detail Sections Integration', () => {
    * 요구사항: FR-004, FR-005
    */
   test('E2E-002: 요구사항 목록과 PRD 참조가 표시된다', async ({ page }) => {
-    await page.getByTestId('wbs-content').waitFor({ state: 'visible', timeout: 3000 })
-
-    // Task 선택
-    await page.getByTestId('wbs-tree-node-TSK-01-01').click()
+    // Task 선택 (beforeEach에서 ACT-01-01 펼침 완료)
+    await page.getByTestId('wbs-tree-node-TSK-01-01-02').click()
     await page.getByTestId('task-detail-panel').waitFor({ state: 'visible', timeout: 2000 })
 
     // 요구사항 패널 확인
@@ -231,10 +97,8 @@ test.describe('TSK-05-02: Detail Sections Integration', () => {
    * 요구사항: FR-006
    */
   test('E2E-003: 요구사항을 편집할 수 있다', async ({ page }) => {
-    await page.getByTestId('wbs-content').waitFor({ state: 'visible', timeout: 3000 })
-
-    // Task 선택
-    await page.getByTestId('wbs-tree-node-TSK-01-01').click()
+    // Task 선택 (beforeEach에서 ACT-01-01 펼침 완료)
+    await page.getByTestId('wbs-tree-node-TSK-01-01-02').click()
     await page.getByTestId('task-detail-panel').waitFor({ state: 'visible', timeout: 2000 })
 
     // 편집 버튼 클릭
@@ -269,10 +133,8 @@ test.describe('TSK-05-02: Detail Sections Integration', () => {
    * 요구사항: FR-006
    */
   test('E2E-004: 요구사항을 추가하고 삭제할 수 있다', async ({ page }) => {
-    await page.getByTestId('wbs-content').waitFor({ state: 'visible', timeout: 3000 })
-
-    // Task 선택
-    await page.getByTestId('wbs-tree-node-TSK-01-01').click()
+    // Task 선택 (beforeEach에서 ACT-01-01 펼침 완료)
+    await page.getByTestId('wbs-tree-node-TSK-01-01-02').click()
     await page.getByTestId('task-detail-panel').waitFor({ state: 'visible', timeout: 2000 })
 
     // 편집 모드 활성화
@@ -315,10 +177,8 @@ test.describe('TSK-05-02: Detail Sections Integration', () => {
    * 요구사항: FR-007, FR-008, FR-010
    */
   test('E2E-005: 문서 목록과 존재/예정 상태가 표시된다', async ({ page }) => {
-    await page.getByTestId('wbs-content').waitFor({ state: 'visible', timeout: 3000 })
-
-    // Task 선택
-    await page.getByTestId('wbs-tree-node-TSK-01-01').click()
+    // Task 선택 (beforeEach에서 ACT-01-01 펼침 완료)
+    await page.getByTestId('wbs-tree-node-TSK-01-01-02').click()
     await page.getByTestId('task-detail-panel').waitFor({ state: 'visible', timeout: 2000 })
 
     // 문서 패널 확인
@@ -346,10 +206,8 @@ test.describe('TSK-05-02: Detail Sections Integration', () => {
    * Note: TSK-05-04에서 DocumentViewer 구현 전이므로 토스트만 확인
    */
   test('E2E-006: 존재하는 문서를 클릭하면 뷰어가 열린다', async ({ page }) => {
-    await page.getByTestId('wbs-content').waitFor({ state: 'visible', timeout: 3000 })
-
-    // Task 선택
-    await page.getByTestId('wbs-tree-node-TSK-01-01').click()
+    // Task 선택 (beforeEach에서 ACT-01-01 펼침 완료)
+    await page.getByTestId('wbs-tree-node-TSK-01-01-02').click()
     await page.getByTestId('task-detail-panel').waitFor({ state: 'visible', timeout: 2000 })
 
     // 존재하는 문서 카드 클릭
@@ -368,10 +226,8 @@ test.describe('TSK-05-02: Detail Sections Integration', () => {
    * 요구사항: FR-011, FR-012, FR-013, BR-HIST-01
    */
   test('E2E-007: 상태 변경 이력이 타임라인으로 표시된다', async ({ page }) => {
-    await page.getByTestId('wbs-content').waitFor({ state: 'visible', timeout: 3000 })
-
-    // Task 선택
-    await page.getByTestId('wbs-tree-node-TSK-01-01').click()
+    // Task 선택 (beforeEach에서 ACT-01-01 펼침 완료)
+    await page.getByTestId('wbs-tree-node-TSK-01-01-02').click()
     await page.getByTestId('task-detail-panel').waitFor({ state: 'visible', timeout: 2000 })
 
     // 이력 패널 확인
@@ -401,22 +257,20 @@ test.describe('TSK-05-02: Detail Sections Integration', () => {
    * 요구사항: BR-WF-01
    */
   test('E2E-008: 카테고리별로 다른 워크플로우 단계가 표시된다', async ({ page }) => {
-    await page.getByTestId('wbs-content').waitFor({ state: 'visible', timeout: 3000 })
-
-    // Development Task (6단계)
-    await page.getByTestId('wbs-tree-node-TSK-01-01').click()
+    // Development Task (6단계) - beforeEach에서 ACT-01-01 펼침 완료
+    await page.getByTestId('wbs-tree-node-TSK-01-01-02').click()
     await page.getByTestId('task-detail-panel').waitFor({ state: 'visible', timeout: 2000 })
     let workflowNodes = page.locator('[data-testid^="workflow-node-"]')
     await expect(workflowNodes).toHaveCount(6)
 
     // Defect Task (5단계)
-    await page.getByTestId('wbs-tree-node-TSK-01-02').click()
+    await page.getByTestId('wbs-tree-node-TSK-01-01-03').click()
     await page.getByTestId('task-detail-panel').waitFor({ state: 'visible', timeout: 2000 })
     workflowNodes = page.locator('[data-testid^="workflow-node-"]')
     await expect(workflowNodes).toHaveCount(5)
 
     // Infrastructure Task (4단계)
-    await page.getByTestId('wbs-tree-node-TSK-01-03').click()
+    await page.getByTestId('wbs-tree-node-TSK-01-01-04').click()
     await page.getByTestId('task-detail-panel').waitFor({ state: 'visible', timeout: 2000 })
     workflowNodes = page.locator('[data-testid^="workflow-node-"]')
     await expect(workflowNodes).toHaveCount(4)
@@ -427,13 +281,11 @@ test.describe('TSK-05-02: Detail Sections Integration', () => {
    * 요구사항: NFR-001
    */
   test('E2E-PERF-01: 모든 섹션이 빠르게 렌더링된다', async ({ page }) => {
-    await page.getByTestId('wbs-content').waitFor({ state: 'visible', timeout: 3000 })
-
-    // 성능 측정 시작
+    // 성능 측정 시작 - beforeEach에서 ACT-01-01 펼침 완료
     const startTime = Date.now()
 
     // Task 선택
-    await page.getByTestId('wbs-tree-node-TSK-01-01').click()
+    await page.getByTestId('wbs-tree-node-TSK-01-01-02').click()
 
     // 모든 섹션 표시 대기
     await page.getByTestId('task-detail-panel').waitFor({ state: 'visible', timeout: 2000 })
@@ -455,10 +307,8 @@ test.describe('TSK-05-02: Detail Sections Integration', () => {
    * 요구사항: NFR-003
    */
   test('E2E-A11Y-01: 모든 섹션이 접근 가능하다', async ({ page }) => {
-    await page.getByTestId('wbs-content').waitFor({ state: 'visible', timeout: 3000 })
-
-    // Task 선택
-    await page.getByTestId('wbs-tree-node-TSK-01-01').click()
+    // Task 선택 (beforeEach에서 ACT-01-01 펼침 완료)
+    await page.getByTestId('wbs-tree-node-TSK-01-01-02').click()
     await page.getByTestId('task-detail-panel').waitFor({ state: 'visible', timeout: 2000 })
 
     // ARIA 라벨 확인
@@ -483,7 +333,7 @@ test.describe('TSK-05-02: Detail Sections Integration', () => {
    */
   test('E2E-ERROR-01: 요구사항 편집 실패 시 롤백된다', async ({ page, context }) => {
     // API 모킹: 편집 실패
-    await context.route('**/api/tasks/TSK-01-01', async (route) => {
+    await context.route('**/api/tasks/TSK-01-01-02', async (route) => {
       if (route.request().method() === 'PUT') {
         await route.fulfill({
           status: 500,
@@ -498,10 +348,8 @@ test.describe('TSK-05-02: Detail Sections Integration', () => {
       }
     })
 
-    await page.getByTestId('wbs-content').waitFor({ state: 'visible', timeout: 3000 })
-
-    // Task 선택
-    await page.getByTestId('wbs-tree-node-TSK-01-01').click()
+    // Task 선택 (beforeEach에서 ACT-01-01 펼침 완료)
+    await page.getByTestId('wbs-tree-node-TSK-01-01-02').click()
     await page.getByTestId('task-detail-panel').waitFor({ state: 'visible', timeout: 2000 })
 
     // 원본 텍스트 저장
@@ -526,10 +374,8 @@ test.describe('TSK-05-02: Detail Sections Integration', () => {
    * E2E-INTEGRATION-01: 전체 패널 로드 통합 테스트
    */
   test('E2E-INTEGRATION-01: WBS 페이지에서 Task 선택 시 모든 섹션이 표시된다', async ({ page }) => {
-    await page.getByTestId('wbs-content').waitFor({ state: 'visible', timeout: 3000 })
-
-    // Task 선택
-    await page.getByTestId('wbs-tree-node-TSK-01-01').click()
+    // Task 선택 (beforeEach에서 ACT-01-01 펼침 완료)
+    await page.getByTestId('wbs-tree-node-TSK-01-01-02').click()
 
     // Task 상세 패널 확인
     const detailPanel = page.getByTestId('task-detail-panel')

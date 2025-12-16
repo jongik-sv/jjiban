@@ -14,10 +14,10 @@ import type {
   ActionsConfig,
 } from '../../../types/settings';
 import { SETTINGS_FILE_NAMES } from '../../../types/settings';
-import { loadSettings as loadSettingsFromCache } from './_cache';
+import { loadSettings as loadSettingsFromCache, refreshCache } from './_cache';
 
-// Note: cache functions (loadSettings, refreshCache, isCacheValid, getCacheLoadedAt) are
-// available via direct import from './_cache' for testing purposes
+// Re-export cache functions for testing
+export { refreshCache };
 
 // ============================================================
 // 서비스 함수

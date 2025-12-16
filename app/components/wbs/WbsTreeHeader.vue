@@ -31,14 +31,14 @@ const handleCollapseAll = () => {
 <template>
   <div
     data-testid="wbs-tree-header"
-    class="wbs-tree-header bg-[#16213e] border-b border-[#3d3d5c] p-4"
+    class="wbs-tree-header bg-bg-header border-b border-border p-4"
   >
     <!-- 타이틀 및 액션 버튼 -->
     <div class="flex items-center justify-between mb-4">
       <!-- 타이틀 -->
       <h2
         id="wbs-tree-title"
-        class="text-lg font-semibold text-[#e8e8e8] flex items-center gap-2"
+        class="text-lg font-semibold text-text flex items-center gap-2"
       >
         <i class="pi pi-sitemap text-purple-500"></i>
         WBS 트리

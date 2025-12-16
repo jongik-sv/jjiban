@@ -126,9 +126,10 @@ function getDocumentIcon(doc: DocumentInfo): string {
 
 /**
  * 문서 타입별 색상 가져오기
+ * TSK-08-06: HEX 하드코딩 제거, CSS 변수 사용
  */
 function getDocumentColor(doc: DocumentInfo): string {
-  return DOCUMENT_TYPE_CONFIG[doc.type]?.color || '#6b7280'
+  return DOCUMENT_TYPE_CONFIG[doc.type]?.color || 'var(--color-text-muted)'
 }
 
 /**
