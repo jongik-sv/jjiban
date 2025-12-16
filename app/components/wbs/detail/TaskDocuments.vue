@@ -29,7 +29,7 @@
           </div>
         </template>
       </Column>
-      <Column field="type" header="타입" sortable style="width: 100px">
+      <Column field="type" header="타입" sortable style="width: 120px">
         <template #body="{ data }">
           {{ getDocumentTypeLabel(data.type) }}
         </template>
