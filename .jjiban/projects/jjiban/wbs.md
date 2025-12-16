@@ -1,7 +1,7 @@
-version: 1.0
-depth: 4
-updated: 2025-12-16
-start: 2025-12-13
+> version: 1.0
+> depth: 4
+> updated: 2025-12-16
+> start: 2025-12-16
 
 ---
 
@@ -411,14 +411,11 @@ start: 2025-12-13
 
 #### TSK-03-06: completed 필드 지원 (Parser/Serializer/API)
 - category: development
-- domain: backend
-- status: done [xx]
+- status: [xx]
 - priority: high
-- assignee: -
 - schedule: 2026-01-13 ~ 2026-01-16
 - tags: api, wbs, completed, parser, serializer
 - depends: TSK-02-02-01, TSK-02-02-02, TSK-03-03
-- test-result: pass
 - requirements:
   - WBS Parser: completed 필드 파싱 (중첩 리스트 형식)
   - WBS Serializer: completed 필드 직렬화
@@ -599,7 +596,7 @@ start: 2025-12-13
 
 #### TSK-05-05: WP/ACT Detail Panel
 - category: development
-- status: done [xx]
+- status: [xx]
 - priority: medium
 - schedule: 2026-02-20 ~ 2026-02-22
 - tags: component, detail, wp, act
@@ -624,7 +621,7 @@ start: 2025-12-13
 ## WP-06: Integration & Testing
 - priority: medium
 - schedule: 2026-01-20 ~ 2026-01-25
-- progress: 80%
+- progress: 100%
 
 #### TSK-06-01: Integration
 - category: development
@@ -699,16 +696,15 @@ start: 2025-12-13
 ## WP-08: PrimeVue Component Migration
 - priority: medium
 - schedule: 2026-02-06 ~ 2026-02-20
-- progress: 0%
+- progress: 100%
 
 #### TSK-08-01: WbsTreePanel + NodeIcon Migration
 - category: development
-- status: done [xx]
+- status: [xx]
 - priority: high
 - schedule: 2026-02-06 ~ 2026-02-09
 - tags: primevue, tree, component, migration
 - depends: TSK-06-02
-- test-result: pass
 - requirements:
   - 커스텀 트리 렌더링 → PrimeVue Tree 컴포넌트로 교체
   - WbsNode[] → PrimeVue TreeNode[] 변환 함수 구현
@@ -727,12 +723,11 @@ start: 2025-12-13
 
 #### TSK-08-02: WBS UI Components Migration
 - category: development
-- status: done [xx]
+- status: [xx]
 - priority: medium
 - schedule: 2026-02-09 ~ 2026-02-11
 - tags: primevue, badge, tag, progress, migration
 - depends: TSK-08-01
-- test-result: pass
 - requirements:
   - StatusBadge: HEX 하드코딩 제거 → CSS 클래스 (.status-*) 적용
   - CategoryTag: HEX 하드코딩 제거 → CSS 클래스 (.category-*) 적용
@@ -749,12 +744,11 @@ start: 2025-12-13
 
 #### TSK-08-03: AppLayout PrimeVue Splitter Migration
 - category: development
-- status: done [xx]
+- status: [xx]
 - priority: high
 - schedule: 2026-02-11 ~ 2026-02-13
 - tags: primevue, splitter, layout, migration
 - depends: TSK-08-01
-- test-result: pass
 - requirements:
   - 커스텀 CSS Grid → PrimeVue Splitter + SplitterPanel 교체
   - 60:40 기본 비율, minSize 제약 유지
@@ -771,12 +765,11 @@ start: 2025-12-13
 
 #### TSK-08-04: AppHeader PrimeVue Menubar Migration
 - category: development
-- status: done [xx]
+- status: [xx]
 - priority: medium
 - schedule: 2026-02-13 ~ 2026-02-15
 - tags: primevue, menubar, navigation, migration
 - depends: TSK-08-03
-- test-result: pass
 - requirements:
   - 커스텀 네비게이션 → PrimeVue Menubar 교체
   - MenuItem 모델로 메뉴 구성 (enabled/disabled 상태)
@@ -794,12 +787,11 @@ start: 2025-12-13
 
 #### TSK-08-05: TaskDetailPanel Dialog Migration
 - category: development
-- status: done [xx]
+- status: [xx]
 - priority: medium
 - schedule: 2026-02-15 ~ 2026-02-17
 - tags: primevue, dialog, detail, migration
 - depends: TSK-08-02
-- test-result: pass
 - requirements:
   - TaskDetailPanel: 인라인 스타일 제거 → PrimeVue Dialog 활용
   - TaskWorkflow: WORKFLOW_THEME 제거 → CSS 클래스 (.workflow-*) 적용
@@ -816,12 +808,12 @@ start: 2025-12-13
 
 #### TSK-08-06: Theme Integration & E2E Testing
 - category: development
-- status: done [xx]
+- status: [xx]
 - priority: high
+- assignee: hong
 - schedule: 2026-02-17 ~ 2026-02-20
 - tags: theme, testing, e2e, migration
 - depends: TSK-08-01, TSK-08-02, TSK-08-03, TSK-08-04, TSK-08-05
-- test-result: pass
 - requirements:
   - PrimeVue 디자인 토큰 오버라이드 (main.css)
   - --p-tree-*, --p-splitter-*, --p-menubar-* 변수 매핑
@@ -837,3 +829,24 @@ start: 2025-12-13
   - im: 2025-12-16
   - vf: 2025-12-16
   - xx: 2025-12-16
+
+#### TSK-08-07: Task Panel Enhancement - Stepper & Missing Info
+- category: development
+- status: [bd]
+- priority: high
+- assignee: hong
+- schedule: 2025-12-16 ~ 2025-12-20
+- tags: stepper, popover, taskpanel, ui, ux
+- depends: TSK-08-06
+- requirements:
+  - TaskDetail 타입에 completed 필드 추가
+  - getTaskDetail() API에서 completed 반환
+  - TaskProgress를 클릭 가능한 Stepper로 변경
+  - Stepper 단계 클릭 시 Popover 표시 (완료일 + 액션 버튼)
+  - Auto 버튼 추가 (wf:auto 명령어 연결, 현재→완료 자동 실행)
+  - 상태 전이 액션 (start, draft, build, verify, done, fix, skip)
+  - 상태 내 액션 (ui, review, apply, test, audit, patch)
+  - TaskBasicInfo에 누락 정보 추가 (schedule, tags, depends, ref)
+  - depends 클릭 시 해당 Task로 이동
+  - 접근성 준수 (WCAG 2.1)
+- ref: PRD 6.3, TRD 2.3.6
