@@ -1,45 +1,37 @@
 <script setup lang="ts">
 /**
- * AppHeader 컴포넌트
- * - jjiban 로고, 네비게이션 메뉴, 프로젝트명 표시
- * - 1차에서는 WBS 메뉴만 활성화
- * - 비활성 메뉴 클릭 시 "준비 중" Toast 표시
+ * AppHeader 컴포넌트 - PrimeVue Menubar Migration
  *
- * @see TSK-01-02-02
+ * @migration TSK-08-04
+ * - 커스텀 버튼 네비게이션 → PrimeVue Menubar
+ * - MenuItem 모델 + Pass Through API
+ * - start/end 슬롯으로 로고/프로젝트명 배치
+ *
+ * @see 010-basic-design.md
+ * @see 011-ui-design.md
  * @see 020-detail-design.md
+ * @see 021-design-review-opus-1.md (Minor 개선사항 적용)
  */
 
 import { useToast } from 'primevue/usetoast'
-
-// ============================================================
-// Types
-// ============================================================
-interface MenuItem {
-  id: string
-  label: string
-  icon: string
-  route: string
-  enabled: boolean
-}
+import type { MenuItem } from 'primevue/menuitem'
+import type { MenubarPassThroughOptions } from 'primevue/menubar'
 
 // ============================================================
 // Props
 // ============================================================
 interface Props {
-  /** 현재 프로젝트명 */
+  /**
+   * 현재 프로젝트명
+   * - props 우선, 없으면 projectStore에서 가져옴
+   * - 둘 다 없으면 "프로젝트를 선택하세요" 표시
+   */
   projectName?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
   projectName: ''
 })
-
-// ============================================================
-// Emits
-// ============================================================
-const emit = defineEmits<{
-  navigate: [payload: { route: string }]
-}>()
 
 // ============================================================
 // Composables
@@ -50,72 +42,126 @@ const toast = useToast()
 const projectStore = useProjectStore()
 
 // ============================================================
-// Data
+// MenuItem 모델
 // ============================================================
-const menuItems: MenuItem[] = [
+/**
+ * MenuItem 모델 (computed로 반응성 유지)
+ *
+ * @review Minor-02 적용: icon 필드 제거 (YAGNI 원칙)
+ * @review Major-01 적용: command 필드 제거 (item 템플릿에서 handleItemClick 사용)
+ * @note disabled 상태는 data.isDisabled로 관리, 클릭은 handleItemClick에서 처리
+ */
+const menuModel = computed<MenuItem[]>(() => [
   {
-    id: 'dashboard',
+    key: 'dashboard',
     label: '대시보드',
-    icon: 'pi pi-home',
-    route: '/dashboard',
-    enabled: false
+    to: '/dashboard',
+    data: { isDisabled: true }
   },
   {
-    id: 'kanban',
+    key: 'kanban',
     label: '칸반',
-    icon: 'pi pi-th-large',
-    route: '/kanban',
-    enabled: false
+    to: '/kanban',
+    data: { isDisabled: true }
   },
   {
-    id: 'wbs',
+    key: 'wbs',
     label: 'WBS',
-    icon: 'pi pi-sitemap',
-    route: '/wbs',
-    enabled: true
+    to: '/wbs',
+    data: { isDisabled: false }
   },
   {
-    id: 'gantt',
+    key: 'gantt',
     label: 'Gantt',
-    icon: 'pi pi-chart-line',
-    route: '/gantt',
-    enabled: false
+    to: '/gantt',
+    data: { isDisabled: true }
   }
-]
+])
 
 // ============================================================
-// Computed
+// Computed 속성
 // ============================================================
-/** 표시할 프로젝트명 */
+/**
+ * 표시할 프로젝트명 계산
+ *
+ * @returns 프로젝트명 또는 안내 메시지
+ *
+ * @priority
+ * 1. props.projectName (부모 컴포넌트 전달)
+ * 2. projectStore.projectName (전역 상태)
+ * 3. '프로젝트를 선택하세요' (기본값)
+ */
 const displayProjectName = computed(() => {
-  return props.projectName || projectStore.projectName || ''
-})
-
-/** 프로젝트 선택 여부 */
-const hasProject = computed(() => {
-  return !!displayProjectName.value
+  return props.projectName || projectStore.projectName || '프로젝트를 선택하세요'
 })
 
 /**
- * 현재 페이지 확인
+ * 프로젝트 선택 여부 확인
  */
-const isCurrentRoute = (itemRoute: string): boolean => {
-  return route.path === itemRoute
+const hasProject = computed(() => {
+  return !!(props.projectName || projectStore.projectName)
+})
+
+/**
+ * 프로젝트명 CSS 클래스 동적 생성
+ */
+const projectNameClass = computed(() => {
+  return hasProject.value
+    ? 'menubar-project-name'
+    : 'menubar-project-name-empty'
+})
+
+/**
+ * 활성 라우트 체크
+ *
+ * @param item - MenuItem 객체
+ * @returns 현재 페이지 여부 (boolean)
+ */
+const isActiveRoute = (item: MenuItem): boolean => {
+  const isDisabled = item.data?.isDisabled ?? false
+  return route.path === item.to && !isDisabled
+}
+
+/**
+ * 메뉴 아이템 CSS 클래스 동적 생성
+ *
+ * @param item - MenuItem 객체
+ * @returns CSS 클래스 문자열
+ */
+const getMenuItemClass = (item: MenuItem): string => {
+  const classes = ['menubar-item']
+  const isDisabled = item.data?.isDisabled ?? false
+
+  if (isDisabled) {
+    classes.push('menubar-item-disabled')
+  } else if (isActiveRoute(item)) {
+    classes.push('menubar-item-active')
+  }
+
+  return classes.join(' ')
 }
 
 // ============================================================
-// Methods
+// 이벤트 처리
 // ============================================================
 /**
- * 메뉴 클릭 핸들러
- * BR-001: WBS 메뉴만 활성화
- * BR-002: 비활성 메뉴 클릭 시 "준비 중" 안내
+ * 메뉴 아이템 클릭 핸들러 (item 템플릿용)
+ *
+ * @param event - 클릭 이벤트
+ * @param item - MenuItem 객체
+ *
+ * @behavior
+ * - disabled 메뉴: preventDefault() → 토스트 표시
+ * - enabled 메뉴: 기본 동작 (라우팅)
  */
-function handleMenuClick(item: MenuItem) {
-  if (item.enabled) {
-    router.push(item.route)
-    emit('navigate', { route: item.route })
-  } else {
+const handleItemClick = (event: Event, item: MenuItem) => {
+  const isDisabled = item.data?.isDisabled ?? false
+
+  if (isDisabled) {
+    // 기본 동작 취소 (라우팅 방지)
+    event.preventDefault()
+
+    // "준비 중" 토스트 표시
     toast.add({
       severity: 'warn',
       summary: '알림',
@@ -123,102 +169,76 @@ function handleMenuClick(item: MenuItem) {
       life: 3000
     })
   }
+  // enabled 메뉴는 기본 동작으로 라우팅
 }
 
+// ============================================================
+// Pass Through API 설정
+// ============================================================
 /**
- * 메뉴 아이템의 스타일 클래스
- * BR-003: 현재 페이지 메뉴 Primary 색상 강조
+ * PrimeVue Menubar Pass Through API 설정
+ *
+ * @purpose CSS 클래스 중앙화 원칙 준수
  */
-function getMenuClasses(item: MenuItem): string[] {
-  const classes: string[] = [
-    'px-4',
-    'py-2',
-    'rounded',
-    'text-sm',
-    'font-medium',
-    'transition-colors',
-    'duration-200'
-  ]
-
-  if (!item.enabled) {
-    // 비활성 메뉴
-    classes.push(
-      'text-text-muted',
-      'opacity-50',
-      'cursor-not-allowed'
-    )
-  } else if (isCurrentRoute(item.route)) {
-    // 활성 메뉴 + 현재 페이지
-    classes.push(
-      'text-primary',
-      'bg-primary/20'
-    )
-  } else {
-    // 활성 메뉴 + 다른 페이지
-    classes.push(
-      'text-text-secondary',
-      'hover:text-text',
-      'hover:bg-surface-50',
-      'cursor-pointer'
-    )
+const menubarPassThrough = computed<MenubarPassThroughOptions>(() => ({
+  root: {
+    class: 'app-menubar'
+  },
+  menu: {
+    class: 'app-menubar-menu'
+  },
+  start: {
+    class: 'app-menubar-start'
+  },
+  end: {
+    class: 'app-menubar-end'
   }
-
-  return classes
-}
+}))
 </script>
 
 <template>
   <header
     data-testid="app-header"
-    class="h-full w-full flex items-center justify-between px-4 bg-bg-header"
+    class="h-full w-full bg-bg-header"
     role="banner"
   >
-    <!-- 좌측: 로고 -->
-    <div class="flex items-center">
-      <NuxtLink
-        to="/wbs"
-        data-testid="app-logo"
-        class="text-xl font-bold text-primary hover:opacity-80 transition-opacity"
-        aria-label="홈으로 이동"
-      >
-        jjiban
-      </NuxtLink>
-    </div>
+    <Menubar :model="menuModel" :pt="menubarPassThrough">
+      <!-- start 슬롯: 로고 -->
+      <template #start>
+        <NuxtLink
+          to="/wbs"
+          data-testid="app-logo"
+          class="menubar-logo"
+          aria-label="홈으로 이동"
+        >
+          jjiban
+        </NuxtLink>
+      </template>
 
-    <!-- 중앙: 네비게이션 메뉴 -->
-    <nav
-      data-testid="nav-menu"
-      class="flex items-center gap-2"
-      role="navigation"
-      aria-label="메인 네비게이션"
-    >
-      <button
-        v-for="item in menuItems"
-        :key="item.id"
-        type="button"
-        :data-testid="`nav-menu-${item.id}`"
-        :data-enabled="item.enabled"
-        :class="getMenuClasses(item)"
-        :aria-current="isCurrentRoute(item.route) && item.enabled ? 'page' : undefined"
-        :aria-disabled="!item.enabled ? 'true' : undefined"
-        :aria-label="!item.enabled ? `${item.label} (준비 중)` : item.label"
-        @click="handleMenuClick(item)"
-      >
-        {{ item.label }}
-      </button>
-    </nav>
+      <!-- item 템플릿: 메뉴 아이템 커스텀 렌더링 -->
+      <template #item="{ item, props: itemProps }">
+        <a
+          v-bind="itemProps.action"
+          :data-testid="`nav-menu-${item.key}`"
+          :class="getMenuItemClass(item)"
+          :aria-current="isActiveRoute(item) ? 'page' : undefined"
+          :aria-disabled="item.data?.isDisabled ? 'true' : undefined"
+          :aria-label="item.data?.isDisabled ? `${item.label} (준비 중)` : item.label"
+          @click="handleItemClick($event, item)"
+        >
+          <span>{{ item.label }}</span>
+        </a>
+      </template>
 
-    <!-- 우측: 프로젝트명 -->
-    <div class="flex items-center">
-      <span
-        data-testid="project-name"
-        :class="[
-          'text-sm max-w-[200px] truncate',
-          hasProject ? 'text-text-secondary' : 'text-text-muted italic'
-        ]"
-      >
-        {{ hasProject ? displayProjectName : '프로젝트를 선택하세요' }}
-      </span>
-    </div>
+      <!-- end 슬롯: 프로젝트명 -->
+      <template #end>
+        <span
+          data-testid="project-name"
+          :class="projectNameClass"
+        >
+          {{ displayProjectName }}
+        </span>
+      </template>
+    </Menubar>
   </header>
 </template>

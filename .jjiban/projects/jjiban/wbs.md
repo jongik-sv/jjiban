@@ -749,11 +749,12 @@ start: 2025-12-13
 
 #### TSK-08-04: AppHeader PrimeVue Menubar Migration
 - category: development
-- status: [ ]
+- status: done [xx]
 - priority: medium
 - schedule: 2026-02-13 ~ 2026-02-15
 - tags: primevue, menubar, navigation, migration
 - depends: TSK-08-03
+- test-result: pass
 - requirements:
   - 커스텀 네비게이션 → PrimeVue Menubar 교체
   - MenuItem 모델로 메뉴 구성 (enabled/disabled 상태)
@@ -762,14 +763,21 @@ start: 2025-12-13
   - disabled 메뉴 클릭 시 "준비 중" 토스트 유지
   - 접근성 유지 (aria-current, aria-disabled)
 - ref: PRD 6.1
+- completed:
+  - bd: 2025-12-16
+  - dd: 2025-12-16
+  - im: 2025-12-16
+  - vf: 2025-12-16
+  - xx: 2025-12-16
 
 #### TSK-08-05: TaskDetailPanel Dialog Migration
 - category: development
-- status: [dd]
+- status: done [xx]
 - priority: medium
 - schedule: 2026-02-15 ~ 2026-02-17
 - tags: primevue, dialog, detail, migration
 - depends: TSK-08-02
+- test-result: pass
 - requirements:
   - TaskDetailPanel: 인라인 스타일 제거 → PrimeVue Dialog 활용
   - TaskWorkflow: WORKFLOW_THEME 제거 → CSS 클래스 (.workflow-*) 적용
@@ -779,6 +787,10 @@ start: 2025-12-13
 - ref: PRD 6.3, TRD 2.3.6
 - completed:
   - bd: 2025-12-16
+  - dd: 2025-12-16
+  - im: 2025-12-16
+  - vf: 2025-12-16
+  - xx: 2025-12-16
 
 #### TSK-08-06: Theme Integration & E2E Testing
 - category: development

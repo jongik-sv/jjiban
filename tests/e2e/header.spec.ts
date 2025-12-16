@@ -69,12 +69,11 @@ test.describe('AppHeader 컴포넌트', () => {
     const dashboardMenu = page.locator('[data-testid="nav-menu-dashboard"]')
     await expect(dashboardMenu).toBeVisible()
 
-    // 대시보드 메뉴 클릭 (aria-disabled 요소이므로 force 옵션 필요)
-    // 비활성 메뉴지만 클릭 가능 - Toast 표시 목적
-    await dashboardMenu.click({ force: true })
+    // 대시보드 메뉴 클릭 - handleItemClick에서 처리
+    await dashboardMenu.click()
 
     // Toast 알림 표시 확인 (PrimeVue Toast)
-    const toast = page.locator('.p-toast-message')
+    const toast = page.locator('.p-toast-message').first()
     await expect(toast).toBeVisible({ timeout: 10000 })
     await expect(toast).toContainText('준비 중')
 
@@ -100,6 +99,7 @@ test.describe('AppHeader 컴포넌트', () => {
   /**
    * E2E-005: 현재 페이지 메뉴 강조
    * @requirement FR-002, BR-003
+   * @updated TSK-08-04: PrimeVue Menubar 활성 스타일
    */
   test('E2E-005: 현재 페이지에 해당하는 메뉴가 강조 표시된다', async ({ page }) => {
     await page.goto('/wbs')
@@ -108,8 +108,8 @@ test.describe('AppHeader 컴포넌트', () => {
     const wbsMenu = page.locator('[data-testid="nav-menu-wbs"]')
     await expect(wbsMenu).toBeVisible()
 
-    // WBS 메뉴가 활성 상태인지 확인 (text-primary 클래스)
-    await expect(wbsMenu).toHaveClass(/text-primary/)
+    // WBS 메뉴가 활성 상태인지 확인 (menubar-item-active 클래스)
+    await expect(wbsMenu).toHaveClass(/menubar-item-active/)
 
     // aria-current="page" 속성 확인
     await expect(wbsMenu).toHaveAttribute('aria-current', 'page')
@@ -139,13 +139,10 @@ test.describe('AppHeader 컴포넌트', () => {
   /**
    * E2E-007: 네비게이션 메뉴 구조 확인
    * @requirement FR-002
+   * @updated TSK-08-04: PrimeVue Menubar 적용
    */
   test('E2E-007: 4개의 네비게이션 메뉴가 표시된다', async ({ page }) => {
     await page.goto('/wbs')
-
-    // 네비게이션 컨테이너 확인
-    const navMenu = page.locator('[data-testid="nav-menu"]')
-    await expect(navMenu).toBeVisible()
 
     // 4개 메뉴 확인
     await expect(page.locator('[data-testid="nav-menu-dashboard"]')).toBeVisible()
@@ -163,6 +160,7 @@ test.describe('AppHeader 컴포넌트', () => {
   /**
    * E2E-008: 비활성 메뉴 스타일 확인
    * @requirement BR-001
+   * @updated TSK-08-04: PrimeVue Menubar disabled 스타일
    */
   test('E2E-008: 비활성 메뉴는 opacity가 낮게 표시된다', async ({ page }) => {
     await page.goto('/wbs')
@@ -174,11 +172,11 @@ test.describe('AppHeader 컴포넌트', () => {
       const menu = page.locator(`[data-testid="nav-menu-${menuId}"]`)
       await expect(menu).toBeVisible()
 
-      // data-enabled="false" 속성 확인
-      await expect(menu).toHaveAttribute('data-enabled', 'false')
+      // aria-disabled 속성 확인
+      await expect(menu).toHaveAttribute('aria-disabled', 'true')
 
-      // opacity-50 클래스 확인
-      await expect(menu).toHaveClass(/opacity-50/)
+      // menubar-item-disabled 클래스 확인 (opacity-50 포함)
+      await expect(menu).toHaveClass(/menubar-item-disabled/)
     }
   })
 
@@ -202,13 +200,21 @@ test.describe('AppHeader 컴포넌트', () => {
   /**
    * E2E-010: 네비게이션 시맨틱 확인
    * @requirement 접근성
+   * @updated TSK-08-04: PrimeVue Menubar 존재 확인
    */
-  test('E2E-010: 네비게이션 영역이 올바른 ARIA 속성을 가진다', async ({ page }) => {
+  test('E2E-010: PrimeVue Menubar 컴포넌트가 렌더링된다', async ({ page }) => {
     await page.goto('/wbs')
 
-    // nav 역할 확인
-    const navMenu = page.locator('[data-testid="nav-menu"]')
-    await expect(navMenu).toHaveAttribute('role', 'navigation')
-    await expect(navMenu).toHaveAttribute('aria-label', '메인 네비게이션')
+    // PrimeVue Menubar 컴포넌트 확인
+    const menubar = page.locator('.p-menubar')
+    await expect(menubar).toBeVisible()
+
+    // 메뉴 아이템들이 올바른 ARIA 속성을 가지는지 확인
+    const wbsMenu = page.locator('[data-testid="nav-menu-wbs"]')
+    await expect(wbsMenu).toHaveAttribute('aria-current', 'page')
+
+    // header banner role 확인
+    const header = page.locator('[data-testid="app-header"]')
+    await expect(header).toHaveAttribute('role', 'banner')
   })
 })

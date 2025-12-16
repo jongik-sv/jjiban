@@ -364,3 +364,156 @@ pre code {
 .app-layout-gutter:active .app-layout-gutter-handle {
   @apply bg-primary/80;
 }
+
+/* ============================================
+ * TaskDetailPanel Dialog Migration (TSK-08-05)
+ * CSS 클래스 중앙화 원칙 준수
+ * ============================================ */
+
+/* Document Viewer Dialog */
+.document-viewer-dialog {
+  width: 80vw;
+  max-width: 1200px;
+}
+
+/* Task Detail Content Area */
+.task-detail-content {
+  max-height: calc(100vh - 200px);
+}
+
+/* ============================================
+ * TaskWorkflow 컴포넌트 스타일 (TSK-08-05)
+ * CSS 클래스 중앙화 원칙 준수
+ * ============================================ */
+
+/* 워크플로우 노드 - 완료 상태 */
+.workflow-step-completed {
+  @apply bg-success text-white;
+}
+
+/* 워크플로우 노드 - 현재 상태 */
+.workflow-step-current {
+  @apply bg-primary text-white font-bold;
+  transform: scale(1.1);
+  box-shadow: 0 4px 6px rgba(59, 130, 246, 0.3);
+}
+
+/* 워크플로우 노드 - 대기 상태 */
+.workflow-step-pending {
+  @apply bg-gray-200 text-gray-500;
+  border: 2px dashed #9ca3af;
+}
+
+/* ============================================
+ * TaskHistory 컴포넌트 스타일 (TSK-08-05)
+ * CSS 클래스 중앙화 원칙 준수
+ * ============================================ */
+
+/* 이력 마커 - 상태 전이 */
+.history-badge-transition {
+  @apply bg-primary;
+}
+
+/* 이력 마커 - 액션 실행 */
+.history-badge-action {
+  @apply bg-level-project;
+}
+
+/* 이력 마커 - 업데이트 */
+.history-badge-update {
+  @apply bg-success;
+}
+
+/* 이력 마커 - 기본값 */
+.history-badge-default {
+  @apply bg-gray-500;
+}
+
+/* ============================================
+ * TaskDocuments 컴포넌트 스타일 (TSK-08-05)
+ * CSS 클래스 중앙화 원칙 준수
+ * ============================================ */
+
+/* 문서 카드 - 존재하는 문서 */
+.doc-card-exists {
+  @apply bg-blue-100 border border-primary;
+}
+
+.doc-card-exists:hover {
+  @apply shadow-md;
+}
+
+/* 문서 카드 - 예정 문서 */
+.doc-card-expected {
+  @apply bg-gray-50 border-2 border-dashed border-gray-400 opacity-60 cursor-not-allowed;
+}
+
+/* ============================================
+ * AppHeader Menubar 스타일 (TSK-08-04)
+ * CSS 클래스 중앙화 원칙 준수
+ * ============================================ */
+
+/* Menubar 루트 컨테이너 */
+.app-menubar {
+  @apply h-full px-4 bg-bg-header;
+}
+
+/* Menubar 메뉴 컨테이너 (ul) */
+.app-menubar-menu {
+  @apply flex items-center gap-2;
+}
+
+/* start 슬롯 컨테이너 */
+.app-menubar-start {
+  @apply flex items-center;
+}
+
+/* end 슬롯 컨테이너 */
+.app-menubar-end {
+  @apply flex items-center;
+}
+
+/* ============================================
+ * 로고 스타일
+ * ============================================ */
+.menubar-logo {
+  @apply text-xl font-bold text-primary hover:opacity-80 transition-opacity;
+}
+
+/* ============================================
+ * 메뉴 아이템 스타일
+ * ============================================ */
+
+/* 메뉴 아이템 - 기본 스타일 */
+.menubar-item {
+  @apply px-4 py-2 rounded text-sm font-medium transition-colors duration-200;
+}
+
+/* 메뉴 아이템 - 활성 상태 (현재 페이지) */
+.menubar-item-active {
+  @apply text-primary bg-primary/20;
+}
+
+/* 메뉴 아이템 - 비활성 상태 (disabled) */
+.menubar-item-disabled {
+  @apply text-text-muted opacity-50 cursor-not-allowed;
+}
+
+/* 메뉴 아이템 - 호버 (활성 메뉴만) */
+.menubar-item:not(.menubar-item-disabled):not(.menubar-item-active):hover {
+  @apply text-text bg-surface-50;
+}
+
+/* ============================================
+ * 프로젝트명 스타일
+ * ============================================ */
+
+/* 프로젝트명 - 선택된 경우 */
+.menubar-project-name {
+  @apply text-sm max-w-[200px] truncate text-text-secondary;
+}
+
+/* 프로젝트명 - 미선택 (안내 메시지) */
+.menubar-project-name-empty {
+  @apply text-sm max-w-[200px] truncate text-text-muted italic;
+}
