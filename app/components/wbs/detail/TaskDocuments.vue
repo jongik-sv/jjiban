@@ -11,7 +11,6 @@
         v-for="(doc, index) in documents"
         :key="doc.path"
         :class="getDocumentCardClasses(doc)"
-        :style="getDocumentCardStyle(doc)"
         :data-testid="doc.exists ? `document-exists-${getDocumentBaseName(doc.name)}` : `document-expected-${getDocumentBaseName(doc.name)}`"
         role="listitem"
       >
@@ -103,37 +102,19 @@ const emit = defineEmits<Emits>()
 // ============================================================
 
 /**
- * 문서 카드 클래스 계산
+ * 문서 카드 클래스 계산 (TSK-08-05: CSS 클래스 중앙화)
+ * FR-008
  */
 function getDocumentCardClasses(doc: DocumentInfo): string[] {
   const classes = ['transition-all', 'duration-200']
 
   if (doc.exists) {
-    classes.push('cursor-pointer', 'hover:shadow-md')
+    classes.push('doc-card-exists', 'cursor-pointer')
   } else {
-    classes.push('cursor-not-allowed')
+    classes.push('doc-card-expected')
   }
 
   return classes
-}
-
-/**
- * 문서 카드 스타일 계산
- * FR-008
- */
-function getDocumentCardStyle(doc: DocumentInfo): Record<string, string> {
-  if (doc.exists) {
-    return {
-      backgroundColor: '#dbeafe',
-      border: '1px solid #3b82f6'
-    }
-  } else {
-    return {
-      backgroundColor: '#f9fafb',
-      border: '2px dashed #9ca3af',
-      opacity: '0.6'
-    }
-  }
 }
 
 /**

@@ -127,24 +127,32 @@ executeAutoWorkflow(taskId, options):
 ### 상태별 매핑
 
 ```javascript
+// preAction 정의 (subagent 명시)
+const ui = { action: 'ui', subagent: 'frontend-architect' };
+const review = { action: 'review', subagent: 'refactoring-expert' };
+const apply = { action: 'apply', subagent: 'refactoring-expert' };
+const audit = { action: 'audit', subagent: 'refactoring-expert' };
+const patch = { action: 'patch', subagent: 'refactoring-expert' };
+const test = { action: 'test', subagent: 'quality-engineer' };
+
 const mapping = {
   development: {
     '[ ]':  { action: 'start', subagent: 'requirements-analyst', next: '[bd]' },
     '[bd]': { preActions: [ui], action: 'draft', subagent: 'system-architect', next: '[dd]' },
-    '[dd]': { preActions: [review, apply], action: 'build', subagent: [backend, frontend], postActions: [test], next: '[im]' },
+    '[dd]': { preActions: [review, apply], action: 'build', subagent: ['backend-architect', 'frontend-architect'], postActions: [test], next: '[im]' },
     '[im]': { preActions: [audit, patch], action: 'verify', subagent: 'quality-engineer', next: '[ts]' },
-    '[ts]': { action: 'done', next: '[xx]' }
+    '[ts]': { action: 'done', subagent: 'requirements-analyst', next: '[xx]' }
   },
   defect: {
     '[ ]':  { action: 'start', subagent: 'requirements-analyst', next: '[an]' },
-    '[an]': { action: 'fix', subagent: [backend, frontend], postActions: [test], next: '[fx]' },
+    '[an]': { action: 'fix', subagent: ['backend-architect', 'frontend-architect'], postActions: [test], next: '[fx]' },
     '[fx]': { preActions: [audit, patch], action: 'verify', subagent: 'quality-engineer', next: '[ts]' },
-    '[ts]': { action: 'done', next: '[xx]' }
+    '[ts]': { action: 'done', subagent: 'requirements-analyst', next: '[xx]' }
   },
   infrastructure: {
     '[ ]':  { action: 'start', subagent: 'devops-architect', next: '[ds]' },
     '[ds]': { action: 'build', subagent: 'devops-architect', next: '[im]' },
-    '[im]': { preActions: [audit, patch], action: 'done', next: '[xx]' }
+    '[im]': { preActions: [audit, patch], action: 'done', subagent: 'requirements-analyst', next: '[xx]' }
   }
 };
 ```

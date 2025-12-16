@@ -14,8 +14,7 @@
     >
       <template #marker="slotProps">
         <div
-          class="flex items-center justify-center w-8 h-8 rounded-full"
-          :style="{ backgroundColor: getEntryColor(slotProps.item) }"
+          :class="['flex items-center justify-center w-8 h-8 rounded-full', getEntryMarkerClass(slotProps.item)]"
         >
           <i :class="getEntryIcon(slotProps.item)" class="text-white text-sm" />
         </div>
@@ -102,7 +101,6 @@
  */
 
 import type { HistoryEntry } from '~/types'
-import { HISTORY_THEME } from '~/utils/themeConfig'
 
 // ============================================================
 // Props
@@ -132,21 +130,36 @@ const sortedHistory = computed(() => {
 // ============================================================
 
 /**
- * 이력 엔트리 아이콘 가져오기
- * FR-012, M-03 (테마 상수 사용)
+ * 이력 엔트리 마커 CSS 클래스 계산 (TSK-08-05: CSS 클래스 중앙화)
  */
-function getEntryIcon(entry: HistoryEntry): string {
-  const theme = HISTORY_THEME[entry.action as keyof typeof HISTORY_THEME] || HISTORY_THEME.default
-  return theme.icon
+function getEntryMarkerClass(entry: HistoryEntry): string {
+  switch (entry.action) {
+    case 'transition':
+      return 'history-badge-transition'
+    case 'action':
+      return 'history-badge-action'
+    case 'update':
+      return 'history-badge-update'
+    default:
+      return 'history-badge-default'
+  }
 }
 
 /**
- * 이력 엔트리 색상 가져오기
- * M-03 (테마 상수 사용)
+ * 이력 엔트리 아이콘 가져오기 (TSK-08-05: CSS 클래스 중앙화)
+ * FR-012
  */
-function getEntryColor(entry: HistoryEntry): string {
-  const theme = HISTORY_THEME[entry.action as keyof typeof HISTORY_THEME] || HISTORY_THEME.default
-  return theme.color
+function getEntryIcon(entry: HistoryEntry): string {
+  switch (entry.action) {
+    case 'transition':
+      return 'pi pi-arrow-right'
+    case 'action':
+      return 'pi pi-bolt'
+    case 'update':
+      return 'pi pi-pencil'
+    default:
+      return 'pi pi-circle'
+  }
 }
 
 /**

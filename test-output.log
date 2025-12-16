@@ -1,0 +1,111 @@
+
+> jjiban@0.1.0 test:e2e
+> playwright test tests/e2e/header.spec.ts
+
+[2m[WebServer] [22m
+[2m[WebServer] [22m> jjiban@0.1.0 dev
+[2m[WebServer] [22m> nuxt dev --port 3333
+[2m[WebServer] [22m
+[2m[WebServer] [22m[90m│[39m
+[2m[WebServer] [22m[34m●[39m  [32mNuxt [1m3.20.2[22m[39m[90m (with [39m[90mNitro [1m2.12.9[22m[39m[90m, Vite [1m7.2.7[22m[39m[90m and Vue [1m3.5.25[22m[39m[90m)[39m
+[2m[WebServer] [22m
+[2m[WebServer] [22m[32m  ➜ Local:   [39m [36m[4mhttp://localhost:[1m3333[22m/[24m[39m
+[2m[WebServer] [22m[90m  ➜ Network:  use [37m--host[90m to expose[39m
+[2m[WebServer] [22m
+[2m[WebServer] [22m[90m[[90mnuxt:tailwindcss[90m][39m [36mℹ[39m Using Tailwind CSS from ~/assets/css/main.css
+[2m[WebServer] [22m[33m  ➜ DevTools: [39m[2mpress [22m[32mShift[39m[2m + [22m[32mAlt[39m[2m + [22m[32mD[39m[2m in the browser (v3.1.1)[22m
+[2m[WebServer] [22m
+[2m[WebServer] [22m[90m[[90mnuxt[90m][39m [36mℹ[39m Compiled [36mtypes/plugins.d.ts[39m in 568.09ms
+[2m[WebServer] [22m[32m✔[39m Vite client built in 83ms
+[2m[WebServer] [22m
+[2m[WebServer] [22m[41m[30m ERROR [39m[49m [31mWebSocket server error: Port 24678 is already in use[39m
+[2m[WebServer] [22m
+[2m[WebServer] [22m[32m✔[39m Vite server built in 2592ms
+[2m[WebServer] [22m[90m[[90mnitro[90m][39m [32m✔[39m Nuxt Nitro server built in 4195ms
+[2m[WebServer] [22m[36mℹ[39m Vite server warmed up in 1ms
+[2m[WebServer] [22m[36mℹ[39m Vite client warmed up in 2ms
+[Global Setup] Preparing E2E test environment...
+[Global Setup] Test root directory: C:\Users\USER1\AppData\Local\Temp\jjiban-e2e-test
+[Global Setup] E2E test data prepared at: C:\Users\USER1\AppData\Local\Temp\jjiban-e2e-test\.jjiban
+[Global Setup] Environment ready. JJIBAN_BASE_PATH: C:\Users\USER1\AppData\Local\Temp\jjiban-e2e-test
+
+Running 10 tests using 6 workers
+
+  ✓  3 [chromium] › header.spec.ts:105:3 › AppHeader 컴포넌트 › E2E-005: 현재 페이지에 해당하는 메뉴가 강조 표시된다 (11.7s)
+  ✓  5 [chromium] › header.spec.ts:89:3 › AppHeader 컴포넌트 › E2E-004: 프로젝트명이 헤더에 표시된다 (11.7s)
+  ✓  1 [chromium] › header.spec.ts:126:3 › AppHeader 컴포넌트 › E2E-006: 프로젝트 미선택 시 안내 텍스트가 표시된다 (11.9s)
+  ✓  6 [chromium] › header.spec.ts:40:3 › AppHeader 컴포넌트 › E2E-002: WBS 메뉴 클릭 시 /wbs 페이지로 이동한다 (11.9s)
+  ✓  2 [chromium] › header.spec.ts:18:3 › AppHeader 컴포넌트 › E2E-001: 로고 클릭 시 /wbs 페이지로 이동한다 (12.9s)
+  ✓  9 [chromium] › header.spec.ts:188:3 › AppHeader 컴포넌트 › E2E-009: 로고가 키보드로 접근 가능하다 (3.4s)
+[2m[WebServer] [22m[36mℹ[39m [32m✨ new dependencies optimized: [33mprimevue/menubar[32m[39m
+[2m[WebServer] [22m[36mℹ[39m [32m✨ optimized dependencies changed. reloading[39m
+  ✓  7 [chromium] › header.spec.ts:145:3 › AppHeader 컴포넌트 › E2E-007: 4개의 네비게이션 메뉴가 표시된다 (3.5s)
+  ✓  8 [chromium] › header.spec.ts:166:3 › AppHeader 컴포넌트 › E2E-008: 비활성 메뉴는 opacity가 낮게 표시된다 (3.4s)
+  ✘  10 [chromium] › header.spec.ts:206:3 › AppHeader 컴포넌트 › E2E-010: 네비게이션 영역이 올바른 ARIA 속성을 가진다 (8.2s)
+  ✘  4 [chromium] › header.spec.ts:62:3 › AppHeader 컴포넌트 › E2E-003: 비활성 메뉴 클릭 시 Toast가 표시된다 (29.9s)
+[Global Teardown] Cleaning up E2E test environment...
+[Global Teardown] Test directory cleaned up: C:\Users\USER1\AppData\Local\Temp\jjiban-e2e-test
+
+
+  1) [chromium] › header.spec.ts:62:3 › AppHeader 컴포넌트 › E2E-003: 비활성 메뉴 클릭 시 Toast가 표시된다 ──────────
+
+    Error: [31mTimed out 10000ms waiting for [39m[2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m()[22m
+
+    Locator: locator('.p-toast-message')
+    Expected: visible
+    Received: <element(s) not found>
+    Call log:
+    [2m  - expect.toBeVisible with timeout 10000ms[22m
+    [2m  - waiting for locator('.p-toast-message')[22m
+
+
+      76 |     // Toast 알림 표시 확인 (PrimeVue Toast)
+      77 |     const toast = page.locator('.p-toast-message')
+    > 78 |     await expect(toast).toBeVisible({ timeout: 10000 })
+         |                         ^
+      79 |     await expect(toast).toContainText('준비 중')
+      80 |
+      81 |     // 스크린샷 캡처
+        at C:\project\jjiban\tests\e2e\header.spec.ts:78:25
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\header-AppHeader-컴포넌트-E2E-003-비활성-메뉴-클릭-시-Toast가-표시된다-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [chromium] › header.spec.ts:206:3 › AppHeader 컴포넌트 › E2E-010: 네비게이션 영역이 올바른 ARIA 속성을 가진다 ──────
+
+    Error: [31mTimed out 5000ms waiting for [39m[2mexpect([22m[31mlocator[39m[2m).[22mtoHaveAttribute[2m([22m[32mexpected[39m[2m)[22m
+
+    Locator: locator('.p-menubar')
+    Expected string: [32m"menubar"[39m
+    Received string: [31m""[39m
+    Call log:
+    [2m  - expect.toHaveAttribute with timeout 5000ms[22m
+    [2m  - waiting for locator('.p-menubar')[22m
+    [2m    3 × locator resolved to <div pc0_0="" data-pc-name="menubar" data-pc-section="root" class="p-menubar p-component app-menubar">…</div>[22m
+    [2m      - unexpected value "null"[22m
+    [2m    2 × waiting for" http://localhost:3333/wbs" navigation to finish...[22m
+    [2m      - navigated to "http://localhost:3333/wbs"[22m
+    [2m    4 × locator resolved to <div pc0_0="" data-pc-name="menubar" data-pc-section="root" class="p-menubar p-component app-menubar">…</div>[22m
+    [2m      - unexpected value "null"[22m
+
+
+      212 |
+      213 |     // menubar role 자동 적용됨
+    > 214 |     await expect(menubar).toHaveAttribute('role', 'menubar')
+          |                           ^
+      215 |   })
+      216 | })
+      217 |
+        at C:\project\jjiban\tests\e2e\header.spec.ts:214:27
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\header-AppHeader-컴포넌트-E2E-010-네비게이션-영역이-올바른-ARIA-속성을-가진다-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [chromium] › header.spec.ts:62:3 › AppHeader 컴포넌트 › E2E-003: 비활성 메뉴 클릭 시 Toast가 표시된다 ───────────
+    [chromium] › header.spec.ts:206:3 › AppHeader 컴포넌트 › E2E-010: 네비게이션 영역이 올바른 ARIA 속성을 가진다 ───────
+  8 passed (1.2m)
+
+  Serving HTML report at http://localhost:62050. Press Ctrl+C to quit.

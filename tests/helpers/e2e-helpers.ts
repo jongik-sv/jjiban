@@ -1,4 +1,5 @@
-import { Page, expect } from '@playwright/test';
+import type { Page } from '@playwright/test';
+import { expect } from '@playwright/test';
 import { TEST_TIMEOUTS, VALID_ARIA_ROLES } from './constants';
 
 /**

@@ -14,8 +14,7 @@
       <template v-for="(step, index) in workflowSteps" :key="step.code">
         <!-- 워크플로우 노드 -->
         <div
-          :class="getNodeClasses(index)"
-          :style="getNodeStyle(index)"
+          :class="[getNodeClasses(index), getNodeClass(index)]"
           role="listitem"
           :aria-current="index === currentStepIndex ? 'step' : undefined"
           :data-testid="index === currentStepIndex ? 'workflow-node-current' : `workflow-node-${index}`"
@@ -51,7 +50,6 @@
 
 import type { TaskDetail, WorkflowStep } from '~/types'
 import { WORKFLOW_STEPS } from '~/types'
-import { WORKFLOW_THEME } from '~/utils/themeConfig'
 
 // ============================================================
 // Props
@@ -113,19 +111,19 @@ function getNodeClasses(index: number): string[] {
 }
 
 /**
- * 노드 스타일 계산 (상태별)
- * FR-003, M-02 (테마 상수 사용)
+ * 노드 상태별 CSS 클래스 계산 (TSK-08-05: CSS 클래스 중앙화)
+ * FR-003
  */
-function getNodeStyle(index: number): Record<string, string> {
+function getNodeClass(index: number): string {
   if (index < currentStepIndex.value) {
     // 완료 상태
-    return { ...WORKFLOW_THEME.completed }
+    return 'workflow-step-completed'
   } else if (index === currentStepIndex.value) {
     // 현재 상태
-    return { ...WORKFLOW_THEME.current }
+    return 'workflow-step-current'
   } else {
     // 미완료 상태
-    return { ...WORKFLOW_THEME.pending }
+    return 'workflow-step-pending'
   }
 }
 </script>
@@ -133,7 +131,7 @@ function getNodeStyle(index: number): Record<string, string> {
 <style scoped>
 .workflow-nodes {
   scrollbar-width: thin;
-  scrollbar-color: #cbd5e1 #f1f5f9;
+  scrollbar-color: var(--color-border) var(--color-bg);
 }
 
 .workflow-nodes::-webkit-scrollbar {
@@ -141,16 +139,16 @@ function getNodeStyle(index: number): Record<string, string> {
 }
 
 .workflow-nodes::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: var(--color-bg);
   border-radius: 3px;
 }
 
 .workflow-nodes::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: var(--color-border);
   border-radius: 3px;
 }
 
 .workflow-nodes::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: var(--color-border-light);
 }
 </style>

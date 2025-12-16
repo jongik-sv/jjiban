@@ -3,7 +3,7 @@
   <Dialog
     v-model:visible="documentViewerVisible"
     :header="currentDocument?.name || '문서 보기'"
-    :style="{ width: '80vw', maxWidth: '1200px' }"
+    class="document-viewer-dialog"
     :modal="true"
     :closable="true"
     :dismissableMask="true"
@@ -68,7 +68,7 @@
 
     <!-- 정상 상태 -->
     <template v-else #content>
-      <div class="task-detail-content overflow-y-auto" style="max-height: calc(100vh - 200px);">
+      <div class="task-detail-content overflow-y-auto">
         <!-- 기본 정보 (TSK-05-01) -->
         <WbsDetailTaskBasicInfo
           :task="selectedTask"
