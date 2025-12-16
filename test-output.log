@@ -2771,3 +2771,316 @@ Call log:
 [2m[WebServer] [22m
 [2m[WebServer] [22m[43m[30m WARN [39m[49m Duplicated imports "refreshCache", the one from "C:/project/jjiban/server/utils/settings/_cache.ts" has been ignored and "C:/project/jjiban/server/utils/settings/index.ts" is used
 [2m[WebServer] [22m
+  ✘  81 [chromium] › theme-integration.spec.ts:113:3 › Theme Integration Tests › TC-04: Dialog가 올바른 다크 테마 스타일을 가진다 (29.5s)
+[2m[WebServer] [22m
+[2m[WebServer] [22m[90m[[90mnitro[90m][39m [41m[30m ERROR [39m[49m Error: Could not load C:/project/jjiban/.nuxt//dist/server/server.mjs (imported by node_modules/@nuxt/nitro-server/dist/runtime/utils/renderer/build-files.js): ENOENT: no such file or directory, open 'C:\project\jjiban\.nuxt\dist\server\server.mjs'
+[2m[WebServer] [22m
+[2m[WebServer] [22m
+[2m[WebServer] [22mundefined
+[2m[WebServer] [22m
+  ✘  79 [chromium] › theme-integration.spec.ts:79:3 › Theme Integration Tests › TC-03: Menubar가 올바른 다크 테마 스타일을 가진다 (30.2s)
+  ✘  82 [chromium] › theme-integration.spec.ts:53:3 › Theme Integration Tests › TC-02: Splitter Gutter가 올바른 다크 테마 스타일을 가진다 (29.1s)
+waitForWbsLoaded failed: page.waitForSelector: Timeout 15000ms exceeded.
+Call log:
+[2m  - waiting for locator('[data-testid="wbs-tree-content"]') to be visible[22m
+
+    at waitForWbsLoaded [90m(C:\project\jjiban\[39mtests\helpers\e2e-helpers.ts:43:12[90m)[39m
+    at [90mC:\project\jjiban\[39mtests\e2e\theme-integration.spec.ts:12:5 {
+  name: [32m'TimeoutError'[39m,
+  [[32mSymbol(step)[39m]: {
+    stepId: [32m'pw:api@14'[39m,
+    location: {
+      file: [32m'C:\\project\\jjiban\\tests\\helpers\\e2e-helpers.ts'[39m,
+      line: [33m43[39m,
+      column: [33m12[39m,
+      function: [32m'waitForWbsLoaded'[39m
+    },
+    category: [32m'pw:api'[39m,
+    title: [32m'page.waitForSelector([data-testid="wbs-tree-content"])'[39m,
+    apiName: [32m'page.waitForSelector'[39m,
+    params: {
+      selector: [32m'[data-testid="wbs-tree-content"]'[39m,
+      state: [32m'visible'[39m,
+      timeout: [33m15000[39m
+    },
+    boxedStack: [90mundefined[39m,
+    steps: [],
+    complete: [36m[Function: complete][39m,
+    endWallTime: [33m1765864713397[39m,
+    error: {
+      message: [32m'TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.\n'[39m +
+        [32m'Call log:\n'[39m +
+        [32m`\x1B[2m  - waiting for locator('[data-testid="wbs-tree-content"]') to be visible\x1B[22m\n`[39m,
+      stack: [32m'TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.\n'[39m +
+        [32m'Call log:\n'[39m +
+        [32m`\x1B[2m  - waiting for locator('[data-testid="wbs-tree-content"]') to be visible\x1B[22m\n`[39m +
+        [32m'\n'[39m +
+        [32m'    at waitForWbsLoaded (C:\\project\\jjiban\\tests\\helpers\\e2e-helpers.ts:43:12)\n'[39m +
+        [32m'    at C:\\project\\jjiban\\tests\\e2e\\theme-integration.spec.ts:12:5'[39m,
+      cause: [90mundefined[39m
+    }
+  }
+}
+waitForWbsLoaded failed: page.waitForSelector: Timeout 15000ms exceeded.
+Call log:
+[2m  - waiting for locator('[data-testid="wbs-tree-content"]') to be visible[22m
+
+    at waitForWbsLoaded [90m(C:\project\jjiban\[39mtests\helpers\e2e-helpers.ts:43:12[90m)[39m
+    at [90mC:\project\jjiban\[39mtests\e2e\theme-integration.spec.ts:12:5 {
+  name: [32m'TimeoutError'[39m,
+  [[32mSymbol(step)[39m]: {
+    stepId: [32m'pw:api@14'[39m,
+    location: {
+      file: [32m'C:\\project\\jjiban\\tests\\helpers\\e2e-helpers.ts'[39m,
+      line: [33m43[39m,
+      column: [33m12[39m,
+      function: [32m'waitForWbsLoaded'[39m
+    },
+    category: [32m'pw:api'[39m,
+    title: [32m'page.waitForSelector([data-testid="wbs-tree-content"])'[39m,
+    apiName: [32m'page.waitForSelector'[39m,
+    params: {
+      selector: [32m'[data-testid="wbs-tree-content"]'[39m,
+      state: [32m'visible'[39m,
+      timeout: [33m15000[39m
+    },
+    boxedStack: [90mundefined[39m,
+    steps: [],
+    complete: [36m[Function: complete][39m,
+    endWallTime: [33m1765864725641[39m,
+    error: {
+      message: [32m'TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.\n'[39m +
+        [32m'Call log:\n'[39m +
+        [32m`\x1B[2m  - waiting for locator('[data-testid="wbs-tree-content"]') to be visible\x1B[22m\n`[39m,
+      stack: [32m'TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.\n'[39m +
+        [32m'Call log:\n'[39m +
+        [32m`\x1B[2m  - waiting for locator('[data-testid="wbs-tree-content"]') to be visible\x1B[22m\n`[39m +
+        [32m'\n'[39m +
+        [32m'    at waitForWbsLoaded (C:\\project\\jjiban\\tests\\helpers\\e2e-helpers.ts:43:12)\n'[39m +
+        [32m'    at C:\\project\\jjiban\\tests\\e2e\\theme-integration.spec.ts:12:5'[39m,
+      cause: [90mundefined[39m
+    }
+  }
+}
+waitForWbsLoaded failed: page.waitForSelector: Timeout 15000ms exceeded.
+Call log:
+[2m  - waiting for locator('[data-testid="wbs-tree-content"]') to be visible[22m
+
+    at waitForWbsLoaded [90m(C:\project\jjiban\[39mtests\helpers\e2e-helpers.ts:43:12[90m)[39m
+    at [90mC:\project\jjiban\[39mtests\e2e\theme-integration.spec.ts:12:5 {
+  name: [32m'TimeoutError'[39m,
+  [[32mSymbol(step)[39m]: {
+    stepId: [32m'pw:api@14'[39m,
+    location: {
+      file: [32m'C:\\project\\jjiban\\tests\\helpers\\e2e-helpers.ts'[39m,
+      line: [33m43[39m,
+      column: [33m12[39m,
+      function: [32m'waitForWbsLoaded'[39m
+    },
+    category: [32m'pw:api'[39m,
+    title: [32m'page.waitForSelector([data-testid="wbs-tree-content"])'[39m,
+    apiName: [32m'page.waitForSelector'[39m,
+    params: {
+      selector: [32m'[data-testid="wbs-tree-content"]'[39m,
+      state: [32m'visible'[39m,
+      timeout: [33m15000[39m
+    },
+    boxedStack: [90mundefined[39m,
+    steps: [],
+    complete: [36m[Function: complete][39m,
+    endWallTime: [33m1765864726170[39m,
+    error: {
+      message: [32m'TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.\n'[39m +
+        [32m'Call log:\n'[39m +
+        [32m`\x1B[2m  - waiting for locator('[data-testid="wbs-tree-content"]') to be visible\x1B[22m\n`[39m,
+      stack: [32m'TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.\n'[39m +
+        [32m'Call log:\n'[39m +
+        [32m`\x1B[2m  - waiting for locator('[data-testid="wbs-tree-content"]') to be visible\x1B[22m\n`[39m +
+        [32m'\n'[39m +
+        [32m'    at waitForWbsLoaded (C:\\project\\jjiban\\tests\\helpers\\e2e-helpers.ts:43:12)\n'[39m +
+        [32m'    at C:\\project\\jjiban\\tests\\e2e\\theme-integration.spec.ts:12:5'[39m,
+      cause: [90mundefined[39m
+    }
+  }
+}
+  ✘  83 [chromium] › theme-integration.spec.ts:139:3 › Theme Integration Tests › TC-05: 기존 컴포넌트가 정상 표시된다 (회귀 검증) (23.9s)
+  ✘  85 [chromium] › theme-integration.spec.ts:165:3 › Theme Integration Tests › TC-06: 색상 대비가 WCAG 2.1 AA 기준을 만족한다 (24.6s)
+  ✘  84 [chromium] › theme-integration.spec.ts:205:3 › Theme Integration Tests › TC-07: 키보드로 전체 UI에 접근할 수 있다 (24.4s)
+waitForWbsLoaded failed: page.waitForSelector: Timeout 15000ms exceeded.
+Call log:
+[2m  - waiting for locator('[data-testid="wbs-tree-content"]') to be visible[22m
+
+    at waitForWbsLoaded [90m(C:\project\jjiban\[39mtests\helpers\e2e-helpers.ts:43:12[90m)[39m
+    at [90mC:\project\jjiban\[39mtests\e2e\theme-integration.spec.ts:12:5 {
+  name: [32m'TimeoutError'[39m,
+  [[32mSymbol(step)[39m]: {
+    stepId: [32m'pw:api@14'[39m,
+    location: {
+      file: [32m'C:\\project\\jjiban\\tests\\helpers\\e2e-helpers.ts'[39m,
+      line: [33m43[39m,
+      column: [33m12[39m,
+      function: [32m'waitForWbsLoaded'[39m
+    },
+    category: [32m'pw:api'[39m,
+    title: [32m'page.waitForSelector([data-testid="wbs-tree-content"])'[39m,
+    apiName: [32m'page.waitForSelector'[39m,
+    params: {
+      selector: [32m'[data-testid="wbs-tree-content"]'[39m,
+      state: [32m'visible'[39m,
+      timeout: [33m15000[39m
+    },
+    boxedStack: [90mundefined[39m,
+    steps: [],
+    complete: [36m[Function: complete][39m,
+    endWallTime: [33m1765864737626[39m,
+    error: {
+      message: [32m'TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.\n'[39m +
+        [32m'Call log:\n'[39m +
+        [32m`\x1B[2m  - waiting for locator('[data-testid="wbs-tree-content"]') to be visible\x1B[22m\n`[39m,
+      stack: [32m'TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.\n'[39m +
+        [32m'Call log:\n'[39m +
+        [32m`\x1B[2m  - waiting for locator('[data-testid="wbs-tree-content"]') to be visible\x1B[22m\n`[39m +
+        [32m'\n'[39m +
+        [32m'    at waitForWbsLoaded (C:\\project\\jjiban\\tests\\helpers\\e2e-helpers.ts:43:12)\n'[39m +
+        [32m'    at C:\\project\\jjiban\\tests\\e2e\\theme-integration.spec.ts:12:5'[39m,
+      cause: [90mundefined[39m
+    }
+  }
+}
+waitForWbsLoaded failed: page.waitForSelector: Timeout 15000ms exceeded.
+Call log:
+[2m  - waiting for locator('[data-testid="wbs-tree-content"]') to be visible[22m
+
+    at waitForWbsLoaded [90m(C:\project\jjiban\[39mtests\helpers\e2e-helpers.ts:43:12[90m)[39m
+    at [90mC:\project\jjiban\[39mtests\e2e\wbs-actions.spec.ts:9:5 {
+  name: [32m'TimeoutError'[39m,
+  [[32mSymbol(step)[39m]: {
+    stepId: [32m'pw:api@14'[39m,
+    location: {
+      file: [32m'C:\\project\\jjiban\\tests\\helpers\\e2e-helpers.ts'[39m,
+      line: [33m43[39m,
+      column: [33m12[39m,
+      function: [32m'waitForWbsLoaded'[39m
+    },
+    category: [32m'pw:api'[39m,
+    title: [32m'page.waitForSelector([data-testid="wbs-tree-content"])'[39m,
+    apiName: [32m'page.waitForSelector'[39m,
+    params: {
+      selector: [32m'[data-testid="wbs-tree-content"]'[39m,
+      state: [32m'visible'[39m,
+      timeout: [33m15000[39m
+    },
+    boxedStack: [90mundefined[39m,
+    steps: [],
+    complete: [36m[Function: complete][39m,
+    endWallTime: [33m1765864738645[39m,
+    error: {
+      message: [32m'TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.\n'[39m +
+        [32m'Call log:\n'[39m +
+        [32m`\x1B[2m  - waiting for locator('[data-testid="wbs-tree-content"]') to be visible\x1B[22m\n`[39m,
+      stack: [32m'TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.\n'[39m +
+        [32m'Call log:\n'[39m +
+        [32m`\x1B[2m  - waiting for locator('[data-testid="wbs-tree-content"]') to be visible\x1B[22m\n`[39m +
+        [32m'\n'[39m +
+        [32m'    at waitForWbsLoaded (C:\\project\\jjiban\\tests\\helpers\\e2e-helpers.ts:43:12)\n'[39m +
+        [32m'    at C:\\project\\jjiban\\tests\\e2e\\wbs-actions.spec.ts:9:5'[39m,
+      cause: [90mundefined[39m
+    }
+  }
+}
+waitForWbsLoaded failed: page.waitForSelector: Timeout 15000ms exceeded.
+Call log:
+[2m  - waiting for locator('[data-testid="wbs-tree-content"]') to be visible[22m
+
+    at waitForWbsLoaded [90m(C:\project\jjiban\[39mtests\helpers\e2e-helpers.ts:43:12[90m)[39m
+    at [90mC:\project\jjiban\[39mtests\e2e\wbs-actions.spec.ts:9:5 {
+  name: [32m'TimeoutError'[39m,
+  [[32mSymbol(step)[39m]: {
+    stepId: [32m'pw:api@14'[39m,
+    location: {
+      file: [32m'C:\\project\\jjiban\\tests\\helpers\\e2e-helpers.ts'[39m,
+      line: [33m43[39m,
+      column: [33m12[39m,
+      function: [32m'waitForWbsLoaded'[39m
+    },
+    category: [32m'pw:api'[39m,
+    title: [32m'page.waitForSelector([data-testid="wbs-tree-content"])'[39m,
+    apiName: [32m'page.waitForSelector'[39m,
+    params: {
+      selector: [32m'[data-testid="wbs-tree-content"]'[39m,
+      state: [32m'visible'[39m,
+      timeout: [33m15000[39m
+    },
+    boxedStack: [90mundefined[39m,
+    steps: [],
+    complete: [36m[Function: complete][39m,
+    endWallTime: [33m1765864740066[39m,
+    error: {
+      message: [32m'TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.\n'[39m +
+        [32m'Call log:\n'[39m +
+        [32m`\x1B[2m  - waiting for locator('[data-testid="wbs-tree-content"]') to be visible\x1B[22m\n`[39m,
+      stack: [32m'TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.\n'[39m +
+        [32m'Call log:\n'[39m +
+        [32m`\x1B[2m  - waiting for locator('[data-testid="wbs-tree-content"]') to be visible\x1B[22m\n`[39m +
+        [32m'\n'[39m +
+        [32m'    at waitForWbsLoaded (C:\\project\\jjiban\\tests\\helpers\\e2e-helpers.ts:43:12)\n'[39m +
+        [32m'    at C:\\project\\jjiban\\tests\\e2e\\wbs-actions.spec.ts:9:5'[39m,
+      cause: [90mundefined[39m
+    }
+  }
+}
+  ✘  86 [chromium] › theme-integration.spec.ts:249:3 › Theme Integration Tests › TC-08: ARIA 속성이 적절하게 설정되어 있다 (24.8s)
+  ✘  87 [chromium] › wbs-actions.spec.ts:12:3 › WBS Tree Actions E2E › E2E-020: 전체 펼치기 (24.4s)
+  ✘  88 [chromium] › wbs-actions.spec.ts:26:3 › WBS Tree Actions E2E › E2E-021: 전체 접기 (24.4s)
+  ✘  91 [chromium] › wbs-page-integration.spec.ts:89:3 › WBS Page Integration › TC-016: 페이지 초기화 → 프로젝트 → WBS → Task 선택 (Happy Path) (4.3s)
+  ✘  90 [chromium] › wbs-page-integration.spec.ts:122:3 › WBS Page Integration › TC-018: 프로젝트 로드 실패 → 재시도 → 성공 (6.4s)
+  ✘  95 [chromium] › wbs-page-integration.spec.ts:193:3 › WBS Page Integration › TC-013: Task 미선택 Empty State (3.5s)
+  ✘  94 [chromium] › wbs-page-integration.spec.ts:207:3 › WBS Page Integration › TC-019: Toast 자동 사라짐 (6.1s)
+  ✘  96 [chromium] › wbs-page-integration.spec.ts:234:3 › WBS Page Integration › TC-021: 최소 너비 1200px 레이아웃 (3.2s)
+  ✘  93 [chromium] › wbs-page-integration.spec.ts:165:3 › WBS Page Integration › TC-020: 프로젝트 없음 → 대시보드 이동 (6.3s)
+  ✘  92 [chromium] › wbs-page-integration.spec.ts:183:3 › WBS Page Integration › TC-002: projectId 잘못된 형식 → Empty State (6.6s)
+waitForWbsLoaded failed: page.waitForSelector: Timeout 15000ms exceeded.
+Call log:
+[2m  - waiting for locator('[data-testid="wbs-tree-content"]') to be visible[22m
+
+    at waitForWbsLoaded [90m(C:\project\jjiban\[39mtests\helpers\e2e-helpers.ts:43:12[90m)[39m
+    at [90mC:\project\jjiban\[39mtests\e2e\wbs-actions.spec.ts:9:5 {
+  name: [32m'TimeoutError'[39m,
+  [[32mSymbol(step)[39m]: {
+    stepId: [32m'pw:api@14'[39m,
+    location: {
+      file: [32m'C:\\project\\jjiban\\tests\\helpers\\e2e-helpers.ts'[39m,
+      line: [33m43[39m,
+      column: [33m12[39m,
+      function: [32m'waitForWbsLoaded'[39m
+    },
+    category: [32m'pw:api'[39m,
+    title: [32m'page.waitForSelector([data-testid="wbs-tree-content"])'[39m,
+    apiName: [32m'page.waitForSelector'[39m,
+    params: {
+      selector: [32m'[data-testid="wbs-tree-content"]'[39m,
+      state: [32m'visible'[39m,
+      timeout: [33m15000[39m
+    },
+    boxedStack: [90mundefined[39m,
+    steps: [],
+    complete: [36m[Function: complete][39m,
+    endWallTime: [33m1765864755858[39m,
+    error: {
+      message: [32m'TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.\n'[39m +
+        [32m'Call log:\n'[39m +
+        [32m`\x1B[2m  - waiting for locator('[data-testid="wbs-tree-content"]') to be visible\x1B[22m\n`[39m,
+      stack: [32m'TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.\n'[39m +
+        [32m'Call log:\n'[39m +
+        [32m`\x1B[2m  - waiting for locator('[data-testid="wbs-tree-content"]') to be visible\x1B[22m\n`[39m +
+        [32m'\n'[39m +
+        [32m'    at waitForWbsLoaded (C:\\project\\jjiban\\tests\\helpers\\e2e-helpers.ts:43:12)\n'[39m +
+        [32m'    at C:\\project\\jjiban\\tests\\e2e\\wbs-actions.spec.ts:9:5'[39m,
+      cause: [90mundefined[39m
+    }
+  }
+}
+  ✘  89 [chromium] › wbs-actions.spec.ts:50:3 › WBS Tree Actions E2E › E2E-022: 개별 노드 펼치기/접기 (24.4s)
+  ✘  97 [chromium] › wbs-page-integration.spec.ts:260:3 › WBS Page Integration › TC-022: 키보드 네비게이션 (3.3s)
+  ✘  98 [chromium] › wbs-page-integration.spec.ts:292:3 › WBS Page Integration › TC-023: ARIA 라벨 (3.6s)
+  ✘  99 [chromium] › wbs-page-integration.spec.ts:310:3 › WBS Page Integration › TC-017: 노드 선택 → Task 상세 로드 성능 (6.5s)
