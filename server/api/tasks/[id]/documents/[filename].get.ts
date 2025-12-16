@@ -8,16 +8,29 @@
 // server/utils는 Nuxt에서 자동 import됨
 // validateDocument: ~/server/utils/validators/documentValidator.ts
 // readTaskDocument: ~/server/utils/documentService.ts
+import { safeDecodePathSegment } from '~~/app/utils/urlPath';
 
 export default defineEventHandler(async (event) => {
-  const taskId = getRouterParam(event, 'id');
-  const filename = getRouterParam(event, 'filename');
+  const taskIdRaw = getRouterParam(event, 'id');
+  const filenameRaw = getRouterParam(event, 'filename');
 
-  if (!taskId || !filename) {
+  if (!taskIdRaw || !filenameRaw) {
     throw createError({
       statusCode: 400,
       statusMessage: 'Task ID와 파일명이 필요합니다',
       data: { code: 'MISSING_PARAMETERS' }
+    });
+  }
+
+  // URL 인코딩된 파라미터 디코딩 (한글, 공백, 괄호 등 지원)
+  const taskId = safeDecodePathSegment(taskIdRaw);
+  const filename = safeDecodePathSegment(filenameRaw);
+
+  if (!taskId || !filename) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: '잘못된 경로 형식입니다',
+      data: { code: 'INVALID_PATH_SEGMENT' }
     });
   }
 

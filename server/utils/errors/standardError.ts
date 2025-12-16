@@ -52,6 +52,13 @@ export function createBadRequestError(statusMessage: string, message: string) {
 }
 
 /**
+ * 403 Forbidden 에러
+ */
+export function createForbiddenError(statusMessage: string, message: string) {
+  return createStandardError(403, statusMessage, message);
+}
+
+/**
  * 409 Conflict 에러
  */
 export function createConflictError(statusMessage: string, message: string) {

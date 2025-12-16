@@ -1,11 +1,11 @@
 /**
  * WBS 스토어
  * WBS 트리 데이터 관리 및 확장/축소 상태 관리
- * Task: TSK-01-01-03
+ * Task: TSK-01-01-03, TSK-09-01
  */
 
 import type { WbsNode } from '~/types/store'
-import type { WbsMetadata } from '~/types'
+import type { WbsMetadata, AllWbsResponse } from '~/types'
 
 export const useWbsStore = defineStore('wbs', () => {
   // ============================================================
@@ -17,6 +17,7 @@ export const useWbsStore = defineStore('wbs', () => {
   const error = ref<string | null>(null)
   const expandedNodes = ref<Set<string>>(new Set())
   const searchQuery = ref('')
+  const isMultiProjectMode = ref(false)  // TSK-09-01: 다중 프로젝트 모드 여부
 
   // ============================================================
   // Getters
@@ -127,11 +128,12 @@ export const useWbsStore = defineStore('wbs', () => {
   // ============================================================
 
   /**
-   * WBS 데이터 조회
+   * WBS 데이터 조회 (단일 프로젝트)
    */
   async function fetchWbs(projectId: string) {
     loading.value = true
     error.value = null
+    isMultiProjectMode.value = false
     try {
       // API 응답: { metadata, tree } 객체 형식
       const response = await $fetch<{ metadata: WbsMetadata; tree: WbsNode[] }>(
@@ -143,6 +145,32 @@ export const useWbsStore = defineStore('wbs', () => {
       response.tree.forEach(node => expandedNodes.value.add(node.id))
     } catch (e) {
       error.value = e instanceof Error ? e.message : 'Failed to fetch WBS'
+      throw e
+    } finally {
+      loading.value = false
+    }
+  }
+
+  /**
+   * 모든 프로젝트 WBS 조회 (다중 프로젝트 모드)
+   * TSK-09-01
+   */
+  async function fetchAllWbs(): Promise<void> {
+    loading.value = true
+    error.value = null
+    isMultiProjectMode.value = true
+
+    try {
+      const response = await $fetch<AllWbsResponse>('/api/wbs/all')
+      tree.value = response.projects
+      flatNodes.value = flattenTree(response.projects)
+
+      // 프로젝트 노드만 기본 확장
+      response.projects.forEach(project => {
+        expandedNodes.value.add(project.id)
+      })
+    } catch (e) {
+      error.value = e instanceof Error ? e.message : 'Failed to fetch all WBS'
       throw e
     } finally {
       loading.value = false
@@ -233,6 +261,7 @@ export const useWbsStore = defineStore('wbs', () => {
     error,
     expandedNodes,
     searchQuery,
+    isMultiProjectMode,
     // Getters
     wpCount,
     actCount,
@@ -241,6 +270,7 @@ export const useWbsStore = defineStore('wbs', () => {
     filteredTree,
     // Actions
     fetchWbs,
+    fetchAllWbs,
     saveWbs,
     getNode,
     toggleExpand,

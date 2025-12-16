@@ -8,6 +8,7 @@
 import { ref, computed, watch, toRef, unref } from 'vue';
 import type { Ref, ComputedRef } from 'vue';
 import type { DocumentContent, DocumentError } from '~/types';
+import { buildApiPath } from '~/utils/urlPath';
 
 interface LRUCacheEntry {
   content: string;
@@ -122,8 +123,10 @@ export function useDocumentLoader(
       const timeoutId = setTimeout(() => controller.abort(), timeout);
 
       try {
+        // 한글, 공백, 괄호 등 특수문자가 포함된 파일명 안전하게 인코딩
+        const apiPath = buildApiPath('/api/tasks', taskIdRef.value, 'documents', filenameRef.value);
         const response = await $fetch<DocumentContent>(
-          `/api/tasks/${taskIdRef.value}/documents/${filenameRef.value}`,
+          apiPath,
           { signal: controller.signal }
         );
 

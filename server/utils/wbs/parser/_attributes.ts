@@ -66,8 +66,12 @@ export function parseNodeAttributes(lines: string[]): NodeAttributes {
         break;
 
       case 'depends':
-        // "-" 값은 undefined로 처리
-        attributes.depends = value === '-' ? undefined : value;
+        // "-" 값은 undefined로 처리, 쉼표로 분리하여 배열로 저장
+        if (value === '-') {
+          attributes.depends = undefined;
+        } else {
+          attributes.depends = value.split(',').map(dep => dep.trim()).filter(dep => dep);
+        }
         break;
 
       case 'requirements':

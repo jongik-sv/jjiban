@@ -245,6 +245,8 @@ pre code {
   --p-panel-border-color: var(--color-border);                  /* #3d3d5c */
   --p-panel-header-background: var(--color-header);             /* #16213e */
   --p-panel-header-color: var(--color-text);                    /* #e8e8e8 */
+  --p-panel-header-hover-background: var(--color-header);       /* 호버 시 동일 색상 유지 */
+  --p-panel-header-hover-color: var(--color-text);              /* 호버 시 동일 색상 유지 */
 
   --p-fieldset-background: var(--color-card);                   /* #1e1e38 */
   --p-fieldset-color: var(--color-text);                        /* #e8e8e8 */
@@ -420,8 +422,8 @@ pre code {
 :root {
   /* ProgressBar 배경 및 높이 */
   --p-progressbar-background: var(--color-border);              /* #3d3d5c */
-  --p-progressbar-height: 0.5rem;                               /* 8px */
-  --p-progressbar-border-radius: 0.25rem;                       /* 4px */
+  --p-progressbar-height: 1.25rem;                              /* 20px */
+  --p-progressbar-border-radius: 0.625rem;                      /* 10px */
 
   /* ProgressBar 값 배경색 (기본값 - 중간 진행률) */
   --p-progressbar-value-background: var(--color-warning);       /* #f59e0b */
@@ -430,9 +432,10 @@ pre code {
    * .progress-bar-low, .progress-bar-medium, .progress-bar-high
    * 이 클래스들이 적용되면 background-color가 재정의됨 */
 
-  /* ProgressBar 라벨 (현재 미사용) */
-  --p-progressbar-label-color: var(--color-text);               /* #e8e8e8 */
+  /* ProgressBar 라벨 */
+  --p-progressbar-label-color: #1a1a2e;                         /* 어두운 색 (대비용) */
   --p-progressbar-label-font-size: 0.75rem;                     /* 12px */
+  --p-progressbar-label-font-weight: 600;                       /* 굵게 */
 }
 
 /* ============================================
@@ -461,6 +464,11 @@ pre code {
 
 .node-icon-task {
   @apply bg-level-task;
+}
+
+/* TSK-09-01: 프로젝트 노드 타이틀 스타일 */
+.wbs-tree-node-title-project {
+  @apply text-violet-400 font-semibold;
 }
 
 /* 반응형: 모바일 노드 아이콘 */
@@ -714,6 +722,30 @@ pre code {
 }
 
 /* ============================================
+ * TaskProgress Stepper (TSK-08-07)
+ * 클릭 가능한 워크플로우 Stepper UI
+ * ============================================ */
+
+/* Stepper 노드 - 클릭 가능 스타일 */
+.workflow-step-clickable {
+  @apply cursor-pointer transition-all duration-200;
+}
+
+.workflow-step-clickable:hover {
+  @apply shadow-md;
+  transform: scale(1.1);
+}
+
+.workflow-step-clickable:focus {
+  @apply ring-2 ring-primary ring-offset-2 ring-offset-bg outline-none;
+}
+
+/* Stepper 노드 - 비활성화 */
+.workflow-step-disabled {
+  @apply cursor-not-allowed opacity-60;
+}
+
+/* ============================================
  * TaskHistory 컴포넌트 스타일 (TSK-08-05)
  * CSS 클래스 중앙화 원칙 준수
  * ============================================ */
@@ -871,7 +903,7 @@ pre code {
 }
 
 .progress-segment-track {
-  @apply flex h-4 rounded-full overflow-hidden bg-border;
+  @apply flex h-5 rounded-full overflow-hidden bg-border;
 }
 
 .progress-segment {
@@ -924,4 +956,82 @@ pre code {
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+
+/* ============================================
+ * ProjectDetailPanel 스타일 (TSK-09-01)
+ * 프로젝트 상세 정보 및 파일 목록
+ * ============================================ */
+
+/* 프로젝트 파일 목록 */
+.project-file-list {
+  @apply border border-border rounded-lg divide-y divide-border max-h-96 overflow-y-auto;
+}
+
+.project-file-item {
+  @apply flex items-center gap-3 p-3 hover:bg-slate-700/50 cursor-pointer transition-colors;
+}
+
+.project-file-item:focus {
+  @apply ring-2 ring-primary ring-offset-2 ring-offset-bg outline-none;
+}
+
+/* 파일 타입별 아이콘 색상 */
+.file-icon-md {
+  @apply text-primary;
+}
+
+.file-icon-json {
+  @apply text-warning;
+}
+
+.file-icon-image {
+  @apply text-success;
+}
+
+.file-icon-other {
+  @apply text-text-muted;
+}
+
+/* 파일 메타 정보 */
+.file-name {
+  @apply text-sm font-medium text-text;
+}
+
+.file-meta {
+  @apply text-xs text-text-muted;
+}
+
+/* FileViewer Dialog 스타일 */
+.file-viewer-dialog {
+  width: 80vw;
+  max-width: 1200px;
+  height: 85vh;
+}
+
+.file-viewer-dialog .p-dialog-content {
+  height: calc(85vh - 4rem);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.file-viewer-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+}
+
+/* 이미지 뷰어 */
+.image-viewer {
+  @apply flex flex-col items-center justify-center;
+}
+
+.image-viewer img {
+  @apply max-w-full h-auto rounded-lg shadow-lg;
+}
+
+/* 코드 뷰어 (Monaco Editor 컨테이너) */
+.code-viewer {
+  @apply h-full;
 }

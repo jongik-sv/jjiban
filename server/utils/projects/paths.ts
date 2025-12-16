@@ -11,6 +11,7 @@
 
 import { join, normalize, isAbsolute, resolve } from 'path';
 import { createBadRequestError } from '../errors/standardError';
+import { decodePathSegment } from '../../../app/utils/urlPath';
 
 /**
  * 경로 안전성 검증
@@ -22,7 +23,7 @@ import { createBadRequestError } from '../errors/standardError';
 function isPathSafe(path: string): boolean {
   try {
     // URL 디코딩 후 재검증 (%2e%2e → ..)
-    const decoded = decodeURIComponent(path);
+    const decoded = decodePathSegment(path);
     const normalized = normalize(decoded);
 
     // 경로 순회 패턴 검사
@@ -95,8 +96,8 @@ export function getProjectsBasePath(): string {
  * @returns .jjiban/projects/{id}
  */
 export function getProjectDir(projectId: string): string {
-  validateProjectId(projectId);
-  return join(getProjectsBasePath(), projectId);
+  const decodedId = validateProjectId(projectId);
+  return join(getProjectsBasePath(), decodedId);
 }
 
 /**
@@ -122,28 +123,40 @@ export function getProjectsListFilePath(): string {
 
 /**
  * 프로젝트 ID 유효성 검증
- * BR-001: 영소문자, 숫자, 하이픈만 허용
+ * BR-001: 영소문자, 숫자, 하이픈, 한글 허용
  * DR-009: 경로 탐색 공격 방지
  *
  * @param id 프로젝트 ID
  * @throws 유효하지 않은 ID 시 에러
  */
-export function validateProjectId(id: string): void {
-  // BR-001: 형식 검증
-  if (!/^[a-z0-9-]+$/.test(id)) {
+export function validateProjectId(id: string): string {
+  // URL 디코딩 처리 (한글, 공백, 괄호 등 인코딩된 문자 지원)
+  const decodedId = decodePathSegment(id);
+
+  if (!decodedId) {
     throw createBadRequestError(
       'INVALID_PROJECT_ID',
-      '프로젝트 ID는 영소문자, 숫자, 하이픈만 허용됩니다'
+      '잘못된 프로젝트 ID 인코딩입니다'
+    );
+  }
+
+  // BR-001: 형식 검증 (한글 포함)
+  if (!/^[a-z0-9가-힣_-]+$/.test(decodedId)) {
+    throw createBadRequestError(
+      'INVALID_PROJECT_ID',
+      '프로젝트 ID는 영소문자, 숫자, 한글, 하이픈, 언더스코어만 허용됩니다'
     );
   }
 
   // DR-009: 경로 탐색 방지
-  const normalized = normalize(id);
-  if (normalized !== id || normalized.includes('..')) {
+  const normalized = normalize(decodedId);
+  if (normalized !== decodedId || normalized.includes('..')) {
     throw createBadRequestError(
       'INVALID_PROJECT_ID',
       '잘못된 프로젝트 ID 형식입니다'
     );
   }
+
+  return decodedId;
 }
 

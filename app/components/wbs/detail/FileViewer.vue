@@ -1,0 +1,309 @@
+<template>
+  <Dialog
+    :visible="visible"
+    :header="fileName"
+    :modal="true"
+    :closable="true"
+    :dismissable-mask="true"
+    class="file-viewer-dialog"
+    data-testid="file-viewer-dialog"
+    @update:visible="handleClose"
+  >
+    <!-- 로딩 상태 -->
+    <div v-if="loading" class="flex items-center justify-center h-64">
+      <div class="text-center">
+        <ProgressSpinner stroke-width="4" animation-duration="1s" />
+        <p class="mt-4 text-text-secondary">파일을 불러오는 중...</p>
+      </div>
+    </div>
+
+    <!-- 에러 상태 -->
+    <div v-else-if="error" class="text-center p-8">
+      <i class="pi pi-exclamation-triangle text-danger text-4xl mb-4"></i>
+      <p class="text-danger">{{ error }}</p>
+      <Button
+        label="다시 시도"
+        icon="pi pi-refresh"
+        class="mt-4"
+        @click="loadFileContent"
+      />
+    </div>
+
+    <!-- 콘텐츠 표시 -->
+    <div v-else class="file-viewer-content">
+      <!-- 마크다운 렌더링 -->
+      <div
+        v-if="isMarkdown"
+        v-html="renderedMarkdown"
+        class="markdown-content prose prose-invert max-w-none"
+      ></div>
+
+      <!-- 이미지 표시 -->
+      <div v-else-if="isImage" class="image-viewer text-center">
+        <img
+          v-if="imageDataUrl"
+          :src="imageDataUrl"
+          :alt="fileName"
+          class="max-w-full h-auto mx-auto"
+        />
+        <p class="text-sm text-text-muted mt-4">
+          크기: {{ formatFileSize(fileSize) }}
+        </p>
+      </div>
+
+      <!-- 코드 파일 (Monaco Editor) -->
+      <ClientOnly v-else-if="isCodeFile">
+        <MonacoEditor
+          v-model="content"
+          :lang="monacoLanguage"
+          :options="monacoOptions"
+          class="code-editor"
+        />
+        <template #fallback>
+          <pre class="bg-bg-card p-4 rounded-lg overflow-x-auto"><code>{{ content }}</code></pre>
+        </template>
+      </ClientOnly>
+
+      <!-- 기타 텍스트 파일 -->
+      <div v-else class="code-viewer">
+        <pre class="bg-bg-card p-4 rounded-lg overflow-x-auto"><code>{{ content }}</code></pre>
+      </div>
+    </div>
+  </Dialog>
+</template>
+
+<script setup lang="ts">
+/**
+ * FileViewer - 통합 파일 뷰어 다이얼로그
+ *
+ * 책임:
+ * - 파일 컨텐츠 로드 및 표시
+ * - 파일 타입별 렌더링 (Markdown, Image, Code, Text)
+ * - Monaco Editor로 코드 파일 문법 하이라이팅
+ * - ProjectFile, DocumentInfo 타입 모두 지원
+ */
+
+import type { ProjectFile, DocumentInfo, FileContentResponse } from '~/types'
+import { marked } from 'marked'
+import DOMPurify from 'isomorphic-dompurify'
+
+// ============================================================
+// Types
+// ============================================================
+type FileInfo = ProjectFile | DocumentInfo
+
+interface Props {
+  file: FileInfo
+  visible: boolean
+  /** Task용 API 사용 여부 (taskId 필수) */
+  taskId?: string
+}
+
+const props = defineProps<Props>()
+
+interface Emits {
+  (e: 'update:visible', value: boolean): void
+  (e: 'loaded', content: string): void
+  (e: 'error', error: Error): void
+}
+
+const emit = defineEmits<Emits>()
+
+// ============================================================
+// State
+// ============================================================
+const content = ref<string>('')
+const imageDataUrl = ref<string | null>(null)
+const loading = ref(false)
+const error = ref<string | null>(null)
+
+// ============================================================
+// Computed - 파일 정보
+// ============================================================
+const fileName = computed(() => props.file.name)
+const fileSize = computed(() => props.file.size ?? 0)
+const fileExtension = computed(() => {
+  const name = props.file.name.toLowerCase()
+  const ext = name.split('.').pop() || ''
+  return ext
+})
+
+// ============================================================
+// Computed - 파일 타입 판단 (확장자 기반)
+// ============================================================
+const isMarkdown = computed(() => ['md', 'markdown'].includes(fileExtension.value))
+const isImage = computed(() => ['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg'].includes(fileExtension.value))
+const isCodeFile = computed(() =>
+  ['json', 'ts', 'js', 'tsx', 'jsx', 'vue', 'css', 'scss', 'html', 'xml', 'yaml', 'yml', 'py', 'sh', 'bash'].includes(fileExtension.value)
+)
+
+// ============================================================
+// Computed - Monaco Editor
+// ============================================================
+const monacoLanguage = computed(() => {
+  const langMap: Record<string, string> = {
+    json: 'json',
+    ts: 'typescript',
+    tsx: 'typescript',
+    js: 'javascript',
+    jsx: 'javascript',
+    vue: 'html',
+    css: 'css',
+    scss: 'scss',
+    html: 'html',
+    xml: 'xml',
+    yaml: 'yaml',
+    yml: 'yaml',
+    py: 'python',
+    sh: 'shell',
+    bash: 'shell'
+  }
+  return langMap[fileExtension.value] || 'plaintext'
+})
+
+const monacoOptions = {
+  readOnly: true,
+  minimap: { enabled: false },
+  lineNumbers: 'on' as const,
+  scrollBeyondLastLine: false,
+  wordWrap: 'on' as const,
+  fontSize: 13,
+  theme: 'vs-dark',
+  automaticLayout: true
+}
+
+// ============================================================
+// Computed - Markdown
+// ============================================================
+const renderedMarkdown = computed(() => {
+  if (!isMarkdown.value || !content.value) return ''
+  try {
+    const html = marked.parse(content.value) as string
+    return DOMPurify.sanitize(html)
+  } catch (e) {
+    console.error('Markdown rendering error:', e)
+    return '<p>마크다운 렌더링 실패</p>'
+  }
+})
+
+// ============================================================
+// Watchers
+// ============================================================
+watch(
+  () => props.visible,
+  (newVisible) => {
+    if (newVisible) {
+      loadFileContent()
+    }
+  },
+  { immediate: true }
+)
+
+// ============================================================
+// Methods
+// ============================================================
+
+/**
+ * 파일 내용 로드
+ */
+async function loadFileContent(): Promise<void> {
+  loading.value = true
+  error.value = null
+  content.value = ''
+  imageDataUrl.value = null
+
+  try {
+    // Task 문서인 경우 taskId 기반 API 사용
+    const apiUrl = props.taskId
+      ? `/api/tasks/${props.taskId}/documents/${encodeURIComponent(props.file.name)}`
+      : `/api/files/content?path=${encodeURIComponent(props.file.path)}`
+
+    if (isImage.value) {
+      // 이미지: ArrayBuffer로 받아서 Data URL 생성
+      const blob = await $fetch<Blob>(apiUrl, { responseType: 'blob' })
+
+      const reader = new FileReader()
+      reader.onload = () => {
+        imageDataUrl.value = reader.result as string
+      }
+      reader.readAsDataURL(blob)
+    } else {
+      // 텍스트 파일
+      const response = await $fetch<FileContentResponse | { content: string }>(apiUrl)
+      content.value = response.content
+      emit('loaded', response.content)
+    }
+  } catch (e) {
+    const errMsg = e instanceof Error ? e.message : '파일을 불러오는 데 실패했습니다'
+    error.value = errMsg
+    emit('error', new Error(errMsg))
+    console.error('File load error:', e)
+  } finally {
+    loading.value = false
+  }
+}
+
+/**
+ * 다이얼로그 닫기
+ */
+function handleClose(): void {
+  emit('update:visible', false)
+  // 상태 초기화
+  content.value = ''
+  imageDataUrl.value = null
+  error.value = null
+}
+
+/**
+ * 파일 크기 포맷팅
+ */
+function formatFileSize(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
+}
+</script>
+
+<style scoped>
+.file-viewer-content {
+  max-height: calc(85vh - 6rem);
+  overflow-y: auto;
+}
+
+.code-editor {
+  height: 500px;
+  min-height: 300px;
+}
+
+/* Markdown 스타일 */
+.markdown-content {
+  color: var(--color-text);
+  line-height: 1.6;
+}
+
+.markdown-content :deep(h1),
+.markdown-content :deep(h2),
+.markdown-content :deep(h3) {
+  color: var(--color-text);
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.markdown-content :deep(code) {
+  background-color: var(--color-bg-sidebar);
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+}
+
+.markdown-content :deep(pre) {
+  background-color: var(--color-bg-sidebar);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+}
+
+.markdown-content :deep(a) {
+  color: var(--color-primary);
+}
+</style>

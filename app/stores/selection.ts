@@ -1,11 +1,13 @@
 /**
  * 선택 스토어
  * 현재 선택된 노드 및 Task 상세 정보 관리
- * Task: TSK-01-01-03
+ * Task: TSK-01-01-03, TSK-09-01
  */
 
-import type { TaskDetail, WbsNodeType, WbsNode } from '~/types/store'
+import type { TaskDetail, WbsNodeType, WbsNode, ProjectFile, ProjectFilesResponse } from '~/types'
 import { useWbsStore } from './wbs'
+import { useProjectStore } from './project'
+import { buildApiUrl } from '~/utils/urlPath'
 
 export const useSelectionStore = defineStore('selection', () => {
   // ============================================================
@@ -15,6 +17,10 @@ export const useSelectionStore = defineStore('selection', () => {
   const selectedTask = ref<TaskDetail | null>(null)
   const loadingTask = ref(false)
   const error = ref<string | null>(null)
+
+  // TSK-09-01: 프로젝트 파일 목록
+  const selectedProjectFiles = ref<ProjectFile[]>([])
+  const loadingFiles = ref(false)
 
   // ============================================================
   // Getters
@@ -93,11 +99,23 @@ export const useSelectionStore = defineStore('selection', () => {
     selectedNodeId.value = nodeId
     error.value = null
 
+    const wbsStore = useWbsStore()
+    const node = wbsStore.getNode(nodeId)
+
+    if (!node) return
+
+    // 프로젝트 노드 선택 시 파일 목록 로드 (TSK-09-01)
+    if (node.type === 'project') {
+      await fetchProjectFiles(nodeId)
+      selectedTask.value = null
+    }
     // Task인 경우 상세 정보 로드
-    if (nodeId.toUpperCase().startsWith('TSK-')) {
+    else if (nodeId.toUpperCase().startsWith('TSK-')) {
       await loadTaskDetail(nodeId)
+      selectedProjectFiles.value = []
     } else {
       selectedTask.value = null
+      selectedProjectFiles.value = []
     }
   }
 
@@ -108,7 +126,11 @@ export const useSelectionStore = defineStore('selection', () => {
     loadingTask.value = true
     error.value = null
     try {
-      const data = await $fetch<TaskDetail>(`/api/tasks/${taskId}`)
+      const projectStore = useProjectStore()
+      const projectId = projectStore.projectId
+      // 한글, 공백, 괄호 등 특수문자 안전하게 인코딩
+      const url = buildApiUrl('/api/tasks', [taskId], projectId ? { project: projectId } : undefined)
+      const data = await $fetch<TaskDetail>(url)
       selectedTask.value = data
     } catch (e) {
       error.value = e instanceof Error ? e.message : 'Failed to load task detail'
@@ -128,11 +150,31 @@ export const useSelectionStore = defineStore('selection', () => {
   }
 
   /**
+   * 프로젝트 파일 목록 조회 (TSK-09-01)
+   */
+  async function fetchProjectFiles(projectId: string): Promise<void> {
+    loadingFiles.value = true
+
+    try {
+      const response = await $fetch<ProjectFilesResponse>(
+        `/api/projects/${projectId}/files`
+      )
+      selectedProjectFiles.value = response.files
+    } catch (e) {
+      console.error('Failed to fetch project files:', e)
+      selectedProjectFiles.value = []
+    } finally {
+      loadingFiles.value = false
+    }
+  }
+
+  /**
    * 선택 해제
    */
   function clearSelection() {
     selectedNodeId.value = null
     selectedTask.value = null
+    selectedProjectFiles.value = []
     error.value = null
   }
 
@@ -140,7 +182,9 @@ export const useSelectionStore = defineStore('selection', () => {
     // State
     selectedNodeId,
     selectedTask,
+    selectedProjectFiles,
     loadingTask,
+    loadingFiles,
     error,
     // Getters
     hasSelection,
@@ -152,6 +196,7 @@ export const useSelectionStore = defineStore('selection', () => {
     selectNode,
     loadTaskDetail,
     refreshTaskDetail,
+    fetchProjectFiles,
     clearSelection
   }
 })

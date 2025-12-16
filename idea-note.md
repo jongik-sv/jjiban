@@ -51,7 +51,6 @@
   - 칸반상태(Todo, Design, Detail, Implement, Verify, Done) 정의 테이블
   - 카테고리 관리, 워크플로우 관리 화면이 필요
 - **프로그래스 상태** : 워크플로우 실행중일때 빙글빙글 돌아야됨
-
 - **프로젝트 단계 확장** : 1차 구축 후 추가 예정, .jjiban의 폴더 구조만 먼저 바꿀까?
 - claude code rule : 사용법 익히자.
 - 상세설계에 코드가 많네. 
@@ -64,6 +63,11 @@
 - auto 를 skill로 변환하면 프롬프트를 알아서 판별해서 명령어를 수행할 수 있다.
 - test 결과에 오류가 있으면 wbs에 표시해서 테스트 결과를 확인할 수 있도록 한다. [결과 없음, 정상, 오류] - 다시 테스트를 수행할 수 있도록 한다.
 - verify 단계의 정의를 다시 세우고 필요 없는 단계이면 삭제하자. 그럼 test 명령어로 대체. test 성공하면 vf 단계로 넘어가자.
+- 각 명령어가 plan 도구를 사용해서 처리 하도록 프롬프트 수정하자.
+- 실행가능한 Task  찾는 프로그램 next-task(아래 참조)
+- 현재는 task ID로만 작업할 task를 찾는데 멀티 프로젝트 관리가 되면 task ID로 찾는 것이 아니라 프로젝트명+task ID로 찾는다. 고로 프롬프트 수정해야 한다.
+- Task 찾는 공통 프롬프트가 있는데 이것도 따로 프로그램으로 빼자 next-task 처럼, 최대한 프로그램으로 많이 빼놔야 토큰도 적게 먹고 빠르고 재사용도 가능하다. 그리고 또 뭐가 있는지 열심히 찾아보자.
+
 
 ## 참고 사항
 - continuous-claude : 생각이 나랑 같네. 알아서 순서대로 명령어를 계속 수행
@@ -88,29 +92,73 @@
 - 중간 중간 개발 화면을 확인하여 프로젝트의 진행 방향 검증
 
 
-@.jjiban\projects\jjiban\tasks\TSK-01-02-01\ui-assets\ @.jjiban\projects\jjiban\tasks\TSK-01-02-02\ui-assets\ 안의 설계 이미지가 전체 생각하고 있는 모습인 @.jjiban\projects\jjiban\wbs-tree-mockup-compact.svg 를 잘 반영하고 잇는지 확인해줘.
 
 
 
 
-  | 실패 테스트 파일                       | 실패 원인                                        | 담당 Task                                     |
-  |----------------------------------------|--------------------------------------------------|-----------------------------------------------|
-  | NodeIcon.test.ts (4 failed)            | icon 클래스 assertion 방식 오류                  | TSK-08-01 (WbsTreePanel + NodeIcon Migration) |
-  | projectsListService.test.ts (7 failed) | getProjectsBasePath mock 누락                    | TSK-03-01 (Project API)                       |
-  | service.test.ts (Settings, 9 failed)   | refreshCache is not a function                   | TSK-02-03-02 (설정 서비스 구현)               |
-  | parser.test.ts (1 failed)              | progress 계산 로직 변경됨 (expected 0%, got 27%) | TSK-02-02-01 (wbs.md 파서 구현)               |
-  | TaskDocuments.test.ts (4 failed)       | CSS 클래스 마이그레이션 후 style 함수 제거됨     | TSK-08-02 (WBS UI Components Migration)       |
-  | integration.test.ts (1 failed)         | WP 개수 변경 (expected 6, got 8)                 | TSK-02-02-01 (테스트 데이터 업데이트 필요)    |
-  | TaskHistory.test.ts (5 failed)         | getEntryColor 함수 제거, icon 변경               | TSK-08-05 (TaskDetailPanel Dialog Migration)  |
-  | taskService.test.ts (2 failed)         | 테스트 데이터 Task ID 불일치                     | TSK-03-02 (WBS API)                           |
 
 
- | 담당 Task    | 실패 테스트                                 | 원인                    |
-  |--------------|---------------------------------------------|-------------------------|
-  | TSK-08-01    | NodeIcon.test.ts (4)                        | CSS 클래스 마이그레이션 |
-  | TSK-08-02    | TaskDocuments.test.ts (4)                   | style 함수 제거         |
-  | TSK-08-05    | TaskHistory.test.ts (5)                     | getEntryColor 함수 제거 |
-  | TSK-03-01    | projectsListService.test.ts (7)             | mock 함수 누락          |
-  | TSK-02-03-02 | service.test.ts (9)                         | refreshCache 함수 변경  |
-  | TSK-02-02-01 | parser.test.ts (1), integration.test.ts (1) | 로직/데이터 변경        |
-  | TSK-03-02    | taskService.test.ts (2)                     | 테스트 데이터 불일치    |
+
+CLI
+
+# 기본 - JSON 출력 (jjiban 프로젝트)
+npx jjiban next-task
+
+# 프로젝트 지정
+npx jjiban next-task myproject
+
+# 카테고리 필터
+npx jjiban next-task --category development
+
+# 표 형식 출력 (사람이 보기용)
+npx jjiban next-task --table
+
+API
+
+# 전체 조회
+GET /api/wbs/executable-tasks?projectId=jjiban
+
+# 카테고리 필터
+GET /api/wbs/executable-tasks?projectId=jjiban&category=development
+
+wf/run.md 프롬프트에서 사용
+
+## 실행 전
+1. `npx jjiban next-task` 실행 (JSON 기본 출력)
+2. 결과에서 첫 번째 Task 선택
+3. 해당 Task로 워크플로우 실행
+
+---
+출력 형식
+
+JSON (기본)
+
+{
+"executable": [
+  {
+    "id": "TSK-09-01",
+    "title": "다중 프로젝트 WBS 통합 뷰",
+    "category": "development",
+    "status": "[ ]",
+    "priority": "high",
+    "nextAction": "start"
+  }
+],
+"waiting": [
+  {
+    "id": "TSK-10-01",
+    "blockedBy": ["TSK-09-01"]
+  }
+]
+}
+
+표 형식 (--table 옵션)
+
+🎯 실행 가능한 Task (1개)
+
+|#  | Task ID      | 카테고리     | 우선순위 | 다음 액션 |
+|----+--------------+-------------+---------+----------|
+|1  | TSK-09-01    | development | high    | start |
+
+⏳ 대기 중 (1개)
+- TSK-10-01: TSK-09-01 완료 대기

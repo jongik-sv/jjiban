@@ -1,52 +1,57 @@
 <template>
   <Panel header="진행 상태" data-testid="task-progress-panel" class="task-progress">
     <div class="space-y-4">
-      <!-- 현재 상태 Badge -->
+      <!-- 워크플로우 Stepper (TSK-08-07) -->
       <div class="field">
-        <label class="font-semibold text-sm text-gray-600">현재 상태</label>
-        <div class="mt-1">
-          <Badge
-            :value="statusLabel"
-            :severity="statusSeverity"
-            data-testid="task-status-badge"
-            class="text-sm"
-          />
-        </div>
-      </div>
+        <div>
+          <!-- Stepper 노드들 -->
+          <div class="workflow-container mt-2" data-testid="workflow-steps-container">
+            <template v-for="(step, index) in workflowSteps" :key="step.code">
+              <!-- 단계 노드 (클릭 가능) -->
+              <div class="workflow-step-item">
+                <button
+                  :id="`step-${index}`"
+                  class="workflow-step-circle workflow-step-clickable"
+                  :class="{
+                    'workflow-step-current': index === currentStepIndex,
+                    'workflow-step-completed': index < currentStepIndex,
+                    'workflow-step-pending': index > currentStepIndex,
+                    'workflow-step-selected': index === effectiveSelectedIndex,
+                  }"
+                  :aria-label="`${step.label} 단계`"
+                  :aria-current="index === currentStepIndex ? 'step' : undefined"
+                  :aria-selected="index === effectiveSelectedIndex"
+                  role="button"
+                  tabindex="0"
+                  :data-testid="index === currentStepIndex ? 'workflow-step-current' : `workflow-step-${index}`"
+                  @click="selectStep(index)"
+                  @keydown.enter="selectStep(index)"
+                  @keydown.space.prevent="selectStep(index)"
+                >
+                  <i
+                    v-if="index < currentStepIndex"
+                    class="pi pi-check text-white"
+                  />
+                  <i
+                    v-else-if="index === currentStepIndex"
+                    class="pi pi-circle-fill text-white"
+                  />
+                  <i
+                    v-else
+                    class="pi pi-circle text-text-muted"
+                  />
+                </button>
 
-      <!-- 워크플로우 단계 인디케이터 -->
-      <div class="field">
-        <label class="font-semibold text-sm text-gray-600">워크플로우 진행</label>
-        <div class="mt-2" data-testid="workflow-steps-container">
-          <div class="flex items-center justify-between">
-            <div
-              v-for="(step, index) in workflowSteps"
-              :key="step.code"
-              class="flex items-center"
-              :data-testid="`workflow-step-${index}`"
-            >
-              <!-- 단계 원형 -->
-              <div
-                class="workflow-step-circle"
-                :class="{
-                  'workflow-step-current': index === currentStepIndex,
-                  'workflow-step-completed': index < currentStepIndex,
-                  'workflow-step-pending': index > currentStepIndex,
-                }"
-                :data-testid="index === currentStepIndex ? 'workflow-step-current' : undefined"
-              >
-                <i
-                  v-if="index < currentStepIndex"
-                  class="pi pi-check text-white"
-                />
-                <i
-                  v-else-if="index === currentStepIndex"
-                  class="pi pi-circle-fill text-white"
-                />
-                <i
-                  v-else
-                  class="pi pi-circle text-gray-400"
-                />
+                <!-- 단계 라벨 -->
+                <div
+                  class="workflow-step-label"
+                  :class="{
+                    'workflow-step-label-current': index === currentStepIndex,
+                    'workflow-step-label-selected': index === effectiveSelectedIndex && index !== currentStepIndex,
+                  }"
+                >
+                  {{ step.label }}
+                </div>
               </div>
 
               <!-- 연결선 (마지막 단계 제외) -->
@@ -58,21 +63,62 @@
                   'workflow-connector-pending': index >= currentStepIndex,
                 }"
               />
-            </div>
+            </template>
           </div>
 
-          <!-- 단계 라벨 -->
-          <div class="flex items-center justify-between mt-2">
-            <div
-              v-for="(step, index) in workflowSteps"
-              :key="`label-${step.code}`"
-              class="text-xs text-center"
-              :class="{
-                'font-semibold text-blue-600': index === currentStepIndex,
-                'text-gray-600': index !== currentStepIndex,
-              }"
-            >
-              {{ step.label }}
+          <!-- 선택된 단계 상세 영역 (항상 표시) -->
+          <div
+            class="workflow-step-detail"
+            data-testid="workflow-step-detail"
+          >
+            <!-- 단계명 + 완료일 -->
+            <div class="step-detail-header">
+              <span class="step-detail-title">{{ selectedStep?.label }}</span>
+              <span
+                class="step-detail-date"
+                :class="getCompletedDate(selectedStep?.code || '') === '미완료' ? 'step-detail-date-pending' : ''"
+              >
+                <i class="pi pi-calendar mr-1"></i>
+                {{ getCompletedDate(selectedStep?.code || '') }}
+              </span>
+            </div>
+
+            <!-- 액션 버튼 영역 -->
+            <div class="step-detail-actions">
+              <!-- Auto 버튼 (현재 단계만) -->
+              <Button
+                v-if="effectiveSelectedIndex === currentStepIndex"
+                label="Auto"
+                icon="pi pi-bolt"
+                severity="help"
+                size="small"
+                :loading="executingCommand === 'auto'"
+                :disabled="executingCommand !== null"
+                data-testid="step-auto-btn"
+                @click="executeAutoCommand"
+              />
+
+              <!-- 액션 버튼들 (모든 단계에서 표시, 현재 단계 아니면 disabled) -->
+              <Button
+                v-for="action in getStepActions(selectedStep?.code || '')"
+                :key="action"
+                :label="getActionLabel(action)"
+                :icon="getActionIcon(action)"
+                :severity="getActionSeverity(action)"
+                size="small"
+                :loading="executingCommand === action"
+                :disabled="effectiveSelectedIndex !== currentStepIndex || executingCommand !== null"
+                :data-testid="`step-action-${action}-btn`"
+                @click="executeAction(action)"
+              />
+
+              <!-- 액션 없을 때 -->
+              <span
+                v-if="getStepActions(selectedStep?.code || '').length === 0 && effectiveSelectedIndex !== currentStepIndex"
+                class="step-detail-no-actions"
+              >
+                실행 가능한 액션이 없습니다.
+              </span>
             </div>
           </div>
         </div>
@@ -80,9 +126,13 @@
 
       <!-- 진행률 -->
       <div class="field">
-        <label class="font-semibold text-sm text-gray-600">진행률</label>
+        <label class="field-label">진행률</label>
         <div class="mt-1">
-          <ProgressBar :value="progressPercentage" :show-value="true" />
+          <ProgressBar
+            :value="progressPercentage"
+            :show-value="true"
+            class="progress-bar-thick"
+          />
         </div>
       </div>
     </div>
@@ -91,15 +141,16 @@
 
 <script setup lang="ts">
 /**
- * TaskProgress - Task 진행 상태 및 워크플로우 시각화
- * Task: TSK-05-01
- * 상세설계: 020-detail-design.md 섹션 9.3
+ * TaskProgress - Task 진행 상태 및 워크플로우 Stepper
+ * Task: TSK-08-07
+ * 상세설계: 020-detail-design.md 섹션 5.1
  *
  * 책임:
  * - 현재 상태 Badge 렌더링
  * - 카테고리별 워크플로우 단계 계산
- * - 워크플로우 단계 인디케이터 렌더링
- * - 현재 단계 강조 표시
+ * - 클릭 가능한 Stepper 노드 렌더링
+ * - 선택된 단계의 완료일 및 액션 버튼 표시 (하단 고정 영역)
+ * - Auto 버튼으로 wf:auto 명령어 실행
  */
 
 import type { TaskDetail, TaskCategory, TaskStatus } from '~/types'
@@ -114,48 +165,24 @@ interface Props {
 const props = defineProps<Props>()
 
 // ============================================================
+// Stores & Composables
+// ============================================================
+const selectionStore = useSelectionStore()
+const notification = useNotification()
+const errorHandler = useErrorHandler()
+
+// ============================================================
+// State
+// ============================================================
+const selectedStepIndex = ref<number | null>(null)
+const executingCommand = ref<string | null>(null)
+
+// ============================================================
 // Computed
 // ============================================================
 
 /**
- * 상태 라벨
- */
-const statusLabel = computed(() => {
-  const labels: Record<string, string> = {
-    '[ ]': '시작 전',
-    '[bd]': '기본설계',
-    '[dd]': '상세설계',
-    '[an]': '분석',
-    '[ds]': '설계',
-    '[im]': '구현',
-    '[fx]': '수정',
-    '[vf]': '검증',
-    '[xx]': '완료',
-  }
-  return labels[props.task.status] || props.task.status
-})
-
-/**
- * 상태 심각도 (PrimeVue Badge severity)
- */
-const statusSeverity = computed(() => {
-  const severities: Record<string, 'info' | 'success' | 'warning' | 'danger'> = {
-    '[ ]': 'info',
-    '[bd]': 'warning',
-    '[dd]': 'warning',
-    '[an]': 'warning',
-    '[ds]': 'warning',
-    '[im]': 'info',
-    '[fx]': 'danger',
-    '[vf]': 'warning',
-    '[xx]': 'success',
-  }
-  return severities[props.task.status] || 'info'
-})
-
-/**
  * 워크플로우 단계 계산 (카테고리별)
- * 정적 정의 (MIN-003: 성능 및 단순성 우선)
  */
 const workflowSteps = computed(() => {
   interface WorkflowStep {
@@ -199,12 +226,200 @@ const currentStepIndex = computed(() => {
 })
 
 /**
+ * 선택된 단계 정보 (선택 없으면 현재 단계 표시)
+ */
+const selectedStep = computed(() => {
+  const index = selectedStepIndex.value ?? currentStepIndex.value
+  return workflowSteps.value[index]
+})
+
+/**
+ * 실제 선택 인덱스 (표시용, null이면 현재 단계)
+ */
+const effectiveSelectedIndex = computed(() => {
+  return selectedStepIndex.value ?? currentStepIndex.value
+})
+
+/**
  * 진행률 퍼센트
  */
 const progressPercentage = computed(() => {
   const total = workflowSteps.value.length - 1 // 시작 전 제외
   if (total === 0) return 0
   return Math.round((currentStepIndex.value / total) * 100)
+})
+
+/**
+ * 상태별 액션 매핑 (v1.1 요구사항)
+ * 각 단계에서 표시할 액션 목록
+ */
+const stepActionsMap: Record<string, Record<string, string[]>> = {
+  development: {
+    '[ ]': ['start'],
+    '[bd]': ['draft', 'ui'],
+    '[dd]': ['build', 'review', 'apply'],
+    '[im]': ['verify', 'test', 'audit', 'patch'],
+    '[vf]': ['done', 'test'],
+    '[xx]': ['test'],
+  },
+  defect: {
+    '[ ]': ['start'],
+    '[an]': ['fix'],
+    '[fx]': ['verify', 'test', 'audit', 'patch'],
+    '[vf]': ['done', 'test'],
+    '[xx]': ['test'],
+  },
+  infrastructure: {
+    '[ ]': ['start', 'skip'],
+    '[ds]': ['build'],
+    '[im]': ['done', 'test', 'audit', 'patch'],
+    '[xx]': ['test'],
+  },
+}
+
+/**
+ * 특정 단계의 액션 목록 반환 (v1.1)
+ */
+function getStepActions(stepCode: string): string[] {
+  const categoryMap = stepActionsMap[props.task.category]
+  if (!categoryMap) return []
+  return categoryMap[stepCode] || []
+}
+
+// ============================================================
+// Workflow Button Config
+// ============================================================
+const workflowButtonConfig: Record<string, { label: string; icon: string; severity: string }> = {
+  start: { label: '시작', icon: 'pi pi-play', severity: 'primary' },
+  draft: { label: '초안 작성', icon: 'pi pi-pencil', severity: 'info' },
+  build: { label: '구현', icon: 'pi pi-cog', severity: 'success' },
+  verify: { label: '검증', icon: 'pi pi-check-circle', severity: 'warn' },
+  done: { label: '완료', icon: 'pi pi-flag', severity: 'success' },
+  review: { label: '리뷰', icon: 'pi pi-eye', severity: 'info' },
+  apply: { label: '적용', icon: 'pi pi-check', severity: 'success' },
+  test: { label: '테스트', icon: 'pi pi-bolt', severity: 'warn' },
+  audit: { label: '감사', icon: 'pi pi-search', severity: 'info' },
+  patch: { label: '패치', icon: 'pi pi-wrench', severity: 'success' },
+  skip: { label: '건너뛰기', icon: 'pi pi-forward', severity: 'secondary' },
+  fix: { label: '수정', icon: 'pi pi-wrench', severity: 'warn' },
+  ui: { label: 'UI', icon: 'pi pi-palette', severity: 'info' },
+}
+
+// ============================================================
+// Methods
+// ============================================================
+
+/**
+ * 단계별 완료일 조회
+ * CR-004: 타입 가드 추가
+ */
+function getCompletedDate(statusCode: string): string {
+  if (!statusCode) return '미완료'
+  if (!props.task.completed) return '미완료'
+
+  // 상태 코드에서 키 추출 (예: '[bd]' → 'bd')
+  const key = statusCode.replace(/[\[\]]/g, '')
+
+  // 타입 가드: 키 존재 여부 확인
+  if (!Object.prototype.hasOwnProperty.call(props.task.completed, key)) {
+    return '미완료'
+  }
+
+  const timestamp = props.task.completed[key]
+  return timestamp || '미완료'
+}
+
+/**
+ * 단계 선택 (항상 열린 상태 유지)
+ */
+function selectStep(index: number) {
+  selectedStepIndex.value = index
+}
+
+/**
+ * 액션 라벨 반환
+ */
+function getActionLabel(action: string): string {
+  return workflowButtonConfig[action]?.label || action
+}
+
+/**
+ * 액션 아이콘 반환
+ */
+function getActionIcon(action: string): string {
+  return workflowButtonConfig[action]?.icon || 'pi pi-arrow-right'
+}
+
+/**
+ * 액션 심각도 반환
+ */
+function getActionSeverity(action: string): 'primary' | 'secondary' | 'success' | 'info' | 'warn' | 'danger' | 'help' | 'contrast' {
+  return (workflowButtonConfig[action]?.severity || 'secondary') as any
+}
+
+/**
+ * Auto 명령어 실행 (wf:auto)
+ */
+async function executeAutoCommand() {
+  if (executingCommand.value) return
+
+  executingCommand.value = 'auto'
+
+  try {
+    // wf:auto API 호출
+    await $fetch(`/api/tasks/${props.task.id}/transition`, {
+      method: 'POST',
+      body: { command: 'auto' },
+    })
+
+    await selectionStore.refreshTaskDetail()
+    notification.success('Auto 명령이 실행되었습니다.')
+  } catch (error) {
+    errorHandler.handle(error, 'TaskProgress.executeAutoCommand')
+  } finally {
+    executingCommand.value = null
+  }
+}
+
+/**
+ * 액션 실행
+ */
+async function executeAction(action: string) {
+  if (executingCommand.value) return
+
+  executingCommand.value = action
+
+  try {
+    await $fetch(`/api/tasks/${props.task.id}/transition`, {
+      method: 'POST',
+      body: { command: action },
+    })
+
+    await selectionStore.refreshTaskDetail()
+    notification.success(`'${getActionLabel(action)}' 명령이 실행되었습니다.`)
+  } catch (error) {
+    errorHandler.handle(error, 'TaskProgress.executeAction')
+  } finally {
+    executingCommand.value = null
+  }
+}
+
+// ============================================================
+// Lifecycle
+// ============================================================
+
+/**
+ * 컴포넌트 마운트 시 현재 단계 자동 선택
+ */
+onMounted(() => {
+  selectedStepIndex.value = currentStepIndex.value
+})
+
+/**
+ * Task 상태 변경 시 현재 단계 자동 선택
+ */
+watch(() => props.task.status, () => {
+  selectedStepIndex.value = currentStepIndex.value
 })
 </script>
 
@@ -217,24 +432,70 @@ const progressPercentage = computed(() => {
   margin-bottom: 0;
 }
 
-/* 워크플로우 단계 원형 (TSK-08-06: HEX 하드코딩 제거) */
+/* 필드 라벨 */
+.field-label {
+  @apply font-semibold text-sm text-text-secondary;
+}
+
+/* 워크플로우 컨테이너 */
+.workflow-container {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+/* 단계 아이템 (원형 + 라벨 묶음) */
+.workflow-step-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  position: relative;
+}
+
+/* 워크플로우 단계 원형 */
 .workflow-step-circle {
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease-in-out;
+  font-size: 0.7rem;
+  flex-shrink: 0;
+  border: none;
+  background: transparent;
 }
 
-/* workflow-step-current, workflow-step-completed, workflow-step-pending
-   클래스는 main.css에서 전역으로 정의됨 (TSK-08-05 CSS 중앙화 원칙) */
+/* 선택된 단계 하이라이트 */
+.workflow-step-selected {
+  @apply ring-2 ring-primary ring-offset-2;
+}
+
+/* 워크플로우 단계 라벨 */
+.workflow-step-label {
+  margin-top: 0.25rem;
+  font-size: 0.65rem;
+  text-align: center;
+  white-space: nowrap;
+  @apply text-text-muted;
+}
+
+.workflow-step-label-current {
+  @apply font-semibold text-primary;
+}
+
+.workflow-step-label-selected {
+  @apply font-medium text-text;
+}
 
 /* 워크플로우 연결선 */
 .workflow-connector {
-  width: 60px;
-  height: 2px;
+  width: 40px;
+  height: 3px;
+  flex-shrink: 0;
+  margin-top: 12px; /* 원형 중앙 높이에 맞춤 (28px/2 - 3px/2) */
   transition: background-color 0.5s ease-in-out;
 }
 
@@ -243,6 +504,45 @@ const progressPercentage = computed(() => {
 }
 
 .workflow-connector-pending {
-  @apply bg-gray-300;
+  @apply bg-border;
+}
+
+/* 선택된 단계 상세 영역 */
+.workflow-step-detail {
+  @apply mt-4 p-3 rounded-lg bg-bg-card border border-border;
+}
+
+.step-detail-header {
+  @apply flex items-center justify-between mb-3 pb-3 border-b border-border;
+}
+
+.step-detail-title {
+  @apply font-semibold text-text;
+}
+
+.step-detail-date {
+  @apply text-sm text-text-secondary;
+}
+
+.step-detail-date-pending {
+  @apply text-text-muted;
+}
+
+.step-detail-actions {
+  @apply flex flex-wrap gap-2;
+}
+
+.step-detail-no-actions {
+  @apply text-sm text-text-muted italic;
+}
+
+/* workflow-step-current, workflow-step-completed, workflow-step-pending
+   클래스는 main.css에서 전역으로 정의됨 (TSK-08-05 CSS 중앙화 원칙) */
+
+/* 진행률 바 두껍게 - CSS 변수 오버라이드 */
+.progress-bar-thick {
+  --p-progressbar-height: 1.25rem;
+  --p-progressbar-border-radius: 0.625rem;
+  --p-progressbar-label-font-size: 0.8rem;
 }
 </style>

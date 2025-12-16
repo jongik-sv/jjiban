@@ -1,23 +1,14 @@
 <template>
-  <!-- 문서 뷰어 다이얼로그 (Card 외부에 배치) -->
-  <Dialog
-    v-model:visible="documentViewerVisible"
-    :header="currentDocument?.name || '문서 보기'"
-    class="document-viewer-dialog"
-    :modal="true"
-    :closable="true"
-    :dismissableMask="true"
-    data-testid="document-viewer-dialog"
-  >
-    <TaskDocumentViewer
-      v-if="currentDocument && selectedTask"
-      :task-id="selectedTask.id"
-      :filename="currentDocument.name"
-      class="h-full"
-      @loaded="handleDocumentLoaded"
-      @error="handleDocumentError"
-    />
-  </Dialog>
+  <!-- 문서 뷰어 다이얼로그 (통합 FileViewer 사용) -->
+  <WbsDetailFileViewer
+    v-if="currentDocument && selectedTask"
+    :file="currentDocument"
+    :visible="documentViewerVisible"
+    :task-id="selectedTask.id"
+    @update:visible="documentViewerVisible = $event"
+    @loaded="handleDocumentLoaded"
+    @error="handleDocumentError"
+  />
 
   <Card
     class="task-detail-panel h-full"
@@ -76,22 +67,12 @@
           @update:title="handleUpdateTitle"
           @update:priority="handleUpdatePriority"
           @update:assignee="handleUpdateAssignee"
+          @update:schedule="handleUpdateSchedule"
+          @transition-completed="handleTransitionCompleted"
         />
 
         <!-- 진행 상태 (TSK-05-01) -->
         <WbsDetailTaskProgress :task="selectedTask" />
-
-        <!-- 워크플로우 흐름 (TSK-05-02) -->
-        <WbsDetailTaskWorkflow :task="selectedTask" />
-
-        <!-- Task 액션 (TSK-05-03) -->
-        <WbsDetailTaskActions
-          :task="selectedTask"
-          :team-members="teamMembers"
-          @task-updated="handleTaskUpdated"
-          @transition-completed="handleTransitionCompleted"
-          @open-documents="handleOpenDocuments"
-        />
 
         <!-- 요구사항 (TSK-05-02) -->
         <WbsDetailTaskRequirements
@@ -340,6 +321,18 @@ function handleUpdateAssignee(assigneeId: string | null) {
     assigneeId === null ? undefined : selectedTask.value?.assignee,
     { assignee: assigneeId },
     '담당자가 변경되었습니다.'
+  )
+}
+
+/**
+ * 일정 수정 핸들러
+ */
+function handleUpdateSchedule(schedule: { start: string; end: string }) {
+  handleUpdate(
+    'schedule',
+    schedule,
+    { schedule },
+    '일정이 변경되었습니다.'
   )
 }
 

@@ -1,6 +1,7 @@
 import { promises as fs } from 'fs';
 import { join, dirname, isAbsolute } from 'path';
 import { JJIBAN_PATHS, SETTINGS_FILES } from '../../types';
+import { decodePathSegment } from '../../app/utils/urlPath';
 
 /**
  * JJIBAN 루트 경로 반환
@@ -192,7 +193,9 @@ export function getProjectsPath(): string {
  * 특정 프로젝트 경로
  */
 export function getProjectPath(projectId: string): string {
-  return join(JJIBAN_ROOT, 'projects', projectId);
+  // URL 인코딩된 한글, 공백, 괄호 등 디코딩 처리
+  const decodedId = decodePathSegment(projectId);
+  return join(JJIBAN_ROOT, 'projects', decodedId);
 }
 
 /**

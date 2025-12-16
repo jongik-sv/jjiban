@@ -91,6 +91,7 @@ export interface TaskDetail {
   documents: DocumentInfo[];
   history: HistoryEntry[];
   availableActions: string[];
+  completed?: CompletedTimestamps;  // TSK-08-07: 단계별 완료 타임스탬프
 }
 
 // 팀 멤버
@@ -289,4 +290,54 @@ export interface DocumentContent {
   filename: string;       // 파일명
   size: number;          // 파일 크기 (bytes)
   lastModified: string;  // 최종 수정 시각 (ISO 8601)
+}
+
+// TSK-09-01: Multi-Project WBS Integration Types
+
+// 다중 프로젝트 WBS 응답
+export interface AllWbsResponse {
+  projects: ProjectWbsNode[];
+}
+
+// 프로젝트 WBS 노드 (WbsNode 확장)
+export interface ProjectWbsNode extends WbsNode {
+  type: 'project';
+  projectMeta: {
+    name: string;
+    status: 'active' | 'archived' | 'completed';
+    wbsDepth: 3 | 4;
+    scheduledStart?: string;
+    scheduledEnd?: string;
+    description?: string;
+    createdAt: string;
+  };
+  progress: number;        // 전체 Task 진행률 (0-100, 집계값)
+  taskCount: number;       // 전체 Task 개수 (집계값)
+  children: WbsNode[];     // WP 배열
+}
+
+// 타입 가드 함수
+export function isProjectNode(node: WbsNode): node is ProjectWbsNode {
+  return node.type === 'project';
+}
+
+// 프로젝트 파일 정보
+export interface ProjectFile {
+  name: string;           // 파일명 (예: 'project.json')
+  path: string;           // 절대 경로
+  relativePath: string;   // 프로젝트 폴더 기준 상대 경로
+  type: 'markdown' | 'image' | 'json' | 'other';
+  size: number;          // 바이트 단위
+  createdAt: string;     // ISO 8601
+  updatedAt: string;     // ISO 8601
+}
+
+// 프로젝트 파일 목록 응답
+export interface ProjectFilesResponse {
+  files: ProjectFile[];
+}
+
+// 파일 컨텐츠 응답
+export interface FileContentResponse {
+  content: string;  // UTF-8 텍스트 또는 Base64 인코딩된 바이너리
 }

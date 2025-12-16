@@ -1,15 +1,15 @@
 <script setup lang="ts">
 /**
  * WBS 페이지
+ * - 모든 프로젝트 WBS 통합 뷰 (프로젝트 노드가 항상 최상단)
  * - WBS Tree + Task Detail 패널 통합
- * - 프로젝트/WBS 순차 로딩
- * - 에러 핸들링 및 Empty State 관리
  *
- * @task TSK-06-01
+ * @task TSK-06-01, TSK-09-01
  */
 
 import WbsTreePanel from '~/components/wbs/WbsTreePanel.vue'
 import NodeDetailPanel from '~/components/wbs/detail/NodeDetailPanel.vue'
+import { decodePathSegment } from '~/utils/urlPath'
 
 // ============================================================
 // Page Metadata
@@ -30,8 +30,6 @@ const router = useRouter()
 const projectStore = useProjectStore()
 const wbsStore = useWbsStore()
 const selectionStore = useSelectionStore()
-const wbsPage = useWbsPage()
-const { loadProjectAndWbs, handleError } = wbsPage
 
 // ============================================================
 // Local State
@@ -41,27 +39,31 @@ const error = ref<string | null>(null)
 
 /**
  * URL 쿼리에서 projectId 추출 및 형식 검증
- * - 소문자, 숫자, 하이픈만 허용
+ * - 소문자, 숫자, 한글, 하이픈, 언더스코어 허용
  * - 잘못된 형식이면 null 반환
  */
 const projectId = computed<string | null>(() => {
   const id = route.query.project
   if (!id || typeof id !== 'string') return null
 
-  // 형식 검증: 소문자, 숫자, 하이픈만 허용
-  if (!/^[a-z0-9-]+$/.test(id)) {
-    console.warn(`Invalid projectId format: ${id}`)
+  // URL 디코딩 (한글, 공백, 괄호 등 특수문자 처리)
+  const decodedId = decodePathSegment(id)
+
+  // 형식 검증: 소문자, 숫자, 한글, 하이픈, 언더스코어 허용
+  if (!/^[a-z0-9가-힣_-]+$/.test(decodedId)) {
+    console.warn(`Invalid projectId format: ${decodedId}`)
     return null
   }
 
-  return id
+  return decodedId
 })
 
 /**
  * 정상 상태 여부 (콘텐츠 표시 가능 여부)
  */
 const isContentReady = computed(() => {
-  return !loading.value && !error.value && projectId.value !== null
+  if (loading.value || error.value) return false
+  return wbsStore.tree.length > 0
 })
 
 // ============================================================
@@ -70,25 +72,24 @@ const isContentReady = computed(() => {
 
 /**
  * 페이지 초기화
- * - URL에서 projectId 추출
- * - 프로젝트 → WBS 순차 로딩
+ * - 항상 모든 프로젝트 WBS 로드 (프로젝트 노드가 최상단에 표시)
+ * - projectId 파라미터는 해당 프로젝트 자동 선택에만 사용
  */
 onMounted(async () => {
-  const id = projectId.value
-  if (!id) {
-    // projectId 없으면 로딩 중단 (Empty State 표시)
-    return
-  }
-
   loading.value = true
   error.value = null
 
-  // loadProjectAndWbs는 내부에서 에러 핸들링 및 Toast 표시
-  // 반환값 false면 에러 발생 (error.value는 composable에서 설정됨)
-  const success = await loadProjectAndWbs(id)
-  if (!success) {
-    // error는 useWbsPage에서 이미 설정됨
-    error.value = wbsPage.error.value
+  try {
+    // 항상 모든 프로젝트 WBS 로드
+    await wbsStore.fetchAllWbs()
+
+    // projectId가 있으면 해당 프로젝트 자동 선택
+    if (projectId.value) {
+      selectionStore.selectNode(projectId.value)
+    }
+  } catch (e) {
+    error.value = e instanceof Error ? e.message : '프로젝트 목록을 불러오는 데 실패했습니다'
+    console.error('Failed to load all projects:', e)
   }
 
   loading.value = false
@@ -106,35 +107,6 @@ onUnmounted(() => {
 // ============================================================
 // Watch (스토어 간 반응형 연동)
 // ============================================================
-
-/**
- * 현재 프로젝트 변화 감지 → WBS 자동 로드
- * 가드 조건:
- * - 동일 프로젝트 ID면 skip
- * - null → null 전환 skip
- */
-watch(
-  () => projectStore.currentProject,
-  async (newProject, oldProject) => {
-    // 가드: 동일 프로젝트 ID
-    if (newProject?.id === oldProject?.id) return
-    // 가드: null → null
-    if (!newProject && !oldProject) return
-
-    // 새 프로젝트 로드 시 WBS 자동 조회
-    if (newProject) {
-      loading.value = true
-      try {
-        await wbsStore.fetchWbs(newProject.id)
-      } catch (e) {
-        // 에러 핸들링 및 Toast 표시
-        error.value = handleError(e)
-      } finally {
-        loading.value = false
-      }
-    }
-  }
-)
 
 /**
  * 선택된 노드 ID 변화 감지 → Task 상세 로드
@@ -173,15 +145,13 @@ function handleNodeSelected(nodeId: string) {
  * 재시도 버튼 클릭
  */
 async function handleRetry() {
-  const id = projectId.value
-  if (!id) return
-
   loading.value = true
   error.value = null
 
-  const success = await loadProjectAndWbs(id)
-  if (!success) {
-    error.value = wbsPage.error.value
+  try {
+    await wbsStore.fetchAllWbs()
+  } catch (e) {
+    error.value = e instanceof Error ? e.message : '프로젝트 목록을 불러오는 데 실패했습니다'
   }
 
   loading.value = false
@@ -241,9 +211,22 @@ function goToDashboard() {
         </div>
       </div>
 
-      <!-- 3. projectId 없음/잘못된 형식 -->
+      <!-- 3. 정상 상태: WBS 트리 패널 (단일 또는 다중 프로젝트 모드) -->
       <div
-        v-else-if="!projectId"
+        v-else-if="isContentReady"
+        class="h-full"
+        data-testid="wbs-content"
+      >
+        <WbsTreePanel
+          aria-label="WBS 트리 패널"
+          :aria-busy="wbsStore.loading ? 'true' : 'false'"
+          @node-selected="handleNodeSelected"
+        />
+      </div>
+
+      <!-- 4. projectId 없음 && 트리 데이터 없음 -->
+      <div
+        v-else
         class="flex items-center justify-center h-full p-8"
         data-testid="empty-state-no-project"
       >
@@ -262,19 +245,6 @@ function goToDashboard() {
           />
         </div>
       </div>
-
-      <!-- 4. 정상 상태: WBS 트리 패널 -->
-      <div
-        v-else
-        class="h-full"
-        data-testid="wbs-content"
-      >
-        <WbsTreePanel
-          aria-label="WBS 트리 패널"
-          :aria-busy="wbsStore.loading ? 'true' : 'false'"
-          @node-selected="handleNodeSelected"
-        />
-      </div>
     </template>
 
     <!-- Right Panel Slot -->
@@ -283,20 +253,39 @@ function goToDashboard() {
         class="h-full"
         aria-label="노드 상세 패널"
       >
-        <!-- 로딩/에러/프로젝트없음 상태에서는 빈 상태 표시 -->
+        <!-- 로딩/에러 상태에서는 빈 상태 표시 -->
         <div
-          v-if="!isContentReady"
+          v-if="loading || error"
           class="flex items-center justify-center h-full p-4"
           data-testid="right-panel-placeholder"
         >
           <div class="text-center text-text-muted">
             <i class="pi pi-info-circle text-2xl mb-2"></i>
-            <p class="text-sm">프로젝트를 로드하면 상세 정보가 표시됩니다.</p>
+            <p class="text-sm">{{ loading ? '로딩 중...' : '프로젝트를 선택하세요' }}</p>
           </div>
         </div>
 
+        <!-- TSK-09-01: 프로젝트 노드 선택 시 ProjectDetailPanel 표시 -->
+        <WbsDetailProjectDetailPanel
+          v-else-if="selectionStore.selectedNodeType === 'project'"
+          :project-id="selectionStore.selectedNodeId!"
+          :files="selectionStore.selectedProjectFiles"
+        />
+
         <!-- 노드 상세 정보 표시 (TSK-05-01 ~ TSK-05-05) -->
-        <NodeDetailPanel v-else />
+        <NodeDetailPanel v-else-if="isContentReady" />
+
+        <!-- 미선택 상태 -->
+        <div
+          v-else
+          class="flex items-center justify-center h-full p-4"
+          data-testid="right-panel-empty"
+        >
+          <div class="text-center text-text-muted">
+            <i class="pi pi-hand-pointer text-2xl mb-2"></i>
+            <p class="text-sm">왼쪽에서 노드를 선택하세요</p>
+          </div>
+        </div>
       </div>
     </template>
   </LayoutAppLayout>

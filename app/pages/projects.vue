@@ -92,6 +92,7 @@
 
 <script setup lang="ts">
 import { formatDate } from '~/utils/format';
+import { encodePathSegment } from '~/utils/urlPath';
 
 // 타입 정의 (server/utils/projects/types.ts에서 복사)
 interface ProjectListItem {
@@ -181,8 +182,8 @@ function navigateToWbs(projectId: string): void {
     return;
   }
 
-  // URL 인코딩으로 특수문자 처리 (M-003)
-  const encodedId = encodeURIComponent(projectId);
+  // URL 인코딩으로 특수문자 처리 (한글, 공백, 괄호 등)
+  const encodedId = encodePathSegment(projectId);
   navigateTo(`/wbs?project=${encodedId}`);
 }
 </script>

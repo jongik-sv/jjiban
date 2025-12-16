@@ -14,6 +14,7 @@ import type {
   DocumentInfo,
   HistoryEntry,
   TaskCategory,
+  TaskStatus,
 } from '../../../types';
 import { getWbsTree, saveWbsTree } from './wbsService';
 import {
@@ -45,7 +46,7 @@ export interface TaskUpdateRequest {
     end: string;
   };
   tags?: string[];
-  depends?: string;
+  depends?: string[];
   ref?: string;
 }
 
@@ -94,6 +95,32 @@ export function findTaskInTree(
         return found;
       }
     }
+  }
+
+  return null;
+}
+
+/**
+ * 특정 프로젝트에서 Task 검색
+ * @param projectId - 프로젝트 ID
+ * @param taskId - 검색할 Task ID
+ * @returns TaskSearchResult 또는 null
+ */
+export async function findTaskInProject(projectId: string, taskId: string): Promise<TaskSearchResult | null> {
+  try {
+    const { tree } = await getWbsTree(projectId);
+    const result = findTaskInTree(tree, taskId);
+
+    if (result) {
+      return {
+        task: result.task,
+        projectId,
+        parentWp: result.parentWp,
+        parentAct: result.parentAct,
+      };
+    }
+  } catch (error) {
+    console.warn(`[TaskService] Failed to search task in project '${projectId}':`, error);
   }
 
   return null;
@@ -270,31 +297,34 @@ function buildHistoryEntry(
 /**
  * Task 상세 조회
  * @param taskId - Task ID
+ * @param projectId - 프로젝트 ID (선택, 지정 시 해당 프로젝트에서만 검색)
  * @returns TaskDetail
  * @throws TASK_NOT_FOUND - Task 없음
  * @throws FILE_ACCESS_ERROR - 파일 읽기 실패
  *
  * FR-003: Task 상세 조회
  */
-export async function getTaskDetail(taskId: string): Promise<TaskDetail> {
-  // Task 검색
-  const searchResult = await findTaskById(taskId);
+export async function getTaskDetail(taskId: string, projectId?: string): Promise<TaskDetail> {
+  // Task 검색 (projectId가 지정되면 해당 프로젝트에서만 검색)
+  const searchResult = projectId
+    ? await findTaskInProject(projectId, taskId)
+    : await findTaskById(taskId);
   if (!searchResult) {
     throw createNotFoundError(`Task를 찾을 수 없습니다: ${taskId}`);
   }
 
-  const { task, projectId, parentWp, parentAct } = searchResult;
+  const { task, projectId: foundProjectId, parentWp, parentAct } = searchResult;
 
   // 팀원 정보 조회
-  const teamJsonPath = getTeamJsonPath(projectId);
+  const teamJsonPath = getTeamJsonPath(foundProjectId);
   const teamData = await readJsonFile<{ members: TeamMember[] }>(teamJsonPath);
   const assignee = teamData?.members?.find((m) => m.id === task.assignee) || null;
 
   // 문서 목록 조회
-  const documents = await buildDocumentInfoList(projectId, taskId);
+  const documents = await buildDocumentInfoList(foundProjectId, taskId);
 
   // 이력 조회
-  const historyPath = join(getTaskFolderPath(projectId, taskId), 'history.json');
+  const historyPath = join(getTaskFolderPath(foundProjectId, taskId), 'history.json');
   const historyData = await readJsonFile<HistoryEntry[]>(historyPath);
   const history = historyData || [];
 
@@ -308,7 +338,7 @@ export async function getTaskDetail(taskId: string): Promise<TaskDetail> {
     id: task.id,
     title: task.title,
     category: task.category as TaskCategory,
-    status: (task.status?.match(/\[([^\]]+)\]/)?.[1] || '[ ]') as any,
+    status: (task.status || '[ ]') as TaskStatus,
     priority: (task.priority || 'medium') as any,
     assignee: assignee || undefined,
     parentWp,
@@ -316,11 +346,12 @@ export async function getTaskDetail(taskId: string): Promise<TaskDetail> {
     schedule: task.schedule,
     requirements: task.requirements || [],
     tags: task.tags || [],
-    depends: task.depends ? [task.depends] : [],
+    depends: task.depends || [],
     ref: task.ref,
     documents,
     history,
     availableActions,
+    completed: task.completed,  // TSK-08-07: 단계별 완료 타임스탬프
   };
 }
 

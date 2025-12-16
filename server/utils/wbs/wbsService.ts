@@ -1,13 +1,14 @@
 /**
  * WBS 서비스
- * Task: TSK-03-02
+ * Task: TSK-03-02, TSK-09-01
  * 상세설계: 020-detail-design.md 섹션 5.1
  *
  * WBS 트리 조회/저장 비즈니스 로직
  */
 
 import { promises as fs } from 'fs';
-import type { WbsNode, WbsMetadata } from '../../../types';
+import type { WbsNode, WbsMetadata, AllWbsResponse, ProjectWbsNode } from '../../../types';
+import type { ProjectListItem } from '../projects/types';
 import { parseWbsMarkdown } from './parser/index';
 import { serializeWbs } from './serializer';
 import { validateWbs } from './validation/index';
@@ -24,6 +25,8 @@ import {
   createConflictError,
   createInternalError,
 } from '../errors/standardError';
+import { getProjectsList } from '../projects/projectsListService';
+import { getProject } from '../projects/projectService';
 
 /**
  * Markdown에서 메타데이터 섹션 파싱
@@ -242,4 +245,114 @@ export async function saveWbsTree(
       `WBS 데이터를 변환할 수 없습니다: ${error instanceof Error ? error.message : 'Unknown error'}`
     );
   }
+}
+
+/**
+ * 모든 프로젝트 WBS 조회 (TSK-09-01)
+ * @returns AllWbsResponse
+ * @throws WBS_FETCH_ERROR - 프로젝트 목록 조회 실패
+ *
+ * FR-001: 다중 프로젝트 WBS 통합 뷰
+ * 개별 프로젝트 로드 실패 시 전체 실패 방지 (resilience)
+ */
+export async function getAllProjectsWbs(): Promise<AllWbsResponse> {
+  // 1. 프로젝트 목록 조회
+  const { projects: projectsList } = await getProjectsList();
+
+  // 2. 병렬로 각 프로젝트 WBS 로드
+  const projectsWbs = await Promise.all(
+    projectsList.map(async (project) => {
+      try {
+        const { metadata, tree } = await getWbsTree(project.id);
+        const projectNode = await createProjectNode(project, metadata, tree);
+        return projectNode;
+      } catch (error) {
+        // 개별 프로젝트 로드 실패 시 경고 로그만 (전체 실패 방지)
+        console.warn(`[getAllProjectsWbs] Failed to load ${project.id}:`, error);
+        return null;
+      }
+    })
+  );
+
+  // 3. null 제거 (로드 실패한 프로젝트)
+  const validProjects = projectsWbs.filter(p => p !== null) as ProjectWbsNode[];
+
+  return { projects: validProjects };
+}
+
+/**
+ * 프로젝트 WBS 노드 생성 (TSK-09-01)
+ * @param project 프로젝트 목록 항목
+ * @param metadata WBS 메타데이터
+ * @param tree WBS 노드 트리
+ * @returns ProjectWbsNode
+ */
+async function createProjectNode(
+  project: ProjectListItem,
+  metadata: WbsMetadata,
+  tree: WbsNode[]
+): Promise<ProjectWbsNode> {
+  // 진행률 + Task 개수 계산 (단일 순회)
+  const stats = calculateProjectStats(tree);
+
+  // project.json에서 추가 정보 로드
+  let description: string | undefined;
+  let scheduledEnd: string | undefined;
+
+  try {
+    const projectConfig = await getProject(project.id);
+    description = projectConfig.description;
+    scheduledEnd = projectConfig.scheduledEnd;
+  } catch (error) {
+    // project.json 읽기 실패 시 기본값 사용
+    console.warn(`[createProjectNode] Failed to load project config for ${project.id}`);
+  }
+
+  return {
+    id: project.id,
+    type: 'project',
+    title: project.name,
+    projectMeta: {
+      name: project.name,
+      status: project.status,
+      wbsDepth: project.wbsDepth,
+      scheduledStart: metadata.start,
+      scheduledEnd,
+      description,
+      createdAt: project.createdAt,
+    },
+    progress: stats.progress,
+    taskCount: stats.taskCount,
+    children: tree,
+  };
+}
+
+/**
+ * 프로젝트 통계 계산 (진행률 + Task 개수, 단일 순회) (TSK-09-01)
+ * 성능 최적화: 2N → N (50% 감소)
+ * @param tree WBS 노드 트리
+ * @returns { progress: number, taskCount: number }
+ */
+function calculateProjectStats(tree: WbsNode[]): { progress: number; taskCount: number } {
+  let totalProgress = 0;
+  let taskCount = 0;
+
+  function traverse(nodes: WbsNode[]): void {
+    for (const node of nodes) {
+      if (node.type === 'task') {
+        totalProgress += node.progress || 0;
+        taskCount++;
+      }
+      if (node.children?.length > 0) {
+        traverse(node.children);
+      }
+    }
+  }
+
+  traverse(tree);
+
+  return {
+    progress: taskCount > 0 ? Math.round(totalProgress / taskCount) : 0,
+    taskCount
+  };
 }

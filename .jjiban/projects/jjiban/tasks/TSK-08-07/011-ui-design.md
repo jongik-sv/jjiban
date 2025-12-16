@@ -5,9 +5,16 @@
 |------|------|
 | Task ID | TSK-08-07 |
 | Category | development |
-| 상태 | [bd] 기본설계 |
+| 상태 | [xx] 완료 |
 | 기본설계 참조 | 010-basic-design.md |
 | 작성일 | 2025-12-16 |
+| 수정일 | 2025-12-16 |
+
+## 변경 이력
+| 버전 | 날짜 | 변경 내용 |
+|------|------|----------|
+| 1.0 | 2025-12-16 | 초기 작성 |
+| 1.1 | 2025-12-16 | **Popover→고정영역 변경** (SCR-02 업데이트) |
 
 ---
 
@@ -16,38 +23,35 @@
 | 화면 ID | 화면명 | 목적 | SVG 파일 |
 |---------|--------|------|----------|
 | SCR-01 | TaskProgress Stepper | 워크플로우 진행 상황 시각화 | screen-01-stepper.svg |
-| SCR-02 | Step Popover | 단계별 완료일 및 액션 버튼 제공 | screen-02-popover.svg |
+| SCR-02 | Step Detail Area | 단계별 완료일 및 액션 버튼 제공 (고정 영역) | screen-02-detail.svg |
 | SCR-03 | TaskBasicInfo 확장 | 누락 정보(schedule, tags, depends, ref) 표시 | screen-03-basicinfo.svg |
 
 ---
 
 ## 2. 화면 전환 흐름
 
-### 2.1 전체 흐름도
+### 2.1 전체 흐름도 (v1.1 업데이트)
 
 ```mermaid
 stateDiagram-v2
     [*] --> TaskDetailPanel
     TaskDetailPanel --> TaskProgress: 스크롤
-    TaskProgress --> StepPopover: 단계 클릭
-    StepPopover --> ActionExecution: 액션 버튼 클릭
-    StepPopover --> TaskProgress: 외부 클릭/Escape
-    ActionExecution --> TaskProgress: 완료
+    TaskProgress --> StepDetail: 단계 클릭 (항상 표시)
+    StepDetail --> ActionExecution: 액션 버튼 클릭
+    ActionExecution --> StepDetail: 완료 후 자동 갱신
 
     TaskDetailPanel --> TaskBasicInfo: 스크롤
     TaskBasicInfo --> DependsTask: depends 링크 클릭
     DependsTask --> TaskDetailPanel: 해당 Task 로드
 ```
 
-### 2.2 액션-화면 매트릭스
+### 2.2 액션-화면 매트릭스 (v1.1 업데이트)
 
 | 현재 화면 | 사용자 액션 | 결과 | 조건 |
 |----------|------------|------|------|
-| TaskProgress | 단계 클릭 | Popover 표시 | - |
-| Popover | Auto 버튼 클릭 | wf:auto 실행 | 현재 단계만 |
-| Popover | 액션 버튼 클릭 | 워크플로우 명령 실행 | 현재 단계만 |
-| Popover | 외부 클릭 | Popover 닫힘 | - |
-| Popover | Escape 키 | Popover 닫힘 | - |
+| TaskProgress | 단계 클릭 | 해당 단계 정보 표시 (하단 고정 영역) | 항상 표시, 토글 없음 |
+| StepDetail | Auto 버튼 클릭 | wf:auto 실행 | 현재 단계만 표시 |
+| StepDetail | 액션 버튼 클릭 | 워크플로우 명령 실행 | 현재 단계만 enabled |
 | TaskBasicInfo | depends 클릭 | 해당 Task로 이동 | - |
 
 ---

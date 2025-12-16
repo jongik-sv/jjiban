@@ -32,7 +32,12 @@ const wbsStore = useWbsStore()
 const projectId = computed(() => route.query.project as string)
 
 // 스토어 상태 구독
-const { loading, error, filteredTree, expandedNodes, flatNodes } = storeToRefs(wbsStore)
+const { loading, error, filteredTree, expandedNodes, flatNodes, isMultiProjectMode } = storeToRefs(wbsStore)
+
+// TSK-09-01: 다중 프로젝트 모드 또는 단일 프로젝트 모드에서 데이터 유효 여부
+const hasValidData = computed(() => {
+  return projectId.value || isMultiProjectMode.value || filteredTree.value.length > 0
+})
 
 // 이벤트 정의
 const emit = defineEmits<{
@@ -165,16 +170,22 @@ function handleNodeDblClick(nodeId: string) {
  *
  * 참고: pages/wbs.vue에서 loadProjectAndWbs를 통해 이미 로드됨
  * WbsTreePanel은 데이터가 이미 있으면 다시 로드하지 않음
+ * TSK-09-01: 다중 프로젝트 모드에서는 projectId 불필요
  */
 async function loadWbs() {
-  // projectId 미존재 시 사용자 안내 (설계리뷰 IMP-02)
-  if (!projectId.value) {
-    console.error('Project ID is required')
+  // 이미 데이터가 있으면 다시 로드하지 않음 (중복 방지)
+  if (filteredTree.value && filteredTree.value.length > 0) {
     return
   }
 
-  // 이미 데이터가 있으면 다시 로드하지 않음 (중복 방지)
-  if (filteredTree.value && filteredTree.value.length > 0) {
+  // 다중 프로젝트 모드에서는 projectId 불필요
+  if (isMultiProjectMode.value) {
+    return
+  }
+
+  // 단일 프로젝트 모드: projectId 필수
+  if (!projectId.value) {
+    console.error('Project ID is required')
     return
   }
 
@@ -187,10 +198,12 @@ async function loadWbs() {
 
 /**
  * 노드 타입에 따른 텍스트 스타일 클래스 반환
+ * TSK-09-01: 프로젝트 타입 추가
  * @param type 노드 타입
  */
 function getTitleClass(type: string): string {
   const classMap: Record<string, string> = {
+    'project': 'wbs-tree-node-title-project',
     'wp': 'wbs-tree-node-title-wp',
     'act': 'wbs-tree-node-title-act',
     'task': 'wbs-tree-node-title-task'
@@ -252,9 +265,9 @@ onMounted(loadWbs)
       />
     </div>
 
-    <!-- projectId 미존재 상태 (설계리뷰 IMP-02) -->
+    <!-- projectId 미존재 && 다중 프로젝트 데이터도 없는 상태 (설계리뷰 IMP-02, TSK-09-01) -->
     <div
-      v-else-if="!projectId"
+      v-else-if="!hasValidData"
       data-testid="no-project-state"
       class="p-4 flex flex-col items-center justify-center h-full"
     >

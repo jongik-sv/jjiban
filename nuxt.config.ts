@@ -52,8 +52,18 @@ export default defineNuxtConfig({
   modules: [
     '@nuxtjs/tailwindcss',
     '@primevue/nuxt-module',
-    '@pinia/nuxt'
+    '@pinia/nuxt',
+    'nuxt-monaco-editor'
   ],
+
+  // Monaco Editor 설정
+  monacoEditor: {
+    locale: 'ko',
+    componentName: {
+      codeEditor: 'MonacoEditor',
+      diffEditor: 'MonacoDiffEditor'
+    }
+  },
 
   // Pinia 설정
   pinia: {

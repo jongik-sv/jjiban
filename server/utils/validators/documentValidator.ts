@@ -7,8 +7,10 @@
 
 import { stat } from 'fs/promises';
 import path from 'path';
+import { decodePathSegment } from '../../../app/utils/urlPath';
 
-const FILENAME_PATTERN = /^\d{3}-[\w-]+\.md$/;
+// 파일명 패턴: 숫자3자리-이름.md (한글, 공백, 괄호 허용)
+const FILENAME_PATTERN = /^\d{3}-[가-힣\w\s()[\]-]+\.md$/;
 const MAX_FILE_SIZE = 1 * 1024 * 1024; // 1MB
 
 export interface DocumentValidationResult {
@@ -37,13 +39,8 @@ export function validateFilename(filename: string): DocumentValidationResult {
  * ../ 포함 불가 + URL 인코딩 우회 방지
  */
 export function validatePathTraversal(filename: string): DocumentValidationResult {
-  // URL 디코딩 후 체크
-  let decoded = filename;
-  try {
-    decoded = decodeURIComponent(filename);
-  } catch {
-    // decodeURIComponent 실패 시 원본 사용
-  }
+  // URL 디코딩 후 체크 (한글, 공백, 괄호 등 특수문자 지원)
+  const decoded = decodePathSegment(filename);
 
   // 다양한 경로 탐색 패턴 차단
   const dangerousPatterns = [

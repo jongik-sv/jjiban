@@ -1,6 +1,6 @@
 > version: 1.0
 > depth: 4
-> updated: 2025-12-16
+> updated: 2025-12-17
 > start: 2025-12-16
 
 ---
@@ -322,7 +322,7 @@
 - category: development
 - status: [xx]
 - priority: high
-- schedule: 2025-12-23 ~ 2025-12-27
+- schedule: 2025-12-23 ~ 2025-12-30
 - tags: api, project
 - depends: TSK-02-03-03
 - requirements:
@@ -832,7 +832,7 @@
 
 #### TSK-08-07: Task Panel Enhancement - Stepper & Missing Info
 - category: development
-- status: [bd]
+- status: [xx]
 - priority: high
 - assignee: hong
 - schedule: 2025-12-16 ~ 2025-12-20
@@ -850,3 +850,40 @@
   - depends 클릭 시 해당 Task로 이동
   - 접근성 준수 (WCAG 2.1)
 - ref: PRD 6.3, TRD 2.3.6
+- completed:
+  - bd: 2025-12-16 18:45
+  - dd: 2025-12-16 22:15
+  - im: 2025-12-16 22:15
+  - vf: 2025-12-16 22:15
+  - xx: 2025-12-16 22:16
+
+---
+
+## WP-09: Multi-Project Support
+- priority: high
+- schedule: 2025-12-17 ~ 2025-12-20
+- progress: 100%
+
+#### TSK-09-01: 다중 프로젝트 WBS 통합 뷰
+- category: development
+- status: [xx]
+- priority: high
+- schedule: 2025-12-17 ~ 2025-12-20
+- tags: multi-project, wbs, tree, api
+- depends: TSK-04-01, TSK-03-02
+- requirements:
+  - GET /api/wbs/all 엔드포인트 추가 (모든 프로젝트 WBS 조회)
+  - 모든 프로젝트 WBS를 한 트리에 표시 (프로젝트 → WP → ACT → TSK)
+  - 프로젝트 노드 타입 UI (아이콘, 스타일)
+  - 프로젝트 상세 패널 컴포넌트 (정보 + 파일 목록)
+  - GET /api/projects/:id/files 엔드포인트 (프로젝트 파일 목록)
+  - 파일 뷰어 (.md: 마크다운, 이미지: 이미지 표시, 기타: Monaco Editor)
+  - URL 파라미터 없이 /wbs 접속 시 전체 프로젝트 뷰
+  - ?project=xxx 파라미터 시 기존 단일 프로젝트 뷰 유지
+- ref: PRD 6.5
+- completed:
+  - bd: 2025-12-17 10:00
+  - dd: 2025-12-17 11:30
+  - im: 2025-12-17 15:30
+  - vf: 2025-12-17 16:00
+  - xx: 2025-12-17 16:10

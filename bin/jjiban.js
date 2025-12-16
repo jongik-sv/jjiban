@@ -16,6 +16,7 @@
 
 import { Command } from 'commander';
 import { workflowCommand } from '../cli/commands/workflow.js';
+import { nextTaskCommand } from '../cli/commands/next-task.js';
 
 // 버전 정보 (package.json에서 가져오기)
 const VERSION = '0.1.0';
@@ -38,11 +39,22 @@ program
   .option('-p, --project <id>', '프로젝트 ID (생략 시 자동 탐지)')
   .action(workflowCommand);
 
+// next-task 명령어
+program
+  .command('next-task [projectId]')
+  .description('실행 가능한 다음 Task 찾기 (의존관계 분석)')
+  .option('-c, --category <cat>', '카테고리 필터 (development|defect|infrastructure)')
+  .option('-t, --table', '표 형식 출력 (기본: JSON)', false)
+  .action(nextTaskCommand);
+
 // 기본 도움말
 program
   .addHelpText('after', `
 
 Examples:
+  $ jjiban next-task                       # 실행 가능한 Task 조회 (JSON)
+  $ jjiban next-task --table               # 표 형식 출력
+  $ jjiban next-task --category development # 카테고리 필터
   $ jjiban workflow TSK-07-01              # 전체 워크플로우 실행
   $ jjiban workflow TSK-07-01 --until build  # 구현까지만 실행
   $ jjiban workflow TSK-07-01 --dry-run    # 실행 계획 확인
