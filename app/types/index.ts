@@ -290,3 +290,12 @@ export interface DocumentContent {
   size: number;          // 파일 크기 (bytes)
   lastModified: string;  // 최종 수정 시각 (ISO 8601)
 }
+
+// WP/ACT 진행률 통계 (TSK-05-05)
+export interface ProgressStats {
+  total: number           // 전체 Task 수
+  completed: number       // 완료 Task 수 (status === '[xx]')
+  inProgress: number      // 진행 중 Task 수 (status !== '[ ]' && !== '[xx]')
+  todo: number            // 대기 Task 수 (status === '[ ]')
+  byStatus: Record<string, number>  // 상태별 카운트 맵 { '[ ]': 2, '[bd]': 1, ... }
+}

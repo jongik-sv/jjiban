@@ -136,7 +136,7 @@ const handleSelectNode = () => {
 }
 
 .wbs-tree-node:hover {
-  background-color: rgba(55, 65, 81, 0.3); /* gray-700 with opacity */
+  @apply bg-header/30;
 }
 
 .wbs-tree-node.selected {

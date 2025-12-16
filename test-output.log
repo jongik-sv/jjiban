@@ -3125,3 +3125,1626 @@ Call log:
     }
   }
 }
+  ✘  103 [chromium] › wbs-tree-panel.spec.ts:22:3 › WBS Tree Panel › E2E-001: WBS 데이터가 성공적으로 로드되어 표시된다 (7.3s)
+  ✘  101 [chromium] › wbs-search.spec.ts:27:3 › WBS Search E2E › E2E-011: X 버튼 → 초기화 (24.4s)
+waitForWbsLoaded failed: page.waitForSelector: Timeout 15000ms exceeded.
+Call log:
+[2m  - waiting for locator('[data-testid="wbs-tree-content"]') to be visible[22m
+
+    at waitForWbsLoaded [90m(C:\project\jjiban\[39mtests\helpers\e2e-helpers.ts:43:12[90m)[39m
+    at [90mC:\project\jjiban\[39mtests\e2e\wbs-search.spec.ts:9:5 {
+  name: [32m'TimeoutError'[39m,
+  [[32mSymbol(step)[39m]: {
+    stepId: [32m'pw:api@14'[39m,
+    location: {
+      file: [32m'C:\\project\\jjiban\\tests\\helpers\\e2e-helpers.ts'[39m,
+      line: [33m43[39m,
+      column: [33m12[39m,
+      function: [32m'waitForWbsLoaded'[39m
+    },
+    category: [32m'pw:api'[39m,
+    title: [32m'page.waitForSelector([data-testid="wbs-tree-content"])'[39m,
+    apiName: [32m'page.waitForSelector'[39m,
+    params: {
+      selector: [32m'[data-testid="wbs-tree-content"]'[39m,
+      state: [32m'visible'[39m,
+      timeout: [33m15000[39m
+    },
+    boxedStack: [90mundefined[39m,
+    steps: [],
+    complete: [36m[Function: complete][39m,
+    endWallTime: [33m1765864786519[39m,
+    error: {
+      message: [32m'TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.\n'[39m +
+        [32m'Call log:\n'[39m +
+        [32m`\x1B[2m  - waiting for locator('[data-testid="wbs-tree-content"]') to be visible\x1B[22m\n`[39m,
+      stack: [32m'TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.\n'[39m +
+        [32m'Call log:\n'[39m +
+        [32m`\x1B[2m  - waiting for locator('[data-testid="wbs-tree-content"]') to be visible\x1B[22m\n`[39m +
+        [32m'\n'[39m +
+        [32m'    at waitForWbsLoaded (C:\\project\\jjiban\\tests\\helpers\\e2e-helpers.ts:43:12)\n'[39m +
+        [32m'    at C:\\project\\jjiban\\tests\\e2e\\wbs-search.spec.ts:9:5'[39m,
+      cause: [90mundefined[39m
+    }
+  }
+}
+waitForWbsLoaded failed: page.waitForSelector: Timeout 15000ms exceeded.
+Call log:
+[2m  - waiting for locator('[data-testid="wbs-tree-content"]') to be visible[22m
+
+    at waitForWbsLoaded [90m(C:\project\jjiban\[39mtests\helpers\e2e-helpers.ts:43:12[90m)[39m
+    at [90mC:\project\jjiban\[39mtests\e2e\wbs-search.spec.ts:9:5 {
+  name: [32m'TimeoutError'[39m,
+  [[32mSymbol(step)[39m]: {
+    stepId: [32m'pw:api@14'[39m,
+    location: {
+      file: [32m'C:\\project\\jjiban\\tests\\helpers\\e2e-helpers.ts'[39m,
+      line: [33m43[39m,
+      column: [33m12[39m,
+      function: [32m'waitForWbsLoaded'[39m
+    },
+    category: [32m'pw:api'[39m,
+    title: [32m'page.waitForSelector([data-testid="wbs-tree-content"])'[39m,
+    apiName: [32m'page.waitForSelector'[39m,
+    params: {
+      selector: [32m'[data-testid="wbs-tree-content"]'[39m,
+      state: [32m'visible'[39m,
+      timeout: [33m15000[39m
+    },
+    boxedStack: [90mundefined[39m,
+    steps: [],
+    complete: [36m[Function: complete][39m,
+    endWallTime: [33m1765864787317[39m,
+    error: {
+      message: [32m'TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.\n'[39m +
+        [32m'Call log:\n'[39m +
+        [32m`\x1B[2m  - waiting for locator('[data-testid="wbs-tree-content"]') to be visible\x1B[22m\n`[39m,
+      stack: [32m'TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.\n'[39m +
+        [32m'Call log:\n'[39m +
+        [32m`\x1B[2m  - waiting for locator('[data-testid="wbs-tree-content"]') to be visible\x1B[22m\n`[39m +
+        [32m'\n'[39m +
+        [32m'    at waitForWbsLoaded (C:\\project\\jjiban\\tests\\helpers\\e2e-helpers.ts:43:12)\n'[39m +
+        [32m'    at C:\\project\\jjiban\\tests\\e2e\\wbs-search.spec.ts:9:5'[39m,
+      cause: [90mundefined[39m
+    }
+  }
+}
+  ✘  105 [chromium] › wbs-tree-panel.spec.ts:75:3 › WBS Search › E2E-003: 검색어 입력 시 X 버튼이 표시된다 (11.8s)
+  ✘  104 [chromium] › wbs-tree-panel.spec.ts:42:3 › WBS Tree Panel › E2E-002: 헤더에 타이틀, 버튼, 검색, 카드가 모두 표시된다 (11.9s)
+  ✘  100 [chromium] › wbs-search.spec.ts:12:3 › WBS Search E2E › E2E-010: 검색어 입력 → 필터링 결과 (25.9s)
+  ✘  107 [chromium] › wbs-tree-panel.spec.ts:116:3 › WBS Tree Actions › E2E-005: 전체 펼치기 버튼이 클릭 가능하다 (11.6s)
+  ✘  106 [chromium] › wbs-tree-panel.spec.ts:91:3 › WBS Search › E2E-004: X 버튼 클릭 시 검색어가 초기화된다 (11.5s)
+  ✘  102 [chromium] › wbs-search.spec.ts:43:3 › WBS Search E2E › E2E-012: 대소문자 무시 검색 (24.3s)
+  ✘  113 [chromium] › wbs.spec.ts:71:3 › WBS API › E2E-WBS-01: GET /api/projects/:id/wbs - WBS 조회 성공 (345ms)
+  -  114 [chromium] › wbs.spec.ts:85:3 › WBS API › E2E-WBS-02-01: PUT /api/projects/:id/wbs - WBS 저장 성공
+  -  115 [chromium] › wbs.spec.ts:109:3 › WBS API › E2E-WBS-02-02: PUT /api/projects/:id/wbs - 동시성 충돌
+  -  116 [chromium] › wbs.spec.ts:127:3 › WBS API › E2E-WBS-04: PUT /api/projects/:id/wbs - 중복 ID 유효성 검증 실패
+  -  117 [chromium] › wbs.spec.ts:152:3 › WBS API › E2E-WBS-05: PUT → GET - 데이터 무결성
+  ✘  111 [chromium] › wbs-tree-panel.spec.ts:205:3 › WBS Performance › PERF-001: 검색 응답 시간이 500ms 이하이다 (12.0s)
+  ✘  108 [chromium] › wbs-tree-panel.spec.ts:129:3 › WBS Tree Actions › E2E-006: 전체 접기 버튼이 클릭 가능하다 (11.8s)
+  ✘  109 [chromium] › wbs-tree-panel.spec.ts:150:3 › WBS Summary Cards › E2E-007: 통계 카드가 정확한 값을 표시한다 (12.0s)
+  ✘  110 [chromium] › wbs-tree-panel.spec.ts:172:3 › WBS Error Handling › E2E-008: API 에러 시 에러 메시지를 표시한다 (5.1s)
+  ✘  112 [chromium] › wbs-tree-panel.spec.ts:233:3 › WBS Theme Integration › THEME-001: Tree 컴포넌트가 올바른 다크 테마 스타일을 가진다 (12.3s)
+[Global Teardown] Cleaning up E2E test environment...
+[Global Teardown] Test directory cleaned up: C:\Users\USER1\AppData\Local\Temp\jjiban-e2e-test
+
+
+  1) [chromium] › completed-field.spec.ts:50:3 › completed 필드 지원 E2E 테스트 › E2E-002: 상태 전이 시 completed 필드에 타임스탬프가 자동으로 기록된다 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBeTruthy[2m()[22m
+
+    Received: [31mfalse[39m
+
+      77 |
+      78 |     // Assert: API 응답 확인
+    > 79 |     expect(response.ok()).toBeTruthy();
+         |                           ^
+      80 |     const result = await response.json();
+      81 |     expect(result.success).toBe(true);
+      82 |
+        at C:\project\jjiban\tests\e2e\completed-field.spec.ts:79:27
+
+  2) [chromium] › completed-field.spec.ts:111:3 › completed 필드 지원 E2E 테스트 › E2E-003: 여러 상태 전이 후 completed 필드에 모든 단계가 누적된다 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBeTruthy[2m()[22m
+
+    Received: [31mfalse[39m
+
+      141 |         data: { command: transition.command },
+      142 |       });
+    > 143 |       expect(response.ok()).toBeTruthy();
+          |                             ^
+      144 |     }
+      145 |
+      146 |     // Assert: WBS 조회하여 누적된 completed 확인
+        at C:\project\jjiban\tests\e2e\completed-field.spec.ts:143:29
+
+  3) [chromium] › completed-field.spec.ts:171:3 › completed 필드 지원 E2E 테스트 › E2E-004: development 워크플로우에서 롤백 시 이후 단계 completed가 삭제된다 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBeTruthy[2m()[22m
+
+    Received: [31mfalse[39m
+
+      200 |
+      201 |     // Assert: API 응답 확인
+    > 202 |     expect(response.ok()).toBeTruthy();
+          |                           ^
+      203 |     const result = await response.json();
+      204 |     expect(result.success).toBe(true);
+      205 |
+        at C:\project\jjiban\tests\e2e\completed-field.spec.ts:202:27
+
+  4) [chromium] › completed-field.spec.ts:234:3 › completed 필드 지원 E2E 테스트 › E2E-005: defect 워크플로우에서 롤백 시 이후 단계 completed가 삭제된다 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBeTruthy[2m()[22m
+
+    Received: [31mfalse[39m
+
+      262 |
+      263 |     // Assert: API 응답 확인
+    > 264 |     expect(response.ok()).toBeTruthy();
+          |                           ^
+      265 |     const result = await response.json();
+      266 |     expect(result.success).toBe(true);
+      267 |
+        at C:\project\jjiban\tests\e2e\completed-field.spec.ts:264:27
+
+  5) [chromium] › completed-field.spec.ts:292:3 › completed 필드 지원 E2E 테스트 › E2E-001: completed 필드가 파싱 및 직렬화 왕복 변환에서 정확히 유지된다 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBeTruthy[2m()[22m
+
+    Received: [31mfalse[39m
+
+      316 |     // Act: 파싱 (GET)
+      317 |     const getResponse = await request.get(`http://localhost:3000/api/projects/${TEST_COMPLETED_PROJECT}/wbs`);
+    > 318 |     expect(getResponse.ok()).toBeTruthy();
+          |                              ^
+      319 |
+      320 |     const wbsData = await getResponse.json();
+      321 |     const task = wbsData.tree[0].children[0]; // TSK-E2E-01
+        at C:\project\jjiban\tests\e2e\completed-field.spec.ts:318:30
+
+  6) [chromium] › detail-panel.spec.ts:150:3 › TSK-05-01: Detail Panel Structure › E2E-001: Task가 선택되지 않으면 빈 상태 메시지를 표시한다 
+
+    TimeoutError: locator.waitFor: Timeout 3000ms exceeded.
+    Call log:
+    [2m  - waiting for getByTestId('wbs-content') to be visible[22m
+
+
+      150 |   test('E2E-001: Task가 선택되지 않으면 빈 상태 메시지를 표시한다', async ({ page }) => {
+      151 |     // WBS 로딩 대기
+    > 152 |     await page.getByTestId('wbs-content').waitFor({ state: 'visible', timeout: 3000 })
+          |                                           ^
+      153 |
+      154 |     // Detail Panel 확인
+      155 |     const detailPanel = page.getByTestId('task-detail-panel')
+        at C:\project\jjiban\tests\e2e\detail-panel.spec.ts:152:43
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\detail-panel-TSK-05-01-Det-cad73-sk가-선택되지-않으면-빈-상태-메시지를-표시한다-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  7) [chromium] › detail-panel.spec.ts:168:3 › TSK-05-01: Detail Panel Structure › E2E-002: 사용자가 Task 제목을 인라인 편집할 수 있다 
+
+    TimeoutError: locator.waitFor: Timeout 3000ms exceeded.
+    Call log:
+    [2m  - waiting for getByTestId('wbs-content') to be visible[22m
+
+
+      167 |    */
+      168 |   test('E2E-002: 사용자가 Task 제목을 인라인 편집할 수 있다', async ({ page }) => {
+    > 169 |     await page.getByTestId('wbs-content').waitFor({ state: 'visible', timeout: 3000 })
+          |                                           ^
+      170 |
+      171 |     // Task 선택
+      172 |     await page.getByTestId('wbs-tree-node-TSK-05-01').click()
+        at C:\project\jjiban\tests\e2e\detail-panel.spec.ts:169:43
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\detail-panel-TSK-05-01-Det-7fdde--사용자가-Task-제목을-인라인-편집할-수-있다-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  8) [chromium] › detail-panel.spec.ts:200:3 › TSK-05-01: Detail Panel Structure › E2E-003: 사용자가 우선순위를 Dropdown으로 변경할 수 있다 
+
+    TimeoutError: locator.waitFor: Timeout 3000ms exceeded.
+    Call log:
+    [2m  - waiting for getByTestId('wbs-content') to be visible[22m
+
+
+      199 |    */
+      200 |   test('E2E-003: 사용자가 우선순위를 Dropdown으로 변경할 수 있다', async ({ page }) => {
+    > 201 |     await page.getByTestId('wbs-content').waitFor({ state: 'visible', timeout: 3000 })
+          |                                           ^
+      202 |
+      203 |     // Task 선택
+      204 |     await page.getByTestId('wbs-tree-node-TSK-05-01').click()
+        at C:\project\jjiban\tests\e2e\detail-panel.spec.ts:201:43
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\detail-panel-TSK-05-01-Det-99cc0-가-우선순위를-Dropdown으로-변경할-수-있다-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  9) [chromium] › detail-panel.spec.ts:229:3 › TSK-05-01: Detail Panel Structure › E2E-004: 사용자가 담당자를 Dropdown으로 변경할 수 있다 
+
+    TimeoutError: locator.waitFor: Timeout 3000ms exceeded.
+    Call log:
+    [2m  - waiting for getByTestId('wbs-content') to be visible[22m
+
+
+      228 |    */
+      229 |   test('E2E-004: 사용자가 담당자를 Dropdown으로 변경할 수 있다', async ({ page }) => {
+    > 230 |     await page.getByTestId('wbs-content').waitFor({ state: 'visible', timeout: 3000 })
+          |                                           ^
+      231 |
+      232 |     // Task 선택
+      233 |     await page.getByTestId('wbs-tree-node-TSK-05-01').click()
+        at C:\project\jjiban\tests\e2e\detail-panel.spec.ts:230:43
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\detail-panel-TSK-05-01-Det-6d1e5-자가-담당자를-Dropdown으로-변경할-수-있다-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  10) [chromium] › detail-panel.spec.ts:258:3 › TSK-05-01: Detail Panel Structure › E2E-005: 카테고리별 색상이 올바르게 적용된다 
+
+    TimeoutError: locator.waitFor: Timeout 3000ms exceeded.
+    Call log:
+    [2m  - waiting for getByTestId('wbs-content') to be visible[22m
+
+
+      257 |    */
+      258 |   test('E2E-005: 카테고리별 색상이 올바르게 적용된다', async ({ page }) => {
+    > 259 |     await page.getByTestId('wbs-content').waitFor({ state: 'visible', timeout: 3000 })
+          |                                           ^
+      260 |
+      261 |     // Development Task - 블루 (#3b82f6)
+      262 |     await page.getByTestId('wbs-tree-node-TSK-TEST-DEV').click()
+        at C:\project\jjiban\tests\e2e\detail-panel.spec.ts:259:43
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\detail-panel-TSK-05-01-Det-383df-E2E-005-카테고리별-색상이-올바르게-적용된다-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  11) [chromium] › detail-panel.spec.ts:287:3 › TSK-05-01: Detail Panel Structure › E2E-006: 우선순위별 색상이 올바르게 적용된다 
+
+    TimeoutError: locator.waitFor: Timeout 3000ms exceeded.
+    Call log:
+    [2m  - waiting for getByTestId('wbs-content') to be visible[22m
+
+
+      286 |    */
+      287 |   test('E2E-006: 우선순위별 색상이 올바르게 적용된다', async ({ page }) => {
+    > 288 |     await page.getByTestId('wbs-content').waitFor({ state: 'visible', timeout: 3000 })
+          |                                           ^
+      289 |
+      290 |     // High 우선순위 Task
+      291 |     await page.getByTestId('wbs-tree-node-TSK-05-01').click()
+        at C:\project\jjiban\tests\e2e\detail-panel.spec.ts:288:43
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\detail-panel-TSK-05-01-Det-807f8-E2E-006-우선순위별-색상이-올바르게-적용된다-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  12) [chromium] › detail-panel.spec.ts:306:3 › TSK-05-01: Detail Panel Structure › E2E-007: 인라인 편집 시 낙관적 업데이트가 즉시 반영된다 
+
+    TimeoutError: locator.waitFor: Timeout 3000ms exceeded.
+    Call log:
+    [2m  - waiting for getByTestId('wbs-content') to be visible[22m
+
+
+      305 |    */
+      306 |   test('E2E-007: 인라인 편집 시 낙관적 업데이트가 즉시 반영된다', async ({ page }) => {
+    > 307 |     await page.getByTestId('wbs-content').waitFor({ state: 'visible', timeout: 3000 })
+          |                                           ^
+      308 |
+      309 |     // Task 선택
+      310 |     await page.getByTestId('wbs-tree-node-TSK-05-01').click()
+        at C:\project\jjiban\tests\e2e\detail-panel.spec.ts:307:43
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\detail-panel-TSK-05-01-Det-0e00e--인라인-편집-시-낙관적-업데이트가-즉시-반영된다-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  13) [chromium] › detail-panel.spec.ts:331:3 › TSK-05-01: Detail Panel Structure › E2E-008: Detail Panel이 스크롤 가능하다 
+
+    TimeoutError: locator.waitFor: Timeout 3000ms exceeded.
+    Call log:
+    [2m  - waiting for getByTestId('wbs-content') to be visible[22m
+
+
+      330 |    */
+      331 |   test('E2E-008: Detail Panel이 스크롤 가능하다', async ({ page }) => {
+    > 332 |     await page.getByTestId('wbs-content').waitFor({ state: 'visible', timeout: 3000 })
+          |                                           ^
+      333 |
+      334 |     // Task 선택
+      335 |     await page.getByTestId('wbs-tree-node-TSK-05-01').click()
+        at C:\project\jjiban\tests\e2e\detail-panel.spec.ts:332:43
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\detail-panel-TSK-05-01-Det-8be5a--008-Detail-Panel이-스크롤-가능하다-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  14) [chromium] › detail-panel.spec.ts:357:3 › TSK-05-01: Detail Panel Structure › E2E-009: Task 로드 중 Skeleton을 표시한다 
+
+    TimeoutError: locator.waitFor: Timeout 3000ms exceeded.
+    Call log:
+    [2m  - waiting for getByTestId('wbs-content') to be visible[22m
+
+
+      362 |     })
+      363 |
+    > 364 |     await page.getByTestId('wbs-content').waitFor({ state: 'visible', timeout: 3000 })
+          |                                           ^
+      365 |
+      366 |     // Task 선택
+      367 |     await page.getByTestId('wbs-tree-node-TSK-05-01').click()
+        at C:\project\jjiban\tests\e2e\detail-panel.spec.ts:364:43
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\detail-panel-TSK-05-01-Det-6e841-09-Task-로드-중-Skeleton을-표시한다-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  15) [chromium] › detail-panel.spec.ts:382:3 › TSK-05-01: Detail Panel Structure › E2E-010: 제목이 200자를 초과하면 에러 메시지를 표시한다 
+
+    TimeoutError: locator.waitFor: Timeout 3000ms exceeded.
+    Call log:
+    [2m  - waiting for getByTestId('wbs-content') to be visible[22m
+
+
+      381 |    */
+      382 |   test('E2E-010: 제목이 200자를 초과하면 에러 메시지를 표시한다', async ({ page }) => {
+    > 383 |     await page.getByTestId('wbs-content').waitFor({ state: 'visible', timeout: 3000 })
+          |                                           ^
+      384 |
+      385 |     // Task 선택
+      386 |     await page.getByTestId('wbs-tree-node-TSK-05-01').click()
+        at C:\project\jjiban\tests\e2e\detail-panel.spec.ts:383:43
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\detail-panel-TSK-05-01-Det-49d60-제목이-200자를-초과하면-에러-메시지를-표시한다-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  16) [chromium] › detail-panel.spec.ts:407:3 › TSK-05-01: Detail Panel Structure › E2E-011: 우선순위 Dropdown은 4개 옵션만 표시한다 
+
+    TimeoutError: locator.waitFor: Timeout 3000ms exceeded.
+    Call log:
+    [2m  - waiting for getByTestId('wbs-content') to be visible[22m
+
+
+      406 |    */
+      407 |   test('E2E-011: 우선순위 Dropdown은 4개 옵션만 표시한다', async ({ page }) => {
+    > 408 |     await page.getByTestId('wbs-content').waitFor({ state: 'visible', timeout: 3000 })
+          |                                           ^
+      409 |
+      410 |     // Task 선택
+      411 |     await page.getByTestId('wbs-tree-node-TSK-05-01').click()
+        at C:\project\jjiban\tests\e2e\detail-panel.spec.ts:408:43
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\detail-panel-TSK-05-01-Det-482d3--우선순위-Dropdown은-4개-옵션만-표시한다-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  17) [chromium] › detail-panel.spec.ts:432:3 › TSK-05-01: Detail Panel Structure › E2E-013: API 실패 시 이전 값으로 롤백한다 
+
+    TimeoutError: locator.waitFor: Timeout 3000ms exceeded.
+    Call log:
+    [2m  - waiting for getByTestId('wbs-content') to be visible[22m
+
+
+      447 |     })
+      448 |
+    > 449 |     await page.getByTestId('wbs-content').waitFor({ state: 'visible', timeout: 3000 })
+          |                                           ^
+      450 |
+      451 |     // Task 선택
+      452 |     await page.getByTestId('wbs-tree-node-TSK-05-01').click()
+        at C:\project\jjiban\tests\e2e\detail-panel.spec.ts:449:43
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\detail-panel-TSK-05-01-Det-cfacc-2E-013-API-실패-시-이전-값으로-롤백한다-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  18) [chromium] › detail-panel.spec.ts:476:3 › TSK-05-01: Detail Panel Structure › E2E-014: 카테고리는 편집할 수 없다 
+
+    TimeoutError: locator.waitFor: Timeout 3000ms exceeded.
+    Call log:
+    [2m  - waiting for getByTestId('wbs-content') to be visible[22m
+
+
+      475 |    */
+      476 |   test('E2E-014: 카테고리는 편집할 수 없다', async ({ page }) => {
+    > 477 |     await page.getByTestId('wbs-content').waitFor({ state: 'visible', timeout: 3000 })
+          |                                           ^
+      478 |
+      479 |     // Task 선택
+      480 |     await page.getByTestId('wbs-tree-node-TSK-05-01').click()
+        at C:\project\jjiban\tests\e2e\detail-panel.spec.ts:477:43
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\detail-panel-TSK-05-01-Det-c5036-ture-E2E-014-카테고리는-편집할-수-없다-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  19) [chromium] › detail-panel.spec.ts:496:3 › TSK-05-01: Detail Panel Structure › E2E-015: Dialog가 올바른 다크 테마 스타일을 가진다 
+
+    TimeoutError: locator.waitFor: Timeout 3000ms exceeded.
+    Call log:
+    [2m  - waiting for getByTestId('wbs-content') to be visible[22m
+
+
+      495 |    */
+      496 |   test('E2E-015: Dialog가 올바른 다크 테마 스타일을 가진다', async ({ page }) => {
+    > 497 |     await page.getByTestId('wbs-content').waitFor({ state: 'visible', timeout: 3000 })
+          |                                           ^
+      498 |
+      499 |     const firstTask = page.getByTestId('wbs-tree-node-TSK-05-01')
+      500 |     await firstTask.click()
+        at C:\project\jjiban\tests\e2e\detail-panel.spec.ts:497:43
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\detail-panel-TSK-05-01-Det-93503--Dialog가-올바른-다크-테마-스타일을-가진다-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  20) [chromium] › detail-sections.spec.ts:45:3 › TSK-05-02: Detail Sections Integration › E2E-001: 워크플로우 흐름이 올바르게 표시된다 
+
+    TimeoutError: locator.waitFor: Timeout 5000ms exceeded.
+    Call log:
+    [2m  - waiting for getByTestId('wbs-content') to be visible[22m
+
+
+      24 |
+      25 |     // WBS 로딩 대기
+    > 26 |     await page.getByTestId('wbs-content').waitFor({ state: 'visible', timeout: 5000 })
+         |                                           ^
+      27 |
+      28 |     // WBS 트리 노드 로딩 대기 (WP-01 노드가 보일 때까지)
+      29 |     await page.getByTestId('wbs-tree-node-WP-01').waitFor({ state: 'visible', timeout: 5000 })
+        at C:\project\jjiban\tests\e2e\detail-sections.spec.ts:26:43
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\detail-sections-TSK-05-02--9c974-E2E-001-워크플로우-흐름이-올바르게-표시된다-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  21) [chromium] › detail-sections.spec.ts:82:3 › TSK-05-02: Detail Sections Integration › E2E-002: 요구사항 목록과 PRD 참조가 표시된다 
+
+    TimeoutError: locator.waitFor: Timeout 5000ms exceeded.
+    Call log:
+    [2m  - waiting for getByTestId('wbs-content') to be visible[22m
+
+
+      24 |
+      25 |     // WBS 로딩 대기
+    > 26 |     await page.getByTestId('wbs-content').waitFor({ state: 'visible', timeout: 5000 })
+         |                                           ^
+      27 |
+      28 |     // WBS 트리 노드 로딩 대기 (WP-01 노드가 보일 때까지)
+      29 |     await page.getByTestId('wbs-tree-node-WP-01').waitFor({ state: 'visible', timeout: 5000 })
+        at C:\project\jjiban\tests\e2e\detail-sections.spec.ts:26:43
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\detail-sections-TSK-05-02--87f0a-E-002-요구사항-목록과-PRD-참조가-표시된다-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  22) [chromium] › detail-sections.spec.ts:109:3 › TSK-05-02: Detail Sections Integration › E2E-003: 요구사항을 편집할 수 있다 
+
+    TimeoutError: locator.waitFor: Timeout 5000ms exceeded.
+    Call log:
+    [2m  - waiting for getByTestId('wbs-content') to be visible[22m
+
+
+      24 |
+      25 |     // WBS 로딩 대기
+    > 26 |     await page.getByTestId('wbs-content').waitFor({ state: 'visible', timeout: 5000 })
+         |                                           ^
+      27 |
+      28 |     // WBS 트리 노드 로딩 대기 (WP-01 노드가 보일 때까지)
+      29 |     await page.getByTestId('wbs-tree-node-WP-01').waitFor({ state: 'visible', timeout: 5000 })
+        at C:\project\jjiban\tests\e2e\detail-sections.spec.ts:26:43
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\detail-sections-TSK-05-02--466c7-tion-E2E-003-요구사항을-편집할-수-있다-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  23) [chromium] › detail-sections.spec.ts:145:3 › TSK-05-02: Detail Sections Integration › E2E-004: 요구사항을 추가하고 삭제할 수 있다 
+
+    TimeoutError: locator.waitFor: Timeout 5000ms exceeded.
+    Call log:
+    [2m  - waiting for getByTestId('wbs-content') to be visible[22m
+    [2m    - waiting for" http://localhost:3333/wbs?project=e2e-test-project" navigation to finish...[22m
+
+
+      24 |
+      25 |     // WBS 로딩 대기
+    > 26 |     await page.getByTestId('wbs-content').waitFor({ state: 'visible', timeout: 5000 })
+         |                                           ^
+      27 |
+      28 |     // WBS 트리 노드 로딩 대기 (WP-01 노드가 보일 때까지)
+      29 |     await page.getByTestId('wbs-tree-node-WP-01').waitFor({ state: 'visible', timeout: 5000 })
+        at C:\project\jjiban\tests\e2e\detail-sections.spec.ts:26:43
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\detail-sections-TSK-05-02--ce56b-E2E-004-요구사항을-추가하고-삭제할-수-있다-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  24) [chromium] › detail-sections.spec.ts:189:3 › TSK-05-02: Detail Sections Integration › E2E-005: 문서 목록과 존재/예정 상태가 표시된다 
+
+    Error: [31mTimed out 5000ms waiting for [39m[2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m()[22m
+
+    Locator: getByTestId('task-documents-panel')
+    Expected: visible
+    Received: <element(s) not found>
+    Call log:
+    [2m  - expect.toBeVisible with timeout 5000ms[22m
+    [2m  - waiting for getByTestId('task-documents-panel')[22m
+
+
+      194 |     // 문서 패널 확인
+      195 |     const documentsPanel = page.getByTestId('task-documents-panel')
+    > 196 |     await expect(documentsPanel).toBeVisible()
+          |                                  ^
+      197 |
+      198 |     // 문서 카드 확인 (최소 1개 이상)
+      199 |     const documentCards = page.locator('[data-testid^="document-card-"]')
+        at C:\project\jjiban\tests\e2e\detail-sections.spec.ts:196:34
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\detail-sections-TSK-05-02--9e12b-E-005-문서-목록과-존재-예정-상태가-표시된다-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  25) [chromium] › detail-sections.spec.ts:218:3 › TSK-05-02: Detail Sections Integration › E2E-006: 존재하는 문서를 클릭하면 뷰어가 열린다 
+
+    TimeoutError: locator.waitFor: Timeout 5000ms exceeded.
+    Call log:
+    [2m  - waiting for getByTestId('wbs-content') to be visible[22m
+    [2m    - waiting for" http://localhost:3333/wbs?project=e2e-test-project" navigation to finish...[22m
+
+
+      24 |
+      25 |     // WBS 로딩 대기
+    > 26 |     await page.getByTestId('wbs-content').waitFor({ state: 'visible', timeout: 5000 })
+         |                                           ^
+      27 |
+      28 |     // WBS 트리 노드 로딩 대기 (WP-01 노드가 보일 때까지)
+      29 |     await page.getByTestId('wbs-tree-node-WP-01').waitFor({ state: 'visible', timeout: 5000 })
+        at C:\project\jjiban\tests\e2e\detail-sections.spec.ts:26:43
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\detail-sections-TSK-05-02--82693-E-006-존재하는-문서를-클릭하면-뷰어가-열린다-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  26) [chromium] › detail-sections.spec.ts:238:3 › TSK-05-02: Detail Sections Integration › E2E-007: 상태 변경 이력이 타임라인으로 표시된다 
+
+    TimeoutError: locator.waitFor: Timeout 5000ms exceeded.
+    Call log:
+    [2m  - waiting for getByTestId('wbs-content') to be visible[22m
+    [2m    - waiting for" http://localhost:3333/wbs?project=e2e-test-project" navigation to finish...[22m
+
+
+      24 |
+      25 |     // WBS 로딩 대기
+    > 26 |     await page.getByTestId('wbs-content').waitFor({ state: 'visible', timeout: 5000 })
+         |                                           ^
+      27 |
+      28 |     // WBS 트리 노드 로딩 대기 (WP-01 노드가 보일 때까지)
+      29 |     await page.getByTestId('wbs-tree-node-WP-01').waitFor({ state: 'visible', timeout: 5000 })
+        at C:\project\jjiban\tests\e2e\detail-sections.spec.ts:26:43
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\detail-sections-TSK-05-02--cc5ee-E-007-상태-변경-이력이-타임라인으로-표시된다-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  27) [chromium] › detail-sections.spec.ts:269:3 › TSK-05-02: Detail Sections Integration › E2E-008: 카테고리별로 다른 워크플로우 단계가 표시된다 
+
+    TimeoutError: locator.waitFor: Timeout 5000ms exceeded.
+    Call log:
+    [2m  - waiting for getByTestId('wbs-content') to be visible[22m
+
+
+      24 |
+      25 |     // WBS 로딩 대기
+    > 26 |     await page.getByTestId('wbs-content').waitFor({ state: 'visible', timeout: 5000 })
+         |                                           ^
+      27 |
+      28 |     // WBS 트리 노드 로딩 대기 (WP-01 노드가 보일 때까지)
+      29 |     await page.getByTestId('wbs-tree-node-WP-01').waitFor({ state: 'visible', timeout: 5000 })
+        at C:\project\jjiban\tests\e2e\detail-sections.spec.ts:26:43
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\detail-sections-TSK-05-02--7af67-08-카테고리별로-다른-워크플로우-단계가-표시된다-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  28) [chromium] › detail-sections.spec.ts:293:3 › TSK-05-02: Detail Sections Integration › E2E-PERF-01: 모든 섹션이 빠르게 렌더링된다 
+
+    TimeoutError: locator.waitFor: Timeout 1000ms exceeded.
+    Call log:
+    [2m  - waiting for getByTestId('task-workflow-panel') to be visible[22m
+
+
+      300 |     // 모든 섹션 표시 대기
+      301 |     await page.getByTestId('task-detail-panel').waitFor({ state: 'visible', timeout: 2000 })
+    > 302 |     await page.getByTestId('task-workflow-panel').waitFor({ state: 'visible', timeout: 1000 })
+          |                                                   ^
+      303 |     await page.getByTestId('task-requirements-panel').waitFor({ state: 'visible', timeout: 1000 })
+      304 |     await page.getByTestId('task-documents-panel').waitFor({ state: 'visible', timeout: 1000 })
+      305 |     await page.getByTestId('task-history-panel').waitFor({ state: 'visible', timeout: 1000 })
+        at C:\project\jjiban\tests\e2e\detail-sections.spec.ts:302:51
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\detail-sections-TSK-05-02--2b3ea-2E-PERF-01-모든-섹션이-빠르게-렌더링된다-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  29) [chromium] › detail-sections.spec.ts:319:3 › TSK-05-02: Detail Sections Integration › E2E-A11Y-01: 모든 섹션이 접근 가능하다 
+
+    [31mTest timeout of 60000ms exceeded.[39m
+
+    Error: locator.getAttribute: Test timeout of 60000ms exceeded.
+    Call log:
+    [2m  - waiting for getByTestId('task-workflow-panel')[22m
+
+
+      324 |     // ARIA 라벨 확인
+      325 |     const workflowPanel = page.getByTestId('task-workflow-panel')
+    > 326 |     const ariaLabel = await workflowPanel.getAttribute('aria-label')
+          |                                           ^
+      327 |     expect(ariaLabel).toBeTruthy()
+      328 |
+      329 |     // 키보드 네비게이션 테스트
+        at C:\project\jjiban\tests\e2e\detail-sections.spec.ts:326:43
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\detail-sections-TSK-05-02--e5bae--E2E-A11Y-01-모든-섹션이-접근-가능하다-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  30) [chromium] › detail-sections.spec.ts:344:3 › TSK-05-02: Detail Sections Integration › E2E-ERROR-01: 요구사항 편집 실패 시 롤백된다 
+
+    [31mTest timeout of 60000ms exceeded.[39m
+
+    Error: locator.textContent: Test timeout of 60000ms exceeded.
+    Call log:
+    [2m  - waiting for getByTestId('requirement-item-0')[22m
+
+
+      364 |
+      365 |     // 원본 텍스트 저장
+    > 366 |     const originalText = await page.getByTestId('requirement-item-0').textContent()
+          |                                                                       ^
+      367 |
+      368 |     // 편집 시도
+      369 |     await page.getByTestId('edit-requirements-btn').click()
+        at C:\project\jjiban\tests\e2e\detail-sections.spec.ts:366:71
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\detail-sections-TSK-05-02--06bd2--ERROR-01-요구사항-편집-실패-시-롤백된다-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  31) [chromium] › detail-sections.spec.ts:386:3 › TSK-05-02: Detail Sections Integration › E2E-INTEGRATION-01: WBS 페이지에서 Task 선택 시 모든 섹션이 표시된다 
+
+    Error: [31mTimed out 5000ms waiting for [39m[2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m()[22m
+
+    Locator: getByTestId('task-title')
+    Expected: visible
+    Received: <element(s) not found>
+    Call log:
+    [2m  - expect.toBeVisible with timeout 5000ms[22m
+    [2m  - waiting for getByTestId('task-title')[22m
+
+
+      394 |     // 기본 정보 (TSK-05-01)
+      395 |     const taskTitle = page.getByTestId('task-title')
+    > 396 |     await expect(taskTitle).toBeVisible()
+          |                             ^
+      397 |     await expect(taskTitle).toContainText('Development Task')
+      398 |
+      399 |     // 진행 상태 (TSK-05-01)
+        at C:\project\jjiban\tests\e2e\detail-sections.spec.ts:396:29
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\detail-sections-TSK-05-02--a6ebc-페이지에서-Task-선택-시-모든-섹션이-표시된다-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  32) [chromium] › detail-sections.spec.ts:428:3 › TSK-05-02: Detail Sections Integration › E2E-THEME-01: TaskWorkflow 현재 단계가 강조 표시된다 
+
+    Error: [31mTimed out 5000ms waiting for [39m[2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m()[22m
+
+    Locator: getByTestId('task-workflow-panel')
+    Expected: visible
+    Received: <element(s) not found>
+    Call log:
+    [2m  - expect.toBeVisible with timeout 5000ms[22m
+    [2m  - waiting for getByTestId('task-workflow-panel')[22m
+
+
+      433 |     // 워크플로우 패널 확인
+      434 |     const workflowPanel = page.getByTestId('task-workflow-panel')
+    > 435 |     await expect(workflowPanel).toBeVisible()
+          |                                 ^
+      436 |
+      437 |     // 현재 단계 노드 확인
+      438 |     const currentStep = page.getByTestId('workflow-node-current')
+        at C:\project\jjiban\tests\e2e\detail-sections.spec.ts:435:33
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\detail-sections-TSK-05-02--d61b0-TaskWorkflow-현재-단계가-강조-표시된다-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  33) [chromium] › projects-page.spec.ts:109:3 › Projects Page E2E Tests › E2E-001: should render project list on page load 
+
+    Error: [31mTimed out 5000ms waiting for [39m[2mexpect([22m[31mlocator[39m[2m).[22mtoHaveCount[2m([22m[32mexpected[39m[2m)[22m
+
+    Locator: locator('.p-card')
+    Expected: [32m1[39m
+    Received: [31m4[39m
+    Call log:
+    [2m  - expect.toHaveCount with timeout 5000ms[22m
+    [2m  - waiting for locator('.p-card')[22m
+    [2m    7 × locator resolved to 4 elements[22m
+    [2m      - unexpected value "4"[22m
+    [2m    2 × waiting for" http://localhost:3333/projects" navigation to finish...[22m
+    [2m      - navigated to "http://localhost:3333/projects"[22m
+
+
+      127 |     // 프로젝트 카드 확인
+      128 |     const cards = page.locator('.p-card');
+    > 129 |     await expect(cards).toHaveCount(1);
+          |                         ^
+      130 |   });
+      131 |
+      132 |   test('E2E-003: should display all project information in card', async ({ page }) => {
+        at C:\project\jjiban\tests\e2e\projects-page.spec.ts:129:25
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\projects-page-Projects-Pag-e04c1-r-project-list-on-page-load-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  34) [chromium] › theme-integration.spec.ts:15:3 › Theme Integration Tests › TC-01: Tree 컴포넌트가 올바른 다크 테마 스타일을 가진다 
+
+    TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('[data-testid="wbs-tree-content"]') to be visible[22m
+
+
+       at ..\helpers\e2e-helpers.ts:43
+
+      41 |     // 3. 트리 콘텐츠 또는 에러/빈 상태 표시 대기
+      42 |     await Promise.race([
+    > 43 |       page.waitForSelector('[data-testid="wbs-tree-content"]', {
+         |            ^
+      44 |         state: 'visible',
+      45 |         timeout
+      46 |       }),
+        at waitForWbsLoaded (C:\project\jjiban\tests\helpers\e2e-helpers.ts:43:12)
+        at C:\project\jjiban\tests\e2e\theme-integration.spec.ts:12:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\theme-integration-Theme-In-1c9a3-ee-컴포넌트가-올바른-다크-테마-스타일을-가진다-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  35) [chromium] › theme-integration.spec.ts:53:3 › Theme Integration Tests › TC-02: Splitter Gutter가 올바른 다크 테마 스타일을 가진다 
+
+    TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('[data-testid="wbs-tree-content"]') to be visible[22m
+
+
+       at ..\helpers\e2e-helpers.ts:43
+
+      41 |     // 3. 트리 콘텐츠 또는 에러/빈 상태 표시 대기
+      42 |     await Promise.race([
+    > 43 |       page.waitForSelector('[data-testid="wbs-tree-content"]', {
+         |            ^
+      44 |         state: 'visible',
+      45 |         timeout
+      46 |       }),
+        at waitForWbsLoaded (C:\project\jjiban\tests\helpers\e2e-helpers.ts:43:12)
+        at C:\project\jjiban\tests\e2e\theme-integration.spec.ts:12:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\theme-integration-Theme-In-9f5dc--Gutter가-올바른-다크-테마-스타일을-가진다-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  36) [chromium] › theme-integration.spec.ts:79:3 › Theme Integration Tests › TC-03: Menubar가 올바른 다크 테마 스타일을 가진다 
+
+    TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('[data-testid="wbs-tree-content"]') to be visible[22m
+
+
+       at ..\helpers\e2e-helpers.ts:43
+
+      41 |     // 3. 트리 콘텐츠 또는 에러/빈 상태 표시 대기
+      42 |     await Promise.race([
+    > 43 |       page.waitForSelector('[data-testid="wbs-tree-content"]', {
+         |            ^
+      44 |         state: 'visible',
+      45 |         timeout
+      46 |       }),
+        at waitForWbsLoaded (C:\project\jjiban\tests\helpers\e2e-helpers.ts:43:12)
+        at C:\project\jjiban\tests\e2e\theme-integration.spec.ts:12:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\theme-integration-Theme-In-430f0-Menubar가-올바른-다크-테마-스타일을-가진다-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  37) [chromium] › theme-integration.spec.ts:113:3 › Theme Integration Tests › TC-04: Dialog가 올바른 다크 테마 스타일을 가진다 
+
+    TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('[data-testid="wbs-tree-content"]') to be visible[22m
+
+
+       at ..\helpers\e2e-helpers.ts:43
+
+      41 |     // 3. 트리 콘텐츠 또는 에러/빈 상태 표시 대기
+      42 |     await Promise.race([
+    > 43 |       page.waitForSelector('[data-testid="wbs-tree-content"]', {
+         |            ^
+      44 |         state: 'visible',
+      45 |         timeout
+      46 |       }),
+        at waitForWbsLoaded (C:\project\jjiban\tests\helpers\e2e-helpers.ts:43:12)
+        at C:\project\jjiban\tests\e2e\theme-integration.spec.ts:12:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\theme-integration-Theme-In-5ed9c--Dialog가-올바른-다크-테마-스타일을-가진다-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  38) [chromium] › theme-integration.spec.ts:139:3 › Theme Integration Tests › TC-05: 기존 컴포넌트가 정상 표시된다 (회귀 검증) 
+
+    TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('[data-testid="wbs-tree-content"]') to be visible[22m
+
+
+       at ..\helpers\e2e-helpers.ts:43
+
+      41 |     // 3. 트리 콘텐츠 또는 에러/빈 상태 표시 대기
+      42 |     await Promise.race([
+    > 43 |       page.waitForSelector('[data-testid="wbs-tree-content"]', {
+         |            ^
+      44 |         state: 'visible',
+      45 |         timeout
+      46 |       }),
+        at waitForWbsLoaded (C:\project\jjiban\tests\helpers\e2e-helpers.ts:43:12)
+        at C:\project\jjiban\tests\e2e\theme-integration.spec.ts:12:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\theme-integration-Theme-In-71647--05-기존-컴포넌트가-정상-표시된다-회귀-검증--chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  39) [chromium] › theme-integration.spec.ts:165:3 › Theme Integration Tests › TC-06: 색상 대비가 WCAG 2.1 AA 기준을 만족한다 
+
+    TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('[data-testid="wbs-tree-content"]') to be visible[22m
+
+
+       at ..\helpers\e2e-helpers.ts:43
+
+      41 |     // 3. 트리 콘텐츠 또는 에러/빈 상태 표시 대기
+      42 |     await Promise.race([
+    > 43 |       page.waitForSelector('[data-testid="wbs-tree-content"]', {
+         |            ^
+      44 |         state: 'visible',
+      45 |         timeout
+      46 |       }),
+        at waitForWbsLoaded (C:\project\jjiban\tests\helpers\e2e-helpers.ts:43:12)
+        at C:\project\jjiban\tests\e2e\theme-integration.spec.ts:12:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\theme-integration-Theme-In-877f2-색상-대비가-WCAG-2-1-AA-기준을-만족한다-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  40) [chromium] › theme-integration.spec.ts:205:3 › Theme Integration Tests › TC-07: 키보드로 전체 UI에 접근할 수 있다 
+
+    TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('[data-testid="wbs-tree-content"]') to be visible[22m
+
+
+       at ..\helpers\e2e-helpers.ts:43
+
+      41 |     // 3. 트리 콘텐츠 또는 에러/빈 상태 표시 대기
+      42 |     await Promise.race([
+    > 43 |       page.waitForSelector('[data-testid="wbs-tree-content"]', {
+         |            ^
+      44 |         state: 'visible',
+      45 |         timeout
+      46 |       }),
+        at waitForWbsLoaded (C:\project\jjiban\tests\helpers\e2e-helpers.ts:43:12)
+        at C:\project\jjiban\tests\e2e\theme-integration.spec.ts:12:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\theme-integration-Theme-In-de7dd--TC-07-키보드로-전체-UI에-접근할-수-있다-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  41) [chromium] › theme-integration.spec.ts:249:3 › Theme Integration Tests › TC-08: ARIA 속성이 적절하게 설정되어 있다 
+
+    TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('[data-testid="wbs-tree-content"]') to be visible[22m
+
+
+       at ..\helpers\e2e-helpers.ts:43
+
+      41 |     // 3. 트리 콘텐츠 또는 에러/빈 상태 표시 대기
+      42 |     await Promise.race([
+    > 43 |       page.waitForSelector('[data-testid="wbs-tree-content"]', {
+         |            ^
+      44 |         state: 'visible',
+      45 |         timeout
+      46 |       }),
+        at waitForWbsLoaded (C:\project\jjiban\tests\helpers\e2e-helpers.ts:43:12)
+        at C:\project\jjiban\tests\e2e\theme-integration.spec.ts:12:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\theme-integration-Theme-In-1a243-TC-08-ARIA-속성이-적절하게-설정되어-있다-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  42) [chromium] › wbs-actions.spec.ts:12:3 › WBS Tree Actions E2E › E2E-020: 전체 펼치기 ───────────────
+
+    TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('[data-testid="wbs-tree-content"]') to be visible[22m
+
+
+       at ..\helpers\e2e-helpers.ts:43
+
+      41 |     // 3. 트리 콘텐츠 또는 에러/빈 상태 표시 대기
+      42 |     await Promise.race([
+    > 43 |       page.waitForSelector('[data-testid="wbs-tree-content"]', {
+         |            ^
+      44 |         state: 'visible',
+      45 |         timeout
+      46 |       }),
+        at waitForWbsLoaded (C:\project\jjiban\tests\helpers\e2e-helpers.ts:43:12)
+        at C:\project\jjiban\tests\e2e\wbs-actions.spec.ts:9:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\wbs-actions-WBS-Tree-Actions-E2E-E2E-020-전체-펼치기-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  43) [chromium] › wbs-actions.spec.ts:26:3 › WBS Tree Actions E2E › E2E-021: 전체 접기 ────────────────
+
+    TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('[data-testid="wbs-tree-content"]') to be visible[22m
+
+
+       at ..\helpers\e2e-helpers.ts:43
+
+      41 |     // 3. 트리 콘텐츠 또는 에러/빈 상태 표시 대기
+      42 |     await Promise.race([
+    > 43 |       page.waitForSelector('[data-testid="wbs-tree-content"]', {
+         |            ^
+      44 |         state: 'visible',
+      45 |         timeout
+      46 |       }),
+        at waitForWbsLoaded (C:\project\jjiban\tests\helpers\e2e-helpers.ts:43:12)
+        at C:\project\jjiban\tests\e2e\wbs-actions.spec.ts:9:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\wbs-actions-WBS-Tree-Actions-E2E-E2E-021-전체-접기-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  44) [chromium] › wbs-actions.spec.ts:50:3 › WBS Tree Actions E2E › E2E-022: 개별 노드 펼치기/접기 ─────────
+
+    TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('[data-testid="wbs-tree-content"]') to be visible[22m
+
+
+       at ..\helpers\e2e-helpers.ts:43
+
+      41 |     // 3. 트리 콘텐츠 또는 에러/빈 상태 표시 대기
+      42 |     await Promise.race([
+    > 43 |       page.waitForSelector('[data-testid="wbs-tree-content"]', {
+         |            ^
+      44 |         state: 'visible',
+      45 |         timeout
+      46 |       }),
+        at waitForWbsLoaded (C:\project\jjiban\tests\helpers\e2e-helpers.ts:43:12)
+        at C:\project\jjiban\tests\e2e\wbs-actions.spec.ts:9:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\wbs-actions-WBS-Tree-Actions-E2E-E2E-022-개별-노드-펼치기-접기-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  45) [chromium] › wbs-page-integration.spec.ts:89:3 › WBS Page Integration › TC-016: 페이지 초기화 → 프로젝트 → WBS → Task 선택 (Happy Path) 
+
+    Error: [31mTimed out 2000ms waiting for [39m[2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m()[22m
+
+    Locator: getByTestId('wbs-content')
+    Expected: visible
+    Received: <element(s) not found>
+    Call log:
+    [2m  - expect.toBeVisible with timeout 2000ms[22m
+    [2m  - waiting for getByTestId('wbs-content')[22m
+
+
+      100 |     // WBS 트리 렌더링 확인
+      101 |     const wbsContent = page.getByTestId('wbs-content')
+    > 102 |     await expect(wbsContent).toBeVisible({ timeout: 2000 })
+          |                              ^
+      103 |
+      104 |     // WBS 트리 노드 확인
+      105 |     const wbsTree = page.locator('[data-testid^="wbs-tree-node"]')
+        at C:\project\jjiban\tests\e2e\wbs-page-integration.spec.ts:102:30
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\wbs-page-integration-WBS-P-00c98-→-WBS-→-Task-선택-Happy-Path--chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  46) [chromium] › wbs-page-integration.spec.ts:122:3 › WBS Page Integration › TC-018: 프로젝트 로드 실패 → 재시도 → 성공 
+
+    Error: [31mTimed out 5000ms waiting for [39m[2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m()[22m
+
+    Locator: getByTestId('error-message')
+    Expected: visible
+    Received: <element(s) not found>
+    Call log:
+    [2m  - expect.toBeVisible with timeout 5000ms[22m
+    [2m  - waiting for getByTestId('error-message')[22m
+
+
+      146 |     // 에러 메시지 확인
+      147 |     const errorMessage = page.getByTestId('error-message')
+    > 148 |     await expect(errorMessage).toBeVisible()
+          |                                ^
+      149 |     await expect(errorMessage).toContainText('데이터를 불러올 수 없습니다')
+      150 |
+      151 |     // Toast 에러 메시지 확인 (PrimeVue Toast)
+        at C:\project\jjiban\tests\e2e\wbs-page-integration.spec.ts:148:32
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\wbs-page-integration-WBS-P-a5e34-C-018-프로젝트-로드-실패-→-재시도-→-성공-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  47) [chromium] › wbs-page-integration.spec.ts:165:3 › WBS Page Integration › TC-020: 프로젝트 없음 → 대시보드 이동 
+
+    Error: [31mTimed out 5000ms waiting for [39m[2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m()[22m
+
+    Locator: getByTestId('empty-state-no-project')
+    Expected: visible
+    Received: <element(s) not found>
+    Call log:
+    [2m  - expect.toBeVisible with timeout 5000ms[22m
+    [2m  - waiting for getByTestId('empty-state-no-project')[22m
+
+
+      169 |     // Empty State 확인
+      170 |     const emptyState = page.getByTestId('empty-state-no-project')
+    > 171 |     await expect(emptyState).toBeVisible()
+          |                              ^
+      172 |     await expect(emptyState).toContainText('프로젝트를 선택하세요')
+      173 |
+      174 |     // 대시보드 이동 버튼 클릭
+        at C:\project\jjiban\tests\e2e\wbs-page-integration.spec.ts:171:30
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\wbs-page-integration-WBS-P-b40ff-on-TC-020-프로젝트-없음-→-대시보드-이동-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  48) [chromium] › wbs-page-integration.spec.ts:183:3 › WBS Page Integration › TC-002: projectId 잘못된 형식 → Empty State 
+
+    Error: [31mTimed out 5000ms waiting for [39m[2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m()[22m
+
+    Locator: getByTestId('empty-state-no-project')
+    Expected: visible
+    Received: <element(s) not found>
+    Call log:
+    [2m  - expect.toBeVisible with timeout 5000ms[22m
+    [2m  - waiting for getByTestId('empty-state-no-project')[22m
+
+
+      187 |     // Empty State 확인
+      188 |     const emptyState = page.getByTestId('empty-state-no-project')
+    > 189 |     await expect(emptyState).toBeVisible()
+          |                              ^
+      190 |     await expect(emptyState).toContainText('프로젝트를 선택하세요')
+      191 |   })
+      192 |
+        at C:\project\jjiban\tests\e2e\wbs-page-integration.spec.ts:189:30
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\wbs-page-integration-WBS-P-dcbfd-jectId-잘못된-형식-→-Empty-State-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  49) [chromium] › wbs-page-integration.spec.ts:193:3 › WBS Page Integration › TC-013: Task 미선택 Empty State 
+
+    Error: [31mTimed out 2000ms waiting for [39m[2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m()[22m
+
+    Locator: getByTestId('wbs-content')
+    Expected: visible
+    Received: <element(s) not found>
+    Call log:
+    [2m  - expect.toBeVisible with timeout 2000ms[22m
+    [2m  - waiting for getByTestId('wbs-content')[22m
+
+
+      197 |     // WBS 콘텐츠 로딩 대기
+      198 |     const wbsContent = page.getByTestId('wbs-content')
+    > 199 |     await expect(wbsContent).toBeVisible({ timeout: 2000 })
+          |                              ^
+      200 |
+      201 |     // Task 미선택 상태에서 Empty State 확인
+      202 |     const emptyStateNoTask = page.getByTestId('empty-state-no-task')
+        at C:\project\jjiban\tests\e2e\wbs-page-integration.spec.ts:199:30
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\wbs-page-integration-WBS-P-124c6-TC-013-Task-미선택-Empty-State-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  50) [chromium] › wbs-page-integration.spec.ts:207:3 › WBS Page Integration › TC-019: Toast 자동 사라짐 
+
+    Error: [31mTimed out 5000ms waiting for [39m[2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m()[22m
+
+    Locator: locator('.p-toast-message')
+    Expected: visible
+    Received: <element(s) not found>
+    Call log:
+    [2m  - expect.toBeVisible with timeout 5000ms[22m
+    [2m  - waiting for locator('.p-toast-message')[22m
+
+
+      223 |     // Toast 에러 메시지 표시 확인
+      224 |     const toast = page.locator('.p-toast-message')
+    > 225 |     await expect(toast).toBeVisible()
+          |                         ^
+      226 |
+      227 |     // 3초 대기
+      228 |     await page.waitForTimeout(3500)
+        at C:\project\jjiban\tests\e2e\wbs-page-integration.spec.ts:225:25
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\wbs-page-integration-WBS-P-94a73-gration-TC-019-Toast-자동-사라짐-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  51) [chromium] › wbs-page-integration.spec.ts:234:3 › WBS Page Integration › TC-021: 최소 너비 1200px 레이아웃 
+
+    Error: [31mTimed out 2000ms waiting for [39m[2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m()[22m
+
+    Locator: getByTestId('wbs-content')
+    Expected: visible
+    Received: <element(s) not found>
+    Call log:
+    [2m  - expect.toBeVisible with timeout 2000ms[22m
+    [2m  - waiting for getByTestId('wbs-content')[22m
+
+
+      241 |     // WBS 콘텐츠 로딩 대기
+      242 |     const wbsContent = page.getByTestId('wbs-content')
+    > 243 |     await expect(wbsContent).toBeVisible({ timeout: 2000 })
+          |                              ^
+      244 |
+      245 |     // 레이아웃 확인 (좌우 패널 존재)
+      246 |     const leftPanel = page.locator('[aria-label="WBS 트리 패널"]')
+        at C:\project\jjiban\tests\e2e\wbs-page-integration.spec.ts:243:30
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\wbs-page-integration-WBS-P-e8d9c-on-TC-021-최소-너비-1200px-레이아웃-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  52) [chromium] › wbs-page-integration.spec.ts:260:3 › WBS Page Integration › TC-022: 키보드 네비게이션 ───
+
+    TimeoutError: locator.waitFor: Timeout 2000ms exceeded.
+    Call log:
+    [2m  - waiting for getByTestId('wbs-content') to be visible[22m
+
+
+      263 |
+      264 |     // WBS 콘텐츠 로딩 대기
+    > 265 |     await page.getByTestId('wbs-content').waitFor({ state: 'visible', timeout: 2000 })
+          |                                           ^
+      266 |
+      267 |     // Tab 키로 포커스 이동 테스트
+      268 |     await page.keyboard.press('Tab')
+        at C:\project\jjiban\tests\e2e\wbs-page-integration.spec.ts:265:43
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\wbs-page-integration-WBS-Page-Integration-TC-022-키보드-네비게이션-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  53) [chromium] › wbs-page-integration.spec.ts:292:3 › WBS Page Integration › TC-023: ARIA 라벨 ─────
+
+    TimeoutError: locator.waitFor: Timeout 2000ms exceeded.
+    Call log:
+    [2m  - waiting for getByTestId('wbs-content') to be visible[22m
+
+
+      295 |
+      296 |     // WBS 콘텐츠 로딩 대기
+    > 297 |     await page.getByTestId('wbs-content').waitFor({ state: 'visible', timeout: 2000 })
+          |                                           ^
+      298 |
+      299 |     // 주요 ARIA 라벨 확인
+      300 |     const layoutLabel = await page.locator('[aria-label="WBS 페이지"]').getAttribute('aria-label')
+        at C:\project\jjiban\tests\e2e\wbs-page-integration.spec.ts:297:43
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\wbs-page-integration-WBS-Page-Integration-TC-023-ARIA-라벨-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  54) [chromium] › wbs-page-integration.spec.ts:310:3 › WBS Page Integration › TC-017: 노드 선택 → Task 상세 로드 성능 
+
+    TimeoutError: locator.waitFor: Timeout 2000ms exceeded.
+    Call log:
+    [2m  - waiting for getByTestId('wbs-content') to be visible[22m
+
+
+      313 |
+      314 |     // WBS 콘텐츠 로딩 대기
+    > 315 |     await page.getByTestId('wbs-content').waitFor({ state: 'visible', timeout: 2000 })
+          |                                           ^
+      316 |
+      317 |     // Task 노드 클릭 시작 시간
+      318 |     const startTime = Date.now()
+        at C:\project\jjiban\tests\e2e\wbs-page-integration.spec.ts:315:43
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\wbs-page-integration-WBS-P-bea47-C-017-노드-선택-→-Task-상세-로드-성능-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  55) [chromium] › wbs-search.spec.ts:12:3 › WBS Search E2E › E2E-010: 검색어 입력 → 필터링 결과 ─────────────
+
+    TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('[data-testid="wbs-tree-content"]') to be visible[22m
+
+
+       at ..\helpers\e2e-helpers.ts:43
+
+      41 |     // 3. 트리 콘텐츠 또는 에러/빈 상태 표시 대기
+      42 |     await Promise.race([
+    > 43 |       page.waitForSelector('[data-testid="wbs-tree-content"]', {
+         |            ^
+      44 |         state: 'visible',
+      45 |         timeout
+      46 |       }),
+        at waitForWbsLoaded (C:\project\jjiban\tests\helpers\e2e-helpers.ts:43:12)
+        at C:\project\jjiban\tests\e2e\wbs-search.spec.ts:9:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\wbs-search-WBS-Search-E2E-E2E-010-검색어-입력-→-필터링-결과-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  56) [chromium] › wbs-search.spec.ts:27:3 › WBS Search E2E › E2E-011: X 버튼 → 초기화 ──────────────────
+
+    TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('[data-testid="wbs-tree-content"]') to be visible[22m
+
+
+       at ..\helpers\e2e-helpers.ts:43
+
+      41 |     // 3. 트리 콘텐츠 또는 에러/빈 상태 표시 대기
+      42 |     await Promise.race([
+    > 43 |       page.waitForSelector('[data-testid="wbs-tree-content"]', {
+         |            ^
+      44 |         state: 'visible',
+      45 |         timeout
+      46 |       }),
+        at waitForWbsLoaded (C:\project\jjiban\tests\helpers\e2e-helpers.ts:43:12)
+        at C:\project\jjiban\tests\e2e\wbs-search.spec.ts:9:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\wbs-search-WBS-Search-E2E-E2E-011-X-버튼-→-초기화-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  57) [chromium] › wbs-search.spec.ts:43:3 › WBS Search E2E › E2E-012: 대소문자 무시 검색 ──────────────────
+
+    TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('[data-testid="wbs-tree-content"]') to be visible[22m
+
+
+       at ..\helpers\e2e-helpers.ts:43
+
+      41 |     // 3. 트리 콘텐츠 또는 에러/빈 상태 표시 대기
+      42 |     await Promise.race([
+    > 43 |       page.waitForSelector('[data-testid="wbs-tree-content"]', {
+         |            ^
+      44 |         state: 'visible',
+      45 |         timeout
+      46 |       }),
+        at waitForWbsLoaded (C:\project\jjiban\tests\helpers\e2e-helpers.ts:43:12)
+        at C:\project\jjiban\tests\e2e\wbs-search.spec.ts:9:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\wbs-search-WBS-Search-E2E-E2E-012-대소문자-무시-검색-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  58) [chromium] › wbs-tree-panel.spec.ts:22:3 › WBS Tree Panel › E2E-001: WBS 데이터가 성공적으로 로드되어 표시된다 
+
+    Error: [31mTimed out 5000ms waiting for [39m[2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m()[22m
+
+    Locator: locator('[data-testid="wbs-tree-panel"]')
+    Expected: visible
+    Received: <element(s) not found>
+    Call log:
+    [2m  - expect.toBeVisible with timeout 5000ms[22m
+    [2m  - waiting for locator('[data-testid="wbs-tree-panel"]')[22m
+
+
+      24 |     // When: WBS 트리 패널 확인
+      25 |     const treePanel = page.locator('[data-testid="wbs-tree-panel"]')
+    > 26 |     await expect(treePanel).toBeVisible()
+         |                             ^
+      27 |
+      28 |     // Then: 콘텐츠 상태 표시 (loading이 끝난 후)
+      29 |     const contentState = page.locator('[data-testid="content-state"]')
+        at C:\project\jjiban\tests\e2e\wbs-tree-panel.spec.ts:26:29
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\wbs-tree-panel-WBS-Tree-Pa-331bc-01-WBS-데이터가-성공적으로-로드되어-표시된다-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  59) [chromium] › wbs-tree-panel.spec.ts:42:3 › WBS Tree Panel › E2E-002: 헤더에 타이틀, 버튼, 검색, 카드가 모두 표시된다 
+
+    TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('[data-testid="content-state"]') to be visible[22m
+
+
+      42 |   test('E2E-002: 헤더에 타이틀, 버튼, 검색, 카드가 모두 표시된다', async ({ page }) => {
+      43 |     // Given: 페이지 로드 완료, 콘텐츠 표시됨
+    > 44 |     await page.waitForSelector('[data-testid="content-state"]', { timeout: 10000 })
+         |                ^
+      45 |
+      46 |     // When: 헤더 요소 확인
+      47 |     const header = page.locator('[data-testid="wbs-tree-header"]')
+        at C:\project\jjiban\tests\e2e\wbs-tree-panel.spec.ts:44:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\wbs-tree-panel-WBS-Tree-Pa-60766-2-헤더에-타이틀-버튼-검색-카드가-모두-표시된다-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  60) [chromium] › wbs-tree-panel.spec.ts:75:3 › WBS Search › E2E-003: 검색어 입력 시 X 버튼이 표시된다 ─────────
+
+    TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('[data-testid="content-state"]') to be visible[22m
+
+
+      70 |     await page.goto(`/wbs?project=${TEST_PROJECT_ID}`)
+      71 |     await page.waitForLoadState('networkidle')
+    > 72 |     await page.waitForSelector('[data-testid="content-state"]', { timeout: 10000 })
+         |                ^
+      73 |   })
+      74 |
+      75 |   test('E2E-003: 검색어 입력 시 X 버튼이 표시된다', async ({ page }) => {
+        at C:\project\jjiban\tests\e2e\wbs-tree-panel.spec.ts:72:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\wbs-tree-panel-WBS-Search-E2E-003-검색어-입력-시-X-버튼이-표시된다-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  61) [chromium] › wbs-tree-panel.spec.ts:91:3 › WBS Search › E2E-004: X 버튼 클릭 시 검색어가 초기화된다 ────────
+
+    TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('[data-testid="content-state"]') to be visible[22m
+
+
+      70 |     await page.goto(`/wbs?project=${TEST_PROJECT_ID}`)
+      71 |     await page.waitForLoadState('networkidle')
+    > 72 |     await page.waitForSelector('[data-testid="content-state"]', { timeout: 10000 })
+         |                ^
+      73 |   })
+      74 |
+      75 |   test('E2E-003: 검색어 입력 시 X 버튼이 표시된다', async ({ page }) => {
+        at C:\project\jjiban\tests\e2e\wbs-tree-panel.spec.ts:72:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\wbs-tree-panel-WBS-Search-E2E-004-X-버튼-클릭-시-검색어가-초기화된다-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  62) [chromium] › wbs-tree-panel.spec.ts:116:3 › WBS Tree Actions › E2E-005: 전체 펼치기 버튼이 클릭 가능하다 ───
+
+    TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('[data-testid="content-state"]') to be visible[22m
+
+
+      111 |     await page.goto(`/wbs?project=${TEST_PROJECT_ID}`)
+      112 |     await page.waitForLoadState('networkidle')
+    > 113 |     await page.waitForSelector('[data-testid="content-state"]', { timeout: 10000 })
+          |                ^
+      114 |   })
+      115 |
+      116 |   test('E2E-005: 전체 펼치기 버튼이 클릭 가능하다', async ({ page }) => {
+        at C:\project\jjiban\tests\e2e\wbs-tree-panel.spec.ts:113:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\wbs-tree-panel-WBS-Tree-Actions-E2E-005-전체-펼치기-버튼이-클릭-가능하다-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  63) [chromium] › wbs-tree-panel.spec.ts:129:3 › WBS Tree Actions › E2E-006: 전체 접기 버튼이 클릭 가능하다 ────
+
+    TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('[data-testid="content-state"]') to be visible[22m
+
+
+      111 |     await page.goto(`/wbs?project=${TEST_PROJECT_ID}`)
+      112 |     await page.waitForLoadState('networkidle')
+    > 113 |     await page.waitForSelector('[data-testid="content-state"]', { timeout: 10000 })
+          |                ^
+      114 |   })
+      115 |
+      116 |   test('E2E-005: 전체 펼치기 버튼이 클릭 가능하다', async ({ page }) => {
+        at C:\project\jjiban\tests\e2e\wbs-tree-panel.spec.ts:113:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\wbs-tree-panel-WBS-Tree-Actions-E2E-006-전체-접기-버튼이-클릭-가능하다-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  64) [chromium] › wbs-tree-panel.spec.ts:150:3 › WBS Summary Cards › E2E-007: 통계 카드가 정확한 값을 표시한다 ──
+
+    TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('[data-testid="content-state"]') to be visible[22m
+
+
+      145 |     await page.goto(`/wbs?project=${TEST_PROJECT_ID}`)
+      146 |     await page.waitForLoadState('networkidle')
+    > 147 |     await page.waitForSelector('[data-testid="content-state"]', { timeout: 10000 })
+          |                ^
+      148 |   })
+      149 |
+      150 |   test('E2E-007: 통계 카드가 정확한 값을 표시한다', async ({ page }) => {
+        at C:\project\jjiban\tests\e2e\wbs-tree-panel.spec.ts:147:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\wbs-tree-panel-WBS-Summary-Cards-E2E-007-통계-카드가-정확한-값을-표시한다-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  65) [chromium] › wbs-tree-panel.spec.ts:172:3 › WBS Error Handling › E2E-008: API 에러 시 에러 메시지를 표시한다 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+    Expected: [32mtrue[39m
+    Received: [31mfalse[39m
+
+      198 |
+      199 |     // 에러 또는 빈 상태 중 하나는 표시되어야 함
+    > 200 |     expect(hasErrorMessage || hasErrorState || hasEmptyNoProject || hasEmptyNoWbs).toBe(true)
+          |                                                                                    ^
+      201 |   })
+      202 | })
+      203 |
+        at C:\project\jjiban\tests\e2e\wbs-tree-panel.spec.ts:200:84
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\wbs-tree-panel-WBS-Error-H-ea3bd-E-008-API-에러-시-에러-메시지를-표시한다-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  66) [chromium] › wbs-tree-panel.spec.ts:205:3 › WBS Performance › PERF-001: 검색 응답 시간이 500ms 이하이다 ─
+
+    TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('[data-testid="content-state"]') to be visible[22m
+
+
+      207 |     await page.goto(`/wbs?project=${TEST_PROJECT_ID}`)
+      208 |     await page.waitForLoadState('networkidle')
+    > 209 |     await page.waitForSelector('[data-testid="content-state"]', { timeout: 10000 })
+          |                ^
+      210 |
+      211 |     // When: 검색어 입력 및 시간 측정
+      212 |     const searchInput = page.locator('[data-testid="search-input"]')
+        at C:\project\jjiban\tests\e2e\wbs-tree-panel.spec.ts:209:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\wbs-tree-panel-WBS-Performance-PERF-001-검색-응답-시간이-500ms-이하이다-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  67) [chromium] › wbs-tree-panel.spec.ts:233:3 › WBS Theme Integration › THEME-001: Tree 컴포넌트가 올바른 다크 테마 스타일을 가진다 
+
+    TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('[data-testid="content-state"]') to be visible[22m
+
+
+      228 |     await page.goto(`/wbs?project=${TEST_PROJECT_ID}`)
+      229 |     await page.waitForLoadState('networkidle')
+    > 230 |     await page.waitForSelector('[data-testid="content-state"]', { timeout: 10000 })
+          |                ^
+      231 |   })
+      232 |
+      233 |   test('THEME-001: Tree 컴포넌트가 올바른 다크 테마 스타일을 가진다', async ({ page }) => {
+        at C:\project\jjiban\tests\e2e\wbs-tree-panel.spec.ts:230:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\artifacts\wbs-tree-panel-WBS-Theme-I-e45c6-ee-컴포넌트가-올바른-다크-테마-스타일을-가진다-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  68) [chromium] › wbs.spec.ts:71:3 › WBS API › E2E-WBS-01: GET /api/projects/:id/wbs - WBS 조회 성공 ──
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+    Expected: [32m200[39m
+    Received: [31m503[39m
+
+      74 |
+      75 |     // Assert
+    > 76 |     expect(response.status()).toBe(200);
+         |                               ^
+      77 |
+      78 |     const data = await response.json();
+      79 |     expect(data.metadata.version).toBe('1.0');
+        at C:\project\jjiban\tests\e2e\wbs.spec.ts:76:31
+
+  Slow test file: [chromium] › debug-wbs.spec.ts (15.9s)
+  Consider splitting slow test files to speed up parallel execution
+  68 failed
+    [chromium] › completed-field.spec.ts:50:3 › completed 필드 지원 E2E 테스트 › E2E-002: 상태 전이 시 completed 필드에 타임스탬프가 자동으로 기록된다 
+    [chromium] › completed-field.spec.ts:111:3 › completed 필드 지원 E2E 테스트 › E2E-003: 여러 상태 전이 후 completed 필드에 모든 단계가 누적된다 
+    [chromium] › completed-field.spec.ts:171:3 › completed 필드 지원 E2E 테스트 › E2E-004: development 워크플로우에서 롤백 시 이후 단계 completed가 삭제된다 
+    [chromium] › completed-field.spec.ts:234:3 › completed 필드 지원 E2E 테스트 › E2E-005: defect 워크플로우에서 롤백 시 이후 단계 completed가 삭제된다 
+    [chromium] › completed-field.spec.ts:292:3 › completed 필드 지원 E2E 테스트 › E2E-001: completed 필드가 파싱 및 직렬화 왕복 변환에서 정확히 유지된다 
+    [chromium] › detail-panel.spec.ts:150:3 › TSK-05-01: Detail Panel Structure › E2E-001: Task가 선택되지 않으면 빈 상태 메시지를 표시한다 
+    [chromium] › detail-panel.spec.ts:168:3 › TSK-05-01: Detail Panel Structure › E2E-002: 사용자가 Task 제목을 인라인 편집할 수 있다 
+    [chromium] › detail-panel.spec.ts:200:3 › TSK-05-01: Detail Panel Structure › E2E-003: 사용자가 우선순위를 Dropdown으로 변경할 수 있다 
+    [chromium] › detail-panel.spec.ts:229:3 › TSK-05-01: Detail Panel Structure › E2E-004: 사용자가 담당자를 Dropdown으로 변경할 수 있다 
+    [chromium] › detail-panel.spec.ts:258:3 › TSK-05-01: Detail Panel Structure › E2E-005: 카테고리별 색상이 올바르게 적용된다 
+    [chromium] › detail-panel.spec.ts:287:3 › TSK-05-01: Detail Panel Structure › E2E-006: 우선순위별 색상이 올바르게 적용된다 
+    [chromium] › detail-panel.spec.ts:306:3 › TSK-05-01: Detail Panel Structure › E2E-007: 인라인 편집 시 낙관적 업데이트가 즉시 반영된다 
+    [chromium] › detail-panel.spec.ts:331:3 › TSK-05-01: Detail Panel Structure › E2E-008: Detail Panel이 스크롤 가능하다 
+    [chromium] › detail-panel.spec.ts:357:3 › TSK-05-01: Detail Panel Structure › E2E-009: Task 로드 중 Skeleton을 표시한다 
+    [chromium] › detail-panel.spec.ts:382:3 › TSK-05-01: Detail Panel Structure › E2E-010: 제목이 200자를 초과하면 에러 메시지를 표시한다 
+    [chromium] › detail-panel.spec.ts:407:3 › TSK-05-01: Detail Panel Structure › E2E-011: 우선순위 Dropdown은 4개 옵션만 표시한다 
+    [chromium] › detail-panel.spec.ts:432:3 › TSK-05-01: Detail Panel Structure › E2E-013: API 실패 시 이전 값으로 롤백한다 
+    [chromium] › detail-panel.spec.ts:476:3 › TSK-05-01: Detail Panel Structure › E2E-014: 카테고리는 편집할 수 없다 
+    [chromium] › detail-panel.spec.ts:496:3 › TSK-05-01: Detail Panel Structure › E2E-015: Dialog가 올바른 다크 테마 스타일을 가진다 
+    [chromium] › detail-sections.spec.ts:45:3 › TSK-05-02: Detail Sections Integration › E2E-001: 워크플로우 흐름이 올바르게 표시된다 
+    [chromium] › detail-sections.spec.ts:82:3 › TSK-05-02: Detail Sections Integration › E2E-002: 요구사항 목록과 PRD 참조가 표시된다 
+    [chromium] › detail-sections.spec.ts:109:3 › TSK-05-02: Detail Sections Integration › E2E-003: 요구사항을 편집할 수 있다 
+    [chromium] › detail-sections.spec.ts:145:3 › TSK-05-02: Detail Sections Integration › E2E-004: 요구사항을 추가하고 삭제할 수 있다 
+    [chromium] › detail-sections.spec.ts:189:3 › TSK-05-02: Detail Sections Integration › E2E-005: 문서 목록과 존재/예정 상태가 표시된다 
+    [chromium] › detail-sections.spec.ts:218:3 › TSK-05-02: Detail Sections Integration › E2E-006: 존재하는 문서를 클릭하면 뷰어가 열린다 
+    [chromium] › detail-sections.spec.ts:238:3 › TSK-05-02: Detail Sections Integration › E2E-007: 상태 변경 이력이 타임라인으로 표시된다 
+    [chromium] › detail-sections.spec.ts:269:3 › TSK-05-02: Detail Sections Integration › E2E-008: 카테고리별로 다른 워크플로우 단계가 표시된다 
+    [chromium] › detail-sections.spec.ts:293:3 › TSK-05-02: Detail Sections Integration › E2E-PERF-01: 모든 섹션이 빠르게 렌더링된다 
+    [chromium] › detail-sections.spec.ts:319:3 › TSK-05-02: Detail Sections Integration › E2E-A11Y-01: 모든 섹션이 접근 가능하다 
+    [chromium] › detail-sections.spec.ts:344:3 › TSK-05-02: Detail Sections Integration › E2E-ERROR-01: 요구사항 편집 실패 시 롤백된다 
+    [chromium] › detail-sections.spec.ts:386:3 › TSK-05-02: Detail Sections Integration › E2E-INTEGRATION-01: WBS 페이지에서 Task 선택 시 모든 섹션이 표시된다 
+    [chromium] › detail-sections.spec.ts:428:3 › TSK-05-02: Detail Sections Integration › E2E-THEME-01: TaskWorkflow 현재 단계가 강조 표시된다 
+    [chromium] › projects-page.spec.ts:109:3 › Projects Page E2E Tests › E2E-001: should render project list on page load 
+    [chromium] › theme-integration.spec.ts:15:3 › Theme Integration Tests › TC-01: Tree 컴포넌트가 올바른 다크 테마 스타일을 가진다 
+    [chromium] › theme-integration.spec.ts:53:3 › Theme Integration Tests › TC-02: Splitter Gutter가 올바른 다크 테마 스타일을 가진다 
+    [chromium] › theme-integration.spec.ts:79:3 › Theme Integration Tests › TC-03: Menubar가 올바른 다크 테마 스타일을 가진다 
+    [chromium] › theme-integration.spec.ts:113:3 › Theme Integration Tests › TC-04: Dialog가 올바른 다크 테마 스타일을 가진다 
+    [chromium] › theme-integration.spec.ts:139:3 › Theme Integration Tests › TC-05: 기존 컴포넌트가 정상 표시된다 (회귀 검증) 
+    [chromium] › theme-integration.spec.ts:165:3 › Theme Integration Tests › TC-06: 색상 대비가 WCAG 2.1 AA 기준을 만족한다 
+    [chromium] › theme-integration.spec.ts:205:3 › Theme Integration Tests › TC-07: 키보드로 전체 UI에 접근할 수 있다 
+    [chromium] › theme-integration.spec.ts:249:3 › Theme Integration Tests › TC-08: ARIA 속성이 적절하게 설정되어 있다 
+    [chromium] › wbs-actions.spec.ts:12:3 › WBS Tree Actions E2E › E2E-020: 전체 펼치기 ─────────────────
+    [chromium] › wbs-actions.spec.ts:26:3 › WBS Tree Actions E2E › E2E-021: 전체 접기 ──────────────────
+    [chromium] › wbs-actions.spec.ts:50:3 › WBS Tree Actions E2E › E2E-022: 개별 노드 펼치기/접기 ───────────
+    [chromium] › wbs-page-integration.spec.ts:89:3 › WBS Page Integration › TC-016: 페이지 초기화 → 프로젝트 → WBS → Task 선택 (Happy Path) 
+    [chromium] › wbs-page-integration.spec.ts:122:3 › WBS Page Integration › TC-018: 프로젝트 로드 실패 → 재시도 → 성공 
+    [chromium] › wbs-page-integration.spec.ts:165:3 › WBS Page Integration › TC-020: 프로젝트 없음 → 대시보드 이동 
+    [chromium] › wbs-page-integration.spec.ts:183:3 › WBS Page Integration › TC-002: projectId 잘못된 형식 → Empty State 
+    [chromium] › wbs-page-integration.spec.ts:193:3 › WBS Page Integration › TC-013: Task 미선택 Empty State 
+    [chromium] › wbs-page-integration.spec.ts:207:3 › WBS Page Integration › TC-019: Toast 자동 사라짐 ──
+    [chromium] › wbs-page-integration.spec.ts:234:3 › WBS Page Integration › TC-021: 최소 너비 1200px 레이아웃 
+    [chromium] › wbs-page-integration.spec.ts:260:3 › WBS Page Integration › TC-022: 키보드 네비게이션 ─────
+    [chromium] › wbs-page-integration.spec.ts:292:3 › WBS Page Integration › TC-023: ARIA 라벨 ───────
+    [chromium] › wbs-page-integration.spec.ts:310:3 › WBS Page Integration › TC-017: 노드 선택 → Task 상세 로드 성능 
+    [chromium] › wbs-search.spec.ts:12:3 › WBS Search E2E › E2E-010: 검색어 입력 → 필터링 결과 ───────────────
+    [chromium] › wbs-search.spec.ts:27:3 › WBS Search E2E › E2E-011: X 버튼 → 초기화 ────────────────────
+    [chromium] › wbs-search.spec.ts:43:3 › WBS Search E2E › E2E-012: 대소문자 무시 검색 ────────────────────
+    [chromium] › wbs-tree-panel.spec.ts:22:3 › WBS Tree Panel › E2E-001: WBS 데이터가 성공적으로 로드되어 표시된다 ──
+    [chromium] › wbs-tree-panel.spec.ts:42:3 › WBS Tree Panel › E2E-002: 헤더에 타이틀, 버튼, 검색, 카드가 모두 표시된다 
+    [chromium] › wbs-tree-panel.spec.ts:75:3 › WBS Search › E2E-003: 검색어 입력 시 X 버튼이 표시된다 ───────────
+    [chromium] › wbs-tree-panel.spec.ts:91:3 › WBS Search › E2E-004: X 버튼 클릭 시 검색어가 초기화된다 ──────────
+    [chromium] › wbs-tree-panel.spec.ts:116:3 › WBS Tree Actions › E2E-005: 전체 펼치기 버튼이 클릭 가능하다 ─────
+    [chromium] › wbs-tree-panel.spec.ts:129:3 › WBS Tree Actions › E2E-006: 전체 접기 버튼이 클릭 가능하다 ──────
+    [chromium] › wbs-tree-panel.spec.ts:150:3 › WBS Summary Cards › E2E-007: 통계 카드가 정확한 값을 표시한다 ────
+    [chromium] › wbs-tree-panel.spec.ts:172:3 › WBS Error Handling › E2E-008: API 에러 시 에러 메시지를 표시한다 
+    [chromium] › wbs-tree-panel.spec.ts:205:3 › WBS Performance › PERF-001: 검색 응답 시간이 500ms 이하이다 ───
+    [chromium] › wbs-tree-panel.spec.ts:233:3 › WBS Theme Integration › THEME-001: Tree 컴포넌트가 올바른 다크 테마 스타일을 가진다 
+    [chromium] › wbs.spec.ts:71:3 › WBS API › E2E-WBS-01: GET /api/projects/:id/wbs - WBS 조회 성공 ────
+  11 did not run
+  38 passed (4.3m)
+
+  Serving HTML report at http://localhost:57572. Press Ctrl+C to quit.

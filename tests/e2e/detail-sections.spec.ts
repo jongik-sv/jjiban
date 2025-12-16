@@ -43,23 +43,16 @@ test.describe('TSK-05-02: Detail Sections Integration', () => {
    * 요구사항: FR-001, FR-002, FR-003, BR-WF-01
    */
   test('E2E-001: 워크플로우 흐름이 올바르게 표시된다', async ({ page }) => {
-    // Task 선택 (beforeEach에서 전체 펼침 완료)
-    const taskNode = page.getByTestId('wbs-tree-node-TSK-01-01-02')
-    await taskNode.waitFor({ state: 'visible', timeout: 3000 })
+    // Task 선택 - div.wbs-tree-node-label 클릭 (handleNodeClick 바인딩됨)
+    const taskNodeLabel = page.locator('.wbs-tree-node-label', { hasText: 'TSK-01-01-02' })
+    await taskNodeLabel.waitFor({ state: 'visible', timeout: 3000 })
+    await taskNodeLabel.click()
 
-    // 디버그: 클릭 전 스크린샷
-    await page.screenshot({ path: 'test-results/artifacts/debug-before-click.png' })
+    // Task 상세 패널 로딩 대기
+    await page.waitForTimeout(500)
 
-    await taskNode.click({ force: true })
-
-    // 클릭 후 대기
-    await page.waitForTimeout(1000)
-
-    // 디버그: 클릭 후 스크린샷
-    await page.screenshot({ path: 'test-results/artifacts/debug-after-click.png' })
-
-    // Task 상세 패널 표시 대기
-    await page.getByTestId('task-detail-panel').waitFor({ state: 'visible', timeout: 5000 })
+    // Task 워크플로우 패널 표시 대기
+    await page.getByTestId('task-workflow-panel').waitFor({ state: 'visible', timeout: 10000 })
 
     // 워크플로우 패널 확인
     const workflowPanel = page.getByTestId('task-workflow-panel')

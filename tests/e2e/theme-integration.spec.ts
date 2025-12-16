@@ -2,8 +2,7 @@ import { test, expect } from '@playwright/test';
 import { waitForPageReady, waitForWbsLoaded } from '../helpers/e2e-helpers';
 import { calculateContrast, verifyColorContrast } from '../helpers/accessibility-helpers';
 import { TEST_TIMEOUTS } from '../helpers/constants';
-
-const TEST_PROJECT_ID = 'jjiban';
+import { TEST_PROJECT_ID } from './test-constants';
 
 test.describe('Theme Integration Tests', () => {
   test.beforeEach(async ({ page }) => {

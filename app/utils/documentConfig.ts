@@ -16,32 +16,32 @@ export interface DocumentTypeStyle {
 export const DOCUMENT_TYPE_CONFIG: Record<string, DocumentTypeStyle> = {
   design: {
     icon: 'pi pi-file-edit',
-    color: '#3b82f6',
+    color: 'var(--color-primary)',
     label: '설계 문서'
   },
   implementation: {
     icon: 'pi pi-code',
-    color: '#22c55e',
+    color: 'var(--color-success)',
     label: '구현 문서'
   },
   test: {
     icon: 'pi pi-check-square',
-    color: '#f59e0b',
+    color: 'var(--color-warning)',
     label: '테스트 문서'
   },
   manual: {
     icon: 'pi pi-book',
-    color: '#8b5cf6',
+    color: 'var(--color-level-project)',
     label: '매뉴얼'
   },
   analysis: {
     icon: 'pi pi-search',
-    color: '#ef4444',
+    color: 'var(--color-danger)',
     label: '분석 문서'
   },
   review: {
     icon: 'pi pi-comments',
-    color: '#06b6d4',
+    color: 'var(--color-primary)',
     label: '리뷰 문서'
   }
 } as const;

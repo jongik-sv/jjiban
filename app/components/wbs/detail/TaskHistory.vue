@@ -28,51 +28,51 @@
         >
           <!-- 타임스탬프 -->
           <div
-            class="text-xs text-gray-500 mb-1"
+            class="text-xs text-text-muted mb-1"
             :data-testid="`history-timestamp-${slotProps.index}`"
           >
             {{ formatTimestamp(slotProps.item.timestamp) }}
           </div>
 
           <!-- 액션 제목 -->
-          <div class="font-semibold text-gray-800 mb-1">
+          <div class="font-semibold text-text mb-1">
             {{ getEntryTitle(slotProps.item) }}
           </div>
 
           <!-- 상태 전이 정보 -->
           <div
             v-if="slotProps.item.action === 'transition'"
-            class="text-sm text-gray-700"
+            class="text-sm text-text"
             :data-testid="`history-transition-${slotProps.index}`"
           >
-            <span class="font-mono bg-gray-100 px-2 py-1 rounded">
+            <span class="history-status-badge history-status-from">
               {{ slotProps.item.previousStatus || slotProps.item.from }}
             </span>
             <i class="pi pi-arrow-right mx-2 text-xs" />
-            <span class="font-mono bg-blue-100 px-2 py-1 rounded">
+            <span class="history-status-badge history-status-to">
               {{ slotProps.item.newStatus || slotProps.item.to }}
             </span>
           </div>
 
           <!-- 명령어 -->
-          <div v-if="slotProps.item.command" class="text-sm text-gray-600 mt-1">
+          <div v-if="slotProps.item.command" class="text-sm text-text-secondary mt-1">
             <i class="pi pi-code mr-1" />
             명령어: <span class="font-mono">{{ slotProps.item.command }}</span>
           </div>
 
           <!-- 문서 생성 -->
-          <div v-if="slotProps.item.documentCreated" class="text-sm text-green-600 mt-1">
+          <div v-if="slotProps.item.documentCreated" class="text-sm text-success mt-1">
             <i class="pi pi-file-plus mr-1" />
             문서 생성: {{ slotProps.item.documentCreated }}
           </div>
 
           <!-- 코멘트 -->
-          <div v-if="slotProps.item.comment" class="text-sm text-gray-600 mt-1 italic">
+          <div v-if="slotProps.item.comment" class="text-sm text-text-secondary mt-1 italic">
             {{ slotProps.item.comment }}
           </div>
 
           <!-- 사용자 -->
-          <div v-if="slotProps.item.userId || slotProps.item.user" class="text-xs text-gray-500 mt-1">
+          <div v-if="slotProps.item.userId || slotProps.item.user" class="text-xs text-text-muted mt-1">
             사용자: {{ slotProps.item.userId || slotProps.item.user }}
           </div>
         </div>

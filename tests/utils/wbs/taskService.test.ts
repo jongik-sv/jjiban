@@ -21,14 +21,16 @@ describe('TaskService', () => {
     const projectPath = getProjectPath(TEST_PROJECT_ID);
     await fs.mkdir(projectPath, { recursive: true });
 
-    // projects.json 생성
-    const settingsPath = join(projectPath, '..', '..', 'settings');
-    await fs.mkdir(settingsPath, { recursive: true });
-    const projectsJsonPath = join(settingsPath, 'projects.json');
+    // project.json 생성 (필수: scanProjects()가 이 파일을 읽어 프로젝트 인식)
+    const projectJsonPath = join(projectPath, 'project.json');
     await fs.writeFile(
-      projectsJsonPath,
+      projectJsonPath,
       JSON.stringify({
-        projects: [{ id: TEST_PROJECT_ID }],
+        id: TEST_PROJECT_ID,
+        name: 'Test Task Service Project',
+        status: 'active',
+        wbsDepth: 3,
+        createdAt: '2025-12-14T00:00:00.000Z',
       }),
       'utf-8'
     );

@@ -40,9 +40,9 @@ describe('TaskDocuments', () => {
     command: '/wf:draft'
   })
 
-  describe('getDocumentCardStyle method', () => {
-    // UT-006: exists=true should have blue background
-    it('should return blue background for existing documents', () => {
+  describe('getDocumentCardClasses method', () => {
+    // UT-006: exists=true should have doc-card-exists class
+    it('should return doc-card-exists class for existing documents', () => {
       const doc = createExistingDoc()
       const wrapper = mount(TaskDocuments, {
         props: { documents: [doc] },
@@ -52,14 +52,15 @@ describe('TaskDocuments', () => {
       })
 
       const vm = wrapper.vm as any
-      const style = vm.getDocumentCardStyle(doc)
+      const classes = vm.getDocumentCardClasses(doc)
 
-      expect(style.backgroundColor).toBe('#dbeafe')
-      expect(style.border).toBe('1px solid #3b82f6')
+      expect(classes).toContain('doc-card-exists')
+      expect(classes).toContain('cursor-pointer')
+      expect(classes).toContain('transition-all')
     })
 
-    // UT-006: exists=false should have gray background and dashed border
-    it('should return gray background with dashed border for expected documents', () => {
+    // UT-006: exists=false should have doc-card-expected class
+    it('should return doc-card-expected class for expected documents', () => {
       const doc = createExpectedDoc()
       const wrapper = mount(TaskDocuments, {
         props: { documents: [doc] },
@@ -69,11 +70,11 @@ describe('TaskDocuments', () => {
       })
 
       const vm = wrapper.vm as any
-      const style = vm.getDocumentCardStyle(doc)
+      const classes = vm.getDocumentCardClasses(doc)
 
-      expect(style.backgroundColor).toBe('#f9fafb')
-      expect(style.border).toBe('2px dashed #9ca3af')
-      expect(style.opacity).toBe('0.6')
+      expect(classes).toContain('doc-card-expected')
+      expect(classes).not.toContain('cursor-pointer')
+      expect(classes).toContain('transition-all')
     })
   })
 
@@ -113,8 +114,9 @@ describe('TaskDocuments', () => {
     })
   })
 
-  describe('Document Card Classes', () => {
-    it('should add cursor-pointer and hover classes for existing documents', () => {
+  describe('Document Card Classes - CSS Class Based Styling', () => {
+    // TSK-08-05: CSS 클래스 중앙화 - hover 스타일은 CSS에서 처리
+    it('should use doc-card-exists class for existing documents (CSS handles hover)', () => {
       const doc = createExistingDoc()
       const wrapper = mount(TaskDocuments, {
         props: { documents: [doc] },
@@ -127,10 +129,11 @@ describe('TaskDocuments', () => {
       const classes = vm.getDocumentCardClasses(doc)
 
       expect(classes).toContain('cursor-pointer')
-      expect(classes).toContain('hover:shadow-md')
+      expect(classes).toContain('doc-card-exists')
     })
 
-    it('should add cursor-not-allowed for expected documents', () => {
+    // TSK-08-05: CSS 클래스 중앙화 - cursor 스타일은 CSS에서 처리
+    it('should use doc-card-expected class for expected documents (CSS handles cursor)', () => {
       const doc = createExpectedDoc()
       const wrapper = mount(TaskDocuments, {
         props: { documents: [doc] },
@@ -142,7 +145,7 @@ describe('TaskDocuments', () => {
       const vm = wrapper.vm as any
       const classes = vm.getDocumentCardClasses(doc)
 
-      expect(classes).toContain('cursor-not-allowed')
+      expect(classes).toContain('doc-card-expected')
       expect(classes).not.toContain('cursor-pointer')
     })
   })
@@ -165,6 +168,7 @@ describe('TaskDocuments', () => {
       expect(color).toBe('#3b82f6')
     })
 
+    // TSK-08-06: CSS 변수 사용으로 변경
     it('should return fallback icon for unknown type', () => {
       const doc = { ...createExistingDoc(), type: 'unknown' as any }
       const wrapper = mount(TaskDocuments, {
@@ -179,7 +183,7 @@ describe('TaskDocuments', () => {
       const color = vm.getDocumentColor(doc)
 
       expect(icon).toBe('pi pi-file')
-      expect(color).toBe('#6b7280')
+      expect(color).toBe('var(--color-text-muted)')
     })
   })
 

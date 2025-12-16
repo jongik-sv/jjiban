@@ -26,20 +26,20 @@
 
             <!-- 문서 정보 -->
             <div class="flex-1">
-              <div class="font-semibold text-gray-800">{{ doc.name }}</div>
-              <div class="text-sm text-gray-600 mt-1">
+              <div class="font-semibold text-text">{{ doc.name }}</div>
+              <div class="text-sm text-text-secondary mt-1">
                 타입: {{ getDocumentTypeLabel(doc.type) }}
               </div>
 
               <!-- 존재하는 문서: 크기, 수정일 -->
-              <div v-if="doc.exists" class="text-xs text-gray-500 mt-1">
+              <div v-if="doc.exists" class="text-xs text-text-muted mt-1">
                 <span v-if="doc.size">{{ formatFileSize(doc.size) }}</span>
                 <span v-if="doc.size && doc.updatedAt"> | </span>
                 <span v-if="doc.updatedAt">수정일: {{ formatDate(doc.updatedAt) }}</span>
               </div>
 
               <!-- 예정 문서: 생성 조건 -->
-              <div v-else class="text-xs text-gray-500 mt-1">
+              <div v-else class="text-xs text-text-muted mt-1">
                 <span v-if="doc.expectedAfter">생성 조건: {{ doc.expectedAfter }}</span>
                 <span v-else-if="doc.command">명령어: {{ doc.command }}</span>
               </div>

@@ -13,7 +13,7 @@
       v-if="currentDocument && selectedTask"
       :task-id="selectedTask.id"
       :filename="currentDocument.name"
-      :max-height="550"
+      class="h-full"
       @loaded="handleDocumentLoaded"
       @error="handleDocumentError"
     />
@@ -68,7 +68,7 @@
 
     <!-- 정상 상태 -->
     <template v-else #content>
-      <div class="task-detail-content overflow-y-auto">
+      <div class="task-detail-content overflow-y-auto space-y-4">
         <!-- 기본 정보 (TSK-05-01) -->
         <WbsDetailTaskBasicInfo
           :task="selectedTask"

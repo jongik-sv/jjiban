@@ -597,6 +597,28 @@ start: 2025-12-13
   - im: 2025-12-15 23:50
   - xx: 2025-12-15 23:55
 
+#### TSK-05-05: WP/ACT Detail Panel
+- category: development
+- status: done [xx]
+- priority: medium
+- schedule: 2026-02-20 ~ 2026-02-22
+- tags: component, detail, wp, act
+- depends: TSK-05-01
+- requirements:
+  - NodeDetailPanel 컴포넌트 (WP/ACT/Task 분기 처리)
+  - WpActBasicInfo 컴포넌트 (ID, 제목, 일정, 진행률)
+  - WpActChildren 컴포넌트 (하위 노드 목록, 상태별 카운트)
+  - WpActProgress 컴포넌트 (진행률 시각화, 완료/진행/대기 비율)
+  - selectionStore 연동 (WP/ACT 선택 시 상세 표시)
+  - wbs.vue 우측 패널 분기 로직 수정
+- ref: PRD 6.3
+- completed:
+  - bd: 2025-12-16 17:00
+  - dd: 2025-12-16 18:30
+  - im: 2025-12-16 17:17
+  - ts: 2025-12-16 17:31
+  - xx: 2025-12-16 18:45
+
 ---
 
 ## WP-06: Integration & Testing
@@ -794,11 +816,12 @@ start: 2025-12-13
 
 #### TSK-08-06: Theme Integration & E2E Testing
 - category: development
-- status: implement [im]
+- status: done [xx]
 - priority: high
 - schedule: 2026-02-17 ~ 2026-02-20
 - tags: theme, testing, e2e, migration
 - depends: TSK-08-01, TSK-08-02, TSK-08-03, TSK-08-04, TSK-08-05
+- test-result: pass
 - requirements:
   - PrimeVue 디자인 토큰 오버라이드 (main.css)
   - --p-tree-*, --p-splitter-*, --p-menubar-* 변수 매핑
@@ -812,3 +835,5 @@ start: 2025-12-13
   - bd: 2025-12-16
   - dd: 2025-12-16
   - im: 2025-12-16
+  - vf: 2025-12-16
+  - xx: 2025-12-16

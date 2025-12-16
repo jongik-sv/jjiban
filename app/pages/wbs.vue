@@ -9,7 +9,7 @@
  */
 
 import WbsTreePanel from '~/components/wbs/WbsTreePanel.vue'
-import TaskDetailPanel from '~/components/wbs/detail/TaskDetailPanel.vue'
+import NodeDetailPanel from '~/components/wbs/detail/NodeDetailPanel.vue'
 
 // ============================================================
 // Page Metadata
@@ -281,7 +281,7 @@ function goToDashboard() {
     <template #right>
       <div
         class="h-full"
-        aria-label="Task 상세 패널"
+        aria-label="노드 상세 패널"
       >
         <!-- 로딩/에러/프로젝트없음 상태에서는 빈 상태 표시 -->
         <div
@@ -295,8 +295,8 @@ function goToDashboard() {
           </div>
         </div>
 
-        <!-- Task 상세 정보 표시 (TSK-05-01 ~ TSK-05-03) -->
-        <TaskDetailPanel v-else />
+        <!-- 노드 상세 정보 표시 (TSK-05-01 ~ TSK-05-05) -->
+        <NodeDetailPanel v-else />
       </div>
     </template>
   </LayoutAppLayout>

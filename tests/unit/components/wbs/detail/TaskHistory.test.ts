@@ -160,7 +160,7 @@ describe('TaskHistory', () => {
       expect(vm.getEntryIcon(entry)).toBe('pi pi-bolt')
     })
 
-    it('should return info-circle icon for unknown action', () => {
+    it('should return circle icon for unknown action', () => {
       const entry: HistoryEntry = {
         timestamp: '2025-12-15T09:00:00Z',
         action: 'unknown_action'
@@ -173,12 +173,13 @@ describe('TaskHistory', () => {
       })
 
       const vm = wrapper.vm as any
-      expect(vm.getEntryIcon(entry)).toBe('pi pi-info-circle')
+      expect(vm.getEntryIcon(entry)).toBe('pi pi-circle')
     })
   })
 
-  describe('getEntryColor method', () => {
-    it('should return blue for transition', () => {
+  describe('getEntryMarkerClass method', () => {
+    // TSK-08-05: CSS 클래스 중앙화 - getEntryColor 대신 getEntryMarkerClass 사용
+    it('should return transition badge class for transition', () => {
       const entry = createTransitionEntry('2025-12-15T09:00:00Z', '[ ]', '[bd]')
       const wrapper = mount(TaskHistory, {
         props: { history: [entry] },
@@ -188,10 +189,10 @@ describe('TaskHistory', () => {
       })
 
       const vm = wrapper.vm as any
-      expect(vm.getEntryColor(entry)).toBe('#3b82f6')
+      expect(vm.getEntryMarkerClass(entry)).toBe('history-badge-transition')
     })
 
-    it('should return green for update', () => {
+    it('should return update badge class for update', () => {
       const entry = createUpdateEntry('2025-12-15T09:00:00Z')
       const wrapper = mount(TaskHistory, {
         props: { history: [entry] },
@@ -201,10 +202,10 @@ describe('TaskHistory', () => {
       })
 
       const vm = wrapper.vm as any
-      expect(vm.getEntryColor(entry)).toBe('#22c55e')
+      expect(vm.getEntryMarkerClass(entry)).toBe('history-badge-update')
     })
 
-    it('should return amber for action', () => {
+    it('should return action badge class for action', () => {
       const entry = createActionEntry('2025-12-15T09:00:00Z')
       const wrapper = mount(TaskHistory, {
         props: { history: [entry] },
@@ -214,10 +215,10 @@ describe('TaskHistory', () => {
       })
 
       const vm = wrapper.vm as any
-      expect(vm.getEntryColor(entry)).toBe('#f59e0b')
+      expect(vm.getEntryMarkerClass(entry)).toBe('history-badge-action')
     })
 
-    it('should return gray for unknown action', () => {
+    it('should return default badge class for unknown action', () => {
       const entry: HistoryEntry = {
         timestamp: '2025-12-15T09:00:00Z',
         action: 'unknown'
@@ -230,7 +231,7 @@ describe('TaskHistory', () => {
       })
 
       const vm = wrapper.vm as any
-      expect(vm.getEntryColor(entry)).toBe('#6b7280')
+      expect(vm.getEntryMarkerClass(entry)).toBe('history-badge-default')
     })
   })
 

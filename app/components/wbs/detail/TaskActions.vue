@@ -462,9 +462,8 @@ watch(() => props.task.id, () => {
 </script>
 
 <style scoped>
-.task-actions {
-  background-color: var(--p-surface-0);
-}
+/* 공통 Card 스타일은 main.css에서 적용 (--color-card) */
+/* scoped에서는 컴포넌트 고유 스타일만 정의 */
 
 .edit-fields {
   padding: 0.5rem;

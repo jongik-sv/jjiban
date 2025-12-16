@@ -134,12 +134,29 @@ function updateExpandedKeys(node: TreeNode) {
 /**
  * 노드 클릭 핸들러
  * - 커스텀 템플릿 내 @click에서 호출
- * - 'node-selected' 이벤트 발생
+ * - 'node-selected' 이벤트 발생 (선택만)
  *
  * @param nodeId 클릭한 노드 ID
  */
 function handleNodeClick(nodeId: string) {
   emit('node-selected', nodeId)
+}
+
+/**
+ * 노드 더블클릭 핸들러
+ * - 자식이 있는 노드만 펼침/접힘 토글
+ *
+ * @param nodeId 더블클릭한 노드 ID
+ */
+function handleNodeDblClick(nodeId: string) {
+  const node = flatNodes.value.get(nodeId)
+  if (node?.children && node.children.length > 0) {
+    if (expandedNodes.value.has(nodeId)) {
+      expandedNodes.value.delete(nodeId)
+    } else {
+      expandedNodes.value.add(nodeId)
+    }
+  }
 }
 
 /**
@@ -285,6 +302,7 @@ onMounted(loadWbs)
               class="wbs-tree-node-label"
               :data-testid="`wbs-tree-node-${slotProps.node.key}`"
               @click="handleNodeClick(slotProps.node.key as string)"
+              @dblclick="handleNodeDblClick(slotProps.node.key as string)"
             >
               <!-- NodeIcon 컴포넌트 -->
               <NodeIcon :type="slotProps.node.data.node.type" />

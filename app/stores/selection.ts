@@ -4,7 +4,8 @@
  * Task: TSK-01-01-03
  */
 
-import type { TaskDetail, WbsNodeType } from '~/types/store'
+import type { TaskDetail, WbsNodeType, WbsNode } from '~/types/store'
+import { useWbsStore } from './wbs'
 
 export const useSelectionStore = defineStore('selection', () => {
   // ============================================================
@@ -41,6 +42,42 @@ export const useSelectionStore = defineStore('selection', () => {
    * 선택된 것이 Task인지 확인
    */
   const isTaskSelected = computed(() => selectedNodeType.value === 'task')
+
+  /**
+   * WP 또는 ACT 선택 여부
+   */
+  const isWpOrActSelected = computed(() => {
+    const type = selectedNodeType.value
+    return type === 'wp' || type === 'act'
+  })
+
+  /**
+   * 선택된 WbsNode 반환 (WP/ACT 전용)
+   * Task가 선택되었으면 null 반환
+   *
+   * H-01 지적사항 반영:
+   * - wbsStore.flatNodes 초기화 검증 추가
+   * - 노드 조회 실패 시 경고 로그 출력
+   */
+  const selectedNode = computed((): WbsNode | null => {
+    if (!selectedNodeId.value) return null
+    if (isTaskSelected.value) return null
+
+    const wbsStore = useWbsStore()
+
+    // wbsStore.flatNodes가 초기화되었는지 확인
+    if (!wbsStore.flatNodes || wbsStore.flatNodes.size === 0) {
+      console.warn('[selectionStore] WBS data not loaded yet')
+      return null
+    }
+
+    const node = wbsStore.getNode(selectedNodeId.value)
+    if (!node) {
+      console.warn(`[selectionStore] Node not found: ${selectedNodeId.value}`)
+    }
+
+    return node || null
+  })
 
   // ============================================================
   // Actions
@@ -109,6 +146,8 @@ export const useSelectionStore = defineStore('selection', () => {
     hasSelection,
     selectedNodeType,
     isTaskSelected,
+    isWpOrActSelected,
+    selectedNode,
     // Actions
     selectNode,
     loadTaskDetail,

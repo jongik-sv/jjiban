@@ -173,6 +173,86 @@ pre code {
  * jjiban 다크 테마와 통합
  * ============================================ */
 
+/* ============================================
+ * PrimeVue 기본 Surface/Content 토큰 오버라이드
+ * jjiban 다크 테마 글로벌 적용
+ * ============================================ */
+:root {
+  /* Surface 색상 계층 (다크 테마) */
+  --p-surface-0: var(--color-bg);                               /* #1a1a2e - 가장 어두운 배경 */
+  --p-surface-50: rgba(255, 255, 255, 0.03);                    /* 매우 연한 오버레이 */
+  --p-surface-100: var(--color-sidebar);                        /* #0f0f23 - 사이드바 */
+  --p-surface-200: var(--color-header);                         /* #16213e - 헤더 */
+  --p-surface-300: var(--color-card);                           /* #1e1e38 - 카드 */
+  --p-surface-400: var(--color-border);                         /* #3d3d5c - 보더 */
+  --p-surface-500: var(--color-border-light);                   /* #4d4d6c - 밝은 보더 */
+  --p-surface-600: var(--color-text-muted);                     /* #666666 - 뮤트 텍스트 */
+  --p-surface-700: var(--color-text-secondary);                 /* #888888 - 보조 텍스트 */
+  --p-surface-800: #aaaaaa;                                     /* 밝은 회색 */
+  --p-surface-900: var(--color-text);                           /* #e8e8e8 - 기본 텍스트 */
+  --p-surface-950: #ffffff;                                     /* 흰색 */
+
+  /* Content 배경 (폼, 패널 내부) */
+  --p-content-background: var(--color-card);                    /* #1e1e38 */
+  --p-content-color: var(--color-text);                         /* #e8e8e8 */
+  --p-content-border-color: var(--color-border);                /* #3d3d5c */
+
+  /* Primary 색상 */
+  --p-primary-color: var(--color-primary);                      /* #3b82f6 */
+  --p-primary-contrast-color: #ffffff;
+  --p-primary-hover-color: var(--color-primary-hover);          /* #2563eb */
+  --p-primary-active-color: #1d4ed8;
+
+  /* Text 색상 */
+  --p-text-color: var(--color-text);                            /* #e8e8e8 */
+  --p-text-muted-color: var(--color-text-muted);                /* #666666 */
+}
+
+/* PrimeVue Select 컴포넌트 */
+:root {
+  --p-select-background: var(--color-card);                     /* #1e1e38 */
+  --p-select-color: var(--color-text);                          /* #e8e8e8 */
+  --p-select-border-color: var(--color-border);                 /* #3d3d5c */
+  --p-select-hover-border-color: var(--color-border-light);     /* #4d4d6c */
+  --p-select-focus-border-color: var(--color-primary);          /* #3b82f6 */
+  --p-select-disabled-background: var(--color-sidebar);         /* #0f0f23 */
+  --p-select-disabled-color: var(--color-text-muted);           /* #666666 */
+
+  /* Select Dropdown */
+  --p-select-overlay-background: var(--color-card);             /* #1e1e38 */
+  --p-select-overlay-border-color: var(--color-border);         /* #3d3d5c */
+  --p-select-option-color: var(--color-text);                   /* #e8e8e8 */
+  --p-select-option-focus-background: var(--color-header);      /* #16213e */
+  --p-select-option-focus-color: var(--color-text);             /* #e8e8e8 */
+  --p-select-option-selected-background: rgba(59, 130, 246, 0.2); /* primary/20 */
+  --p-select-option-selected-color: var(--color-primary);       /* #3b82f6 */
+}
+
+/* PrimeVue InputText 컴포넌트 */
+:root {
+  --p-inputtext-background: var(--color-card);                  /* #1e1e38 */
+  --p-inputtext-color: var(--color-text);                       /* #e8e8e8 */
+  --p-inputtext-border-color: var(--color-border);              /* #3d3d5c */
+  --p-inputtext-hover-border-color: var(--color-border-light);  /* #4d4d6c */
+  --p-inputtext-focus-border-color: var(--color-primary);       /* #3b82f6 */
+  --p-inputtext-placeholder-color: var(--color-text-muted);     /* #666666 */
+}
+
+/* PrimeVue Panel/Fieldset 컴포넌트 */
+:root {
+  --p-panel-background: var(--color-card);                      /* #1e1e38 */
+  --p-panel-color: var(--color-text);                           /* #e8e8e8 */
+  --p-panel-border-color: var(--color-border);                  /* #3d3d5c */
+  --p-panel-header-background: var(--color-header);             /* #16213e */
+  --p-panel-header-color: var(--color-text);                    /* #e8e8e8 */
+
+  --p-fieldset-background: var(--color-card);                   /* #1e1e38 */
+  --p-fieldset-color: var(--color-text);                        /* #e8e8e8 */
+  --p-fieldset-border-color: var(--color-border);               /* #3d3d5c */
+  --p-fieldset-legend-background: var(--color-header);          /* #16213e */
+  --p-fieldset-legend-color: var(--color-text);                 /* #e8e8e8 */
+}
+
 /* PrimeVue Tree 컴포넌트 (WbsTreePanel - TSK-08-01) */
 :root {
   /* Tree 배경 및 텍스트 */
@@ -280,6 +360,62 @@ pre code {
   --p-dialog-mask-background: rgba(0, 0, 0, 0.6);
 }
 
+/* PrimeVue Card 컴포넌트 (TaskDetailPanel - TSK-08-05) */
+:root {
+  /* Card 배경 및 텍스트 */
+  --p-card-background: var(--color-card);                       /* #1e1e38 */
+  --p-card-color: var(--color-text);                            /* #e8e8e8 */
+  --p-card-border-color: var(--color-border);                   /* #3d3d5c */
+  --p-card-border-radius: 0.75rem;                              /* 12px */
+  --p-card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3),
+                   0 2px 4px -1px rgba(0, 0, 0, 0.2);
+
+  /* Card Body */
+  --p-card-body-padding: 1rem;                                  /* 16px */
+
+  /* Card Title */
+  --p-card-title-color: var(--color-text);                      /* #e8e8e8 */
+  --p-card-title-font-weight: 600;
+
+  /* Card Subtitle */
+  --p-card-subtitle-color: var(--color-text-secondary);         /* #888888 */
+}
+
+/* PrimeVue Card 클래스 직접 오버라이드 (토큰 미적용 시 fallback) */
+/* PrimeVue 내부 스타일보다 우선 적용을 위해 구체적 선택자 사용 */
+.p-card.p-component {
+  background: var(--color-card) !important;
+  color: var(--color-text);
+  border-color: var(--color-border);
+}
+
+@layer tailwind-utilities {
+  .p-card {
+    background: var(--color-card);
+    color: var(--color-text);
+    border-color: var(--color-border);
+  }
+
+  /* Card 높이 100% 지원 (h-full 클래스 사용 시) */
+  .p-card.h-full {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .p-card.h-full > .p-card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .p-card.h-full > .p-card-body > .p-card-content {
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
+  }
+}
+
 /* PrimeVue ProgressBar 컴포넌트 (ProgressBar - TSK-08-02) */
 :root {
   /* ProgressBar 배경 및 높이 */
@@ -350,7 +486,7 @@ pre code {
 
 /* 노드 호버 상태 */
 .wbs-tree :deep(.p-tree-node-content:hover) {
-  @apply bg-bg-header;
+  @apply bg-slate-600 border-l-2 border-primary;
 }
 
 /* 노드 선택 상태 */
@@ -382,7 +518,11 @@ pre code {
 
 /* 노드 라벨 컨테이너 */
 .wbs-tree-node-label {
-  @apply flex items-center gap-2 flex-1;
+  @apply flex items-center gap-2 flex-1 cursor-pointer py-1 px-2 rounded-md transition-colors;
+}
+
+.wbs-tree-node-label:hover {
+  @apply bg-slate-600;
 }
 
 /* 노드 제목 텍스트 */
@@ -392,15 +532,15 @@ pre code {
 
 /* 노드 타입별 텍스트 색상 */
 .wbs-tree-node-title-wp {
-  @apply text-text font-medium;
+  @apply text-white font-medium;
 }
 
 .wbs-tree-node-title-act {
-  @apply text-text-secondary;
+  @apply text-text;
 }
 
 .wbs-tree-node-title-task {
-  @apply text-text-muted text-xs;
+  @apply text-text text-xs;
 }
 
 /* 진행률 표시 */
@@ -505,11 +645,50 @@ pre code {
 .document-viewer-dialog {
   width: 80vw;
   max-width: 1200px;
+  height: 90vh;
 }
 
-/* Task Detail Content Area */
+.document-viewer-dialog .p-dialog-content {
+  height: calc(90vh - 4rem);  /* 헤더 높이 제외 */
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.document-viewer-dialog .document-viewer {
+  flex: 1;
+  height: 100%;
+  max-height: none !important;  /* prop으로 전달된 maxHeight 무시 */
+  overflow-y: scroll;  /* auto 대신 scroll로 항상 표시 */
+  /* Firefox 스크롤바 */
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-primary) var(--color-bg);
+}
+
+/* Document Viewer 스크롤바 스타일 (Webkit/Chrome) */
+.document-viewer-dialog .document-viewer::-webkit-scrollbar {
+  width: 12px;
+}
+
+.document-viewer-dialog .document-viewer::-webkit-scrollbar-track {
+  background: var(--color-bg);
+  border-radius: 6px;
+}
+
+.document-viewer-dialog .document-viewer::-webkit-scrollbar-thumb {
+  background: var(--color-primary);
+  border-radius: 6px;
+  border: 2px solid var(--color-bg);
+}
+
+.document-viewer-dialog .document-viewer::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary-hover);
+}
+
+/* Task Detail Content Area - 부모 컨테이너 높이 100% 사용 */
 .task-detail-content {
-  max-height: calc(100vh - 200px);
+  flex: 1;
+  overflow-y: auto;
 }
 
 /* ============================================
@@ -531,8 +710,7 @@ pre code {
 
 /* 워크플로우 노드 - 대기 상태 */
 .workflow-step-pending {
-  @apply bg-gray-200 text-gray-500;
-  border: 2px dashed #9ca3af;
+  @apply bg-bg-card text-text-muted border-2 border-dashed border-border;
 }
 
 /* ============================================
@@ -557,7 +735,20 @@ pre code {
 
 /* 이력 마커 - 기본값 */
 .history-badge-default {
-  @apply bg-gray-500;
+  @apply bg-border;
+}
+
+/* 이력 상태 뱃지 - 기본 */
+.history-status-badge {
+  @apply font-mono px-2 py-1 rounded;
+  background-color: var(--color-card);
+  color: var(--color-text);
+}
+
+/* 이력 상태 뱃지 - 변경 후 */
+.history-status-to {
+  background-color: rgba(59, 130, 246, 0.2);
+  color: var(--color-primary);
 }
 
 /* ============================================
@@ -567,16 +758,18 @@ pre code {
 
 /* 문서 카드 - 존재하는 문서 */
 .doc-card-exists {
-  @apply bg-blue-100 border border-primary;
+  @apply border border-primary;
+  background-color: rgba(59, 130, 246, 0.1);
 }
 
 .doc-card-exists:hover {
   @apply shadow-md;
+  background-color: rgba(59, 130, 246, 0.15);
 }
 
 /* 문서 카드 - 예정 문서 */
 .doc-card-expected {
-  @apply bg-gray-50 border-2 border-dashed border-gray-400 opacity-60 cursor-not-allowed;
+  @apply bg-bg-card border-2 border-dashed border-border opacity-60 cursor-not-allowed;
 }
 
 /* ============================================
@@ -647,4 +840,88 @@ pre code {
 /* 프로젝트명 - 미선택 (안내 메시지) */
 .menubar-project-name-empty {
   @apply text-sm max-w-[200px] truncate text-text-muted italic;
+}
+
+/* ============================================
+ * WP/ACT Detail Panel 스타일 (TSK-05-05)
+ * ============================================ */
+
+/* WpActDetailPanel 컨테이너 */
+.wp-act-detail-panel {
+  @apply h-full flex flex-col;
+}
+
+.wp-act-detail-content {
+  @apply p-4 space-y-4 overflow-y-auto;
+  max-height: calc(100vh - 8rem);
+}
+
+/* WpActBasicInfo */
+.wp-act-basic-info .field {
+  @apply mb-3;
+}
+
+.wp-act-basic-info .field:last-child {
+  @apply mb-0;
+}
+
+/* WpActProgress - 다단계 ProgressBar */
+.progress-segments {
+  @apply w-full;
+}
+
+.progress-segment-track {
+  @apply flex h-4 rounded-full overflow-hidden bg-border;
+}
+
+.progress-segment {
+  @apply transition-all duration-300;
+}
+
+.progress-segment-completed {
+  @apply bg-success;
+}
+
+.progress-segment-inprogress {
+  @apply bg-warning;
+}
+
+.progress-segment-todo {
+  @apply bg-text-muted;
+}
+
+/* WpActChildren - 하위 노드 목록 */
+.children-list {
+  @apply space-y-2 max-h-[400px] overflow-y-auto;
+}
+
+.child-item {
+  @apply p-3 rounded-lg border border-border bg-bg-card cursor-pointer transition-all;
+}
+
+.child-item:hover {
+  @apply border-border-light bg-slate-700/50 shadow-md;
+}
+
+.child-item:focus {
+  @apply ring-2 ring-primary ring-offset-2 ring-offset-bg;
+}
+
+.child-header {
+  @apply flex items-center justify-between gap-2;
+}
+
+.child-info {
+  @apply mt-2 pt-2 border-t border-border/50;
+}
+
+/* 애니메이션: 패널 전환 */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
