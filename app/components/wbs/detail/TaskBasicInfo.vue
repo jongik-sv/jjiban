@@ -1,10 +1,51 @@
 <template>
-  <Panel header="기본 정보" data-testid="task-basic-info-panel" class="task-basic-info">
+  <Panel data-testid="task-basic-info-panel" class="task-basic-info">
+    <template #header>
+      <div class="flex items-center justify-between w-full">
+        <span class="font-semibold">기본 정보</span>
+        <div class="flex items-center gap-1">
+          <Button
+            icon="pi pi-chevron-up"
+            text
+            rounded
+            size="small"
+            severity="secondary"
+            :disabled="!hasPrevTask"
+            data-testid="task-nav-prev-btn"
+            aria-label="이전 Task"
+            v-tooltip.top="'이전 Task (↑)'"
+            @click="handlePrevTask"
+          />
+          <span class="text-xs text-text-muted px-1">
+            {{ currentTaskIndex + 1 }}/{{ totalTasks }}
+          </span>
+          <Button
+            icon="pi pi-chevron-down"
+            text
+            rounded
+            size="small"
+            severity="secondary"
+            :disabled="!hasNextTask"
+            data-testid="task-nav-next-btn"
+            aria-label="다음 Task"
+            v-tooltip.top="'다음 Task (↓)'"
+            @click="handleNextTask"
+          />
+        </div>
+      </div>
+    </template>
     <div class="space-y-3">
       <!-- Task ID (카테고리 + ID) -->
       <div class="field-row">
         <label class="field-label">Task ID</label>
         <div class="field-value flex items-center gap-2">
+          <Badge
+            v-if="projectId"
+            :value="projectId"
+            severity="secondary"
+            class="text-sm"
+            data-testid="task-project-badge"
+          />
           <Tag
             :value="categoryLabel"
             :class="categoryClass"
@@ -40,7 +81,7 @@
           <div
             v-else
             data-testid="task-title-display"
-            class="cursor-pointer hover:bg-gray-100 p-1 rounded"
+            class="cursor-pointer p-1 rounded"
             @click="startEditTitle"
           >
             {{ task.title }}
@@ -48,25 +89,7 @@
         </div>
       </div>
 
-      <!-- 상태 전이 버튼 -->
-      <div v-if="availableActions.length > 0" class="field-row">
-        <label class="field-label">작업</label>
-        <div class="field-value flex flex-wrap gap-2" role="group" aria-label="워크플로우 명령어">
-          <Button
-            v-for="action in availableActions"
-            :key="action"
-            :label="getActionLabel(action)"
-            :icon="getActionIcon(action)"
-            :severity="getActionSeverity(action)"
-            size="small"
-            :loading="transitioningCommand === action"
-            :disabled="props.updating || transitioningCommand !== null"
-            :data-testid="`task-actions-${action}-btn`"
-            :aria-label="`${getActionLabel(action)} 실행`"
-            @click="handleTransition(action)"
-          />
-        </div>
-      </div>
+
 
       <!-- 우선순위 + 담당자 (한 줄) -->
       <div class="field">
@@ -244,6 +267,7 @@
  */
 
 import type { TaskDetail, Priority, TeamMember } from '~/types'
+import { storeToRefs } from 'pinia'
 
 // ============================================================
 // Props & Emits
@@ -273,6 +297,11 @@ const selectionStore = useSelectionStore()
 const wbsStore = useWbsStore()
 const notification = useNotification()
 const errorHandler = useErrorHandler()
+const { selectedProjectId } = storeToRefs(selectionStore)
+
+// Task 네비게이션
+const { hasPrevTask, hasNextTask, currentTaskIndex, allTasks } = storeToRefs(selectionStore)
+const totalTasks = computed(() => allTasks.value.length)
 
 // ============================================================
 // State
@@ -333,6 +362,14 @@ const teamMemberOptions = computed(() => {
  */
 const availableActions = computed(() => props.task.availableActions || [])
 
+/**
+ * 프로젝트 ID (TSK-08-07)
+ */
+const projectId = computed(() => {
+  return selectedProjectId.value
+})
+
+
 // ============================================================
 // Workflow Button Config
 // ============================================================
@@ -385,7 +422,8 @@ async function handleTransition(command: string) {
   transitioningCommand.value = command
 
   try {
-    await $fetch(`/api/tasks/${props.task.id}/transition`, {
+    const projectParam = selectedProjectId.value ? `?project=${encodeURIComponent(selectedProjectId.value)}` : ''
+    await $fetch(`/api/tasks/${props.task.id}/transition${projectParam}`, {
       method: 'POST',
       body: { command },
     })
@@ -493,11 +531,11 @@ async function loadTeamMembers() {
 
   loadingTeam.value = true
   try {
-    // 프로젝트 ID는 URL 쿼리 또는 전역 상태에서 가져와야 함
-    // 여기서는 'jjiban'으로 하드코딩 (실제로는 route.query.project 사용)
-    const route = useRoute()
-    const projectId = (route.query.project as string) || 'jjiban'
-    await projectStore.loadProject(projectId)
+    // 선택된 Task의 프로젝트 ID 사용
+    const projectId = selectedProjectId.value
+    if (projectId) {
+      await projectStore.loadProject(projectId)
+    }
   } catch (error) {
     console.error('[TaskBasicInfo] 팀원 목록 로드 실패:', error)
   } finally {
@@ -563,6 +601,24 @@ function getDependsLabel(taskId: string): string {
   const rawStatus = (node.status || '').replace(/[\[\]]/g, '')
   const statusLabel = statusLabels[rawStatus] ?? statusLabels['']
   return `${taskId}[${statusLabel}]`
+}
+
+// ============================================================
+// Task Navigation
+// ============================================================
+
+/**
+ * 이전 Task로 이동
+ */
+function handlePrevTask() {
+  selectionStore.selectPrevTask()
+}
+
+/**
+ * 다음 Task로 이동
+ */
+function handleNextTask() {
+  selectionStore.selectNextTask()
 }
 
 // ============================================================

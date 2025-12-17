@@ -130,6 +130,8 @@ main.css → tailwind.config.ts → 컴포넌트 (:class만 사용)
 
 
 ## TDD, E2E 테스트 시 유의사항
-- .jjiban/jjiban 폴더는 테스트에 사용하지 말것
-- 요청에 좋은 대안이 있으면 제시해
+- .jjiban/jjiban, .jjiban/jjiban개선 폴더는 테스트에 사용하지 말것**(특히 지우지말 것)**
+- 내가 한 요청에 좋은 대안이 있으면 언제든지 제시해
+- 프로젝트의 중요 내용 수정이 있으면 관련 Task의 설계문서, prd, trd 파일도 같이 수정해.
 - 슬래쉬('/') 명령어 수정과 생성은 100%의미를 함축하여 compact 하게 할 것
+- 컴포넌트는 PrimeVue를 우선 사용하여 구현하고 대체할 컴포넌트가 없으면 Tailwind CSS를 사용하여 구현할 것

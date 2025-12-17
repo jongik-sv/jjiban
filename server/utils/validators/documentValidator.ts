@@ -9,8 +9,11 @@ import { stat } from 'fs/promises';
 import path from 'path';
 import { decodePathSegment } from '../../../app/utils/urlPath';
 
-// 파일명 패턴: 숫자3자리-이름.md (한글, 공백, 괄호 허용)
-const FILENAME_PATTERN = /^\d{3}-[가-힣\w\s()[\]-]+\.md$/;
+// 파일명 패턴:
+// 1. 표준 문서: 숫자3자리-이름.md (예: 010-basic-design.md)
+// 2. 일반 마크다운: 알파벳/한글로 시작하는 .md 파일 (예: IMPLEMENTATION-SUMMARY.md, README.md)
+const STANDARD_PATTERN = /^\d{3}-[가-힣\w\s()[\]-]+\.md$/;
+const GENERAL_MD_PATTERN = /^[가-힣A-Za-z][가-힣\w\s()[\].-]*\.md$/;
 const MAX_FILE_SIZE = 1 * 1024 * 1024; // 1MB
 
 export interface DocumentValidationResult {
@@ -21,10 +24,15 @@ export interface DocumentValidationResult {
 
 /**
  * 파일명 패턴 검증 (BR-001)
- * 패턴: \d{3}-[\w-]+\.md
+ * 허용 패턴:
+ * - 표준 문서: \d{3}-[\w-]+\.md (예: 010-basic-design.md)
+ * - 일반 마크다운: 알파벳/한글로 시작하는 .md 파일 (예: IMPLEMENTATION-SUMMARY.md)
  */
 export function validateFilename(filename: string): DocumentValidationResult {
-  if (!FILENAME_PATTERN.test(filename)) {
+  const isStandard = STANDARD_PATTERN.test(filename);
+  const isGeneral = GENERAL_MD_PATTERN.test(filename);
+
+  if (!isStandard && !isGeneral) {
     return {
       valid: false,
       error: '유효하지 않은 파일명 형식입니다',

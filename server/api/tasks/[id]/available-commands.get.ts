@@ -2,10 +2,13 @@
  * Task 가능한 명령어 조회 API
  * Task: TSK-03-04
  * 상세설계: 020-detail-design.md 섹션 6.1
+ *
+ * Query params:
+ * - project: 프로젝트 ID (선택, 지정 시 해당 프로젝트에서만 검색)
  */
 
 import { getAvailableCommands } from '../../../utils/workflow/transitionService';
-import { findTaskById } from '../../../utils/wbs/taskService';
+import { findTaskById, findTaskInProject } from '../../../utils/wbs/taskService';
 import { createNotFoundError } from '../../../utils/errors/standardError';
 
 export default defineEventHandler(async (event) => {
@@ -15,8 +18,14 @@ export default defineEventHandler(async (event) => {
     throw createNotFoundError('Task ID가 필요합니다');
   }
 
-  // Task 존재 확인
-  const taskResult = await findTaskById(taskId);
+  // projectId: 쿼리 파라미터로 받거나 undefined (전체 프로젝트 검색)
+  const query = getQuery(event);
+  const projectId = typeof query.project === 'string' ? query.project : undefined;
+
+  // Task 존재 확인 (projectId가 지정되면 해당 프로젝트에서만 검색)
+  const taskResult = projectId
+    ? await findTaskInProject(projectId, taskId)
+    : await findTaskById(taskId);
   if (!taskResult) {
     throw createNotFoundError(`Task를 찾을 수 없습니다: ${taskId}`);
   }

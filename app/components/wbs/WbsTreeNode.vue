@@ -135,12 +135,27 @@ const handleSelectNode = () => {
   min-height: 48px;
 }
 
-.wbs-tree-node:hover {
-  @apply bg-header/30;
+/* 비선택 상태 호버 */
+.wbs-tree-node:not(.selected):hover {
+  background-color: rgba(255, 255, 255, 0.05);
 }
 
-.wbs-tree-node.selected {
-  @apply bg-primary/15 border-l-[3px] border-primary;
+/* 선택 상태 - 기본 */
+div.wbs-tree-node.selected {
+  background-color: rgba(59, 130, 246, 0.3);
+  border-left: 4px solid #3b82f6;
+  box-shadow: inset 0 0 0 1px rgba(59, 130, 246, 0.5);
+}
+
+/* 선택 상태 호버 */
+div.wbs-tree-node.selected:hover {
+  background-color: rgba(59, 130, 246, 0.4);
+}
+
+/* 선택된 노드 제목 스타일 */
+div.wbs-tree-node.selected .node-title {
+  color: #60a5fa;
+  font-weight: 600;
 }
 
 .wbs-tree-node:focus-visible {

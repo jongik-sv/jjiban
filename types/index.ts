@@ -32,6 +32,7 @@ export interface WbsNode {
   id: string;
   type: WbsNodeType;
   title: string;
+  projectId?: string;  // 다중 프로젝트 모드에서 소속 프로젝트 ID
   status?: string;  // 파서 호환을 위해 string으로 확장 (예: "detail-design [dd]")
   category?: TaskCategory;
   priority?: Priority;
@@ -159,28 +160,6 @@ export interface Project {
   scheduledEnd?: string;
 }
 
-// 칸반 컬럼
-export interface Column {
-  id: string;
-  name: string;
-  statuses: string[];
-}
-
-// 카테고리 설정
-export interface CategoryConfig {
-  id: string;
-  name: string;
-  code: string;
-}
-
-// 워크플로우 규칙
-export interface WorkflowRule {
-  category: string;
-  from: string;
-  to: string;
-  command: string;
-}
-
 // 워크플로우 단계 (TSK-05-02 R-02: 타입 정의 추출)
 export interface WorkflowStep {
   code: string;        // 상태 코드 (예: '[ ]', '[bd]', '[dd]', '[im]', '[vf]', '[xx]')
@@ -272,11 +251,6 @@ export interface PaginationInfo {
   totalPages: number;
 }
 
-// 페이징된 응답
-export interface PaginatedResponse<T> extends ApiResponse<T[]> {
-  pagination: PaginationInfo;
-}
-
 // Document Viewer 타입 (TSK-05-04)
 export interface DocumentError {
   code: string;           // 에러 코드 (DOCUMENT_NOT_FOUND, FILE_READ_ERROR 등)
@@ -314,11 +288,6 @@ export interface ProjectWbsNode extends WbsNode {
   progress: number;        // 전체 Task 진행률 (0-100, 집계값)
   taskCount: number;       // 전체 Task 개수 (집계값)
   children: WbsNode[];     // WP 배열
-}
-
-// 타입 가드 함수
-export function isProjectNode(node: WbsNode): node is ProjectWbsNode {
-  return node.type === 'project';
 }
 
 // 프로젝트 파일 정보

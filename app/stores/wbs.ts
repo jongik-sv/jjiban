@@ -204,6 +204,32 @@ export const useWbsStore = defineStore('wbs', () => {
   }
 
   /**
+   * 특정 노드의 조상 노드 ID 목록 반환 (루트 → 부모 순서)
+   * 트리 순회하여 해당 노드까지의 경로 탐색
+   */
+  function getAncestorIds(targetId: string): string[] {
+    const path: string[] = []
+
+    function findPath(nodes: WbsNode[], currentPath: string[]): boolean {
+      for (const node of nodes) {
+        if (node.id === targetId) {
+          path.push(...currentPath)
+          return true
+        }
+        if (node.children && node.children.length > 0) {
+          if (findPath(node.children, [...currentPath, node.id])) {
+            return true
+          }
+        }
+      }
+      return false
+    }
+
+    findPath(tree.value, [])
+    return path
+  }
+
+  /**
    * 노드 확장/축소 토글
    */
   function toggleExpand(id: string) {
@@ -273,6 +299,7 @@ export const useWbsStore = defineStore('wbs', () => {
     fetchAllWbs,
     saveWbs,
     getNode,
+    getAncestorIds,
     toggleExpand,
     isExpanded,
     expandAll,

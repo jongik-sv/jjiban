@@ -38,7 +38,7 @@
                   />
                   <i
                     v-else
-                    class="pi pi-circle text-text-muted"
+                    class="pi pi-circle text-text-secondary"
                   />
                 </button>
 
@@ -455,14 +455,14 @@ watch(() => props.task.status, () => {
 
 /* 워크플로우 단계 원형 */
 .workflow-step-circle {
-  width: 28px;
-  height: 28px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease-in-out;
-  font-size: 0.7rem;
+  font-size: 1rem;
   flex-shrink: 0;
   border: none;
   background: transparent;
@@ -476,10 +476,10 @@ watch(() => props.task.status, () => {
 /* 워크플로우 단계 라벨 */
 .workflow-step-label {
   margin-top: 0.25rem;
-  font-size: 0.65rem;
+  font-size: 0.85rem;
   text-align: center;
   white-space: nowrap;
-  @apply text-text-muted;
+  @apply text-text-secondary;
 }
 
 .workflow-step-label-current {
@@ -495,7 +495,7 @@ watch(() => props.task.status, () => {
   width: 40px;
   height: 3px;
   flex-shrink: 0;
-  margin-top: 12px; /* 원형 중앙 높이에 맞춤 (28px/2 - 3px/2) */
+  margin-top: 19px; /* 원형 중앙 높이에 맞춤 (40px/2 - 3px/2) ≈ 19px */
   transition: background-color 0.5s ease-in-out;
 }
 

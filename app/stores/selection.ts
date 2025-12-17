@@ -9,12 +9,41 @@ import { useWbsStore } from './wbs'
 import { useProjectStore } from './project'
 import { buildApiUrl } from '~/utils/urlPath'
 
+/**
+ * 복합 ID 파싱 (다중 프로젝트 모드 지원)
+ * @param compositeId - `projectId:nodeId` 또는 `nodeId` 형식
+ * @returns { projectId, nodeId } - projectId는 복합 ID일 때만 존재
+ */
+function parseCompositeId(compositeId: string): { projectId?: string; nodeId: string } {
+  const colonIndex = compositeId.indexOf(':')
+  if (colonIndex > 0) {
+    return {
+      projectId: compositeId.substring(0, colonIndex),
+      nodeId: compositeId.substring(colonIndex + 1)
+    }
+  }
+  return { nodeId: compositeId }
+}
+
+/**
+ * 노드 ID에서 노드 타입 추출
+ * @param nodeId - 원본 노드 ID (복합 ID 아님)
+ */
+function getNodeTypeFromId(nodeId: string): WbsNodeType | null {
+  const upper = nodeId.toUpperCase()
+  if (upper.startsWith('WP-')) return 'wp'
+  if (upper.startsWith('ACT-')) return 'act'
+  if (upper.startsWith('TSK-')) return 'task'
+  return null
+}
+
 export const useSelectionStore = defineStore('selection', () => {
   // ============================================================
   // State
   // ============================================================
   const selectedNodeId = ref<string | null>(null)
   const selectedTask = ref<TaskDetail | null>(null)
+  const selectedProjectId = ref<string | null>(null)  // 현재 선택된 Task/Node의 프로젝트 ID
   const loadingTask = ref(false)
   const error = ref<string | null>(null)
 
@@ -33,15 +62,15 @@ export const useSelectionStore = defineStore('selection', () => {
 
   /**
    * 선택된 노드의 타입 추출
+   * 다중 프로젝트 모드: 복합 ID (projectId:nodeId) 지원
    */
   const selectedNodeType = computed((): WbsNodeType | null => {
     if (!selectedNodeId.value) return null
 
-    const id = selectedNodeId.value.toUpperCase()
-    if (id.startsWith('WP-')) return 'wp'
-    if (id.startsWith('ACT-')) return 'act'
-    if (id.startsWith('TSK-')) return 'task'
-    return 'project'
+    // 복합 ID에서 원본 nodeId 추출
+    const { nodeId } = parseCompositeId(selectedNodeId.value)
+    const type = getNodeTypeFromId(nodeId)
+    return type || 'project'
   })
 
   /**
@@ -91,6 +120,7 @@ export const useSelectionStore = defineStore('selection', () => {
 
   /**
    * 노드 선택
+   * 다중 프로젝트 모드: 복합 ID (projectId:nodeId) 지원
    */
   async function selectNode(nodeId: string) {
     // 같은 노드 재선택 시 무시
@@ -110,7 +140,7 @@ export const useSelectionStore = defineStore('selection', () => {
       selectedTask.value = null
     }
     // Task인 경우 상세 정보 로드
-    else if (nodeId.toUpperCase().startsWith('TSK-')) {
+    else if (node.type === 'task') {
       await loadTaskDetail(nodeId)
       selectedProjectFiles.value = []
     } else {
@@ -121,13 +151,22 @@ export const useSelectionStore = defineStore('selection', () => {
 
   /**
    * Task 상세 정보 로드
+   * 다중 프로젝트 모드: 복합 ID (projectId:taskId)에서 원본 ID 추출
    */
-  async function loadTaskDetail(taskId: string) {
+  async function loadTaskDetail(compositeTaskId: string) {
     loadingTask.value = true
     error.value = null
     try {
+      // 복합 ID에서 projectId와 원본 taskId 추출
+      const { projectId: parsedProjectId, nodeId: taskId } = parseCompositeId(compositeTaskId)
+
+      // projectId 우선순위: 복합 ID > projectStore
       const projectStore = useProjectStore()
-      const projectId = projectStore.projectId
+      const projectId = parsedProjectId || projectStore.projectId
+
+      // 선택된 프로젝트 ID 저장
+      selectedProjectId.value = projectId || null
+
       // 한글, 공백, 괄호 등 특수문자 안전하게 인코딩
       const url = buildApiUrl('/api/tasks', [taskId], projectId ? { project: projectId } : undefined)
       const data = await $fetch<TaskDetail>(url)
@@ -174,14 +213,84 @@ export const useSelectionStore = defineStore('selection', () => {
   function clearSelection() {
     selectedNodeId.value = null
     selectedTask.value = null
+    selectedProjectId.value = null
     selectedProjectFiles.value = []
     error.value = null
+  }
+
+  /**
+   * 모든 Task 목록 (트리 순서)
+   */
+  const allTasks = computed(() => {
+    const wbsStore = useWbsStore()
+    return Array.from(wbsStore.flatNodes.values()).filter(n => n.type === 'task')
+  })
+
+  /**
+   * 현재 선택된 Task의 인덱스
+   */
+  const currentTaskIndex = computed(() => {
+    if (!selectedNodeId.value || !isTaskSelected.value) return -1
+    return allTasks.value.findIndex(t => t.id === selectedNodeId.value)
+  })
+
+  /**
+   * 이전 Task 존재 여부
+   */
+  const hasPrevTask = computed(() => currentTaskIndex.value > 0)
+
+  /**
+   * 다음 Task 존재 여부
+   */
+  const hasNextTask = computed(() => {
+    return currentTaskIndex.value >= 0 && currentTaskIndex.value < allTasks.value.length - 1
+  })
+
+  /**
+   * 이전 Task로 이동
+   */
+  async function selectPrevTask() {
+    if (!hasPrevTask.value) return
+    const prevTask = allTasks.value[currentTaskIndex.value - 1]
+    if (prevTask) {
+      await selectNode(prevTask.id)
+      // 트리에서 노드가 보이도록 부모 노드 확장
+      ensureNodeVisible(prevTask.id)
+    }
+  }
+
+  /**
+   * 다음 Task로 이동
+   */
+  async function selectNextTask() {
+    if (!hasNextTask.value) return
+    const nextTask = allTasks.value[currentTaskIndex.value + 1]
+    if (nextTask) {
+      await selectNode(nextTask.id)
+      // 트리에서 노드가 보이도록 부모 노드 확장
+      ensureNodeVisible(nextTask.id)
+    }
+  }
+
+  /**
+   * 노드가 트리에서 보이도록 부모 노드들을 확장
+   * 트리 구조를 순회하여 정확한 조상 노드들을 찾아 확장
+   */
+  function ensureNodeVisible(nodeId: string) {
+    const wbsStore = useWbsStore()
+    // 트리를 순회하여 정확한 조상 노드 ID 목록 획득
+    const ancestorIds = wbsStore.getAncestorIds(nodeId)
+    // 모든 조상 노드 확장
+    for (const ancestorId of ancestorIds) {
+      wbsStore.expandedNodes.add(ancestorId)
+    }
   }
 
   return {
     // State
     selectedNodeId,
     selectedTask,
+    selectedProjectId,
     selectedProjectFiles,
     loadingTask,
     loadingFiles,
@@ -192,12 +301,18 @@ export const useSelectionStore = defineStore('selection', () => {
     isTaskSelected,
     isWpOrActSelected,
     selectedNode,
+    allTasks,
+    currentTaskIndex,
+    hasPrevTask,
+    hasNextTask,
     // Actions
     selectNode,
     loadTaskDetail,
     refreshTaskDetail,
     fetchProjectFiles,
-    clearSelection
+    clearSelection,
+    selectPrevTask,
+    selectNextTask
   }
 })
 

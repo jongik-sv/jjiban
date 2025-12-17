@@ -46,11 +46,9 @@
           </div>
 
           <!-- 상태 배지 (Task만) -->
-          <Badge
+          <StatusBadge
             v-if="child.type === 'task' && child.status"
-            :value="child.status"
-            :severity="getStatusSeverity(child.status)"
-            class="font-mono text-xs"
+            :status="child.status"
           />
         </div>
 
@@ -89,9 +87,8 @@
 
 import Panel from 'primevue/panel'
 import Message from 'primevue/message'
-import Badge from 'primevue/badge'
+import StatusBadge from '~/components/wbs/StatusBadge.vue'
 import type { WbsNode, WbsNodeType } from '~/types'
-import { getStatusSeverity } from '~/utils/wbsProgress'
 
 // ============================================================
 // Props & Emits

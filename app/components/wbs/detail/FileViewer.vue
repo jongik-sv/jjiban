@@ -31,16 +31,16 @@
 
     <!-- 콘텐츠 표시 -->
     <div v-else class="file-viewer-content">
-      <!-- 마크다운 렌더링 (MDC + Mermaid) -->
-      <div v-if="isMarkdown" class="markdown-body">
-        <MDC :value="processedContent" />
-        <!-- Mermaid 다이어그램 렌더링 -->
-        <div
-          v-for="(diagram, idx) in mermaidDiagrams"
-          :key="idx"
-          :ref="el => mermaidRefs[idx] = el as HTMLElement"
-          class="mermaid-container my-4"
-        ></div>
+      <!-- 마크다운 렌더링 (marked + Mermaid 인라인) -->
+      <div
+        v-if="isMarkdown"
+        ref="markdownContainer"
+        class="markdown-body prose prose-invert max-w-none"
+      >
+        <div v-if="renderedHtml" v-html="renderedHtml"></div>
+        <div v-else class="flex items-center justify-center p-8">
+          <ProgressSpinner stroke-width="4" animation-duration="1s" />
+        </div>
       </div>
 
       <!-- 이미지 표시 -->
@@ -89,6 +89,7 @@
  */
 
 import type { ProjectFile, DocumentInfo, FileContentResponse } from '~/types'
+import { marked } from 'marked'
 import mermaid from 'mermaid'
 
 // ============================================================
@@ -101,6 +102,8 @@ interface Props {
   visible: boolean
   /** Task용 API 사용 여부 (taskId 필수) */
   taskId?: string
+  /** 프로젝트 파일용 (이미지 경로 변환에 사용) */
+  projectId?: string
 }
 
 const props = defineProps<Props>()
@@ -120,8 +123,9 @@ const content = ref<string>('')
 const imageDataUrl = ref<string | null>(null)
 const loading = ref(false)
 const error = ref<string | null>(null)
-const mermaidRefs = ref<(HTMLElement | null)[]>([])
+const markdownContainer = ref<HTMLElement | null>(null)
 const mermaidInitialized = ref(false)
+const renderedHtml = ref<string>('')
 
 // ============================================================
 // Computed - 파일 정보
@@ -181,23 +185,63 @@ const monacoOptions = {
 // ============================================================
 // Computed - Mermaid 다이어그램 추출
 // ============================================================
-const mermaidRegex = /```mermaid\n([\s\S]*?)```/g
-
 const mermaidDiagrams = computed(() => {
   if (!isMarkdown.value || !content.value) return []
+  // Windows 줄바꿈(\r\n)도 지원
+  const regex = /```mermaid\r?\n([\s\S]*?)```/g
   const diagrams: string[] = []
-  let match
-  while ((match = mermaidRegex.exec(content.value)) !== null) {
+  const matches = content.value.matchAll(regex)
+  for (const match of matches) {
     diagrams.push(match[1].trim())
   }
   return diagrams
 })
 
-// Mermaid 블록을 placeholder로 교체한 콘텐츠
+// Mermaid 블록을 placeholder로 대체 및 이미지 경로 변환
 const processedContent = computed(() => {
   if (!isMarkdown.value || !content.value) return ''
-  // Mermaid 블록 제거 (MDC에서 처리 못함)
-  return content.value.replace(mermaidRegex, '')
+
+  let processed = content.value
+  let mermaidIndex = 0
+
+  // 1. Mermaid 블록을 placeholder div로 대체 (원래 위치 유지)
+  // Windows 줄바꿈(\r\n)도 지원
+  const mermaidRegex = /```mermaid\r?\n([\s\S]*?)```/g
+  processed = processed.replace(mermaidRegex, () => {
+    const placeholder = `<div class="mermaid-placeholder" data-mermaid-index="${mermaidIndex}"></div>`
+    mermaidIndex++
+    return placeholder
+  })
+
+  // 2. 상대 이미지 경로를 API 경로로 변환
+  const imageRegex = /!\[([^\]]*)\]\(\.?\/?([^)]+\.(png|jpg|jpeg|gif|webp|svg))\)/gi
+  processed = processed.replace(imageRegex, (_, alt, imagePath) => {
+    // 이미 절대 URL이면 그대로
+    if (imagePath.startsWith('http://') || imagePath.startsWith('https://') || imagePath.startsWith('/api/')) {
+      return `![${alt}](${imagePath})`
+    }
+
+    // Task 문서인 경우
+    if (props.taskId) {
+      const apiPath = `/api/tasks/${props.taskId}/documents/${imagePath}`
+      return `![${alt}](${apiPath})`
+    }
+
+    // 프로젝트 파일인 경우 (file.path 기반)
+    if (props.file.path) {
+      // 파일 경로에서 디렉토리 추출
+      const filePath = props.file.path.replace(/\\/g, '/')
+      const fileDir = filePath.substring(0, filePath.lastIndexOf('/'))
+      // 상대 경로를 절대 경로로 변환
+      const absoluteImagePath = `${fileDir}/${imagePath.replace(/^\.\//, '')}`
+      const apiPath = `/api/files/content?path=${encodeURIComponent(absoluteImagePath)}`
+      return `![${alt}](${apiPath})`
+    }
+
+    return `![${alt}](${imagePath})`
+  })
+
+  return processed
 })
 
 // ============================================================
@@ -222,21 +266,29 @@ async function initMermaid() {
 
 async function renderMermaidDiagrams() {
   if (mermaidDiagrams.value.length === 0) return
-  await initMermaid()
+  if (!markdownContainer.value) return
 
-  // 다음 틱에서 렌더링 (DOM 업데이트 후)
+  await initMermaid()
   await nextTick()
 
-  for (let i = 0; i < mermaidDiagrams.value.length; i++) {
-    const el = mermaidRefs.value[i]
-    if (!el) continue
+  // placeholder div들을 찾아서 mermaid 다이어그램으로 교체
+  const placeholders = markdownContainer.value.querySelectorAll('.mermaid-placeholder')
+
+  for (const placeholder of placeholders) {
+    const index = parseInt(placeholder.getAttribute('data-mermaid-index') || '0', 10)
+    const diagramCode = mermaidDiagrams.value[index]
+    if (!diagramCode) continue
 
     try {
-      const { svg } = await mermaid.render(`mermaid-${Date.now()}-${i}`, mermaidDiagrams.value[i])
-      el.innerHTML = svg
+      const { svg } = await mermaid.render(`mermaid-${Date.now()}-${index}`, diagramCode)
+      // placeholder를 mermaid 컨테이너로 교체
+      const container = document.createElement('div')
+      container.className = 'mermaid-container my-4'
+      container.innerHTML = svg
+      placeholder.replaceWith(container)
     } catch (e) {
       console.error('Mermaid render error:', e)
-      el.innerHTML = `<pre class="text-danger text-sm">Mermaid 렌더링 실패: ${e instanceof Error ? e.message : 'Unknown error'}</pre>`
+      placeholder.innerHTML = `<pre class="text-danger text-sm p-2">Mermaid 렌더링 실패: ${e instanceof Error ? e.message : 'Unknown error'}</pre>`
     }
   }
 }
@@ -254,15 +306,25 @@ watch(
   { immediate: true }
 )
 
-// Mermaid 다이어그램 렌더링
+// 마크다운 렌더링 후 Mermaid 처리
 watch(
-  () => mermaidDiagrams.value,
-  async (diagrams) => {
-    if (diagrams.length > 0) {
-      await renderMermaidDiagrams()
+  () => processedContent.value,
+  async (newContent) => {
+    if (newContent && isMarkdown.value) {
+      try {
+        renderedHtml.value = await marked(newContent)
+        // DOM 업데이트 후 Mermaid 렌더링
+        await nextTick()
+        await renderMermaidDiagrams()
+      } catch (e) {
+        console.error('[FileViewer] Markdown rendering error:', e)
+        renderedHtml.value = ''
+      }
+    } else {
+      renderedHtml.value = ''
     }
   },
-  { deep: true }
+  { immediate: true }
 )
 
 // ============================================================
@@ -280,9 +342,13 @@ async function loadFileContent(): Promise<void> {
 
   try {
     // Task 문서인 경우 taskId 기반 API 사용
-    const apiUrl = props.taskId
-      ? `/api/tasks/${props.taskId}/documents/${encodeURIComponent(props.file.name)}`
-      : `/api/files/content?path=${encodeURIComponent(props.file.path)}`
+    let apiUrl: string
+    if (props.taskId) {
+      const projectParam = props.projectId ? `?project=${encodeURIComponent(props.projectId)}` : ''
+      apiUrl = `/api/tasks/${props.taskId}/documents/${encodeURIComponent(props.file.name)}${projectParam}`
+    } else {
+      apiUrl = `/api/files/content?path=${encodeURIComponent(props.file.path)}`
+    }
 
     if (isImage.value) {
       // 이미지: ArrayBuffer로 받아서 Data URL 생성
@@ -318,7 +384,7 @@ function handleClose(): void {
   content.value = ''
   imageDataUrl.value = null
   error.value = null
-  mermaidRefs.value = []
+  renderedHtml.value = ''
 }
 
 /**

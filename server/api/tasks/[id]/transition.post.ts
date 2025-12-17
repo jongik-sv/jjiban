@@ -4,9 +4,12 @@
  * 상세설계: 020-detail-design.md 섹션 3.1
  *
  * POST /api/tasks/:id/transition
+ *
+ * Query params:
+ * - project: 프로젝트 ID (선택, 지정 시 해당 프로젝트에서만 검색)
  */
 
-import { defineEventHandler, getRouterParam, readBody, createError, H3Event } from 'h3';
+import { defineEventHandler, getRouterParam, readBody, createError, getQuery, H3Event } from 'h3';
 import { executeTransition } from '../../../utils/workflow/transitionService';
 
 export default defineEventHandler(async (event: H3Event) => {
@@ -21,6 +24,10 @@ export default defineEventHandler(async (event: H3Event) => {
     });
   }
 
+  // projectId: 쿼리 파라미터로 받거나 undefined (전체 프로젝트 검색)
+  const query = getQuery(event);
+  const projectId = typeof query.project === 'string' ? query.project : undefined;
+
   const body = await readBody(event);
   const { command, comment } = body;
 
@@ -34,7 +41,7 @@ export default defineEventHandler(async (event: H3Event) => {
   }
 
   try {
-    const result = await executeTransition(taskId, command, comment);
+    const result = await executeTransition(taskId, command, comment, projectId);
 
     // 201 Created 응답
     event.node.res.statusCode = 201;

@@ -557,6 +557,23 @@ pre code {
 }
 
 /* ============================================
+ * 실행 상태 스피너 스타일 (jjiban개선 PRD 9장)
+ * Task 노드 실행 중 시각화
+ * ============================================ */
+
+/* 실행 중 스피너 (노드 아이콘 왼쪽) */
+.execution-spinner {
+  @apply inline-flex mr-1 flex-shrink-0;
+  width: 14px !important;
+  height: 14px !important;
+}
+
+/* 실행 중인 노드 라벨 */
+.wbs-tree-node-executing {
+  @apply animate-pulse;
+}
+
+/* ============================================
  * CategoryTag 컴포넌트 스타일 (TSK-08-02)
  * CSS 클래스 중앙화 원칙 준수
  * ============================================ */

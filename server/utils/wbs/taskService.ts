@@ -359,6 +359,7 @@ export async function getTaskDetail(taskId: string, projectId?: string): Promise
  * Task 정보 수정
  * @param taskId - Task ID
  * @param updates - 수정할 속성
+ * @param projectId - 프로젝트 ID (선택, 지정 시 해당 프로젝트에서만 검색)
  * @returns TaskDetail (수정 후)
  * @throws TASK_NOT_FOUND - Task 없음
  * @throws VALIDATION_ERROR - 유효성 검증 실패
@@ -369,15 +370,19 @@ export async function getTaskDetail(taskId: string, projectId?: string): Promise
  */
 export async function updateTask(
   taskId: string,
-  updates: Partial<TaskUpdateRequest>
+  updates: Partial<TaskUpdateRequest>,
+  projectId?: string
 ): Promise<TaskDetail> {
-  // Task 검색
-  const searchResult = await findTaskById(taskId);
+  // Task 검색 (projectId가 지정되면 해당 프로젝트에서만 검색)
+  const searchResult = projectId
+    ? await findTaskInProject(projectId, taskId)
+    : await findTaskById(taskId);
   if (!searchResult) {
     throw createNotFoundError(`Task를 찾을 수 없습니다: ${taskId}`);
   }
 
-  const { task, projectId } = searchResult;
+  const { task, projectId: foundProjectId } = searchResult;
+  const resolvedProjectId = projectId ?? foundProjectId;
 
   // 유효성 검증
   if (updates.title && (updates.title.length < 1 || updates.title.length > 200)) {
@@ -416,7 +421,7 @@ export async function updateTask(
   };
 
   // WBS 전체 조회
-  const { metadata, tree } = await getWbsTree(projectId);
+  const { metadata, tree } = await getWbsTree(resolvedProjectId);
 
   // 트리에서 Task 다시 찾기 (참조 업데이트용)
   const foundTask = findTaskInTree(tree, taskId);
@@ -438,7 +443,7 @@ export async function updateTask(
 
   // WBS 저장
   try {
-    await saveWbsTree(projectId, metadata, tree);
+    await saveWbsTree(resolvedProjectId, metadata, tree);
   } catch (error) {
     throw createInternalError(
       'FILE_WRITE_ERROR',
@@ -448,16 +453,16 @@ export async function updateTask(
 
   // 이력 기록 (BR-005)
   const historyEntry = buildHistoryEntry(oldValues, task);
-  const historyPath = join(getTaskFolderPath(projectId, taskId), 'history.json');
+  const historyPath = join(getTaskFolderPath(resolvedProjectId, taskId), 'history.json');
 
   // 기존 이력 읽기
   const existingHistory = await readJsonFile<HistoryEntry[]>(historyPath) || [];
   existingHistory.unshift(historyEntry); // 최신 항목을 앞에 추가
 
   // 이력 저장
-  await ensureDir(getTaskFolderPath(projectId, taskId));
+  await ensureDir(getTaskFolderPath(resolvedProjectId, taskId));
   await writeJsonFile(historyPath, existingHistory);
 
-  // 수정된 Task 상세 정보 반환
-  return getTaskDetail(taskId);
+  // 수정된 Task 상세 정보 반환 (찾은 프로젝트 ID 사용)
+  return getTaskDetail(taskId, resolvedProjectId);
 }

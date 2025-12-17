@@ -32,6 +32,7 @@ export interface WbsNode {
   id: string;
   type: WbsNodeType;
   title: string;
+  projectId?: string;  // 다중 프로젝트 모드에서 소속 프로젝트 ID
   status?: string;  // 파서 호환을 위해 string으로 확장 (예: "detail-design [dd]")
   category?: TaskCategory;
   priority?: Priority;

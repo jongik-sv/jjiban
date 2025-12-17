@@ -244,7 +244,7 @@
 
 ### TSK-06-01: 의존관계 그래프 시각화 기능 구현
 - category: development
-- status: detail-design [dd]
+- status: [dd]
 - priority: high
 - schedule: 2025-12-17 ~ 2025-12-18
 - tags: vis-network, graph, modal

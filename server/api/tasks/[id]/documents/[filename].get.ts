@@ -34,8 +34,12 @@ export default defineEventHandler(async (event) => {
     });
   }
 
+  // projectId: 쿼리 파라미터로 받거나 기본값 'jjiban' 사용
+  const query = getQuery(event);
+  const projectId = typeof query.project === 'string' ? query.project : 'jjiban';
+
   // 파일 경로 구성 (검증용)
-  const filePath = `${process.cwd()}/.jjiban/projects/jjiban/tasks/${taskId}/${filename}`;
+  const filePath = `${process.cwd()}/.jjiban/projects/${projectId}/tasks/${taskId}/${filename}`;
 
   // 문서 검증 (파일명 패턴, 경로 탐색, 파일 크기)
   const validationResult = await validateDocument(filename, filePath);
@@ -49,8 +53,6 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    // projectId는 현재 하드코딩 (향후 프로젝트 선택 기능 추가 시 변경)
-    const projectId = 'jjiban';
     const document = await readTaskDocument(projectId, taskId, filename);
 
     return {

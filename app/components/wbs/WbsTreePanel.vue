@@ -11,9 +11,11 @@
  * @see 020-detail-design.md
  */
 
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, onUnmounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useWbsStore } from '~/stores/wbs'
+import { useExecutionStore } from '~/stores/execution'
+import { useSelectionStore } from '~/stores/selection'
 import { useRoute } from 'vue-router'
 import type { WbsNode } from '~/types'
 import type { TreeNode } from 'primevue/treenode'
@@ -27,6 +29,8 @@ import StatusBadge from './StatusBadge.vue'
 
 const route = useRoute()
 const wbsStore = useWbsStore()
+const executionStore = useExecutionStore()
+const selectionStore = useSelectionStore()
 
 // Route에서 projectId 추출
 const projectId = computed(() => route.query.project as string)
@@ -211,8 +215,28 @@ function getTitleClass(type: string): string {
   return classMap[type] || 'wbs-tree-node-title-wp'
 }
 
-// 컴포넌트 마운트 시 WBS 데이터 로드 (필요한 경우에만)
-onMounted(loadWbs)
+/**
+ * Task가 현재 실행 중인지 확인
+ * @param nodeId 노드 ID (복합 ID 형식: projectId:taskId)
+ */
+function isTaskExecuting(nodeId: string): boolean {
+  // 복합 ID에서 실제 taskId 추출 (예: "jjiban:TSK-01-01" → "TSK-01-01")
+  const colonIndex = nodeId.indexOf(':')
+  const taskId = colonIndex > 0 ? nodeId.substring(colonIndex + 1) : nodeId
+  return executionStore.isExecuting(taskId)
+}
+
+// 컴포넌트 마운트 시 WBS 데이터 로드 및 실행 상태 폴링 시작
+onMounted(() => {
+  loadWbs()
+  // 실행 상태 폴링 시작 (30초 간격)
+  executionStore.startPolling(30000)
+})
+
+// 언마운트 시 폴링 중지
+onUnmounted(() => {
+  executionStore.stopPolling()
+})
 
 // 언마운트 시에는 wbsStore.clearWbs()를 호출하지 않음
 // pages/wbs.vue에서 언마운트 시 정리함
@@ -313,10 +337,24 @@ onMounted(loadWbs)
           <template #default="slotProps">
             <div
               class="wbs-tree-node-label"
+              :class="{
+                'wbs-tree-node-executing': slotProps.node.data.node.type === 'task' && isTaskExecuting(slotProps.node.key as string),
+                'selected': selectionStore.selectedNodeId === slotProps.node.key
+              }"
               :data-testid="`wbs-tree-node-${slotProps.node.key}`"
               @click="handleNodeClick(slotProps.node.key as string)"
               @dblclick="handleNodeDblClick(slotProps.node.key as string)"
             >
+              <!-- 실행 중 스피너 (Task 노드 전용, 아이콘 왼쪽) -->
+              <ProgressSpinner
+                v-if="slotProps.node.data.node.type === 'task' && isTaskExecuting(slotProps.node.key as string)"
+                class="execution-spinner"
+                strokeWidth="4"
+                fill="transparent"
+                animationDuration="1s"
+                :aria-label="`${slotProps.node.key} 실행 중`"
+              />
+
               <!-- NodeIcon 컴포넌트 -->
               <NodeIcon :type="slotProps.node.data.node.type" />
 
@@ -359,3 +397,78 @@ onMounted(loadWbs)
     </div>
   </div>
 </template>
+
+<style scoped>
+/* PrimeVue Tree 커스터마이징 */
+:deep(.p-tree) {
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+:deep(.p-treenode-content) {
+  padding: 0 !important;
+  border-radius: 0 !important;
+  transition: background-color 0.2s;
+}
+
+:deep(.p-treenode-content:hover) {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* 노드 라벨 컨테이너 */
+.wbs-tree-node-label {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 8px 12px;
+  gap: 8px;
+  cursor: pointer;
+  min-height: 40px;
+  border-left: 4px solid transparent; /* 선택바 공간 확보 */
+}
+
+/* 선택된 상태 스타일 (WbsTreeNode.vue와 일치) */
+.wbs-tree-node-label.selected {
+  background-color: rgba(59, 130, 246, 0.3); /* blue-500/30 */
+  border-left-color: #3b82f6; /* blue-500 */
+  box-shadow: inset 0 0 0 1px rgba(59, 130, 246, 0.5);
+}
+
+.wbs-tree-node-label.selected .wbs-tree-node-title {
+  color: #60a5fa; /* blue-400 */
+  font-weight: 600;
+}
+
+/* 실행 중인 상태 스타일 */
+.wbs-tree-node-executing {
+  background-color: rgba(34, 197, 94, 0.1); /* green-500/10 */
+}
+
+.wbs-tree-node-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: #e5e7eb; /* gray-200 */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+/* 노드 타입별 타이틀 색상 (선택 안되었을 때) */
+.wbs-tree-node-title-project { color: #fcd34d; } /* amber-300 */
+.wbs-tree-node-title-wp { color: #93c5fd; } /* blue-300 */
+.wbs-tree-node-title-act { color: #c4b5fd; } /* violet-300 */
+.wbs-tree-node-title-task { color: #e5e7eb; } /* gray-200 */
+
+.wbs-tree-node-progress {
+  font-size: 12px;
+  color: #9ca3af;
+  margin-left: 8px;
+}
+
+.execution-spinner {
+  width: 20px;
+  height: 20px;
+}
+</style>

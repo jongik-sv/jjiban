@@ -281,6 +281,24 @@ export async function getAllProjectsWbs(): Promise<AllWbsResponse> {
 }
 
 /**
+ * 노드 ID에 프로젝트 프리픽스 추가 (재귀)
+ * 다중 프로젝트 모드에서 노드 ID 충돌 방지
+ * @param nodes WBS 노드 트리
+ * @param projectId 프로젝트 ID
+ * @returns 프리픽스가 추가된 노드 트리
+ */
+function addProjectPrefixToNodes(nodes: WbsNode[], projectId: string): WbsNode[] {
+  return nodes.map(node => ({
+    ...node,
+    id: `${projectId}:${node.id}`,
+    projectId,  // 노드에 projectId 필드 추가
+    children: node.children?.length > 0
+      ? addProjectPrefixToNodes(node.children, projectId)
+      : [],
+  }));
+}
+
+/**
  * 프로젝트 WBS 노드 생성 (TSK-09-01)
  * @param project 프로젝트 목록 항목
  * @param metadata WBS 메타데이터
@@ -292,7 +310,7 @@ async function createProjectNode(
   metadata: WbsMetadata,
   tree: WbsNode[]
 ): Promise<ProjectWbsNode> {
-  // 진행률 + Task 개수 계산 (단일 순회)
+  // 진행률 + Task 개수 계산 (단일 순회) - 프리픽스 추가 전에 계산
   const stats = calculateProjectStats(tree);
 
   // project.json에서 추가 정보 로드
@@ -307,6 +325,9 @@ async function createProjectNode(
     // project.json 읽기 실패 시 기본값 사용
     console.warn(`[createProjectNode] Failed to load project config for ${project.id}`);
   }
+
+  // 다중 프로젝트 모드: 노드 ID에 프로젝트 프리픽스 추가
+  const prefixedTree = addProjectPrefixToNodes(tree, project.id);
 
   return {
     id: project.id,
@@ -323,7 +344,7 @@ async function createProjectNode(
     },
     progress: stats.progress,
     taskCount: stats.taskCount,
-    children: tree,
+    children: prefixedTree,
   };
 }
 

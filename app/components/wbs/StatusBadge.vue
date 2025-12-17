@@ -37,15 +37,15 @@ const statusCode = computed(() => {
  */
 const statusLabel = computed(() => {
   const labels: Record<string, string> = {
-    ' ': 'Todo',
-    'bd': 'Design',
-    'dd': 'Detail',
-    'an': 'Analyze',
-    'ds': 'Design',
-    'im': 'Implement',
-    'fx': 'Fix',
-    'vf': 'Verify',
-    'xx': 'Done'
+    ' ': '대기',
+    'bd': '기본설계',
+    'dd': '상세설계',
+    'an': '분석',
+    'ds': '설계',
+    'im': '구현',
+    'fx': '수정',
+    'vf': '검증',
+    'xx': '완료'
   }
   return labels[statusCode.value] || statusCode.value
 })

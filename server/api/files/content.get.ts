@@ -3,13 +3,13 @@
  * Task: TSK-09-01
  * 상세설계: 020-detail-design.md 섹션 1.2
  *
- * 파일 컨텐츠 조회
+ * 파일 컨텐츠 조회 (텍스트 및 이미지 지원)
  * 보안: Path Traversal 방어, 파일 크기 제한, .jjiban 폴더 내로 제한
  */
 
-import { defineEventHandler, getQuery } from 'h3';
+import { defineEventHandler, getQuery, setHeader } from 'h3';
 import { readFile, stat } from 'fs/promises';
-import { resolve } from 'path';
+import { resolve, extname } from 'path';
 import type { FileContentResponse } from '../../../types';
 import { fileExists } from '../../utils/file';
 import {
@@ -22,7 +22,32 @@ import {
 // 파일 크기 제한 (10MB)
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
-export default defineEventHandler(async (event): Promise<FileContentResponse> => {
+// 이미지 확장자 목록
+const IMAGE_EXTENSIONS = ['.png', '.jpg', '.jpeg', '.gif', '.webp', '.svg', '.ico', '.bmp'];
+
+// MIME 타입 매핑
+const MIME_TYPES: Record<string, string> = {
+  '.png': 'image/png',
+  '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg',
+  '.gif': 'image/gif',
+  '.webp': 'image/webp',
+  '.svg': 'image/svg+xml',
+  '.ico': 'image/x-icon',
+  '.bmp': 'image/bmp',
+};
+
+function isImageFile(filename: string): boolean {
+  const ext = extname(filename).toLowerCase();
+  return IMAGE_EXTENSIONS.includes(ext);
+}
+
+function getMimeType(filename: string): string {
+  const ext = extname(filename).toLowerCase();
+  return MIME_TYPES[ext] || 'application/octet-stream';
+}
+
+export default defineEventHandler(async (event): Promise<FileContentResponse | Buffer> => {
   const query = getQuery(event);
   const filePath = query.path as string;
 
@@ -46,9 +71,10 @@ export default defineEventHandler(async (event): Promise<FileContentResponse> =>
   }
 
   // 4. 파일 크기 제한
+  let fileStats;
   try {
-    const stats = await stat(normalizedPath);
-    if (stats.size > MAX_FILE_SIZE) {
+    fileStats = await stat(normalizedPath);
+    if (fileStats.size > MAX_FILE_SIZE) {
       throw createBadRequestError('FILE_TOO_LARGE', '파일 크기가 10MB를 초과합니다');
     }
   } catch (error) {
@@ -61,7 +87,26 @@ export default defineEventHandler(async (event): Promise<FileContentResponse> =>
     );
   }
 
-  // 5. 파일 읽기
+  // 5. 이미지 파일인 경우 바이너리로 응답
+  if (isImageFile(normalizedPath)) {
+    try {
+      const buffer = await readFile(normalizedPath);
+      const mimeType = getMimeType(normalizedPath);
+
+      setHeader(event, 'Content-Type', mimeType);
+      setHeader(event, 'Content-Length', fileStats.size);
+      setHeader(event, 'Cache-Control', 'public, max-age=86400');
+
+      return buffer;
+    } catch (error) {
+      throw createInternalError(
+        'FILE_READ_ERROR',
+        `이미지를 읽을 수 없습니다: ${error instanceof Error ? error.message : 'Unknown error'}`
+      );
+    }
+  }
+
+  // 6. 텍스트 파일 읽기
   try {
     const content = await readFile(normalizedPath, 'utf-8');
     return { content };

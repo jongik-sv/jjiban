@@ -73,7 +73,7 @@ const isContentReady = computed(() => {
 /**
  * 페이지 초기화
  * - 항상 모든 프로젝트 WBS 로드 (프로젝트 노드가 최상단에 표시)
- * - projectId 파라미터는 해당 프로젝트 자동 선택에만 사용
+ * - 첫 번째 Task 자동 선택 및 부모 노드 확장
  */
 onMounted(async () => {
   loading.value = true
@@ -83,10 +83,8 @@ onMounted(async () => {
     // 항상 모든 프로젝트 WBS 로드
     await wbsStore.fetchAllWbs()
 
-    // projectId가 있으면 해당 프로젝트 자동 선택
-    if (projectId.value) {
-      selectionStore.selectNode(projectId.value)
-    }
+    // 첫 번째 Task 자동 선택
+    await autoSelectFirstTask()
   } catch (e) {
     error.value = e instanceof Error ? e.message : '프로젝트 목록을 불러오는 데 실패했습니다'
     console.error('Failed to load all projects:', e)
@@ -94,6 +92,41 @@ onMounted(async () => {
 
   loading.value = false
 })
+
+/**
+ * 첫 번째 Task 자동 선택 및 부모 노드 확장
+ */
+async function autoSelectFirstTask() {
+  // flatNodes에서 첫 번째 Task 찾기
+  const firstTask = Array.from(wbsStore.flatNodes.values()).find(n => n.type === 'task')
+  if (!firstTask) return
+
+  // 부모 노드들 확장 (트리에서 보이도록)
+  const parts = firstTask.id.split(':')
+  const nodeId = parts.length > 1 ? parts[1] : firstTask.id
+  const idParts = nodeId.split('-')
+
+  if (idParts.length >= 2) {
+    // 프로젝트 노드 확장
+    const projectId = parts.length > 1 ? parts[0] : null
+    if (projectId) {
+      wbsStore.expandedNodes.add(projectId)
+    }
+
+    // WP 확장
+    const wpId = projectId ? `${projectId}:WP-${idParts[1]}` : `WP-${idParts[1]}`
+    wbsStore.expandedNodes.add(wpId)
+
+    // ACT 확장 (4단계 구조일 경우)
+    if (idParts.length >= 3) {
+      const actId = projectId ? `${projectId}:ACT-${idParts[1]}-${idParts[2]}` : `ACT-${idParts[1]}-${idParts[2]}`
+      wbsStore.expandedNodes.add(actId)
+    }
+  }
+
+  // 첫 번째 Task 선택
+  await selectionStore.selectNode(firstTask.id)
+}
 
 /**
  * 페이지 언마운트 시 상태 초기화

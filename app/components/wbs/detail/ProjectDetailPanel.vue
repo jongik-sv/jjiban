@@ -130,6 +130,7 @@
     v-if="selectedFile"
     :file="selectedFile"
     :visible="fileViewerVisible"
+    :project-id="projectId"
     @update:visible="fileViewerVisible = $event"
   />
 </template>

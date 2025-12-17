@@ -5,6 +5,7 @@
     :file="currentDocument"
     :visible="documentViewerVisible"
     :task-id="selectedTask.id"
+    :project-id="selectedProjectId"
     @update:visible="documentViewerVisible = $event"
     @loaded="handleDocumentLoaded"
     @error="handleDocumentError"
@@ -116,7 +117,7 @@ import type { Priority, DocumentInfo, TeamMember } from '~/types/index'
 // ============================================================
 const selectionStore = useSelectionStore()
 const projectStore = useProjectStore()
-const { selectedTask, loadingTask, error } = storeToRefs(selectionStore)
+const { selectedTask, selectedProjectId, loadingTask, error } = storeToRefs(selectionStore)
 const toast = useToast()
 const notification = useNotification()
 
@@ -243,9 +244,10 @@ async function handleUpdate<K extends keyof NonNullable<typeof selectedTask.valu
     // P1-03: 타입 안전한 낙관적 업데이트 (FR-008)
     updateTaskField(selectedTask.value, field, newValue)
 
-    // API 호출
+    // API 호출 (프로젝트 ID 포함)
+    const projectParam = selectedProjectId.value ? `?project=${encodeURIComponent(selectedProjectId.value)}` : ''
     const response = await $fetch<{ success: boolean; task: typeof selectedTask.value }>(
-      `/api/tasks/${selectedTask.value.id}`,
+      `/api/tasks/${selectedTask.value.id}${projectParam}`,
       {
         method: 'PUT',
         body: apiBody,
@@ -372,8 +374,8 @@ function handleOpenDocument(doc: DocumentInfo) {
 /**
  * 문서 로드 완료 핸들러 (TSK-05-04)
  */
-function handleDocumentLoaded(content: string) {
-  console.log('문서 로드 완료:', currentDocument.value?.name, `(${content.length} bytes)`)
+function handleDocumentLoaded(_content: string) {
+  // 문서 로드 완료 (필요 시 추가 처리)
 }
 
 /**
@@ -396,16 +398,14 @@ function handleDocumentError(error: Error) {
  * Task 업데이트 완료 핸들러
  */
 function handleTaskUpdated() {
-  // 필요 시 추가 처리 (예: 상위 컴포넌트 알림)
-  console.log('Task 업데이트 완료')
+  // Task 업데이트 완료 (필요 시 상위 컴포넌트 알림)
 }
 
 /**
  * 상태 전이 완료 핸들러
  */
-function handleTransitionCompleted(command: string) {
-  console.log('상태 전이 완료:', command)
-  // 필요 시 추가 처리 (예: 상위 컴포넌트 알림)
+function handleTransitionCompleted(_command: string) {
+  // 상태 전이 완료 (필요 시 상위 컴포넌트 알림)
 }
 
 /**

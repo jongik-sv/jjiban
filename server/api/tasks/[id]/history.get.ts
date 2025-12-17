@@ -2,6 +2,9 @@
  * Task 워크플로우 이력 조회 API
  * Task: TSK-03-04
  * 상세설계: 020-detail-design.md 섹션 6.2
+ *
+ * Query params:
+ * - project: 프로젝트 ID (선택, 지정 시 해당 프로젝트에서만 검색)
  */
 
 import { queryHistory } from '../../../utils/workflow/workflowEngine';
@@ -19,6 +22,7 @@ export default defineEventHandler(async (event) => {
   const action = query.action as 'transition' | 'update' | undefined;
   const limit = query.limit ? parseInt(query.limit as string, 10) : 50;
   const offset = query.offset ? parseInt(query.offset as string, 10) : 0;
+  const projectId = typeof query.project === 'string' ? query.project : undefined;
 
   // 유효성 검증
   if (action && !['transition', 'update'].includes(action)) {
@@ -47,6 +51,7 @@ export default defineEventHandler(async (event) => {
     action,
     limit,
     offset,
+    projectId,
   });
 
   return {

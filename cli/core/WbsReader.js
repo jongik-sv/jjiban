@@ -71,6 +71,42 @@ export class WbsReader {
   }
 
   /**
+   * 모든 프로젝트 목록 조회
+   * @returns {Promise<string[]>} 프로젝트 ID 배열
+   */
+  async getAllProjects() {
+    const projectsDir = join(this.projectRoot, '.jjiban', 'projects');
+    try {
+      const entries = await fs.readdir(projectsDir, { withFileTypes: true });
+      return entries.filter(e => e.isDirectory()).map(e => e.name);
+    } catch {
+      return [];
+    }
+  }
+
+  /**
+   * Task ID로 전체 프로젝트 검색
+   * @param {string} taskId - Task ID
+   * @returns {Promise<Array<{projectId: string, task: Object}>>} 발견된 프로젝트와 Task 정보
+   */
+  async searchTaskInAllProjects(taskId) {
+    const projects = await this.getAllProjects();
+    const results = [];
+
+    for (const projectId of projects) {
+      try {
+        const nodes = await this.readWbs(projectId);
+        const task = this.findTaskInList(nodes, taskId);
+        if (task) {
+          results.push({ projectId, task });
+        }
+      } catch { /* WBS 없으면 무시 */ }
+    }
+
+    return results;
+  }
+
+  /**
    * 프로젝트 ID 자동 탐지
    * @returns {Promise<string|null>} 프로젝트 ID
    */

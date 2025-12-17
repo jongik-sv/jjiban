@@ -108,3 +108,28 @@ export function getStatusSeverity(status: string): string {
   }
   return severityMap[status] || 'secondary'
 }
+
+/**
+ * Task 상태 코드에 따른 한국어 레이블 반환
+ *
+ * @param status - Task 상태 코드 ('[ ]', '[bd]', '[dd]', '[im]', '[vf]', '[xx]', 등)
+ * @returns 한국어 레이블
+ *
+ * @example
+ * const label = getStatusLabel('[xx]')  // '완료'
+ * const label = getStatusLabel('[bd]')  // '기본설계'
+ */
+export function getStatusLabel(status: string): string {
+  const labelMap: Record<string, string> = {
+    '[ ]': '대기',
+    '[bd]': '기본설계',
+    '[dd]': '상세설계',
+    '[an]': '분석',
+    '[ds]': '설계',
+    '[im]': '구현',
+    '[fx]': '수정',
+    '[vf]': '검증',
+    '[xx]': '완료',
+  }
+  return labelMap[status] || status
+}

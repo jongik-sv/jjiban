@@ -230,7 +230,7 @@ Project (프로젝트) - 6~24개월
 ### TSK-00-01: jjiban 프로젝트 구조 초기화
 - category: infrastructure
 - domain: infra
-- status: todo [ ]
+- status: [ ]
 - priority: critical
 - assignee: -
 - schedule: {시작일} ~ {시작일}
@@ -253,7 +253,7 @@ Project (프로젝트) - 6~24개월
 #### TSK-01-01-01: {Task명}
 - category: development
 - domain: backend
-- status: todo [ ]
+- status: [ ]
 - priority: high
 - assignee: -
 - schedule: {시작일} ~ {종료일}
@@ -263,7 +263,7 @@ Project (프로젝트) - 6~24개월
 #### TSK-01-01-02: {Task명}
 - category: development
 - domain: frontend
-- status: todo [ ]
+- status: [ ]
 - priority: medium
 - assignee: -
 - schedule: {시작일} ~ {종료일}
@@ -281,7 +281,7 @@ Project (프로젝트) - 6~24개월
 ### TSK-02-01: {Task명} (3단계 예시 - ACT 생략)
 - category: development
 - domain: fullstack
-- status: todo [ ]
+- status: [ ]
 - priority: high
 - assignee: -
 - note: 3단계 구조 예시

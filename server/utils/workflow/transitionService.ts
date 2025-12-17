@@ -17,7 +17,7 @@ import type {
   WbsNode,
 } from '../../../types';
 import type { WorkflowTransition, WorkflowsConfig } from '../../../types/settings';
-import { findTaskById } from '../wbs/taskService';
+import { findTaskById, findTaskInProject } from '../wbs/taskService';
 import { getWbsTree, saveWbsTree } from '../wbs/wbsService';
 import { getWorkflows } from '../settings';
 import {
@@ -183,14 +183,18 @@ interface ValidationResult {
  * 상태 전이 가능 여부 검증 (내부용 - Task 결과 포함)
  * @param taskId - Task ID
  * @param command - 전이 명령어
+ * @param projectId - 프로젝트 ID (선택, 지정 시 해당 프로젝트에서만 검색)
  * @returns 검증 결과 + Task 정보
  */
 async function validateTransitionInternal(
   taskId: string,
-  command: string
+  command: string,
+  projectId?: string
 ): Promise<ValidationResult> {
-  // Task 검색
-  const taskResult = await findTaskById(taskId);
+  // Task 검색 (projectId가 지정되면 해당 프로젝트에서만 검색)
+  const taskResult = projectId
+    ? await findTaskInProject(projectId, taskId)
+    : await findTaskById(taskId);
   if (!taskResult) {
     throw createNotFoundError(`Task를 찾을 수 없습니다: ${taskId}`);
   }
@@ -295,17 +299,19 @@ function updateTaskInTree(
  * @param taskId - Task ID
  * @param command - 전이 명령어
  * @param comment - 변경 사유 (선택)
+ * @param projectId - 프로젝트 ID (선택, 지정 시 해당 프로젝트에서만 검색)
  * @returns TransitionResult
  */
 export async function executeTransition(
   taskId: string,
   command: string,
-  comment?: string
+  comment?: string,
+  projectId?: string
 ): Promise<TransitionResult> {
   const timestamp = new Date().toISOString();
 
   // 유효성 검증 (Task 조회 결과 재사용)
-  const validation = await validateTransitionInternal(taskId, command);
+  const validation = await validateTransitionInternal(taskId, command, projectId);
   if (!validation.valid) {
     throw createConflictError(
       'INVALID_TRANSITION',
@@ -319,11 +325,11 @@ export async function executeTransition(
     throw createConflictError('INVALID_TRANSITION', '검증 결과가 불완전합니다');
   }
 
-  const { projectId } = taskResult;
+  const { projectId: foundProjectId } = taskResult;
   const newStatus = transition.to;
 
   // WBS 트리 조회
-  const { metadata, tree } = await getWbsTree(projectId);
+  const { metadata, tree } = await getWbsTree(foundProjectId);
 
   // TSK-03-06: 타임스탬프 포맷 (분리된 유틸리티 함수 사용)
   const completedTimestamp = formatCompletedTimestamp();
@@ -347,7 +353,7 @@ export async function executeTransition(
 
   // WBS 저장
   try {
-    await saveWbsTree(projectId, metadata, tree);
+    await saveWbsTree(foundProjectId, metadata, tree);
   } catch (error) {
     throw createBadRequestError(
       'FILE_WRITE_ERROR',
@@ -358,7 +364,7 @@ export async function executeTransition(
   // 문서 생성 (필요한 경우)
   let documentCreated: string | undefined;
   if (transition.document) {
-    const created = await createDocument(projectId, taskId, transition.document);
+    const created = await createDocument(foundProjectId, taskId, transition.document);
     if (created) {
       documentCreated = transition.document;
     }

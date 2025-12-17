@@ -337,7 +337,7 @@
 - priority: critical
 - schedule: 2025-12-27 ~ 2025-12-31
 - tags: api, wbs
-- depends: TSK-02-02-01, TSK-02-02-02, TSK-03-01
+- depends: TSK-02-02-01,TSK-02-02-02,TSK-03-01
 - requirements:
   - GET /api/projects/:id/wbs - WBS 트리 조회 (파싱, 계층 구조, 진행률)
   - PUT /api/projects/:id/wbs - WBS 저장 (유효성 검증, 롤백)
@@ -356,7 +356,7 @@
 - priority: high
 - schedule: 2025-12-31 ~ 2026-01-03
 - tags: api, workflow, settings
-- depends: TSK-03-02, TSK-02-03-02
+- depends: TSK-03-02,TSK-02-03-02
 - requirements:
   - POST /api/tasks/:id/transition - 상태 전이 API
   - GET /api/tasks/:id/documents - 문서 목록 (존재/예정 구분)
@@ -375,7 +375,7 @@
 - priority: high
 - schedule: 2026-01-03 ~ 2026-01-10
 - tags: service, workflow, rules
-- depends: TSK-02-03-01, TSK-03-03
+- depends: TSK-02-03-01,TSK-03-03
 - requirements:
   - 워크플로우 규칙 정의 (development, defect, infrastructure)
   - WorkflowEngine 서비스 (getAvailableCommands, executeCommand, 검증)
@@ -395,7 +395,7 @@
 - priority: medium
 - schedule: 2026-01-10 ~ 2026-01-13
 - tags: api, wbs, test-result
-- depends: TSK-03-02, TSK-02-02-01, TSK-02-02-02
+- depends: TSK-03-02,TSK-02-02-01,TSK-02-02-02
 - requirements:
   - PUT /api/projects/:id/wbs/tasks/:taskId/test-result - 테스트 결과 업데이트 API
   - wbs.md 파일의 test-result 필드 자동 업데이트
@@ -415,7 +415,7 @@
 - priority: high
 - schedule: 2026-01-13 ~ 2026-01-16
 - tags: api, wbs, completed, parser, serializer
-- depends: TSK-02-02-01, TSK-02-02-02, TSK-03-03
+- depends: TSK-02-02-01,TSK-02-02-02,TSK-03-03
 - requirements:
   - WBS Parser: completed 필드 파싱 (중첩 리스트 형식)
   - WBS Serializer: completed 필드 직렬화
@@ -442,7 +442,7 @@
 - priority: high
 - schedule: 2026-01-06 ~ 2026-01-07
 - tags: page, project, list
-- depends: TSK-03-01, TSK-01-02-01
+- depends: TSK-03-01,TSK-01-02-01
 - requirements:
   - ProjectsPage 컴포넌트 (pages/projects.vue)
   - GET /api/projects 연동하여 프로젝트 목록 표시
@@ -462,7 +462,7 @@
 - priority: high
 - schedule: 2026-01-06 ~ 2026-01-09
 - tags: component, tree
-- depends: TSK-01-02-01, TSK-03-02
+- depends: TSK-01-02-01,TSK-03-02
 - requirements:
   - WbsTreePanel 컴포넌트 (컨테이너, 데이터 로드, 상태 관리)
   - WbsTreeHeader 컴포넌트 (검색 박스, 펼치기/접기, 요약 카드)
@@ -502,7 +502,7 @@
 - priority: high
 - schedule: 2026-01-12 ~ 2026-01-15
 - tags: state, interaction
-- depends: TSK-04-02, TSK-01-01-03
+- depends: TSK-04-02,TSK-01-01-03
 - requirements:
   - 트리 펼침/접힘 상태 관리 (토글, 전체 펼치기/접기, 로컬 스토리지)
   - 노드 선택 및 상세 패널 연동 (Pinia selection 스토어)
@@ -546,7 +546,7 @@
 - priority: medium
 - schedule: 2026-01-15 ~ 2026-01-18
 - tags: component, workflow
-- depends: TSK-05-01, TSK-03-03
+- depends: TSK-05-01,TSK-03-03
 - requirements:
   - TaskWorkflow 컴포넌트 (워크플로우 흐름, 상태 노드, 현재 상태 강조)
   - TaskRequirements 컴포넌트 (요구사항 목록, PRD 참조, 인라인 편집)
@@ -565,7 +565,7 @@
 - priority: high
 - schedule: 2026-01-18 ~ 2026-01-20
 - tags: component, action, edit
-- depends: TSK-05-02, TSK-03-02
+- depends: TSK-05-02,TSK-03-02
 - requirements:
   - TaskActions 컴포넌트 (편집, 문서 열기, 상태 전이 버튼)
   - 인라인 편집 기능 (필드별 편집, API 연동, 낙관적 업데이트)
@@ -582,7 +582,7 @@
 - priority: medium
 - schedule: 2026-01-20 ~ 2026-01-22
 - tags: markdown, viewer, component
-- depends: TSK-01-01-02, TSK-03-03, TSK-05-02
+- depends: TSK-01-01-02,TSK-03-03,TSK-05-02
 - requirements:
   - Markdown 렌더러 설정 (marked/markdown-it, GFM, highlight.js)
   - DocumentViewer 컴포넌트 (로드, 렌더링, 스크롤)
@@ -629,7 +629,7 @@
 - priority: high
 - schedule: 2026-01-20 ~ 2026-01-23
 - tags: page, integration, pinia
-- depends: TSK-04-03, TSK-05-03
+- depends: TSK-04-03,TSK-05-03
 - requirements:
   - WBS 페이지 통합 (pages/wbs.vue, 패널 통합, 에러 핸들링)
   - 상태 관리 통합 (project, wbs, selection 스토어 연동)
@@ -813,7 +813,7 @@
 - assignee: hong
 - schedule: 2026-02-17 ~ 2026-02-20
 - tags: theme, testing, e2e, migration
-- depends: TSK-08-01, TSK-08-02, TSK-08-03, TSK-08-04, TSK-08-05
+- depends: TSK-08-01,TSK-08-02,TSK-08-03,TSK-08-04,TSK-08-05
 - requirements:
   - PrimeVue 디자인 토큰 오버라이드 (main.css)
   - --p-tree-*, --p-splitter-*, --p-menubar-* 변수 매핑
@@ -870,7 +870,7 @@
 - priority: high
 - schedule: 2025-12-17 ~ 2025-12-20
 - tags: multi-project, wbs, tree, api
-- depends: TSK-04-01, TSK-03-02
+- depends: TSK-04-01,TSK-03-02
 - requirements:
   - GET /api/wbs/all 엔드포인트 추가 (모든 프로젝트 WBS 조회)
   - 모든 프로젝트 WBS를 한 트리에 표시 (프로젝트 → WP → ACT → TSK)

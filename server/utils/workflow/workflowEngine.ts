@@ -13,7 +13,7 @@ import type {
   TaskCategory,
   TransitionResult,
 } from '../../../types';
-import { findTaskById } from '../wbs/taskService';
+import { findTaskById, findTaskInProject } from '../wbs/taskService';
 import {
   executeTransition,
   getAvailableCommands as getCommandsFromTransitionService,
@@ -133,7 +133,7 @@ export async function executeCommand(
 /**
  * Task의 워크플로우 이력 조회
  * @param taskId - Task ID
- * @param filter - 필터링 옵션
+ * @param filter - 필터링 옵션 (projectId 포함)
  * @returns QueryHistoryResult (items, totalCount)
  *
  * FR-004: 워크플로우 이력 조회
@@ -144,10 +144,13 @@ export async function queryHistory(
     action?: 'transition' | 'update';
     limit?: number;
     offset?: number;
+    projectId?: string;
   }
 ): Promise<QueryHistoryResult> {
-  // Task 존재 확인
-  const taskResult = await findTaskById(taskId);
+  // Task 존재 확인 (projectId가 지정되면 해당 프로젝트에서만 검색)
+  const taskResult = filter?.projectId
+    ? await findTaskInProject(filter.projectId, taskId)
+    : await findTaskById(taskId);
   if (!taskResult) {
     throw createNotFoundError(`Task를 찾을 수 없습니다: ${taskId}`);
   }

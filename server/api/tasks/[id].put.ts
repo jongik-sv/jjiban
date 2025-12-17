@@ -15,7 +15,11 @@ export default defineEventHandler(async (event): Promise<{
   const taskId = getRouterParam(event, 'id') as string;
   const updates = await readBody<Partial<TaskUpdateRequest>>(event);
 
-  const task = await updateTask(taskId, updates);
+  // projectId: 쿼리 파라미터로 받거나 undefined (전체 프로젝트 검색)
+  const query = getQuery(event);
+  const projectId = typeof query.project === 'string' ? query.project : undefined;
+
+  const task = await updateTask(taskId, updates, projectId);
   return {
     success: true,
     task,

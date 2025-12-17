@@ -72,7 +72,7 @@
           :key="status"
           class="flex items-center justify-between px-3 py-2 rounded bg-bg-card border border-border"
         >
-          <span class="font-mono text-text-secondary">{{ status }}</span>
+          <span class="text-text-secondary">{{ getStatusLabel(status as string) }}</span>
           <Badge
             :value="count"
             :severity="getStatusSeverity(status as string)"
@@ -101,7 +101,7 @@ import Panel from 'primevue/panel'
 import Badge from 'primevue/badge'
 import Divider from 'primevue/divider'
 import type { ProgressStats } from '~/types'
-import { getStatusSeverity } from '~/utils/wbsProgress'
+import { getStatusSeverity, getStatusLabel } from '~/utils/wbsProgress'
 
 // ============================================================
 // Props

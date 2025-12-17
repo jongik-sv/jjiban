@@ -4,11 +4,14 @@
  * 상세설계: 020-detail-design.md 섹션 3.2
  *
  * GET /api/tasks/:id/documents
+ *
+ * Query params:
+ * - project: 프로젝트 ID (선택, 지정 시 해당 프로젝트에서만 검색)
  */
 
-import { defineEventHandler, getRouterParam, createError, H3Event } from 'h3';
+import { defineEventHandler, getRouterParam, createError, getQuery, H3Event } from 'h3';
 import { getTaskDocuments } from '../../../utils/workflow/documentService';
-import { findTaskById } from '../../../utils/wbs/taskService';
+import { findTaskById, findTaskInProject } from '../../../utils/wbs/taskService';
 
 export default defineEventHandler(async (event: H3Event) => {
   const taskId = getRouterParam(event, 'id');
@@ -22,9 +25,15 @@ export default defineEventHandler(async (event: H3Event) => {
     });
   }
 
+  // projectId: 쿼리 파라미터로 받거나 undefined (전체 프로젝트 검색)
+  const query = getQuery(event);
+  const projectId = typeof query.project === 'string' ? query.project : undefined;
+
   try {
-    // Task 존재 확인
-    const taskResult = await findTaskById(taskId);
+    // Task 존재 확인 (projectId가 지정되면 해당 프로젝트에서만 검색)
+    const taskResult = projectId
+      ? await findTaskInProject(projectId, taskId)
+      : await findTaskById(taskId);
     if (!taskResult) {
       throw createError({
         statusCode: 404,
