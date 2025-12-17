@@ -234,3 +234,26 @@
   - 기존 WBS 파일 ([ts] 상태) 호환성 검증
   - 설정 파일 로드 실패 시 폴백 검증
 - ref: PRD 10.5
+
+---
+
+## WP-06: 의존관계 그래프 시각화
+- priority: medium
+- schedule: 2025-12-17 ~ 2025-12-18
+- progress: 0%
+
+### TSK-06-01: 의존관계 그래프 시각화 기능 구현
+- category: development
+- status: basic-design [bd]
+- priority: high
+- schedule: 2025-12-17 ~ 2025-12-18
+- tags: vis-network, graph, modal
+- requirements:
+  - vis-network ^9.x, vis-data ^7.x 설치
+  - app/types/graph.ts 타입 정의 (GraphNode, GraphEdge, GraphData)
+  - app/composables/useDependencyGraph.ts (flatNodes → GraphData 변환, 위상정렬 레벨 계산)
+  - app/components/wbs/graph/DependencyGraph.vue (vis-network 캔버스, Hierarchical LR 레이아웃)
+  - app/components/wbs/graph/DependencyGraphModal.vue (PrimeVue Dialog 전체화면 모달)
+  - app/components/wbs/graph/GraphLegend.vue (범례)
+  - WbsTreeHeader.vue 그래프 버튼 추가 및 selectionStore 연동
+- ref: PRD 11
