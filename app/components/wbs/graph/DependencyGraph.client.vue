@@ -47,6 +47,7 @@ const stabilizationProgress = ref(0)
 const selectedNodeId = ref<string | null>(null)
 const originalNodeColors = ref<Map<string, any>>(new Map())
 const originalEdgeColors = ref<Map<string, any>>(new Map())
+const isHighlighting = ref(false)  // 하이라이트 업데이트 중 플래그
 
 // Computed
 const mergedOptions = computed(() => {
@@ -65,9 +66,9 @@ onUnmounted(() => {
   destroyNetwork()
 })
 
-// Watch for data changes
+// Watch for data changes (하이라이트 업데이트 중에는 무시)
 watch(() => props.graphData, () => {
-  if (networkInstance.value) {
+  if (networkInstance.value && !isHighlighting.value) {
     networkInstance.value.setData({
       nodes: props.graphData.nodes,
       edges: props.graphData.edges
@@ -97,8 +98,8 @@ function initNetwork() {
       highlightConnections(nodeId)
       emit('nodeClick', { nodeId })
     } else {
-      // 빈 공간 클릭 시 하이라이트 해제
-      clearHighlight()
+      // 빈 공간 클릭 시 하이라이트 해제 (플래그 설정으로 watch 트리거 방지)
+      clearHighlight(true)
     }
   })
 
@@ -176,6 +177,9 @@ function selectNode(nodeId: string) {
 function highlightConnections(nodeId: string) {
   if (!networkInstance.value) return
 
+  // 하이라이트 업데이트 중 플래그 설정 (watch 트리거 방지)
+  isHighlighting.value = true
+
   // 이전 하이라이트 해제
   clearHighlight()
 
@@ -183,6 +187,9 @@ function highlightConnections(nodeId: string) {
 
   const nodes = props.graphData.nodes
   const edges = props.graphData.edges
+
+  // 현재 노드 위치 저장 (위치 유지를 위해)
+  const positions = networkInstance.value.getPositions()
 
   // 연결된 엣지와 노드 찾기
   const connectedEdges: string[] = []
@@ -209,33 +216,44 @@ function highlightConnections(nodeId: string) {
       font: node.font
     })
 
+    // 현재 위치 가져오기
+    const pos = positions[node.id]
+
     if (node.id === nodeId) {
       // 선택된 노드: 노란색
       nodes.update({
         id: node.id,
         color: HIGHLIGHT_COLORS.selectedNode,
-        font: { color: '#000000', bold: true }
+        font: { color: '#000000', bold: true },
+        x: pos?.x,
+        y: pos?.y
       })
     } else if (dependsOnNodes.includes(node.id)) {
       // 의존하는 Task (선행): 빨간색
       nodes.update({
         id: node.id,
         color: HIGHLIGHT_COLORS.dependsOn,
-        font: { color: '#ffffff', bold: true }
+        font: { color: '#ffffff', bold: true },
+        x: pos?.x,
+        y: pos?.y
       })
     } else if (dependedByNodes.includes(node.id)) {
       // 의존되어지는 Task (후행): 녹색
       nodes.update({
         id: node.id,
         color: HIGHLIGHT_COLORS.dependedBy,
-        font: { color: '#ffffff', bold: true }
+        font: { color: '#ffffff', bold: true },
+        x: pos?.x,
+        y: pos?.y
       })
     } else {
       // 연결되지 않은 노드: 흐리게
       nodes.update({
         id: node.id,
         color: { background: '#374151', border: '#4b5563' },
-        font: { color: '#6b7280' }
+        font: { color: '#6b7280' },
+        x: pos?.x,
+        y: pos?.y
       })
     }
   })
@@ -264,23 +282,40 @@ function highlightConnections(nodeId: string) {
       })
     }
   })
+
+  // 하이라이트 업데이트 완료
+  nextTick(() => {
+    isHighlighting.value = false
+  })
 }
 
 /**
  * 하이라이트 해제 및 원본 색상 복원
+ * @param setHighlightFlag 외부에서 호출 시 플래그 설정 여부 (기본: true)
  */
-function clearHighlight() {
+function clearHighlight(setHighlightFlag: boolean = false) {
   if (!networkInstance.value || !selectedNodeId.value) return
+
+  // 외부에서 직접 호출 시 플래그 설정 (빈 공간 클릭 등)
+  if (setHighlightFlag) {
+    isHighlighting.value = true
+  }
 
   const nodes = props.graphData.nodes
   const edges = props.graphData.edges
 
-  // 노드 원본 복원
+  // 현재 노드 위치 저장 (위치 유지를 위해)
+  const positions = networkInstance.value.getPositions()
+
+  // 노드 원본 복원 (위치 유지)
   originalNodeColors.value.forEach((original, nodeId) => {
+    const pos = positions[nodeId]
     nodes.update({
       id: nodeId,
       color: original.color,
-      font: original.font
+      font: original.font,
+      x: pos?.x,
+      y: pos?.y
     })
   })
 
@@ -296,6 +331,13 @@ function clearHighlight() {
   originalNodeColors.value.clear()
   originalEdgeColors.value.clear()
   selectedNodeId.value = null
+
+  // 외부에서 직접 호출 시 플래그 해제
+  if (setHighlightFlag) {
+    nextTick(() => {
+      isHighlighting.value = false
+    })
+  }
 }
 
 defineExpose({

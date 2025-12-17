@@ -12,7 +12,7 @@
 
 ### TSK-01-01: 터미널 패키지 설치 및 설정
 - category: infrastructure
-- status: [dd]
+- status: [xx]
 - priority: critical
 - schedule: 2025-12-17 ~ 2025-12-18
 - tags: xterm, node-pty, setup
@@ -21,6 +21,10 @@
   - node-pty ^1.0.x 설치
   - Nuxt 3 nitro 통합 확인
 - ref: PRD 7.1
+- completed:
+  - dd: 2025-12-17
+  - im: 2025-12-17 (xterm, node-pty-prebuilt-multiarch 설치 완료)
+  - xx: 2025-12-17 (코드 리뷰, 보안 패치, 테스트 완료)
 
 ### TSK-01-02: 터미널 UI 컴포넌트
 - category: development
