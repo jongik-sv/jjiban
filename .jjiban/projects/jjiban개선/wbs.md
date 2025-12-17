@@ -1,5 +1,3 @@
-# WBS - jjiban개선 (웹 터미널 기반 워크플로우)
-
 > version: 2.0
 > depth: 3
 > updated: 2025-12-17
@@ -8,21 +6,16 @@
 ---
 
 ## WP-01: 터미널 시스템
-- status: planned
 - priority: critical
 - schedule: 2025-12-17 ~ 2025-12-28
-- progress: 0%
-- note: xterm.js + node-pty 터미널 전체 구현
+- progress: 13%
 
 ### TSK-01-01: 터미널 패키지 설치 및 설정
 - category: infrastructure
-- domain: fullstack
-- status: design [dd]
+- status: [dd]
 - priority: critical
-- assignee: -
 - schedule: 2025-12-17 ~ 2025-12-18
 - tags: xterm, node-pty, setup
-- depends: -
 - requirements:
   - xterm ^5.x, @xterm/addon-fit 설치
   - node-pty ^1.0.x 설치
@@ -31,10 +24,8 @@
 
 ### TSK-01-02: 터미널 UI 컴포넌트
 - category: development
-- domain: frontend
-- status: [ ]
+- status: basic-design [bd]
 - priority: critical
-- assignee: -
 - schedule: 2025-12-18 ~ 2025-12-22
 - tags: xterm, component, dialog
 - depends: TSK-01-01
@@ -47,10 +38,8 @@
 
 ### TSK-01-03: 서버 터미널 세션 API
 - category: development
-- domain: backend
-- status: [ ]
+- status: basic-design [bd]
 - priority: critical
-- assignee: -
 - schedule: 2025-12-20 ~ 2025-12-26
 - tags: api, session, sse
 - depends: TSK-01-01
@@ -64,37 +53,33 @@
 ---
 
 ## WP-02: 워크플로우 시스템
-- status: planned
 - priority: high
 - schedule: 2025-12-22 ~ 2025-12-30
-- progress: 0%
-- note: 버튼 → 프롬프트 생성 → 터미널 실행
+- progress: 7%
 
 ### TSK-02-01: 워크플로우 액션 UI
 - category: development
-- domain: frontend
-- status: [ ]
+- status: [  ]
 - priority: high
-- assignee: -
 - schedule: 2025-12-22 ~ 2025-12-26
 - tags: workflow, button, actions
-- depends: -
 - requirements:
   - WorkflowButton (상태별 스타일)
   - WorkflowActions (15개 명령어 버튼)
   - WorkflowAutoActions (run, auto, 중지)
   - 카테고리/상태별 가용성 필터링
 - ref: PRD 2.2, 3.5
+- completed:
+  - bd: 2025-12-17 13:20
+  - dd: 2025-12-17 13:20
 
 ### TSK-02-02: 워크플로우 프롬프트 생성
 - category: development
-- domain: fullstack
 - status: [ ]
 - priority: high
-- assignee: -
 - schedule: 2025-12-24 ~ 2025-12-28
 - tags: workflow, prompt
-- depends: TSK-01-03, TSK-02-01
+- depends: TSK-01-03,TSK-02-01
 - requirements:
   - 버튼 클릭 → 프롬프트 문자열 생성 ("/wf:build TSK-01-01")
   - 터미널 세션에 프롬프트 입력 전송
@@ -103,10 +88,8 @@
 
 ### TSK-02-03: 워크플로우 타입 및 스토어
 - category: development
-- domain: fullstack
 - status: [ ]
 - priority: medium
-- assignee: -
 - schedule: 2025-12-28 ~ 2025-12-30
 - tags: types, pinia
 - depends: TSK-02-02
@@ -119,21 +102,16 @@
 ---
 
 ## WP-03: 실행 상태 관리
-- status: in_progress
 - priority: high
 - schedule: 2025-12-17 ~ 2025-12-20
-- progress: 80%
-- note: WBS 스피너 표시 및 중복 방지
+- progress: 67%
 
 ### TSK-03-01: 실행 상태 서버/API
 - category: development
-- domain: backend
-- status: done [xx]
+- status: [xx]  
 - priority: critical
-- assignee: -
 - schedule: 2025-12-17 ~ 2025-12-17
 - tags: execution, api
-- depends: -
 - requirements:
   - server/utils/executionManager.ts
   - POST /api/execution/start, stop
@@ -142,10 +120,8 @@
 
 ### TSK-03-02: 실행 상태 클라이언트
 - category: development
-- domain: frontend
-- status: done [xx]
+- status: [xx]
 - priority: high
-- assignee: -
 - schedule: 2025-12-17 ~ 2025-12-17
 - tags: pinia, spinner
 - depends: TSK-03-01
@@ -156,10 +132,8 @@
 
 ### TSK-03-03: 워크플로우 명령어 훅
 - category: development
-- domain: infra
 - status: [ ]
 - priority: medium
-- assignee: -
 - schedule: 2025-12-18 ~ 2025-12-20
 - tags: workflow, hook, cli
 - depends: TSK-03-01
@@ -167,29 +141,25 @@
   - cli/commands/exec.js 신규 생성 (start/stop 서브커맨드)
   - bin/jjiban.js에 exec 명령어 등록
   - .claude/commands/wf/*.md 시작/종료 시 스크립트 추가:
-    - 시작: `npx jjiban exec start $TASK_ID $CMD --session $JJIBAN_SESSION_ID --pid $JJIBAN_TERMINAL_PID`
-    - 종료: `npx jjiban exec stop $TASK_ID`
+  - 시작: `npx jjiban exec start $TASK_ID $CMD --session $JJIBAN_SESSION_ID --pid $JJIBAN_TERMINAL_PID`
+  - 종료: `npx jjiban exec stop $TASK_ID`
   - 15개 wf 명령어 파일 수정
 - ref: PRD 9.6, 9.7
 
 ---
 
 ## WP-04: 전역 통합
-- status: planned
 - priority: high
 - schedule: 2025-12-30 ~ 2026-01-03
 - progress: 0%
-- note: 헤더 터미널 아이콘 + TaskDetailPanel 워크플로우 통합
 
 ### TSK-04-01: 전역 터미널 및 워크플로우 통합
 - category: development
-- domain: frontend
 - status: [ ]
 - priority: critical
-- assignee: -
 - schedule: 2025-12-30 ~ 2026-01-03
 - tags: integration, header, workflow
-- depends: TSK-01-02, TSK-02-01, TSK-02-03
+- depends: TSK-01-02,TSK-02-01,TSK-02-03
 - requirements:
   - AppHeader에 TerminalHeaderIcon 추가
   - TaskDetailPanel에 WorkflowActions 추가
@@ -199,21 +169,16 @@
 ---
 
 ## WP-05: 워크플로우 유연화
-- status: planned
 - priority: medium
 - schedule: 2026-01-03 ~ 2026-01-10
 - progress: 0%
-- note: CLI 하드코딩 → 설정 파일 기반 전환
 
 ### TSK-05-01: CLI 설정 로더 생성
 - category: infrastructure
-- domain: backend
 - status: [ ]
 - priority: high
-- assignee: -
 - schedule: 2026-01-03 ~ 2026-01-04
 - tags: cli, settings, loader
-- depends: -
 - requirements:
   - cli/config/settingsLoader.js 신규 생성
   - cli/config/defaultWorkflows.js 신규 생성
@@ -223,10 +188,8 @@
 
 ### TSK-05-02: workflowSteps 리팩토링
 - category: development
-- domain: backend
 - status: [ ]
 - priority: high
-- assignee: -
 - schedule: 2026-01-04 ~ 2026-01-06
 - tags: cli, refactoring, workflow
 - depends: TSK-05-01
@@ -238,10 +201,8 @@
 
 ### TSK-05-03: 상태 코드 통일
 - category: development
-- domain: fullstack
 - status: [ ]
 - priority: medium
-- assignee: -
 - schedule: 2026-01-06 ~ 2026-01-08
 - tags: status-code, migration
 - depends: TSK-05-02
@@ -253,10 +214,8 @@
 
 ### TSK-05-04: 통합 테스트
 - category: development
-- domain: fullstack
 - status: [ ]
 - priority: medium
-- assignee: -
 - schedule: 2026-01-08 ~ 2026-01-10
 - tags: test, integration
 - depends: TSK-05-03
