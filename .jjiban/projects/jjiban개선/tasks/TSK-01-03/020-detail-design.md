@@ -5,8 +5,9 @@
 | 항목 | 내용 |
 |------|------|
 | Task ID | TSK-01-03 |
-| 문서 버전 | 1.0 |
+| 문서 버전 | 1.1 |
 | 작성일 | 2025-12-17 |
+| 수정일 | 2025-12-17 |
 | 카테고리 | development |
 | 상태 | 상세설계 [dd] |
 
@@ -41,6 +42,7 @@ export type SessionStatus =
   | 'connecting'
   | 'connected'
   | 'running'
+  | 'closing'
   | 'completed'
   | 'error'
 
@@ -132,8 +134,8 @@ export type SSEEvent = SSEOutputEvent | SSEStatusEvent | SSECompleteEvent | SSEE
 ### 3.1 server/utils/terminalService.ts
 
 ```typescript
-import * as pty from 'node-pty'
-import type { IPty, IPtyForkOptions } from 'node-pty'
+import * as pty from 'node-pty-prebuilt-multiarch'
+import type { IPty, IPtyForkOptions } from 'node-pty-prebuilt-multiarch'
 import type { SessionStatus } from '~/types/terminal'
 import { randomUUID } from 'crypto'
 
@@ -244,8 +246,11 @@ class TerminalService {
       sseClients: new Set()
     }
 
-    // 환경변수에 PID 설정
-    ptyProcess.write(`export JJIBAN_TERMINAL_PID=${ptyProcess.pid}\n`)
+    // 플랫폼별 환경변수 PID 설정
+    const setPidCommand = process.platform === 'win32'
+      ? `$env:JJIBAN_TERMINAL_PID="${ptyProcess.pid}"\n`
+      : `export JJIBAN_TERMINAL_PID=${ptyProcess.pid}\n`
+    ptyProcess.write(setPidCommand)
 
     // 이벤트 핸들러 설정
     this.setupEventHandlers(session)
@@ -264,11 +269,15 @@ class TerminalService {
    */
   closeSession(sessionId: string): void {
     const session = this.sessions.get(sessionId)
-    if (!session) return
+    if (!session || session.status === 'closing') return
+
+    // 세션 상태를 'closing'으로 변경하여 경쟁 조건 방지
+    session.status = 'closing'
 
     // 타임아웃 정리
     if (session.timeoutId) {
       clearTimeout(session.timeoutId)
+      session.timeoutId = undefined
     }
 
     // SSE 클라이언트에게 종료 알림
@@ -285,12 +294,31 @@ class TerminalService {
       }
     })
 
-    // PTY 종료
+    // PTY graceful shutdown (SIGTERM → SIGKILL)
     try {
-      session.ptyProcess.kill()
+      if (process.platform === 'win32') {
+        // Windows는 SIGTERM 미지원, 즉시 종료
+        session.ptyProcess.kill()
+      } else {
+        // Unix: SIGTERM 후 2초 대기, 타임아웃 시 SIGKILL
+        session.ptyProcess.kill('SIGTERM')
+        setTimeout(() => {
+          try {
+            if (!session.ptyProcess.killed) {
+              session.ptyProcess.kill('SIGKILL')
+            }
+          } catch {
+            // ignore
+          }
+        }, 2000)
+      }
     } catch {
       // ignore
     }
+
+    // 명시적 메모리 정리
+    session.outputBuffer = []
+    session.sseClients.clear()
 
     // 세션 제거
     this.sessions.delete(sessionId)
@@ -326,6 +354,11 @@ class TerminalService {
     const session = this.sessions.get(sessionId)
     if (!session) {
       throw new Error('SESSION_NOT_FOUND')
+    }
+
+    // 세션이 종료 중이면 무시
+    if (session.status === 'closing') {
+      return
     }
 
     // 입력 크기 제한 (10KB)
@@ -423,22 +456,26 @@ class TerminalService {
 
     // 출력 핸들러
     ptyProcess.onData((data: string) => {
-      // 버퍼에 저장
+      // 버퍼에 저장 (최대 10,000줄 유지)
       session.outputBuffer.push(data)
       while (session.outputBuffer.length > this.BUFFER_SIZE) {
         session.outputBuffer.shift()
       }
 
-      // SSE 전송
+      // SSE 전송 (실패한 클라이언트는 나중에 일괄 제거)
       const message = this.formatSSE('output', { text: data })
+      const failedClients: SSEWriter[] = []
+
       session.sseClients.forEach(client => {
         try {
           client.write(message)
         } catch {
-          // 실패한 클라이언트 제거
-          session.sseClients.delete(client)
+          failedClients.push(client)
         }
       })
+
+      // 실패한 클라이언트 정리
+      failedClients.forEach(client => session.sseClients.delete(client))
 
       session.updatedAt = new Date()
     })
@@ -473,6 +510,11 @@ class TerminalService {
    * 타임아웃 리셋
    */
   private resetTimeout(session: InternalSession): void {
+    // 세션이 종료 중이면 타임아웃 설정 안함
+    if (session.status === 'closing') {
+      return
+    }
+
     if (session.timeoutId) {
       clearTimeout(session.timeoutId)
     }
@@ -638,7 +680,8 @@ export default defineEventHandler(async (event) => {
   if (!sessionId) {
     throw createError({
       statusCode: 400,
-      statusMessage: '세션 ID가 필요합니다'
+      statusMessage: '세션 ID가 필요합니다',
+      data: { code: 'MISSING_SESSION_ID' }
     })
   }
 
@@ -646,15 +689,17 @@ export default defineEventHandler(async (event) => {
   if (!session) {
     throw createError({
       statusCode: 404,
-      statusMessage: '세션을 찾을 수 없습니다'
+      statusMessage: '세션을 찾을 수 없습니다',
+      data: { code: 'SESSION_NOT_FOUND' }
     })
   }
 
-  // SSE 헤더 설정
-  setHeader(event, 'Content-Type', 'text/event-stream')
-  setHeader(event, 'Cache-Control', 'no-cache')
+  // SSE 헤더 설정 (SSE 표준 준수)
+  setHeader(event, 'Content-Type', 'text/event-stream; charset=utf-8')
+  setHeader(event, 'Cache-Control', 'no-cache, no-transform')
   setHeader(event, 'Connection', 'keep-alive')
   setHeader(event, 'X-Accel-Buffering', 'no')  // nginx 버퍼링 비활성화
+  setHeader(event, 'Content-Encoding', 'identity')
 
   // ReadableStream 생성
   const stream = new ReadableStream({
@@ -710,14 +755,16 @@ export default defineEventHandler(async (event) => {
   if (!sessionId) {
     throw createError({
       statusCode: 400,
-      statusMessage: '세션 ID가 필요합니다'
+      statusMessage: '세션 ID가 필요합니다',
+      data: { code: 'MISSING_SESSION_ID' }
     })
   }
 
   if (!body.input && body.input !== '') {
     throw createError({
       statusCode: 400,
-      statusMessage: 'input 필드가 필요합니다'
+      statusMessage: 'input 필드가 필요합니다',
+      data: { code: 'MISSING_INPUT' }
     })
   }
 
@@ -729,13 +776,15 @@ export default defineEventHandler(async (event) => {
     if (err.message === 'SESSION_NOT_FOUND') {
       throw createError({
         statusCode: 404,
-        statusMessage: '세션을 찾을 수 없습니다'
+        statusMessage: '세션을 찾을 수 없습니다',
+        data: { code: 'SESSION_NOT_FOUND' }
       })
     }
     if (err.message === 'INPUT_TOO_LARGE') {
       throw createError({
         statusCode: 400,
-        statusMessage: '입력이 너무 큽니다 (최대 10KB)'
+        statusMessage: '입력이 너무 큽니다 (최대 10KB)',
+        data: { code: 'INPUT_TOO_LARGE' }
       })
     }
     throw err
@@ -757,14 +806,16 @@ export default defineEventHandler(async (event) => {
   if (!sessionId) {
     throw createError({
       statusCode: 400,
-      statusMessage: '세션 ID가 필요합니다'
+      statusMessage: '세션 ID가 필요합니다',
+      data: { code: 'MISSING_SESSION_ID' }
     })
   }
 
   if (typeof body.cols !== 'number' || typeof body.rows !== 'number') {
     throw createError({
       statusCode: 400,
-      statusMessage: 'cols와 rows는 숫자여야 합니다'
+      statusMessage: 'cols와 rows는 숫자여야 합니다',
+      data: { code: 'INVALID_SIZE_TYPE' }
     })
   }
 
@@ -780,7 +831,8 @@ export default defineEventHandler(async (event) => {
     if (err.message === 'SESSION_NOT_FOUND') {
       throw createError({
         statusCode: 404,
-        statusMessage: '세션을 찾을 수 없습니다'
+        statusMessage: '세션을 찾을 수 없습니다',
+        data: { code: 'SESSION_NOT_FOUND' }
       })
     }
     throw err
@@ -858,3 +910,4 @@ export default defineEventHandler(async (event) => {
 | 버전 | 날짜 | 변경 내용 |
 |------|------|-----------|
 | 1.0 | 2025-12-17 | 초안 작성 |
+| 1.1 | 2025-12-17 | 설계 리뷰 반영 (Critical/Major 이슈 해결)<br>- [Critical-01] node-pty → node-pty-prebuilt-multiarch 수정<br>- [Critical-02] SSE Writer 타입 일관성 확보<br>- [Critical-03] 세션 종료 경쟁 조건 해결 ('closing' 상태 추가)<br>- [Major-01] 플랫폼별 환경변수 설정 (PowerShell vs bash)<br>- [Major-02] 출력 버퍼 크기 명확화 (10,000줄)<br>- [Major-03] SSE 클라이언트 정리 로직 개선<br>- [Major-04] 모든 API 에러 코드 일관성 확보<br>- [Major-05] PTY graceful shutdown 구현 (SIGTERM → SIGKILL) |

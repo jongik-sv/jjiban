@@ -101,7 +101,7 @@
               <Dropdown
                 :model-value="task.priority"
                 :options="priorityOptions"
-                option-label="label"
+                option-label="text"
                 option-value="value"
                 data-testid="task-priority-dropdown"
                 aria-label="우선순위 선택"
@@ -119,7 +119,7 @@
                     :class="getPriorityClass(option.value)"
                     :data-testid="`priority-option-${option.value}`"
                   >
-                    {{ option.label }}
+                    {{ option.text }}
                   </div>
                 </template>
               </Dropdown>
@@ -344,10 +344,10 @@ const categoryClass = computed(() => {
  * 우선순위 옵션 (BR-002)
  */
 const priorityOptions = computed(() => [
-  { label: '긴급', value: 'critical' },
-  { label: '높음', value: 'high' },
-  { label: '보통', value: 'medium' },
-  { label: '낮음', value: 'low' },
+  { text: '긴급', value: 'critical' },
+  { text: '높음', value: 'high' },
+  { text: '보통', value: 'medium' },
+  { text: '낮음', value: 'low' },
 ])
 
 /**

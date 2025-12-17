@@ -7,6 +7,7 @@
  */
 
 import type { GraphFilter } from '~/types/graph'
+import { useDebounceFn } from '@vueuse/core'
 
 // 클라이언트 전용 컴포넌트 동적 import
 const DependencyGraph = defineAsyncComponent(() =>
@@ -14,6 +15,9 @@ const DependencyGraph = defineAsyncComponent(() =>
 )
 const GraphLegend = defineAsyncComponent(() =>
   import('./GraphLegend.vue')
+)
+const GraphFilterPanel = defineAsyncComponent(() =>
+  import('./GraphFilterPanel.vue')
 )
 
 // Props
@@ -25,47 +29,53 @@ const emit = defineEmits<{
 }>()
 
 // Composables
-const { buildGraphData, getGraphStats, getCategoryName } = useDependencyGraph()
+const { buildGraphData, getGraphStats } = useDependencyGraph()
+const { encodeFilterToURL, parseURLParams } = useGraphFilter()
+const { groupExpandedStates, toggleGroup, isGroupExpanded, resetGroupStates } = useGroupNodes()
 const selectionStore = useSelectionStore()
+const route = useRoute()
+const router = useRouter()
 
 // Refs
 const graphRef = ref<{ fit: () => void; zoomIn: () => void; zoomOut: () => void; resetZoom: () => void } | null>(null)
 
-// State
+// TSK-06-03: 확장된 필터 상태
 const selectedCategories = ref<string[]>([])
 const selectedStatuses = ref<string[]>([])
+const hierarchyMode = ref<'full' | 'wp' | 'act'>('full')
+const focusTask = ref<string | null>(null)
+const focusDepth = ref<number>(2)
 const isLoading = ref(true)
 
-// Options for filters
-const categoryOptions = [
-  { label: '개발', value: 'development' },
-  { label: '결함', value: 'defect' },
-  { label: '인프라', value: 'infrastructure' }
-]
+// TSK-06-03: computed with extended filter
+const currentFilter = computed<GraphFilter>(() => ({
+  categories: selectedCategories.value,
+  statuses: selectedStatuses.value,
+  hierarchyMode: hierarchyMode.value,
+  focusTask: focusTask.value,
+  focusDepth: focusDepth.value
+}))
 
-const statusOptions = [
-  { label: 'Todo', value: '[ ]' },
-  { label: '기본설계', value: '[bd]' },
-  { label: '상세설계', value: '[dd]' },
-  { label: '구현', value: '[im]' },
-  { label: '검증', value: '[vf]' },
-  { label: '완료', value: '[xx]' }
-]
-
-// Computed
 const graphData = computed(() => {
-  const filter: GraphFilter | undefined =
-    selectedCategories.value.length > 0 || selectedStatuses.value.length > 0
-      ? {
-          categories: selectedCategories.value,
-          statuses: selectedStatuses.value
-        }
-      : undefined
+  // 필터가 비어있으면 undefined 전달 (전체 표시)
+  const hasFilter =
+    selectedCategories.value.length > 0 ||
+    selectedStatuses.value.length > 0 ||
+    hierarchyMode.value !== 'full' ||
+    focusTask.value !== null
 
-  return buildGraphData(filter)
+  // groupStates는 계층 모드일 때만 전달
+  const states = (hierarchyMode.value === 'wp' || hierarchyMode.value === 'act')
+    ? groupExpandedStates.value
+    : undefined
+
+  return buildGraphData(hasFilter ? currentFilter.value : undefined, states)
 })
 
-const stats = computed(() => getGraphStats())
+const stats = computed(() => ({
+  nodeCount: graphData.value.nodes.length,
+  edgeCount: graphData.value.edges.length
+}))
 
 // Methods
 function handleNodeClick(event: { nodeId: string }) {
@@ -79,13 +89,46 @@ function handleNodeDoubleClick(event: { nodeId: string }) {
   visible.value = false
 }
 
-function handleStabilized() {
-  isLoading.value = false
+// TSK-06-03: 그룹 노드 토글 핸들러
+function handleGroupToggle(event: { groupId: string }) {
+  toggleGroup(event.groupId)
+}
+
+// TSK-06-03: URL 동기화 (debounce 300ms)
+const updateURL = useDebounceFn(() => {
+  const queryString = encodeFilterToURL(currentFilter.value)
+  const newQuery = Object.fromEntries(new URLSearchParams(queryString))
+
+  router.replace({ query: newQuery })
+}, 300)
+
+// URL 파라미터 복원 (모달 열림 시)
+function restoreFiltersFromURL() {
+  const searchParams = new URLSearchParams(route.query as Record<string, string>)
+  const filter = parseURLParams(searchParams)
+
+  selectedCategories.value = filter.categories
+  selectedStatuses.value = filter.statuses
+  hierarchyMode.value = filter.hierarchyMode
+  focusTask.value = filter.focusTask
+  focusDepth.value = filter.focusDepth
 }
 
 function resetFilters() {
   selectedCategories.value = []
   selectedStatuses.value = []
+  hierarchyMode.value = 'full'
+  focusTask.value = null
+  focusDepth.value = 2
+  resetGroupStates()  // 그룹 상태도 초기화
+}
+
+function handleApplyFocus() {
+  // 초점 뷰 적용 (필터 상태가 이미 반영되어 있으므로 별도 작업 불필요)
+  // graphData computed가 자동으로 재계산됨
+  nextTick(() => {
+    graphRef.value?.fit()
+  })
 }
 
 function zoomIn() {
@@ -100,10 +143,22 @@ function resetZoom() {
   graphRef.value?.resetZoom()
 }
 
+// TSK-06-03: 필터 변경 감지 → URL 업데이트
+watch(
+  [selectedCategories, selectedStatuses, hierarchyMode, focusTask, focusDepth],
+  () => {
+    updateURL()
+  }
+)
+
 // Watch modal open to reset loading state
 watch(visible, (newVal) => {
   if (newVal) {
     isLoading.value = true
+
+    // URL 파라미터 복원
+    restoreFiltersFromURL()
+
     // 모달이 열릴 때 잠시 후 fit 호출
     nextTick(() => {
       setTimeout(() => {
@@ -112,6 +167,9 @@ watch(visible, (newVal) => {
     })
   }
 })
+
+// Graph data watch 최적화 (deep 제거)
+// graphData는 computed이므로 참조가 변경되면 자동으로 트리거됨
 </script>
 
 <template>
@@ -125,54 +183,27 @@ watch(visible, (newVal) => {
       content: { style: 'height: calc(100% - 60px); display: flex; flex-direction: column;' }
     }"
   >
-    <!-- 툴바 -->
+    <!-- TSK-06-03: 필터 패널 -->
+    <GraphFilterPanel
+      :categories="selectedCategories"
+      :statuses="selectedStatuses"
+      :hierarchyMode="hierarchyMode"
+      :focusTask="focusTask"
+      :focusDepth="focusDepth"
+      :stats="stats"
+      @update:categories="selectedCategories = $event"
+      @update:statuses="selectedStatuses = $event"
+      @update:hierarchyMode="hierarchyMode = $event"
+      @update:focusTask="focusTask = $event"
+      @update:focusDepth="focusDepth = $event"
+      @reset="resetFilters"
+      @applyFocus="handleApplyFocus"
+    />
+
+    <!-- 툴바 (줌 컨트롤만 남김) -->
     <div class="graph-toolbar">
-      <!-- 필터 -->
-      <div class="filter-group">
-        <MultiSelect
-          v-model="selectedCategories"
-          :options="categoryOptions"
-          option-label="label"
-          option-value="value"
-          placeholder="카테고리"
-          :max-selected-labels="2"
-          class="filter-select"
-        />
-
-        <MultiSelect
-          v-model="selectedStatuses"
-          :options="statusOptions"
-          option-label="label"
-          option-value="value"
-          placeholder="상태"
-          :max-selected-labels="2"
-          class="filter-select"
-        />
-
-        <Button
-          v-if="selectedCategories.length > 0 || selectedStatuses.length > 0"
-          icon="pi pi-filter-slash"
-          severity="secondary"
-          text
-          rounded
-          size="small"
-          v-tooltip.top="'필터 초기화'"
-          @click="resetFilters"
-        />
-      </div>
-
-      <!-- 통계 -->
-      <div class="stats-group">
-        <Tag severity="info">
-          노드: {{ stats.taskCount }}
-        </Tag>
-        <Tag severity="secondary">
-          엣지: {{ stats.edgeCount }}
-        </Tag>
-      </div>
-
       <!-- 줌 컨트롤 -->
-      <div class="zoom-group">
+      <div class="zoom-group ml-auto">
         <Button
           icon="pi pi-search-plus"
           severity="secondary"
@@ -212,7 +243,7 @@ watch(visible, (newVal) => {
           height="100%"
           @node-click="handleNodeClick"
           @node-double-click="handleNodeDoubleClick"
-          @stabilized="handleStabilized"
+          @group-toggle="handleGroupToggle"
         />
 
         <template #fallback>

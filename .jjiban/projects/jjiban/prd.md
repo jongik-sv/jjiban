@@ -45,7 +45,7 @@
 | 기능 | 설명 |
 |------|------|
 | WBS 트리 뷰 | 계층 구조 시각화, 확장/축소, 검색, 요약 카드 |
-| Task 상세 패널 | 기본 정보, 상태, 워크플로우, 문서, 이력 표시 |
+| Task 상세 패널 | 기본 정보, 상태, 워크플로우, 문서 표시 |
 | 워크플로우 엔진 | 상태 전이, 카테고리별 규칙 |
 | 데이터 저장소 | wbs.md 파싱/저장, JSON 설정 관리 |
 | 프로젝트 초기화 | .jjiban 폴더 구조 생성 |
@@ -202,9 +202,6 @@ Project
 │                                     │ │ 📄 010-basic-design  │   │
 │                                     │ ├─────────────────────┤   │
 │                                     │ │ [편집] [문서] [draft] │   │
-│                                     │ ├─────────────────────┤   │
-│                                     │ │ 이력                 │   │
-│                                     │ │ 01-15 상태변경 [bd]  │   │
 │                                     │ └─────────────────────┘   │
 └─────────────────────────────────────┴───────────────────────────┘
 ```
@@ -283,11 +280,6 @@ Project
 | 편집 | Task 정보 수정 모달 |
 | 문서 열기 | 현재 단계 문서 표시 |
 | [다음상태] | 워크플로우 상태 전이 (예: draft) |
-
-#### 6.3.6 이력 섹션
-
-- 시간순 상태 변경 기록
-- 형식: `{날짜} {시간} {변경내용}`
 
 ### 6.5 다중 프로젝트 통합 뷰
 
@@ -486,7 +478,6 @@ interface TaskDetail {
   requirements: string[];
   ref?: string;
   documents: DocumentInfo[];
-  history: HistoryEntry[];
   availableActions: string[];  // 현재 상태에서 가능한 명령어
 }
 ```
@@ -523,8 +514,7 @@ components/
 │   ├── TaskWorkflow.vue      # 워크플로우 시각화
 │   ├── TaskRequirements.vue  # 요구사항 섹션
 │   ├── TaskDocuments.vue     # 관련 문서 섹션
-│   ├── TaskActions.vue       # 작업 버튼들
-│   └── TaskHistory.vue       # 이력 섹션
+│   └── TaskActions.vue       # 작업 버튼들
 └── common/
     ├── StatusBadge.vue       # 상태 배지
     ├── CategoryTag.vue       # 카테고리 태그

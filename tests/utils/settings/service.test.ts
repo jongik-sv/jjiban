@@ -7,15 +7,12 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { readFile } from 'fs/promises';
 import {
-  loadSettings,
   getColumns,
   getCategories,
   getWorkflows,
-  getActions,
-  getSettingsByType,
   isValidSettingsType,
-  refreshCache,
 } from '../../../server/utils/settings';
+import { refreshCache, loadSettings } from '../../../server/utils/settings/_cache';
 import {
   DEFAULT_COLUMNS,
   DEFAULT_CATEGORIES,

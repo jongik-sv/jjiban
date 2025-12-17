@@ -4,7 +4,7 @@
  */
 
 import { vi } from 'vitest'
-import { computed, ref, reactive } from 'vue'
+import { computed, ref, reactive, readonly } from 'vue'
 import { defineStore } from 'pinia'
 import { config } from '@vue/test-utils'
 
@@ -12,6 +12,7 @@ import { config } from '@vue/test-utils'
 globalThis.computed = computed
 globalThis.ref = ref
 globalThis.reactive = reactive
+globalThis.readonly = readonly
 globalThis.defineStore = defineStore
 
 // Mock Pinia HMR
@@ -27,11 +28,14 @@ globalThis.useWbsStore = vi.fn(() => ({
   fetchWbs: vi.fn(),
   clearWbs: vi.fn(),
   tree: [],
-  loading: false
+  loading: false,
+  flatNodes: new Map(),
+  expandedNodes: new Set()
 }))
 
 globalThis.useSelectionStore = vi.fn(() => ({
   selectedNodeId: null,
+  selectedProjectId: null,
   selectNode: vi.fn(),
   clearSelection: vi.fn()
 }))
@@ -41,6 +45,29 @@ globalThis.useProjectStore = vi.fn(() => ({
   currentProject: null,
   clearProject: vi.fn(),
   projectName: ''
+}))
+
+// Mock graph composables (for useDependencyGraph)
+globalThis.useFocusView = vi.fn(() => ({
+  buildFocusGraph: vi.fn((focusTaskId, depth, taskNodes, edges) => ({
+    focusTaskId,
+    depth,
+    includesNodes: new Set([focusTaskId])
+  }))
+}))
+
+// Mock useDependencyGraph for useGanttDependencies tests
+globalThis.useDependencyGraph = vi.fn(() => ({
+  extractStatusCode: vi.fn((status: string | undefined) => {
+    if (!status) return '[ ]'
+    const match = status.match(/\[([^\]]+)\]/)
+    return match ? `[${match[1]}]` : '[ ]'
+  }),
+  buildGraphData: vi.fn(),
+  calculateLevels: vi.fn(),
+  getStatusName: vi.fn(),
+  getCategoryName: vi.fn(),
+  getGraphStats: vi.fn()
 }))
 
 // Mock PrimeVue useToast

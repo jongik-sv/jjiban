@@ -1,209 +1,112 @@
 /**
- * 의존관계 그래프 타입 정의
+ * 의존관계 그래프 타입 정의 (Vue Flow 기반)
  * Task: TSK-06-01
  */
 
-import type { DataSet } from 'vis-data'
+import type { Node, Edge } from '@vue-flow/core'
 
-// vis-network 노드 타입
-export interface GraphNode {
-  id: string              // Task ID (예: "TSK-06-01")
-  label: string           // 노드 라벨 (줄바꿈 포함)
-  title?: string          // 호버 툴팁 (HTML)
-  group: string           // 카테고리 (색상 그룹)
-  level?: number          // 위상정렬 레벨 (LR 배치)
-  color?: {
-    background?: string
-    border?: string
-  }
-  font?: {
-    color?: string
-    size?: number
-  }
+// Vue Flow 노드 데이터
+export interface TaskNodeData {
+  taskId: string          // Task ID (예: "TSK-06-01")
+  title: string           // Task 제목
+  status: string          // 상태 코드 (예: "[bd]")
+  statusName: string      // 상태 이름 (예: "기본설계")
+  category: string        // 카테고리 (development, defect, infrastructure)
+  categoryName: string    // 카테고리 이름 (개발, 결함, 인프라)
+  assignee?: string       // 담당자
+  depends?: string        // 의존 Task 목록
 }
 
-// vis-network 엣지 타입
-export interface GraphEdge {
-  id: string              // 엣지 고유 ID
-  from: string            // 출발 노드 ID (의존 대상)
-  to: string              // 도착 노드 ID (현재 Task)
-  arrows?: string         // 화살표 방향
-  color?: {
-    color?: string
-    highlight?: string
-    hover?: string
-  }
-}
+// Vue Flow 노드 타입
+export type TaskNode = Node<TaskNodeData>
 
-// 그래프 전체 데이터
+// Vue Flow 그룹 노드 타입 (TSK-06-03)
+export type GroupNode = Node<GroupNodeData>
+
+// Vue Flow 엣지 타입
+export type TaskEdge = Edge
+
+// 그래프 전체 데이터 (TSK-06-03: GroupNode 포함)
 export interface GraphData {
-  nodes: DataSet<GraphNode>
-  edges: DataSet<GraphEdge>
+  nodes: (TaskNode | GroupNode)[]
+  edges: TaskEdge[]
 }
 
-// 필터링 옵션
+// 필터링 옵션 (TSK-06-03 확장)
 export interface GraphFilter {
-  categories: string[]    // 선택된 카테고리
-  statuses: string[]      // 선택된 상태
+  categories: string[]                    // 선택된 카테고리
+  statuses: string[]                      // 선택된 상태
+  hierarchyMode: 'full' | 'wp' | 'act'   // 계층 표시 모드
+  focusTask: string | null                // 초점 Task ID
+  focusDepth: number                      // 초점 깊이 (1~3)
 }
 
-// vis-network Layout 옵션
-export interface GraphLayoutOptions {
-  hierarchical: {
-    enabled: boolean
-    direction: 'LR' | 'RL' | 'UD' | 'DU'
-    sortMethod: 'directed' | 'hubsize'
-    levelSeparation: number
-    nodeSpacing: number
-    treeSpacing: number
-    blockShifting: boolean
-    edgeMinimization: boolean
-    parentCentralization: boolean
-  }
+// 그룹 노드 데이터 (TSK-06-03)
+export interface GroupNodeData {
+  groupId: string          // 그룹 ID (예: "WP-01", "ACT-02")
+  groupType: 'wp' | 'act'  // 그룹 타입
+  title: string            // 그룹 제목
+  taskCount: number        // 포함된 Task 개수
+  completedCount: number   // 완료된 Task 개수
+  isExpanded: boolean      // 확장/축소 상태
+  childTaskIds: string[]   // 포함된 Task ID 목록
 }
 
-// vis-network Interaction 옵션
-export interface GraphInteractionOptions {
-  dragNodes: boolean
-  dragView: boolean
-  zoomView: boolean
-  hover: boolean
-  tooltipDelay: number
-  multiselect: boolean
-  navigationButtons: boolean
-  keyboard: {
-    enabled: boolean
-  }
-}
-
-// vis-network 전체 옵션
-export interface GraphOptions {
-  layout: GraphLayoutOptions
-  physics: {
-    enabled: boolean
-  }
-  interaction: GraphInteractionOptions
-  nodes: {
-    shape: string
-    margin: number
-    font: {
-      size: number
-      face: string
-      color: string
-    }
-    borderWidth: number
-    shadow: boolean
-  }
-  edges: {
-    arrows: {
-      to: {
-        enabled: boolean
-        scaleFactor: number
-      }
-    }
-    smooth: {
-      type: string
-      forceDirection: string
-    }
-    color: {
-      color: string
-      highlight: string
-      hover: string
-    }
-    width: number
-  }
-  groups: Record<string, {
-    color: {
-      background: string
-      border: string
-    }
-  }>
+// 초점 뷰 설정 (TSK-06-03)
+export interface FocusViewConfig {
+  focusTaskId: string       // 초점 Task ID
+  depth: number             // 탐색 깊이 (1~3)
+  includesNodes: Set<string> // depth 내 Task ID 집합
 }
 
 // 카테고리별 색상 정의
 export const GRAPH_COLORS = {
   development: {
     background: '#3b82f6',
-    border: '#2563eb'
+    border: '#2563eb',
+    text: '#ffffff'
   },
   defect: {
     background: '#ef4444',
-    border: '#dc2626'
+    border: '#dc2626',
+    text: '#ffffff'
   },
   infrastructure: {
     background: '#22c55e',
-    border: '#16a34a'
+    border: '#16a34a',
+    text: '#ffffff'
   }
 } as const
 
-// 기본 그래프 옵션
-export const DEFAULT_GRAPH_OPTIONS: GraphOptions = {
-  layout: {
-    hierarchical: {
-      enabled: true,
-      direction: 'LR',
-      sortMethod: 'directed',
-      levelSeparation: 200,
-      nodeSpacing: 100,
-      treeSpacing: 200,
-      blockShifting: true,
-      edgeMinimization: true,
-      parentCentralization: true
-    }
-  },
-  physics: {
-    enabled: false
-  },
-  interaction: {
-    dragNodes: true,
-    dragView: true,
-    zoomView: true,
-    hover: true,
-    tooltipDelay: 200,
-    multiselect: false,
-    navigationButtons: false,
-    keyboard: {
-      enabled: true
-    }
-  },
-  nodes: {
-    shape: 'box',
-    margin: 10,
-    font: {
-      size: 12,
-      face: 'Pretendard, sans-serif',
-      color: '#e5e7eb'
-    },
-    borderWidth: 2,
-    shadow: true
-  },
-  edges: {
-    arrows: {
-      to: {
-        enabled: true,
-        scaleFactor: 0.8
-      }
-    },
-    smooth: {
-      type: 'cubicBezier',
-      forceDirection: 'horizontal'
-    },
-    color: {
-      color: '#6c9bcf',
-      highlight: '#3b82f6',
-      hover: '#93c5fd'
-    },
-    width: 2
-  },
-  groups: {
-    development: {
-      color: GRAPH_COLORS.development
-    },
-    defect: {
-      color: GRAPH_COLORS.defect
-    },
-    infrastructure: {
-      color: GRAPH_COLORS.infrastructure
-    }
+// 상태별 색상 (완료 상태용)
+export const STATUS_COLORS = {
+  done: {
+    background: '#4b5563',
+    border: '#374151',
+    text: '#9ca3af'
   }
-}
+} as const
+
+// 하이라이트 색상
+export const HIGHLIGHT_COLORS = {
+  selected: {
+    background: '#fbbf24',
+    border: '#f59e0b',
+    text: '#000000'
+  },
+  dependsOn: {
+    background: '#ef4444',
+    border: '#dc2626',
+    text: '#ffffff'
+  },
+  dependedBy: {
+    background: '#22c55e',
+    border: '#16a34a',
+    text: '#ffffff'
+  },
+  dimmed: {
+    background: '#374151',
+    border: '#4b5563',
+    text: '#6b7280'
+  }
+} as const

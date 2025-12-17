@@ -5,8 +5,9 @@
 | 항목 | 내용 |
 |------|------|
 | Task ID | TSK-01-02 |
-| 문서 버전 | 1.0 |
+| 문서 버전 | 1.1 |
 | 작성일 | 2025-12-17 |
+| 수정일 | 2025-12-17 |
 | 카테고리 | development |
 | 상태 | 상세설계 [dd] |
 
@@ -25,6 +26,7 @@
 | `app/stores/terminal.ts` | 터미널 세션 상태 관리 |
 | `app/composables/useTerminal.ts` | 터미널 세션 관리 composable |
 | `app/composables/useTerminalResize.ts` | 터미널 리사이즈 로직 |
+| `app/composables/useTerminalReconnect.ts` | 자동 재연결 로직 |
 | `app/types/terminal.ts` | 터미널 관련 타입 정의 |
 
 ### 1.2 수정 파일
@@ -45,11 +47,12 @@
  * 터미널 세션 상태
  */
 export type TerminalSessionStatus =
-  | 'connecting'  // SSE 연결 중
-  | 'connected'   // 연결 완료, 대기 중
-  | 'running'     // 명령어 실행 중
-  | 'completed'   // 정상 종료
-  | 'error'       // 오류 발생
+  | 'connecting'    // SSE 연결 중
+  | 'connected'     // 연결 완료, 대기 중
+  | 'running'       // 명령어 실행 중
+  | 'completed'     // 정상 종료
+  | 'error'         // 오류 발생
+  | 'reconnecting'  // 자동 재연결 중
 
 /**
  * 터미널 세션 정보
@@ -61,6 +64,7 @@ export interface TerminalSession {
   status: TerminalSessionStatus
   currentCommand?: string         // 현재 실행 중인 명령어
   exitCode?: number               // 종료 코드 (completed/error 시)
+  outputBuffer: string[]          // 출력 버퍼 (최근 1000줄)
   createdAt: Date
   updatedAt: Date
 }
@@ -69,7 +73,8 @@ export interface TerminalSession {
  * 터미널 스토어 상태
  */
 export interface TerminalState {
-  sessions: Map<string, TerminalSession>
+  sessions: Record<string, TerminalSession>  // Map 대신 Record 사용 (Pinia 직렬화 호환)
+  eventSources: Record<string, EventSource>  // 세션별 SSE 연결 관리
   activeSessionId: string | null
   isCreating: boolean            // 세션 생성 중
   error: string | null
@@ -154,7 +159,8 @@ import type {
 
 export const useTerminalStore = defineStore('terminal', {
   state: (): TerminalState => ({
-    sessions: new Map(),
+    sessions: {},
+    eventSources: {},
     activeSessionId: null,
     isCreating: false,
     error: null
@@ -166,27 +172,23 @@ export const useTerminalStore = defineStore('terminal', {
      */
     activeSession(): TerminalSession | null {
       if (!this.activeSessionId) return null
-      return this.sessions.get(this.activeSessionId) ?? null
+      return this.sessions[this.activeSessionId] ?? null
     },
 
     /**
      * 실행 중인 세션 개수 (running 상태)
      */
     activeSessionCount(): number {
-      let count = 0
-      this.sessions.forEach(session => {
-        if (session.status === 'running' || session.status === 'connected') {
-          count++
-        }
-      })
-      return count
+      return Object.values(this.sessions).filter(
+        session => session.status === 'running' || session.status === 'connected'
+      ).length
     },
 
     /**
      * 세션 목록 (배열 형태)
      */
     sessionList(): TerminalSession[] {
-      return Array.from(this.sessions.values())
+      return Object.values(this.sessions)
         .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
     },
 
@@ -194,7 +196,7 @@ export const useTerminalStore = defineStore('terminal', {
      * 세션 존재 여부
      */
     hasSession(): boolean {
-      return this.sessions.size > 0
+      return Object.keys(this.sessions).length > 0
     }
   },
 
@@ -220,16 +222,21 @@ export const useTerminalStore = defineStore('terminal', {
           taskId: request.taskId,
           projectId: request.projectId,
           status: 'connecting',
+          outputBuffer: [],
           createdAt: new Date(),
           updatedAt: new Date()
         }
 
-        this.sessions.set(session.id, session)
+        this.sessions[session.id] = session
         this.setActiveSession(session.id)
 
         return session.id
-      } catch (err: any) {
-        this.error = err.message || '세션 생성 실패'
+      } catch (err) {
+        if (err instanceof Error) {
+          this.error = err.message
+        } else {
+          this.error = '세션 생성에 실패했습니다'
+        }
         throw err
       } finally {
         this.isCreating = false
@@ -240,7 +247,7 @@ export const useTerminalStore = defineStore('terminal', {
      * 세션 종료
      */
     async closeSession(sessionId: string): Promise<void> {
-      const session = this.sessions.get(sessionId)
+      const session = this.sessions[sessionId]
       if (!session) return
 
       try {
@@ -251,7 +258,13 @@ export const useTerminalStore = defineStore('terminal', {
         // 서버 오류 무시 (이미 종료된 경우 등)
       }
 
-      this.sessions.delete(sessionId)
+      // SSE 연결 정리
+      if (this.eventSources[sessionId]) {
+        this.eventSources[sessionId].close()
+        delete this.eventSources[sessionId]
+      }
+
+      delete this.sessions[sessionId]
 
       // 활성 세션이 삭제된 경우 다른 세션 선택
       if (this.activeSessionId === sessionId) {
@@ -264,7 +277,7 @@ export const useTerminalStore = defineStore('terminal', {
      * 활성 세션 설정
      */
     setActiveSession(sessionId: string): void {
-      if (this.sessions.has(sessionId)) {
+      if (this.sessions[sessionId]) {
         this.activeSessionId = sessionId
       }
     },
@@ -277,7 +290,7 @@ export const useTerminalStore = defineStore('terminal', {
       status: TerminalSession['status'],
       exitCode?: number
     ): void {
-      const session = this.sessions.get(sessionId)
+      const session = this.sessions[sessionId]
       if (session) {
         session.status = status
         session.updatedAt = new Date()
@@ -291,11 +304,25 @@ export const useTerminalStore = defineStore('terminal', {
      * 세션 명령어 업데이트
      */
     updateSessionCommand(sessionId: string, command: string): void {
-      const session = this.sessions.get(sessionId)
+      const session = this.sessions[sessionId]
       if (session) {
         session.currentCommand = command
         session.status = 'running'
         session.updatedAt = new Date()
+      }
+    },
+
+    /**
+     * 출력 버퍼에 추가
+     */
+    appendOutput(sessionId: string, text: string): void {
+      const session = this.sessions[sessionId]
+      if (session) {
+        session.outputBuffer.push(text)
+        // 최근 1000줄만 유지
+        if (session.outputBuffer.length > 1000) {
+          session.outputBuffer = session.outputBuffer.slice(-1000)
+        }
       }
     },
 
@@ -320,10 +347,57 @@ export const useTerminalStore = defineStore('terminal', {
     },
 
     /**
+     * SSE 연결 생성 및 관리
+     */
+    connectSSE(sessionId: string): EventSource {
+      // 기존 연결이 있으면 재사용
+      if (this.eventSources[sessionId]) {
+        return this.eventSources[sessionId]
+      }
+
+      const eventSource = new EventSource(
+        `/api/terminal/session/${sessionId}/output`
+      )
+
+      eventSource.addEventListener('output', (event) => {
+        const { text } = JSON.parse(event.data)
+        this.appendOutput(sessionId, text)
+      })
+
+      eventSource.addEventListener('status', (event) => {
+        const { status, exitCode } = JSON.parse(event.data)
+        this.updateSessionStatus(sessionId, status, exitCode)
+      })
+
+      eventSource.addEventListener('open', () => {
+        this.updateSessionStatus(sessionId, 'connected')
+      })
+
+      eventSource.addEventListener('error', () => {
+        if (eventSource.readyState === EventSource.CLOSED) {
+          this.updateSessionStatus(sessionId, 'error')
+        }
+      })
+
+      this.eventSources[sessionId] = eventSource
+      return eventSource
+    },
+
+    /**
+     * SSE 연결 종료
+     */
+    disconnectSSE(sessionId: string): void {
+      if (this.eventSources[sessionId]) {
+        this.eventSources[sessionId].close()
+        delete this.eventSources[sessionId]
+      }
+    },
+
+    /**
      * 모든 세션 정리 (앱 종료 시)
      */
     async cleanup(): Promise<void> {
-      const promises = Array.from(this.sessions.keys()).map(id =>
+      const promises = Object.keys(this.sessions).map(id =>
         this.closeSession(id)
       )
       await Promise.allSettled(promises)
@@ -411,7 +485,92 @@ export function useTerminal() {
 }
 ```
 
-### 4.2 app/composables/useTerminalResize.ts
+### 4.2 app/composables/useTerminalReconnect.ts
+
+```typescript
+import { useTerminalStore } from '~/stores/terminal'
+import type { Ref } from 'vue'
+
+interface UseTerminalReconnectOptions {
+  sessionId: Ref<string>
+  maxRetries?: number
+  initialDelay?: number
+}
+
+export function useTerminalReconnect(options: UseTerminalReconnectOptions) {
+  const store = useTerminalStore()
+  const {
+    sessionId,
+    maxRetries = 3,
+    initialDelay = 1000
+  } = options
+
+  let retryCount = 0
+  let retryTimeout: NodeJS.Timeout | null = null
+
+  /**
+   * Exponential backoff 재연결
+   */
+  async function attemptReconnect(): Promise<boolean> {
+    if (retryCount >= maxRetries) {
+      store.updateSessionStatus(sessionId.value, 'error')
+      return false
+    }
+
+    // Exponential backoff: 1s → 2s → 4s
+    const delay = initialDelay * Math.pow(2, retryCount)
+    store.updateSessionStatus(sessionId.value, 'reconnecting')
+
+    await new Promise(resolve => {
+      retryTimeout = setTimeout(resolve, delay)
+    })
+
+    try {
+      // 기존 SSE 연결 종료
+      store.disconnectSSE(sessionId.value)
+
+      // 새 SSE 연결 생성
+      store.connectSSE(sessionId.value)
+
+      retryCount = 0  // 성공 시 카운트 리셋
+      return true
+    } catch (err) {
+      retryCount++
+      console.warn(`Reconnect attempt ${retryCount}/${maxRetries} failed:`, err)
+      return attemptReconnect()
+    }
+  }
+
+  /**
+   * 수동 재연결
+   */
+  function reconnect(): void {
+    retryCount = 0
+    attemptReconnect()
+  }
+
+  /**
+   * 정리
+   */
+  function cleanup(): void {
+    if (retryTimeout) {
+      clearTimeout(retryTimeout)
+      retryTimeout = null
+    }
+    retryCount = 0
+  }
+
+  onBeforeUnmount(cleanup)
+
+  return {
+    attemptReconnect,
+    reconnect,
+    cleanup
+  }
+}
+```
+
+### 4.3 app/composables/useTerminalResize.ts
 
 ```typescript
 import { useTerminalStore } from '~/stores/terminal'
@@ -628,9 +787,9 @@ async function handleCloseSession(sessionId: string): Promise<void> {
           v-if="activeSession"
           :session-id="activeSession.id"
         />
-        <div v-else class="terminal-empty-state">
+        <div v-else class="terminal-empty-state terminal-bg">
           <i class="pi pi-desktop text-4xl text-surface-400 mb-4" />
-          <p class="text-surface-500">활성 세션이 없습니다</p>
+          <p class="terminal-empty-text">활성 세션이 없습니다</p>
           <Button
             label="새 세션 시작"
             icon="pi pi-plus"
@@ -674,8 +833,6 @@ async function handleCloseSession(sessionId: string): Promise<void> {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: #1e1e2e;
-  color: var(--p-surface-400);
 }
 </style>
 ```
@@ -871,8 +1028,10 @@ function handleCreate(): void {
 <script setup lang="ts">
 import { Terminal } from 'xterm'
 import { FitAddon } from '@xterm/addon-fit'
+import type { IDisposable } from '@xterm/xterm'
 import { useTerminalStore } from '~/stores/terminal'
 import { useTerminalResize } from '~/composables/useTerminalResize'
+import { useTerminalReconnect } from '~/composables/useTerminalReconnect'
 import type { TerminalTheme } from '~/types/terminal'
 
 interface Props {
@@ -893,7 +1052,8 @@ const store = useTerminalStore()
 const containerRef = ref<HTMLElement | null>(null)
 const terminalRef = ref<Terminal | null>(null)
 const fitAddonRef = ref<FitAddon | null>(null)
-const eventSourceRef = ref<EventSource | null>(null)
+let dataDisposable: IDisposable | null = null
+
 const isConnecting = ref(true)
 const connectionError = ref<string | null>(null)
 
@@ -932,6 +1092,26 @@ useTerminalResize({
   sessionId: sessionIdRef
 })
 
+// 자동 재연결 핸들러
+const { reconnect } = useTerminalReconnect({
+  sessionId: sessionIdRef
+})
+
+// 현재 세션 상태 감시
+const session = computed(() => store.sessions[props.sessionId])
+watch(() => session.value?.status, (status) => {
+  if (status === 'connected') {
+    isConnecting.value = false
+    connectionError.value = null
+  } else if (status === 'error') {
+    connectionError.value = '연결이 종료되었습니다'
+    isConnecting.value = false
+  } else if (status === 'reconnecting') {
+    isConnecting.value = true
+    connectionError.value = null
+  }
+})
+
 /**
  * 터미널 초기화
  */
@@ -959,76 +1139,55 @@ function initTerminal(): void {
   terminalRef.value = terminal
   fitAddonRef.value = fitAddon
 
-  // 키 입력 핸들러
-  terminal.onData((data) => {
+  // 키 입력 핸들러 (IDisposable 저장)
+  dataDisposable = terminal.onData((data) => {
     emit('data', data)
     store.sendInput(props.sessionId, data)
   })
 
-  // SSE 연결
-  connectSSE()
+  // SSE 연결 (스토어 레벨에서 관리)
+  const eventSource = store.connectSSE(props.sessionId)
 
-  emit('ready')
-}
+  // 기존 버퍼 복원
+  const existingBuffer = session.value?.outputBuffer || []
+  existingBuffer.forEach(text => terminal.write(text))
 
-/**
- * SSE 연결
- */
-function connectSSE(): void {
-  isConnecting.value = true
-  connectionError.value = null
-
-  const eventSource = new EventSource(
-    `/api/terminal/session/${props.sessionId}/output`
-  )
-
-  eventSource.addEventListener('output', (event) => {
-    const { text } = JSON.parse(event.data)
-    terminalRef.value?.write(text)
-  })
-
-  eventSource.addEventListener('status', (event) => {
-    const { status, exitCode } = JSON.parse(event.data)
-    store.updateSessionStatus(props.sessionId, status, exitCode)
-  })
-
-  eventSource.addEventListener('open', () => {
-    isConnecting.value = false
-    store.updateSessionStatus(props.sessionId, 'connected')
-  })
-
-  eventSource.addEventListener('error', () => {
-    if (eventSource.readyState === EventSource.CLOSED) {
-      connectionError.value = '연결이 종료되었습니다'
-      store.updateSessionStatus(props.sessionId, 'error')
+  // SSE 출력을 xterm에 실시간 렌더링
+  watch(() => session.value?.outputBuffer.length, () => {
+    if (session.value && session.value.outputBuffer.length > 0) {
+      const lastOutput = session.value.outputBuffer[session.value.outputBuffer.length - 1]
+      terminal.write(lastOutput)
     }
   })
 
-  eventSourceRef.value = eventSource
+  emit('ready')
 }
 
 /**
  * 재연결 시도
  */
 function handleReconnect(): void {
-  if (eventSourceRef.value) {
-    eventSourceRef.value.close()
-  }
-  connectSSE()
+  reconnect()
 }
 
 /**
  * 정리
  */
 function cleanup(): void {
-  if (eventSourceRef.value) {
-    eventSourceRef.value.close()
-    eventSourceRef.value = null
+  // IDisposable 정리
+  if (dataDisposable) {
+    dataDisposable.dispose()
+    dataDisposable = null
   }
+
+  // xterm 정리
   if (terminalRef.value) {
     terminalRef.value.dispose()
     terminalRef.value = null
   }
+
+  // SSE는 스토어에서 관리하므로 세션 전환 시 끊지 않음
+  // (다이얼로그 닫을 때만 cleanup 호출)
 }
 
 // 세션 ID 변경 시 재초기화
@@ -1049,13 +1208,13 @@ onBeforeUnmount(cleanup)
     <!-- 연결 중 오버레이 -->
     <div v-if="isConnecting" class="terminal-overlay">
       <i class="pi pi-spin pi-spinner text-2xl text-blue-500 mb-2" />
-      <span class="text-surface-300">연결 중...</span>
+      <span class="terminal-overlay-text">연결 중...</span>
     </div>
 
     <!-- 에러 오버레이 -->
     <div v-else-if="connectionError" class="terminal-overlay">
       <i class="pi pi-exclamation-triangle text-2xl text-yellow-500 mb-2" />
-      <span class="text-surface-300 mb-4">{{ connectionError }}</span>
+      <span class="terminal-overlay-text mb-4">{{ connectionError }}</span>
       <Button
         label="재연결"
         icon="pi pi-refresh"
@@ -1071,7 +1230,6 @@ onBeforeUnmount(cleanup)
   position: relative;
   width: 100%;
   height: 100%;
-  background-color: #1e1e2e;
 }
 
 .terminal-container {
@@ -1091,7 +1249,6 @@ onBeforeUnmount(cleanup)
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: rgba(30, 30, 46, 0.9);
   z-index: 10;
 }
 </style>
@@ -1106,6 +1263,27 @@ onBeforeUnmount(cleanup)
 ```css
 /* ===== Terminal Components ===== */
 
+/* Terminal theme colors (Catppuccin Mocha) */
+.terminal-bg {
+  background-color: #1e1e2e;
+}
+
+.terminal-text {
+  color: #cdd6f4;
+}
+
+.terminal-overlay-bg {
+  background-color: rgba(30, 30, 46, 0.9);
+}
+
+.terminal-overlay-text {
+  color: #cdd6f4;
+}
+
+.terminal-empty-text {
+  color: #6c7086;
+}
+
 /* Dialog overrides */
 .terminal-dialog .p-dialog-content {
   padding: 0;
@@ -1114,10 +1292,25 @@ onBeforeUnmount(cleanup)
 }
 
 /* Session status colors */
-.session-status-running { color: theme('colors.green.500'); }
-.session-status-connected { color: theme('colors.blue.500'); }
-.session-status-completed { color: theme('colors.surface.400'); }
-.session-status-error { color: theme('colors.red.500'); }
+.session-status-running {
+  color: theme('colors.green.500');
+}
+
+.session-status-connected {
+  color: theme('colors.blue.500');
+}
+
+.session-status-completed {
+  color: theme('colors.surface.400');
+}
+
+.session-status-error {
+  color: theme('colors.red.500');
+}
+
+.session-status-reconnecting {
+  color: theme('colors.yellow.500');
+}
 
 /* Terminal scrollbar */
 .terminal-container ::-webkit-scrollbar {
@@ -1209,8 +1402,69 @@ data: {"status": "completed", "exitCode": 0}
 
 ---
 
+---
+
+## 10. 설계 리뷰 반영 사항
+
+### 10.1 Critical 이슈 해결
+
+**1. SSE 연결 관리 (다중 세션 지원)**
+- `TerminalState`에 `eventSources: Record<string, EventSource>` 추가
+- `connectSSE()`, `disconnectSSE()` 액션을 스토어에 추가
+- 각 세션마다 독립적인 EventSource 유지
+- TerminalView는 스토어의 SSE 연결 재사용
+- 세션 전환 시 기존 SSE 연결 유지 (백그라운드 출력 수신)
+
+**2. 출력 버퍼 관리**
+- `TerminalSession` 인터페이스에 `outputBuffer: string[]` 추가
+- `appendOutput()` 액션으로 버퍼 관리 (최근 1000줄 제한)
+- SSE 이벤트 수신 시 `appendOutput()` 호출하여 버퍼 저장
+- TerminalView 마운트 시 기존 버퍼를 xterm에 복원
+
+### 10.2 Major 이슈 해결
+
+**3. 자동 재연결 로직**
+- `reconnecting` 상태 타입 추가
+- `useTerminalReconnect.ts` composable 생성
+- Exponential backoff 재연결 (1s → 2s → 4s)
+- 최대 3회 재시도, 실패 시 `error` 상태로 전환
+- TerminalView에서 자동 재연결 통합
+
+**4. TypeScript 타입 안정성**
+- `sessions: Map` → `sessions: Record<string, TerminalSession>` 변경
+- Pinia 직렬화 호환 및 Vue devtools 지원
+- 에러 처리 시 `any` 제거, `instanceof Error` 타입 가드 사용
+- 모든 에러 핸들러에 타입 안전한 처리 적용
+
+**5. 메모리 누수 방지**
+- `terminal.onData()` 리턴값을 `IDisposable`로 저장
+- cleanup 시 `dataDisposable.dispose()` 명시적 호출
+- `eventSources` Record로 SSE 연결 추적
+- `closeSession()` 시 SSE 연결 정리
+- ResizeObserver 정리 로직 강화
+
+**6. CSS 중앙화 원칙 준수**
+- main.css에 `.terminal-bg`, `.terminal-text`, `.terminal-overlay-text` 클래스 정의
+- 컴포넌트 내 HEX 하드코딩 제거 (`background-color: #1e1e2e` → `class="terminal-bg"`)
+- `.terminal-empty-text`, `.session-status-reconnecting` 클래스 추가
+- xterm.js 테마는 설정 객체이므로 예외 유지
+
+### 10.3 Minor 이슈 대응
+
+**7. Props 검증**
+- 기본설계 단계에서 명시 (구현 시 적용)
+
+**8. 접근성 개선**
+- 기본설계 단계에서 명시 (구현 시 적용)
+
+**9. 테스트 명세 구체화**
+- 026-test-specification.md에 구체적 측정 방법 추가 예정
+
+---
+
 ## 변경 이력
 
 | 버전 | 날짜 | 변경 내용 |
 |------|------|-----------|
 | 1.0 | 2025-12-17 | 초안 작성 |
+| 1.1 | 2025-12-17 | 설계 리뷰 반영 (Critical 2건, Major 4건 해결) |

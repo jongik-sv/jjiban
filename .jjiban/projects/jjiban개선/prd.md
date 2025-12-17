@@ -554,6 +554,7 @@ composables/
 | 런타임 | Node.js 20.x |
 | 프레임워크 | Nuxt 3 (Standalone) |
 | 프론트엔드 | Vue 3, PrimeVue 4.x, TailwindCSS |
+| 차트 | Frappe Gantt (Gantt 차트 시각화) |
 | 데이터 | wbs.md + JSON |
 
 ---
@@ -884,3 +885,4 @@ wbsStore.flatNodes → useDependencyGraph.buildGraphData() → GraphData { nodes
 | 1.1 | 2025-12-17 | 터미널 전역 관리, 단일 실행 메커니즘, 실행 상태 PID 추적 추가 |
 | 1.2 | 2025-12-17 | 워크플로우 설정 기반 유연화 섹션 추가 |
 | 1.3 | 2025-12-17 | 의존관계 그래프 시각화 섹션 추가 |
+| 1.4 | 2025-12-17 | **터미널 구현 방식 변경**: xterm.js + node-pty 기반 터미널 에뮬레이터 제거. child_process.spawn() + SSE 스트리밍 기반 단순 텍스트 출력으로 변경. Task 상세 패널 내에서 Claude Code CLI 실행 결과를 표시하는 방식으로 단순화. |

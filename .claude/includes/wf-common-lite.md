@@ -81,7 +81,7 @@
 | `[ds]` | 설계 | infrastructure | Detail |
 | `[im]` | 구현 | dev/infra | Implement |
 | `[fx]` | 수정 | defect | Implement |
-| `[ts]` | 테스트 | dev/defect | Verify |
+| `[vf]` | 테스트 | dev/defect | Verify |
 | `[xx]` | 완료 | 공통 | Done |
 
 ---

@@ -65,14 +65,6 @@ export interface DocumentInfo {
   type: 'basic-design' | 'detail-design' | 'implementation' | 'test' | 'manual' | 'other'
 }
 
-export interface HistoryEntry {
-  timestamp: string
-  action: string
-  fromStatus?: string
-  toStatus?: string
-  description?: string
-}
-
 export interface TaskDetail {
   id: string
   title: string
@@ -91,7 +83,6 @@ export interface TaskDetail {
   tags?: string[]
   depends?: string[]
   documents: DocumentInfo[]
-  history: HistoryEntry[]
   availableActions: string[]
 }
 

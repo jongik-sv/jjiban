@@ -90,7 +90,6 @@ export interface TaskDetail {
   depends?: string[];
   ref?: string;
   documents: DocumentInfo[];
-  history: HistoryEntry[];
   availableActions: string[];
 }
 
@@ -114,23 +113,6 @@ export interface DocumentInfo {
   updatedAt?: string;               // exists=true일 때만
   expectedAfter?: string;           // exists=false일 때만
   command?: string;                 // exists=false일 때만
-}
-
-// 이력 엔트리
-export interface HistoryEntry {
-  taskId?: string;
-  timestamp: string;
-  userId?: string;
-  action: 'transition' | 'action' | 'update' | string;
-  previousStatus?: string;
-  newStatus?: string;
-  command?: string;
-  comment?: string;
-  documentCreated?: string;
-  // 기존 호환성 유지
-  from?: string;
-  to?: string;
-  user?: string | null;
 }
 
 // 상태 전이 결과

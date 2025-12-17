@@ -14,11 +14,7 @@ import type {
   ActionsConfig,
 } from '../../../types/settings';
 import { SETTINGS_FILE_NAMES } from '../../../types/settings';
-import { loadSettings as loadSettingsFromCache, refreshCache } from './_cache';
-
-// Re-export cache functions for testing
-export { refreshCache };
-
+import { loadSettings as loadSettingsFromCache } from './_cache';
 // ============================================================
 // 서비스 함수
 // ============================================================

@@ -87,8 +87,11 @@
           @open-document="handleOpenDocument"
         />
 
-        <!-- 이력 (TSK-05-02) -->
-        <WbsDetailTaskHistory :history="selectedTask.history" />
+        <!-- Claude Code 실행 (TSK-01 터미널 대체) -->
+        <WbsDetailClaudeCodePanel
+          :task-id="selectedTask.id"
+          :project-id="selectedProjectId"
+        />
       </div>
     </template>
   </Card>

@@ -1,6 +1,6 @@
 > version: 2.0
 > depth: 3
-> updated: 2025-12-17
+> updated: 2025-12-18
 > start: 2025-12-17
 
 ---
@@ -8,7 +8,7 @@
 ## WP-01: 터미널 시스템
 - priority: critical
 - schedule: 2025-12-17 ~ 2025-12-28
-- progress: 13%
+- progress: 100%
 
 ### TSK-01-01: 터미널 패키지 설치 및 설정
 - category: infrastructure
@@ -28,7 +28,7 @@
 
 ### TSK-01-02: 터미널 UI 컴포넌트
 - category: development
-- status: detail-design [dd]
+- status: [xx]
 - priority: critical
 - schedule: 2025-12-18 ~ 2025-12-22
 - tags: xterm, component, dialog
@@ -42,10 +42,13 @@
 - completed:
   - ui: 2025-12-17
   - dd: 2025-12-17
+  - im: 2025-12-17 (9개 파일 구현 완료: types, store, 3개 composables, 4개 컴포넌트, AppHeader 통합)
+  - vf: 2025-12-17 (타입체크, 빌드 검증 완료)
+  - xx: 2025-12-17 (코드리뷰 패치 적용, 통합테스트 문서 작성)
 
 ### TSK-01-03: 서버 터미널 세션 API
 - category: development
-- status: detail-design [dd]
+- status: [xx]
 - priority: critical
 - schedule: 2025-12-20 ~ 2025-12-26
 - tags: api, session, sse
@@ -58,6 +61,9 @@
 - ref: PRD 4.1, 4.3
 - completed:
   - dd: 2025-12-17
+  - im: 2025-12-17 (8개 파일 구현 완료: types, service, 6개 API)
+  - vf: 2025-12-17 (타입체크, 코드리뷰 완료)
+  - xx: 2025-12-17 (코드리뷰 패치 적용, 통합테스트 문서 작성)
 
 ---
 
@@ -253,10 +259,10 @@
 
 ---
 
-## WP-06: 의존관계 그래프 시각화
+## WP-06: 의존관계 시각화
 - priority: medium
-- schedule: 2025-12-17 ~ 2025-12-18
-- progress: 0%
+- schedule: 2025-12-17 ~ 2025-12-20
+- progress: 50%
 
 ### TSK-06-01: 의존관계 그래프 시각화 기능 구현
 - category: development
@@ -273,3 +279,44 @@
   - app/components/wbs/graph/GraphLegend.vue (범례)
   - WbsTreeHeader.vue 그래프 버튼 추가 및 selectionStore 연동
 - ref: PRD 11
+
+### TSK-06-02: Gantt 차트 의존성 화살표
+- category: development
+- status: done [xx]
+- priority: high
+- schedule: 2025-12-18 ~ 2025-12-19
+- tags: gantt, dependency, arrow
+- depends: TSK-06-01
+- requirements:
+  - Frappe Gantt 의존성 라인 렌더링 (SVG 화살표)
+  - Task 간 의존관계를 시간축 기반으로 시각화
+  - 의존성 화살표 색상/스타일 (완료/진행중 구분)
+  - 호버 시 연결된 Task 하이라이트
+- ref: PRD 11
+- completed:
+  - bd: 2025-12-17
+  - dd: 2025-12-17
+  - im: 2025-12-17
+  - vf: 2025-12-18
+  - xx: 2025-12-18
+
+### TSK-06-03: 의존관계 그래프 필터 및 계층 접기
+- category: development
+- status: [xx]
+- priority: medium
+- schedule: 2025-12-19 ~ 2025-12-20
+- tags: graph, filter, collapse
+- depends: TSK-06-01
+- requirements:
+  - WP/ACT 단위 그룹 노드로 축소/확장
+  - 카테고리/상태별 필터 패널
+  - 특정 Task 중심 의존관계만 표시 (depth 제한)
+  - 필터 상태 URL 파라미터 저장
+- ref: PRD 11
+- completed:
+  - bd: 2025-12-17
+  - ui: 2025-12-17
+  - dd: 2025-12-17
+  - im: 2025-12-17
+  - vf: 2025-12-17
+  - xx: 2025-12-17

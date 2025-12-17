@@ -70,6 +70,7 @@
 | 프론트엔드 | Vue 3 | 3.5.x |
 | UI 컴포넌트 | PrimeVue | 4.x |
 | 스타일링 | TailwindCSS | 3.4.x |
+| 차트 | Frappe Gantt | 0.6.x |
 
 ---
 
@@ -942,3 +943,4 @@ npm install --global windows-build-tools
 | 버전 | 날짜 | 변경 내용 |
 |------|------|-----------|
 | 1.0 | 2025-12-17 | 초기 버전 작성 (웹 터미널 + 워크플로우 실행) |
+| 1.1 | 2025-12-17 | **터미널 구현 방식 변경**: xterm.js + node-pty 제거, child_process.spawn() + SSE 스트리밍으로 변경. 사유: xterm.js 렌더링 문제(viewport 스크롤 이슈), node-pty 네이티브 빌드 복잡성. 새 방식은 단순 텍스트 출력으로 Claude Code CLI 실행 결과만 표시. |

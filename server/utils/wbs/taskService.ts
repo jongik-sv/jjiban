@@ -12,7 +12,6 @@ import type {
   TaskDetail,
   TeamMember,
   DocumentInfo,
-  HistoryEntry,
   TaskCategory,
   TaskStatus,
 } from '../../../types';
@@ -261,40 +260,6 @@ function getAvailableActions(category: TaskCategory, status: string): string[] {
 }
 
 /**
- * 이력 엔트리 생성
- * @param oldValues - 변경 전 값
- * @param newValues - 변경 후 값
- * @returns HistoryEntry
- *
- * FR-006: Task 변경 이력 기록
- * BR-005: 이력 자동 기록
- */
-function buildHistoryEntry(
-  oldValues: Partial<WbsNode>,
-  newValues: Partial<WbsNode>
-): HistoryEntry {
-  const changes: string[] = [];
-
-  if (oldValues.title !== newValues.title && newValues.title) {
-    changes.push(`title: "${oldValues.title}" → "${newValues.title}"`);
-  }
-  if (oldValues.priority !== newValues.priority && newValues.priority) {
-    changes.push(`priority: ${oldValues.priority} → ${newValues.priority}`);
-  }
-  if (oldValues.assignee !== newValues.assignee) {
-    changes.push(`assignee: ${oldValues.assignee || 'none'} → ${newValues.assignee || 'none'}`);
-  }
-
-  return {
-    timestamp: new Date().toISOString(),
-    action: 'update',
-    from: JSON.stringify(oldValues),
-    to: JSON.stringify(newValues),
-    user: null,
-  };
-}
-
-/**
  * Task 상세 조회
  * @param taskId - Task ID
  * @param projectId - 프로젝트 ID (선택, 지정 시 해당 프로젝트에서만 검색)
@@ -323,11 +288,6 @@ export async function getTaskDetail(taskId: string, projectId?: string): Promise
   // 문서 목록 조회
   const documents = await buildDocumentInfoList(foundProjectId, taskId);
 
-  // 이력 조회
-  const historyPath = join(getTaskFolderPath(foundProjectId, taskId), 'history.json');
-  const historyData = await readJsonFile<HistoryEntry[]>(historyPath);
-  const history = historyData || [];
-
   // 가능한 액션 조회
   const availableActions = getAvailableActions(
     task.category as TaskCategory,
@@ -349,7 +309,6 @@ export async function getTaskDetail(taskId: string, projectId?: string): Promise
     depends: task.depends || [],
     ref: task.ref,
     documents,
-    history,
     availableActions,
     completed: task.completed,  // TSK-08-07: 단계별 완료 타임스탬프
   };
@@ -409,17 +368,6 @@ export async function updateTask(
     }
   }
 
-  // 변경 전 값 저장 (이력용)
-  const oldValues: Partial<WbsNode> = {
-    title: task.title,
-    priority: task.priority,
-    assignee: task.assignee,
-    schedule: task.schedule,
-    tags: task.tags,
-    depends: task.depends,
-    ref: task.ref,
-  };
-
   // WBS 전체 조회
   const { metadata, tree } = await getWbsTree(resolvedProjectId);
 
@@ -450,18 +398,6 @@ export async function updateTask(
       `데이터 저장에 실패했습니다: ${error instanceof Error ? error.message : 'Unknown error'}`
     );
   }
-
-  // 이력 기록 (BR-005)
-  const historyEntry = buildHistoryEntry(oldValues, task);
-  const historyPath = join(getTaskFolderPath(resolvedProjectId, taskId), 'history.json');
-
-  // 기존 이력 읽기
-  const existingHistory = await readJsonFile<HistoryEntry[]>(historyPath) || [];
-  existingHistory.unshift(historyEntry); // 최신 항목을 앞에 추가
-
-  // 이력 저장
-  await ensureDir(getTaskFolderPath(resolvedProjectId, taskId));
-  await writeJsonFile(historyPath, existingHistory);
 
   // 수정된 Task 상세 정보 반환 (찾은 프로젝트 ID 사용)
   return getTaskDetail(taskId, resolvedProjectId);

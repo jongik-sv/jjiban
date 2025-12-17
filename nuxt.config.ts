@@ -16,7 +16,7 @@ export default defineNuxtConfig({
   // Vite 설정 - zod를 서버 빌드에 포함
   vite: {
     optimizeDeps: {
-      include: ['zod', '@xterm/xterm', '@xterm/addon-fit']
+      include: ['zod']
     },
     ssr: {
       noExternal: ['zod']

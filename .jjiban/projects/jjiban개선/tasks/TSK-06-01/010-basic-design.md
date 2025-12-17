@@ -42,9 +42,10 @@ Task 간 의존관계를 **왼쪽→오른쪽** 방향의 인터랙티브 그래
 ### 1.2 범위
 
 **포함 범위**:
-- vis-network 라이브러리 설치 및 설정
+- Vue Flow 라이브러리 설치 및 설정 (@vue-flow/core, @vue-flow/background, @vue-flow/controls, @vue-flow/minimap)
 - 그래프 데이터 변환 컴포저블 (useDependencyGraph)
-- DependencyGraph 캔버스 컴포넌트
+- DependencyGraph 캔버스 컴포넌트 (Vue Flow 기반)
+- TaskNode 커스텀 노드 컴포넌트
 - DependencyGraphModal 전체화면 모달
 - GraphLegend 범례 컴포넌트
 - WbsTreeHeader 트리거 버튼 추가
@@ -97,7 +98,9 @@ Task 간 의존관계를 **왼쪽→오른쪽** 방향의 인터랙티브 그래
 │ │ 필터 바: [카테고리 ▼] [상태 ▼] [줌 리셋]          │ │
 │ ├─────────────────────────────────────────────────┤ │
 │ │                                                 │ │
-│ │   DependencyGraph (vis-network 캔버스)          │ │
+│ │   DependencyGraph (Vue Flow 캔버스)             │ │
+│ │   + TaskNode (커스텀 노드)                       │ │
+│ │   + Background, Controls, MiniMap               │ │
 │ │                                                 │ │
 │ ├─────────────────────────────────────────────────┤ │
 │ │ GraphLegend (범례)                              │ │
@@ -109,8 +112,9 @@ Task 간 의존관계를 **왼쪽→오른쪽** 방향의 인터랙티브 그래
 
 | 컴포넌트 | 역할 | 책임 |
 |----------|------|------|
-| `useDependencyGraph.ts` | 데이터 변환 | WBS flatNodes → GraphData 변환, 레벨 계산 |
-| `DependencyGraph.vue` | 그래프 렌더링 | vis-network 캔버스, 인터랙션 처리 |
+| `useDependencyGraph.ts` | 데이터 변환 | WBS flatNodes → Vue Flow GraphData 변환, 레벨 계산 |
+| `DependencyGraph.client.vue` | 그래프 렌더링 | Vue Flow 캔버스, 인터랙션 처리, 하이라이트 |
+| `TaskNode.vue` | 커스텀 노드 | Task 정보 표시, 카테고리별 색상, 하이라이트 스타일 |
 | `DependencyGraphModal.vue` | 모달 컨테이너 | Dialog 관리, 필터 UI, 레이아웃 |
 | `GraphLegend.vue` | 범례 표시 | 카테고리별 색상 설명 |
 
@@ -123,15 +127,15 @@ wbsStore.flatNodes (Map<string, WbsNode>)
          ▼
 useDependencyGraph.buildGraphData()
          │
-         │ 1. GraphNode[] 생성 (id, label, group, level)
-         │ 2. GraphEdge[] 생성 (from, to, arrows)
-         │ 3. 위상정렬로 level 계산
+         │ 1. TaskNode[] 생성 (id, type, position, data)
+         │ 2. TaskEdge[] 생성 (id, source, target)
+         │ 3. 위상정렬로 position.x 계산 (level * 250)
          ▼
-GraphData { nodes: DataSet, edges: DataSet }
+GraphData { nodes: TaskNode[], edges: TaskEdge[] }
          │
-         │ vis-network 렌더링
+         │ Vue Flow 렌더링
          ▼
-DependencyGraph.vue (캔버스)
+DependencyGraph.client.vue (캔버스) + TaskNode.vue (커스텀 노드)
 ```
 
 ---
@@ -140,16 +144,17 @@ DependencyGraph.vue (캔버스)
 
 | 결정 | 고려 옵션 | 선택 | 근거 |
 |------|----------|------|------|
-| 그래프 라이브러리 | vis-network, Cytoscape.js, D3+dagre | vis-network | 낮은 학습곡선, Hierarchical LR 기본제공, Vue 3 통합 용이 |
-| 레이아웃 알고리즘 | Hierarchical, Force-directed | Hierarchical | 왼쪽→오른쪽 방향성 명확, 의존관계 표현에 적합 |
+| 그래프 라이브러리 | vis-network, Cytoscape.js, Vue Flow | Vue Flow | Vue 3 전용, 현대적 API, 매끄러운 드래그 인터랙션, 활발한 개발 |
+| 레이아웃 알고리즘 | Hierarchical, Force-directed | 수동 위상정렬 | 위상정렬로 level 계산 후 position 직접 지정, 커스텀 배치 가능 |
 | 모달 컴포넌트 | PrimeVue Dialog, 커스텀 | PrimeVue Dialog | 프로젝트 표준, 전체화면/드래그 지원 |
-| 데이터 구조 | vis-data DataSet, 일반 배열 | vis-data DataSet | vis-network 최적화, 동적 업데이트 지원 |
+| 데이터 구조 | DataSet, 일반 배열 | 일반 배열 | Vue Flow는 reactive 배열 사용, Vue 반응성 시스템 활용 |
+| 커스텀 노드 | 기본 노드, 커스텀 컴포넌트 | TaskNode.vue | Task 정보 상세 표시, 카테고리별 스타일링, 하이라이트 제어 |
 
 ---
 
 ## 5. 인수 기준
 
-- [ ] AC-01: vis-network, vis-data 패키지 설치 완료
+- [x] AC-01: Vue Flow 패키지 설치 완료 (@vue-flow/core, @vue-flow/background, @vue-flow/controls, @vue-flow/minimap)
 - [ ] AC-02: 모든 Task가 그래프 노드로 표시됨
 - [ ] AC-03: 의존관계가 화살표 엣지로 표시됨
 - [ ] AC-04: 그래프가 왼쪽→오른쪽 방향으로 정렬됨
@@ -166,8 +171,8 @@ DependencyGraph.vue (캔버스)
 
 | 리스크 | 영향 | 완화 방안 |
 |--------|------|----------|
-| vis-network SSR 호환성 | Medium | ClientOnly 래퍼 사용 |
-| 대규모 노드 성능 저하 | Low | stabilization 진행률 표시, 노드 100개 이상 시 경고 |
+| Vue Flow SSR 호환성 | Medium | .client.vue 파일 사용, ClientOnly 래퍼 |
+| 대규모 노드 성능 저하 | Low | Vue Flow 가상화 지원, 노드 100개 이상 시 경고 |
 | 순환 의존성 레이아웃 오류 | Low | 순환 감지 후 시각적 경고 표시 |
 
 ### 6.2 의존성

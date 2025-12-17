@@ -73,8 +73,10 @@ const menuModel = computed<MenuItem[]>(() => [
   {
     key: 'gantt',
     label: 'Gantt',
-    to: '/gantt',
-    data: { isDisabled: true }
+    to: displayProjectName.value !== '프로젝트를 선택하세요' && projectStore.currentProject?.id 
+      ? `/gantt?project=${projectStore.currentProject.id}` 
+      : '/gantt',
+    data: { isDisabled: false }
   }
 ])
 
@@ -230,7 +232,7 @@ const menubarPassThrough = computed<MenubarPassThroughOptions>(() => ({
         </a>
       </template>
 
-      <!-- end 슬롯: 프로젝트명 -->
+      <!-- end 슬롯: 프로젝트명 + 터미널 아이콘 -->
       <template #end>
         <span
           data-testid="project-name"
@@ -238,6 +240,7 @@ const menubarPassThrough = computed<MenubarPassThroughOptions>(() => ({
         >
           {{ displayProjectName }}
         </span>
+        <TerminalHeaderIcon />
       </template>
     </Menubar>
   </header>

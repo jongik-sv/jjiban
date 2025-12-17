@@ -26,6 +26,7 @@
   --color-success: #22c55e;
   --color-warning: #f59e0b;
   --color-danger: #ef4444;
+  --color-highlight: #fbbf24;
 
   /* 텍스트 색상 */
   --color-text: #e8e8e8;
@@ -763,44 +764,6 @@ pre code {
 }
 
 /* ============================================
- * TaskHistory 컴포넌트 스타일 (TSK-08-05)
- * CSS 클래스 중앙화 원칙 준수
- * ============================================ */
-
-/* 이력 마커 - 상태 전이 */
-.history-badge-transition {
-  @apply bg-primary;
-}
-
-/* 이력 마커 - 액션 실행 */
-.history-badge-action {
-  @apply bg-level-project;
-}
-
-/* 이력 마커 - 업데이트 */
-.history-badge-update {
-  @apply bg-success;
-}
-
-/* 이력 마커 - 기본값 */
-.history-badge-default {
-  @apply bg-border;
-}
-
-/* 이력 상태 뱃지 - 기본 */
-.history-status-badge {
-  @apply font-mono px-2 py-1 rounded;
-  background-color: var(--color-card);
-  color: var(--color-text);
-}
-
-/* 이력 상태 뱃지 - 변경 후 */
-.history-status-to {
-  background-color: rgba(59, 130, 246, 0.2);
-  color: var(--color-primary);
-}
-
-/* ============================================
  * TaskDocuments 컴포넌트 스타일 (TSK-08-05)
  * CSS 클래스 중앙화 원칙 준수
  * ============================================ */
@@ -1051,4 +1014,236 @@ pre code {
 /* 코드 뷰어 (Monaco Editor 컨테이너) */
 .code-viewer {
   @apply h-full;
+}
+
+/* ============================================
+ * Terminal Components (TSK-01-02)
+ * 터미널 UI 컴포넌트 스타일
+ * ============================================ */
+
+/* Terminal theme colors (Catppuccin Mocha) */
+.terminal-bg {
+  background-color: #1e1e2e;
+}
+
+.terminal-text {
+  color: #cdd6f4;
+}
+
+.terminal-overlay-bg {
+  background-color: rgba(30, 30, 46, 0.9);
+}
+
+.terminal-overlay-text {
+  color: #cdd6f4;
+}
+
+.terminal-empty-text {
+  color: #6c7086;
+}
+
+/* Dialog overrides */
+.terminal-dialog .p-dialog-content {
+  padding: 0;
+  height: calc(80vh - 60px);
+  overflow: hidden;
+}
+
+/* Session status colors */
+.session-status-running {
+  color: theme('colors.green.500');
+}
+
+.session-status-connected {
+  color: theme('colors.blue.500');
+}
+
+.session-status-completed {
+  color: theme('colors.surface.400');
+}
+
+.session-status-error {
+  color: theme('colors.red.500');
+}
+
+.session-status-reconnecting {
+  color: theme('colors.yellow.500');
+}
+
+/* Terminal scrollbar */
+.terminal-container ::-webkit-scrollbar {
+  width: 10px;
+}
+
+.terminal-container ::-webkit-scrollbar-track {
+  background: #313244;
+}
+
+.terminal-container ::-webkit-scrollbar-thumb {
+  background: #585b70;
+  border-radius: 5px;
+}
+
+.terminal-container ::-webkit-scrollbar-thumb:hover {
+  background: #6c7086;
+}
+
+/* ============================================
+ * Dependency Graph Styles (TSK-06-03)
+ * CSS 클래스 중앙화 원칙 준수
+ * ============================================ */
+
+/* Group Node Colors */
+.group-node-wp {
+  border-color: theme('colors.blue.500');
+}
+
+.group-node-act {
+  border-color: theme('colors.green.500');
+}
+
+.group-icon-wp {
+  color: theme('colors.blue.500');
+}
+
+.group-icon-act {
+  color: theme('colors.green.500');
+}
+
+/* Task Node Focus Depth Borders */
+.task-node-focus-depth-0 {
+  border: 4px solid theme('colors.yellow.500');
+}
+
+.task-node-focus-depth-1 {
+  border: 3px solid theme('colors.blue.500');
+}
+
+.task-node-focus-depth-2 {
+  border: 2px dashed theme('colors.blue.500');
+}
+
+.task-node-focus-depth-3 {
+  border: 1px dotted theme('colors.blue.500');
+}
+
+.task-node-selected {
+  border: 3px solid theme('colors.yellow.500');
+}
+
+/* Edge Styles */
+.edge-highlighted {
+  stroke: theme('colors.yellow.500');
+  stroke-width: 3;
+}
+
+.edge-dimmed {
+  stroke: theme('colors.gray.700');
+  stroke-width: 1;
+  opacity: 0.3;
+}
+
+.edge-default {
+  stroke: theme('colors.blue.300');
+  stroke-width: 2;
+}
+
+/* ============================================
+ * Gantt Dependency Arrow Styles (TSK-06-02)
+ * CSS 클래스 중앙화 원칙 준수
+ * ============================================ */
+
+/* Gantt arrows container */
+.gantt-arrows-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.gantt-arrows-overlay > svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Arrow base style */
+.gantt-arrow {
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: stroke-width 0.2s ease, opacity 0.2s ease;
+  pointer-events: stroke;
+  cursor: pointer;
+}
+
+/* Arrow status colors */
+.gantt-arrow-completed {
+  stroke: var(--color-success);
+  opacity: 0.8;
+}
+
+.gantt-arrow-active {
+  stroke: var(--color-primary);
+  opacity: 1;
+}
+
+.gantt-arrow-pending {
+  stroke: var(--color-text-muted);
+  opacity: 0.6;
+}
+
+.gantt-arrow-error {
+  stroke: var(--color-danger);
+  stroke-dasharray: 4 2;
+  opacity: 1;
+  animation: dash-flow 1s linear infinite;
+}
+
+/* Circular dependency animation */
+@keyframes dash-flow {
+  0% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: 6;
+  }
+}
+
+/* Arrow hover state */
+.gantt-arrow:hover {
+  stroke-width: 3;
+  opacity: 1;
+}
+
+/* Arrow highlighted state */
+.gantt-arrow-highlighted {
+  stroke: var(--color-highlight);
+  stroke-width: 3;
+  opacity: 1;
+  filter: drop-shadow(0 0 4px rgba(251, 191, 36, 0.6));
+}
+
+/* Arrow dimmed state */
+.gantt-arrow-dimmed {
+  opacity: 0.2;
+}
+
+/* Arrow focus state */
+.gantt-arrow:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.gantt-arrow:focus-visible {
+  outline: 3px solid var(--color-highlight);
+  outline-offset: 3px;
+}
+
+/* Arrow marker colors */
+.gantt-arrow-marker-highlighted {
+  fill: var(--color-highlight);
 }
