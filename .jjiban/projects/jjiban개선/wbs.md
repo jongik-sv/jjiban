@@ -138,7 +138,7 @@
 
 ### TSK-03-03: 워크플로우 명령어 훅
 - category: development
-- status: basic-design [bd]
+- status: detail-design [dd]
 - priority: medium
 - schedule: 2025-12-18 ~ 2025-12-20
 - tags: workflow, hook, cli
@@ -154,6 +154,7 @@
 - completed:
   - bd: 2025-12-17
   - ui: 2025-12-17
+  - dd: 2025-12-17
 
 ---
 
