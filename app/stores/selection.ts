@@ -136,6 +136,8 @@ export const useSelectionStore = defineStore('selection', () => {
 
     // 프로젝트 노드 선택 시 파일 목록 로드 (TSK-09-01)
     if (node.type === 'project') {
+      // 프로젝트 ID 설정 (의존관계 그래프 필터링용)
+      selectedProjectId.value = nodeId
       await fetchProjectFiles(nodeId)
       selectedTask.value = null
     }
@@ -144,6 +146,11 @@ export const useSelectionStore = defineStore('selection', () => {
       await loadTaskDetail(nodeId)
       selectedProjectFiles.value = []
     } else {
+      // WP/ACT 노드: 복합 ID에서 프로젝트 ID 추출
+      const { projectId } = parseCompositeId(nodeId)
+      if (projectId) {
+        selectedProjectId.value = projectId
+      }
       selectedTask.value = null
       selectedProjectFiles.value = []
     }

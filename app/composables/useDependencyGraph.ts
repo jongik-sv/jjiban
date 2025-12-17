@@ -10,6 +10,36 @@ import { GRAPH_COLORS } from '~/types/graph'
 
 export function useDependencyGraph() {
   const wbsStore = useWbsStore()
+  const selectionStore = useSelectionStore()
+
+  /**
+   * 현재 선택된 프로젝트의 Task만 필터링하여 반환
+   * selectionStore.selectedProjectId를 기준으로 필터링
+   */
+  function getProjectTasks(): Map<string, { node: WbsNode; taskId: string }> {
+    const result = new Map<string, { node: WbsNode; taskId: string }>()
+    const currentProjectId = selectionStore.selectedProjectId
+
+    if (!currentProjectId) return result
+
+    wbsStore.flatNodes.forEach((node, id) => {
+      if (node.type === 'task') {
+        // 복합 ID에서 프로젝트 ID와 taskId 추출 (예: "jjiban:TSK-01-01")
+        const colonIndex = id.indexOf(':')
+        if (colonIndex > 0) {
+          const projectId = id.substring(0, colonIndex)
+          const taskId = id.substring(colonIndex + 1)
+
+          // 현재 프로젝트의 Task만 포함
+          if (projectId === currentProjectId) {
+            result.set(taskId, { node, taskId })
+          }
+        }
+      }
+    })
+
+    return result
+  }
 
   /**
    * flatNodes Map에서 Task 노드만 추출하여 그래프 데이터로 변환
@@ -19,28 +49,24 @@ export function useDependencyGraph() {
     const edges: GraphEdge[] = []
     const taskNodes = new Map<string, WbsNode>()
 
-    // 1. Task 노드만 필터링
-    wbsStore.flatNodes.forEach((node, id) => {
-      if (node.type === 'task') {
-        // 복합 ID에서 실제 taskId 추출 (예: "jjiban:TSK-01-01" → "TSK-01-01")
-        const colonIndex = id.indexOf(':')
-        const taskId = colonIndex > 0 ? id.substring(colonIndex + 1) : id
+    // 1. 현재 프로젝트의 Task만 필터링
+    const projectTasks = getProjectTasks()
 
-        // 필터 적용
-        if (filter) {
-          const category = node.category || 'development'
-          const status = extractStatusCode(node.status)
+    projectTasks.forEach(({ node, taskId }) => {
+      // 필터 적용
+      if (filter) {
+        const category = node.category || 'development'
+        const status = extractStatusCode(node.status)
 
-          if (filter.categories.length > 0 && !filter.categories.includes(category)) {
-            return
-          }
-          if (filter.statuses.length > 0 && !filter.statuses.includes(status)) {
-            return
-          }
+        if (filter.categories.length > 0 && !filter.categories.includes(category)) {
+          return
         }
-
-        taskNodes.set(taskId, node)
+        if (filter.statuses.length > 0 && !filter.statuses.includes(status)) {
+          return
+        }
       }
+
+      taskNodes.set(taskId, node)
     })
 
     // 2. 레벨 계산 (위상정렬)
@@ -261,21 +287,23 @@ export function useDependencyGraph() {
   }
 
   /**
-   * 그래프 통계 반환
+   * 그래프 통계 반환 (현재 프로젝트만)
    */
   function getGraphStats() {
     let taskCount = 0
     let edgeCount = 0
 
-    wbsStore.flatNodes.forEach((node) => {
-      if (node.type === 'task') {
-        taskCount++
-        if (node.depends) {
-          const deps = typeof node.depends === 'string'
-            ? node.depends.split(',')
-            : node.depends
-          edgeCount += deps.filter(d => d.trim()).length
-        }
+    const projectTasks = getProjectTasks()
+    const taskIds = new Set(projectTasks.keys())
+
+    projectTasks.forEach(({ node }) => {
+      taskCount++
+      if (node.depends) {
+        const deps = typeof node.depends === 'string'
+          ? node.depends.split(',')
+          : node.depends
+        // 현재 프로젝트 내의 의존관계만 카운트
+        edgeCount += deps.filter(d => d.trim() && taskIds.has(d.trim())).length
       }
     })
 

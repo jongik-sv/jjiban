@@ -82,7 +82,7 @@
 
 ### TSK-02-02: 워크플로우 프롬프트 생성
 - category: development
-- status: [ ]
+- status: detail-design [dd]
 - priority: high
 - schedule: 2025-12-24 ~ 2025-12-28
 - tags: workflow, prompt
@@ -92,6 +92,9 @@
   - 터미널 세션에 프롬프트 입력 전송
   - GET /api/workflow/available-commands/:taskId (상태/카테고리 기반 필터링)
 - ref: PRD 1.4, 2.2
+- completed:
+  - bd: 2025-12-17
+  - dd: 2025-12-17
 
 ### TSK-02-03: 워크플로우 타입 및 스토어
 - category: development
@@ -186,7 +189,7 @@
 
 ### TSK-05-01: CLI 설정 로더 생성
 - category: infrastructure
-- status: [ ]
+- status: detail-design [dd]
 - priority: high
 - schedule: 2026-01-03 ~ 2026-01-04
 - tags: cli, settings, loader

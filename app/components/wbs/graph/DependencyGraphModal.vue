@@ -8,6 +8,14 @@
 
 import type { GraphFilter } from '~/types/graph'
 
+// 클라이언트 전용 컴포넌트 동적 import
+const DependencyGraph = defineAsyncComponent(() =>
+  import('./DependencyGraph.client.vue')
+)
+const GraphLegend = defineAsyncComponent(() =>
+  import('./GraphLegend.vue')
+)
+
 // Props
 const visible = defineModel<boolean>('visible', { required: true })
 
@@ -259,7 +267,8 @@ watch(visible, (newVal) => {
 
 .graph-area {
   flex: 1;
-  min-height: 0;
+  min-height: 400px;
+  height: calc(85vh - 250px);
   position: relative;
   border-radius: 6px;
   overflow: hidden;
