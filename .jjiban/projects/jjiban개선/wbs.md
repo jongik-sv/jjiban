@@ -151,6 +151,9 @@
   - 종료: `npx jjiban exec stop $TASK_ID`
   - 15개 wf 명령어 파일 수정
 - ref: PRD 9.6, 9.7
+- completed:
+  - bd: 2025-12-17
+  - ui: 2025-12-17
 
 ---
 
