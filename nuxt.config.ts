@@ -100,7 +100,8 @@ export default defineNuxtConfig({
   css: [
     'primeicons/primeicons.css',
     '~/assets/css/main.css',
-    '~/assets/styles/markdown.css'
+    '~/assets/styles/markdown.css',
+    '~/assets/css/frappe-gantt.css'
   ],
 
   // TailwindCSS 설정

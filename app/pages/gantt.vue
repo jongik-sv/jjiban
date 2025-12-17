@@ -226,88 +226,120 @@ onMounted(async () => {
 </template>
 
 <style>
-/* Frappe Gantt base styles */
+/* Dark theme - Override Frappe Gantt CSS variables */
 .gantt-chart-container {
+  --g-arrow-color: #94a3b8;
+  --g-bar-color: #3b82f6;
+  --g-bar-border: #2563eb;
+  --g-tick-color-thick: #374151;
+  --g-tick-color: #1f2937;
+  --g-actions-background: #1f2937;
+  --g-border-color: #374151;
+  --g-text-muted: #9ca3af;
+  --g-text-light: #f9fafb;
+  --g-text-dark: #e5e7eb;
+  --g-progress-color: #22c55e;
+  --g-handle-color: #60a5fa;
+  --g-weekend-label-color: #4b5563;
+  --g-expected-progress: #6366f1;
+  --g-header-background: #111827;
+  --g-row-color: #111827;
+  --g-row-border-color: #374151;
+  --g-today-highlight: #fbbf24;
+  --g-popup-actions: #1f2937;
+  --g-weekend-highlight-color: #1f2937;
+
   width: 100%;
   height: 100%;
   overflow: auto;
+  background: #111827;
 }
 
+/* Bar styles */
 .gantt .bar {
-  fill: var(--color-primary);
+  fill: var(--g-bar-color);
+  cursor: pointer;
 }
 
 .gantt .bar-progress {
-  fill: var(--color-success);
+  fill: var(--g-progress-color);
 }
 
 .gantt .bar-label {
-  fill: white;
+  fill: var(--g-text-light);
   font-size: 12px;
 }
 
+/* Popup styles */
 .gantt-popup {
-  background: var(--color-card);
-  color: var(--color-text);
-  border: 1px solid var(--color-border);
+  background: #1f2937;
+  color: #e5e7eb;
+  border: 1px solid #374151;
   border-radius: 8px;
   padding: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
 }
 
 .gantt-popup h5 {
   margin: 0 0 8px 0;
   font-size: 14px;
   font-weight: 600;
+  color: #f9fafb;
 }
 
 .gantt-popup p {
   margin: 4px 0;
   font-size: 12px;
-  color: var(--color-text-secondary);
+  color: #9ca3af;
 }
 
-/* Add data-task-id attributes for arrow positioning */
-.gantt .bar {
-  cursor: pointer;
-}
-
-/* Dark theme for Frappe Gantt */
+/* Grid and row overrides */
 .gantt-container {
-  background: var(--color-bg);
+  background: #111827 !important;
+}
+
+.gantt .grid-background {
+  fill: none;
+}
+
+.gantt .grid-row {
+  fill: #1e293b;
+}
+
+.gantt .row-line {
+  stroke: #374151;
+}
+
+.gantt .tick {
+  stroke: #374151;
+}
+
+.gantt .tick.thick {
+  stroke: #4b5563;
+}
+
+/* Header text */
+.gantt-container .upper-text,
+.gantt-container .lower-text {
+  color: #9ca3af !important;
+  fill: #9ca3af;
+}
+
+.gantt-container .current-upper {
+  background: #111827 !important;
 }
 
 .gantt-container .grid-header {
-  fill: var(--color-header);
-  stroke: var(--color-border);
+  background-color: #111827 !important;
 }
 
-.gantt-container .grid-row {
-  fill: var(--color-bg);
+.gantt-container .side-header * {
+  background-color: #1f2937 !important;
+  color: #e5e7eb !important;
 }
 
-.gantt-container .grid-row:nth-child(even) {
-  fill: var(--color-card);
-}
-
-.gantt-container .row-line {
-  stroke: var(--color-border);
-}
-
-.gantt-container .tick {
-  stroke: var(--color-border);
-}
-
-.gantt-container .today-highlight {
-  fill: rgba(59, 130, 246, 0.1);
-}
-
-.gantt-container text {
-  fill: var(--color-text);
-}
-
-.gantt-container .upper-text,
-.gantt-container .lower-text {
-  fill: var(--color-text-secondary);
+/* Arrow styles */
+.gantt .arrow {
+  stroke: #60a5fa;
 }
 </style>
