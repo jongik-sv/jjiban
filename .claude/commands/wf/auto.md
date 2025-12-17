@@ -7,12 +7,21 @@
 ### 1단계: 실행 가능한 Task 조회
 
 ```bash
-npx jjiban next-task
+# 기본 (의존관계 적용)
+npx jjiban next-task {PROJECT}
+
+# 설계 단계용 (의존관계 무시)
+npx jjiban next-task {PROJECT} --ignore-deps
 ```
+
+**--until 옵션에 따른 조회 방식:**
+- 설계 단계(~apply): `--ignore-deps` 사용
+- 구현 단계(build~): 기본 모드 사용
 
 **결과 JSON 파싱:**
 ```json
 {
+  "projectId": "jjiban",
   "executable": [
     { "id": "TSK-XX-XX", "category": "development", "status": "[dd]", "nextAction": "build" }
   ],
@@ -36,20 +45,30 @@ npx jjiban next-task
 ## 사용법
 
 ```bash
-/wf:auto [옵션]
+/wf:auto [PROJECT] [옵션]
 
-# 기본 실행 (첫 번째 실행 가능 Task)
+# 기본 실행 (프로젝트 자동 선택 + 첫 Task)
 /wf:auto
+
+# 프로젝트 명시
+/wf:auto jjiban              # jjiban 프로젝트
 
 # 부분 실행
 /wf:auto --until detail-design   # 상세설계까지
 /wf:auto 상세설계까지             # 한글 자연어
+/wf:auto jjiban --until build    # 프로젝트 + 부분 실행
 
 # 옵션
 /wf:auto --dry-run      # 실행 계획만 출력
 /wf:auto --skip-review  # review/apply 건너뛰기
 /wf:auto --skip-audit   # audit/patch 건너뛰기
 ```
+
+| 예시 | 설명 |
+|------|------|
+| `/wf:auto` | 자동 프로젝트 (1개 또는 default) |
+| `/wf:auto jjiban` | 프로젝트 명시 |
+| `/wf:auto jjiban --until build` | 프로젝트 + 부분 실행 |
 
 ---
 
@@ -78,43 +97,58 @@ npx jjiban next-task
 
 ## 부분 실행 옵션
 
-| --until | 한글 자연어 | 상태 | 실행 단계 |
-|---------|------------|------|----------|
-| `basic-design` | `기본설계까지` | `[bd]` | start |
-| `ui-design` | `UI설계까지` | `[bd]` | start + ui |
-| `detail-design` | `상세설계까지` | `[dd]` | draft |
-| `review` | `리뷰까지` | `[dd]` | review |
-| `apply` | `리뷰반영까지` | `[dd]` | review + apply |
-| `build` | `구현까지` | `[im]` | build + test |
-| `audit` | `코드리뷰까지` | `[im]` | audit |
-| `patch` | `패치까지` | `[im]` | audit + patch |
-| `verify` | `테스트까지` | `[ts]` | verify |
-| `done` | `완료까지` | `[xx]` | done (기본값) |
+| --until | 한글 자연어 | 상태 | 실행 단계 | 의존관계 |
+|---------|------------|------|----------|---------|
+| `basic-design` | `기본설계까지` | `[bd]`/`[an]`/`[dd]` | start | **무시** |
+| `ui-design` | `UI설계까지` | `[bd]` | start + ui | **무시** |
+| `detail-design` | `상세설계까지` | `[dd]` | draft | **무시** |
+| `review` | `리뷰까지` | `[dd]` | review | **무시** |
+| `apply` | `리뷰반영까지` | `[dd]` | review + apply | **무시** |
+| `build` | `구현까지` | `[im]` | build + test | 적용 |
+| `audit` | `코드리뷰까지` | `[im]` | audit | 적용 |
+| `patch` | `패치까지` | `[im]` | audit + patch | 적용 |
+| `verify` | `테스트까지` | `[ts]` | verify | 적용 |
+| `done` | `완료까지` | `[xx]` | done (기본값) | 적용 |
+
+### 의존관계 무시 규칙
+
+**설계 단계(basic-design ~ apply)까지**는 의존관계를 **무시**합니다:
+- 설계 문서는 코드 구현이 없어 병렬 작성 가능
+- WP 내 모든 Task의 설계를 동시에 진행 가능
+- `waiting` 목록도 대상에 포함
+
+**구현 단계(build) 이후**부터 의존관계 **적용**:
+- 실제 코드가 선행 Task 산출물에 의존
+- `executable` 목록만 대상
 
 ---
 
 ## 핵심 실행 로직
 
 ```
-1. npx jjiban next-task 실행 → JSON 결과 획득
-2. executable[0] 선택 (없으면 에러)
-3. task.nextAction 확인
-4. 해당 /wf:{action} 명령어 실행
-5. target 도달까지 반복 (기본: done)
+1. npx jjiban next-task [PROJECT] 실행 → JSON 결과 획득
+2. --until 옵션 확인:
+   - 설계 단계(basic-design ~ apply): executable + waiting 모두 대상
+   - 구현 단계(build ~): executable만 대상
+3. 대상 Task 선택 (우선순위 + WBS ID 순)
+4. projectId 추출 → 후속 명령에 사용
+5. task.nextAction 확인
+6. 해당 /wf:{action} {project}/{taskId} 실행
+7. target 도달까지 반복 (기본: done)
 ```
 
 ### 상태별 명령어 매핑
 
 | 상태 | nextAction | 실행 명령어 |
 |------|-----------|------------|
-| `[ ]` | start | `/wf:start {taskId}` |
-| `[bd]` | draft | `/wf:ui` → `/wf:draft {taskId}` |
-| `[dd]` | build | `/wf:review` → `/wf:apply` → `/wf:build {taskId}` |
-| `[im]` | verify | `/wf:audit` → `/wf:patch` → `/wf:verify {taskId}` |
-| `[ts]` | done | `/wf:done {taskId}` |
-| `[an]` | fix | `/wf:fix {taskId}` |
-| `[fx]` | verify | `/wf:audit` → `/wf:patch` → `/wf:verify {taskId}` |
-| `[ds]` | build | `/wf:build {taskId}` |
+| `[ ]` | start | `/wf:start {project}/{taskId}` |
+| `[bd]` | draft | `/wf:ui` → `/wf:draft {project}/{taskId}` |
+| `[dd]` | build | `/wf:review` → `/wf:apply` → `/wf:build {project}/{taskId}` |
+| `[im]` | verify | `/wf:audit` → `/wf:patch` → `/wf:verify {project}/{taskId}` |
+| `[ts]` | done | `/wf:done {project}/{taskId}` |
+| `[an]` | fix | `/wf:fix {project}/{taskId}` |
+| `[fx]` | verify | `/wf:audit` → `/wf:patch` → `/wf:verify {project}/{taskId}` |
+| `[ds]` | build | `/wf:build {project}/{taskId}` |
 
 ---
 

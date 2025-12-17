@@ -41,10 +41,12 @@ program
 
 // next-task 명령어
 program
-  .command('next-task [projectId]')
+  .command('next-task [input]')
   .description('실행 가능한 다음 Task 찾기 (의존관계 분석)')
+  .option('-p, --project <id>', '프로젝트 ID')
   .option('-c, --category <cat>', '카테고리 필터 (development|defect|infrastructure)')
   .option('-t, --table', '표 형식 출력 (기본: JSON)', false)
+  .option('-i, --ignore-deps', '의존관계 무시 (설계 단계용)', false)
   .action(nextTaskCommand);
 
 // 기본 도움말
@@ -54,11 +56,21 @@ program
 Examples:
   $ jjiban next-task                       # 실행 가능한 Task 조회 (JSON)
   $ jjiban next-task --table               # 표 형식 출력
+  $ jjiban next-task TSK-01-01             # Task 검색 (자동/선택)
+  $ jjiban next-task jjiban/TSK-01-01      # 프로젝트 명시
+  $ jjiban next-task -p jjiban             # 프로젝트별 목록
   $ jjiban next-task --category development # 카테고리 필터
+  $ jjiban next-task --ignore-deps         # 의존관계 무시 (설계 단계용)
   $ jjiban workflow TSK-07-01              # 전체 워크플로우 실행
   $ jjiban workflow TSK-07-01 --until build  # 구현까지만 실행
   $ jjiban workflow TSK-07-01 --dry-run    # 실행 계획 확인
   $ jjiban workflow TSK-07-01 --resume     # 중단된 워크플로우 재개
+
+next-task Input Formats:
+  jjiban next-task                    # 전체 실행 가능 Task (default project)
+  jjiban next-task TSK-01-01          # Task 검색 (1개면 자동, 여러개면 선택)
+  jjiban next-task jjiban/TSK-01-01   # 프로젝트/Task ID 형식
+  jjiban next-task -p jjiban          # 프로젝트 지정
 
 Available --until targets:
   basic-design   기본설계까지 (start)
