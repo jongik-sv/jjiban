@@ -64,7 +64,7 @@
 
 ### TSK-02-01: 워크플로우 액션 UI
 - category: development
-- status: basic-design [bd]
+- status: detail-design [dd]
 - priority: high
 - schedule: 2025-12-22 ~ 2025-12-26
 - tags: workflow, button, actions
@@ -77,6 +77,7 @@
 - completed:
   - bd: 2025-12-17
   - ui: 2025-12-17
+  - dd: 2025-12-17
 
 ### TSK-02-02: 워크플로우 프롬프트 생성
 - category: development
