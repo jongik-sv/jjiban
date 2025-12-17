@@ -94,11 +94,12 @@
 - ref: PRD 1.4, 2.2
 - completed:
   - bd: 2025-12-17
+  - ui: 2025-12-17
   - dd: 2025-12-17
 
 ### TSK-02-03: 워크플로우 타입 및 스토어
 - category: development
-- status: [ ]
+- status: detail-design [dd]
 - priority: medium
 - schedule: 2025-12-28 ~ 2025-12-30
 - tags: types, pinia
@@ -108,6 +109,10 @@
   - stores/terminal.ts, stores/workflow.ts
   - composables (useTerminal, useWorkflow)
 - ref: PRD 4.5, 5.4
+- completed:
+  - bd: 2025-12-17
+  - ui: 2025-12-17
+  - dd: 2025-12-17
 
 ---
 
@@ -118,7 +123,7 @@
 
 ### TSK-03-01: 실행 상태 서버/API
 - category: development
-- status: [xx]  
+- status: [xx]
 - priority: critical
 - schedule: 2025-12-17 ~ 2025-12-17
 - tags: execution, api
@@ -202,7 +207,7 @@
 
 ### TSK-05-02: workflowSteps 리팩토링
 - category: development
-- status: [ ]
+- status: [dd]
 - priority: high
 - schedule: 2026-01-04 ~ 2026-01-06
 - tags: cli, refactoring, workflow
@@ -215,7 +220,7 @@
 
 ### TSK-05-03: 상태 코드 통일
 - category: development
-- status: [ ]
+- status: detail-design [dd]
 - priority: medium
 - schedule: 2026-01-06 ~ 2026-01-08
 - tags: status-code, migration
@@ -228,7 +233,7 @@
 
 ### TSK-05-04: 통합 테스트
 - category: development
-- status: [ ]
+- status: [dd]
 - priority: medium
 - schedule: 2026-01-08 ~ 2026-01-10
 - tags: test, integration
@@ -238,6 +243,9 @@
   - 기존 WBS 파일 ([ts] 상태) 호환성 검증
   - 설정 파일 로드 실패 시 폴백 검증
 - ref: PRD 10.5
+- completed:
+  - bd: 2025-12-17
+  - dd: 2025-12-17
 
 ---
 
