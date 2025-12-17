@@ -53,8 +53,17 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     '@primevue/nuxt-module',
     '@pinia/nuxt',
-    'nuxt-monaco-editor'
+    'nuxt-monaco-editor',
+    '@nuxtjs/mdc'
   ],
+
+  // MDC (Markdown Components) 설정
+  mdc: {
+    highlight: {
+      theme: 'github-dark',
+      langs: ['typescript', 'javascript', 'vue', 'json', 'bash', 'markdown', 'yaml', 'css', 'html', 'shell', 'python', 'sql']
+    }
+  },
 
   // Monaco Editor 설정
   monacoEditor: {
@@ -91,8 +100,7 @@ export default defineNuxtConfig({
   css: [
     'primeicons/primeicons.css',
     '~/assets/css/main.css',
-    '~/assets/styles/markdown.css',
-    'highlight.js/styles/atom-one-dark.css'
+    '~/assets/styles/markdown.css'
   ],
 
   // TailwindCSS 설정

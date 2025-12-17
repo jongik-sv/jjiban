@@ -31,12 +31,17 @@
 
     <!-- 콘텐츠 표시 -->
     <div v-else class="file-viewer-content">
-      <!-- 마크다운 렌더링 -->
-      <div
-        v-if="isMarkdown"
-        v-html="renderedMarkdown"
-        class="markdown-content prose prose-invert max-w-none"
-      ></div>
+      <!-- 마크다운 렌더링 (MDC + Mermaid) -->
+      <div v-if="isMarkdown" class="markdown-body">
+        <MDC :value="processedContent" />
+        <!-- Mermaid 다이어그램 렌더링 -->
+        <div
+          v-for="(diagram, idx) in mermaidDiagrams"
+          :key="idx"
+          :ref="el => mermaidRefs[idx] = el as HTMLElement"
+          class="mermaid-container my-4"
+        ></div>
+      </div>
 
       <!-- 이미지 표시 -->
       <div v-else-if="isImage" class="image-viewer text-center">
@@ -84,8 +89,7 @@
  */
 
 import type { ProjectFile, DocumentInfo, FileContentResponse } from '~/types'
-import { marked } from 'marked'
-import DOMPurify from 'isomorphic-dompurify'
+import mermaid from 'mermaid'
 
 // ============================================================
 // Types
@@ -116,6 +120,8 @@ const content = ref<string>('')
 const imageDataUrl = ref<string | null>(null)
 const loading = ref(false)
 const error = ref<string | null>(null)
+const mermaidRefs = ref<(HTMLElement | null)[]>([])
+const mermaidInitialized = ref(false)
 
 // ============================================================
 // Computed - 파일 정보
@@ -173,18 +179,67 @@ const monacoOptions = {
 }
 
 // ============================================================
-// Computed - Markdown
+// Computed - Mermaid 다이어그램 추출
 // ============================================================
-const renderedMarkdown = computed(() => {
-  if (!isMarkdown.value || !content.value) return ''
-  try {
-    const html = marked.parse(content.value) as string
-    return DOMPurify.sanitize(html)
-  } catch (e) {
-    console.error('Markdown rendering error:', e)
-    return '<p>마크다운 렌더링 실패</p>'
+const mermaidRegex = /```mermaid\n([\s\S]*?)```/g
+
+const mermaidDiagrams = computed(() => {
+  if (!isMarkdown.value || !content.value) return []
+  const diagrams: string[] = []
+  let match
+  while ((match = mermaidRegex.exec(content.value)) !== null) {
+    diagrams.push(match[1].trim())
   }
+  return diagrams
 })
+
+// Mermaid 블록을 placeholder로 교체한 콘텐츠
+const processedContent = computed(() => {
+  if (!isMarkdown.value || !content.value) return ''
+  // Mermaid 블록 제거 (MDC에서 처리 못함)
+  return content.value.replace(mermaidRegex, '')
+})
+
+// ============================================================
+// Mermaid 초기화
+// ============================================================
+async function initMermaid() {
+  if (mermaidInitialized.value) return
+  mermaid.initialize({
+    startOnLoad: false,
+    theme: 'dark',
+    themeVariables: {
+      primaryColor: '#3b82f6',
+      primaryTextColor: '#e8e8e8',
+      primaryBorderColor: '#3d3d5c',
+      lineColor: '#6c9bcf',
+      secondaryColor: '#1e1e38',
+      tertiaryColor: '#16213e'
+    }
+  })
+  mermaidInitialized.value = true
+}
+
+async function renderMermaidDiagrams() {
+  if (mermaidDiagrams.value.length === 0) return
+  await initMermaid()
+
+  // 다음 틱에서 렌더링 (DOM 업데이트 후)
+  await nextTick()
+
+  for (let i = 0; i < mermaidDiagrams.value.length; i++) {
+    const el = mermaidRefs.value[i]
+    if (!el) continue
+
+    try {
+      const { svg } = await mermaid.render(`mermaid-${Date.now()}-${i}`, mermaidDiagrams.value[i])
+      el.innerHTML = svg
+    } catch (e) {
+      console.error('Mermaid render error:', e)
+      el.innerHTML = `<pre class="text-danger text-sm">Mermaid 렌더링 실패: ${e instanceof Error ? e.message : 'Unknown error'}</pre>`
+    }
+  }
+}
 
 // ============================================================
 // Watchers
@@ -197,6 +252,17 @@ watch(
     }
   },
   { immediate: true }
+)
+
+// Mermaid 다이어그램 렌더링
+watch(
+  () => mermaidDiagrams.value,
+  async (diagrams) => {
+    if (diagrams.length > 0) {
+      await renderMermaidDiagrams()
+    }
+  },
+  { deep: true }
 )
 
 // ============================================================
@@ -252,6 +318,7 @@ function handleClose(): void {
   content.value = ''
   imageDataUrl.value = null
   error.value = null
+  mermaidRefs.value = []
 }
 
 /**
@@ -275,35 +342,18 @@ function formatFileSize(bytes: number): string {
   min-height: 400px;
 }
 
-/* Markdown 스타일 */
-.markdown-content {
-  color: var(--color-text);
-  line-height: 1.6;
-}
-
-.markdown-content :deep(h1),
-.markdown-content :deep(h2),
-.markdown-content :deep(h3) {
-  color: var(--color-text);
-  margin-top: 1.5rem;
-  margin-bottom: 0.75rem;
-}
-
-.markdown-content :deep(code) {
-  background-color: var(--color-bg-sidebar);
-  padding: 0.2rem 0.4rem;
-  border-radius: 0.25rem;
-  font-size: 0.875rem;
-}
-
-.markdown-content :deep(pre) {
-  background-color: var(--color-bg-sidebar);
+/* Mermaid 컨테이너 스타일 */
+.mermaid-container {
+  display: flex;
+  justify-content: center;
   padding: 1rem;
+  background-color: var(--color-bg-card);
   border-radius: 0.5rem;
-  overflow-x: auto;
+  border: 1px solid var(--color-border);
 }
 
-.markdown-content :deep(a) {
-  color: var(--color-primary);
+.mermaid-container :deep(svg) {
+  max-width: 100%;
+  height: auto;
 }
 </style>
