@@ -6,17 +6,25 @@
  * - 검색 박스 통합
  * - 요약 카드 통합
  * - 전체 펼치기/접기 버튼
+ * - 의존관계 그래프 버튼
  *
  * @see TSK-04-01
+ * @see TSK-06-01
  * @see 020-detail-design.md
  */
 
 import { useWbsStore } from '~/stores/wbs'
+import { useSelectionStore } from '~/stores/selection'
 import Button from 'primevue/button'
 import WbsSearchBox from './WbsSearchBox.vue'
 import WbsSummaryCards from './WbsSummaryCards.vue'
+import DependencyGraphModal from './graph/DependencyGraphModal.vue'
 
 const wbsStore = useWbsStore()
+const selectionStore = useSelectionStore()
+
+// 그래프 모달 상태
+const isGraphModalVisible = ref(false)
 
 // 액션 핸들러
 const handleExpandAll = () => {
@@ -25,6 +33,15 @@ const handleExpandAll = () => {
 
 const handleCollapseAll = () => {
   wbsStore.collapseAll()
+}
+
+const handleOpenGraph = () => {
+  isGraphModalVisible.value = true
+}
+
+const handleTaskSelect = (taskId: string) => {
+  // 그래프에서 Task 선택 시 트리에서도 선택
+  selectionStore.selectNode(taskId)
 }
 </script>
 
@@ -46,6 +63,17 @@ const handleCollapseAll = () => {
 
       <!-- 액션 버튼 -->
       <div class="flex gap-2">
+        <Button
+          data-testid="graph-button"
+          icon="pi pi-share-alt"
+          size="small"
+          severity="info"
+          outlined
+          v-tooltip.top="'의존관계 그래프'"
+          @click="handleOpenGraph"
+          aria-label="Open dependency graph"
+          aria-describedby="wbs-tree-title"
+        />
         <Button
           data-testid="expand-all-button"
           label="전체 펼치기"
@@ -76,5 +104,11 @@ const handleCollapseAll = () => {
 
     <!-- 요약 카드 -->
     <WbsSummaryCards />
+
+    <!-- 의존관계 그래프 모달 -->
+    <DependencyGraphModal
+      v-model:visible="isGraphModalVisible"
+      @task-select="handleTaskSelect"
+    />
   </div>
 </template>
