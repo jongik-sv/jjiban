@@ -35,6 +35,8 @@
   - TerminalSessionList (왼쪽 세션 목록)
   - TerminalView (xterm.js 래퍼, SSE 연결, 키 입력)
 - ref: PRD 5.1, 5.2
+- completed:
+  - ui: 2025-12-17
 
 ### TSK-01-03: 서버 터미널 세션 API
 - category: development
