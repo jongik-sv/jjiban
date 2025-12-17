@@ -24,7 +24,7 @@
 
 ### TSK-01-02: 터미널 UI 컴포넌트
 - category: development
-- status: basic-design [bd]
+- status: detail-design [dd]
 - priority: critical
 - schedule: 2025-12-18 ~ 2025-12-22
 - tags: xterm, component, dialog
@@ -37,10 +37,11 @@
 - ref: PRD 5.1, 5.2
 - completed:
   - ui: 2025-12-17
+  - dd: 2025-12-17
 
 ### TSK-01-03: 서버 터미널 세션 API
 - category: development
-- status: basic-design [bd]
+- status: detail-design [dd]
 - priority: critical
 - schedule: 2025-12-20 ~ 2025-12-26
 - tags: api, session, sse
@@ -51,6 +52,8 @@
   - GET /api/terminal/session/:id/output (SSE)
   - POST /api/terminal/session/:id/input, resize
 - ref: PRD 4.1, 4.3
+- completed:
+  - dd: 2025-12-17
 
 ---
 
