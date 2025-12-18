@@ -79,6 +79,7 @@
 | `[dd]` | 상세설계 | development | Detail |
 | `[an]` | 분석 | defect | Detail |
 | `[ds]` | 설계 | infrastructure | Detail |
+| `[ap]` | 설계승인 | development | Approve |
 | `[im]` | 구현 | dev/infra | Implement |
 | `[fx]` | 수정 | defect | Implement |
 | `[vf]` | 테스트 | dev/defect | Verify |
@@ -150,6 +151,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 |--------|--------|
 | `/wf:start` | `[wf:start] TSK-01-01-01: 기본설계 완료` |
 | `/wf:draft` | `[wf:draft] TSK-01-01-01: 상세설계 완료` |
+| `/wf:approve` | `[wf:approve] TSK-01-01-01: 설계승인 완료` |
 | `/wf:build` | `[wf:build] TSK-01-01-01: 구현 완료` |
 | `/wf:verify` | `[wf:verify] TSK-01-01-01: 통합테스트 완료` |
 | `/wf:done` | `[wf:done] TSK-01-01-01: 작업 완료` |
@@ -166,5 +168,5 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 
 <!--
 jjiban - Workflow Common Module (Lite)
-Version: 1.0
+Version: 1.1
 -->

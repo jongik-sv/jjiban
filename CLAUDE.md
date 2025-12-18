@@ -39,23 +39,23 @@
 
 ## 워크플로우 상태
 
-### 칸반 컬럼 (6단계)
+### 칸반 컬럼 (7단계)
 
 ```
-Todo [ ] → Design [bd] → Detail [dd] → Implement [im] → Verify [vf] → Done [xx]
+Todo [ ] → Design [bd] → Detail [dd] → Approve [ap] → Implement [im] → Verify [vf] → Done [xx]
 ```
 
 ### 카테고리별 흐름
 
 | 카테고리 | 상태 흐름 |
 |---------|----------|
-| development | `[ ]` → `[bd]` → `[dd]` → `[im]` → `[vf]` → `[xx]` |
+| development | `[ ]` → `[bd]` → `[dd]` → `[ap]` → `[im]` → `[vf]` → `[xx]` |
 | defect | `[ ]` → `[an]` → `[fx]` → `[vf]` → `[xx]` |
 | infrastructure | `[ ]` → `[ds]?` → `[im]` → `[xx]` |
 
 ### 워크플로우 명령어
 
-**development**: `start` → `draft` → `build` → `verify` → `done`
+**development**: `start` → `draft` → `approve` → `build` → `verify` → `done`
 **defect**: `start` → `analyze` → `verify` → `done`
 **infrastructure**: `start`/`skip` → `build` → `done`
 

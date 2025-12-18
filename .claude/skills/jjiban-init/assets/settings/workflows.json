@@ -1,13 +1,14 @@
 {
-  "version": "1.1",
+  "version": "1.2",
   "workflows": {
     "development": {
       "name": "Development Workflow",
-      "states": ["todo", "basic-design", "detail-design", "implement", "verify", "done"],
+      "states": ["todo", "basic-design", "detail-design", "approve", "implement", "verify", "done"],
       "transitions": [
         { "from": "todo", "to": "basic-design", "command": "start", "document": "010-basic-design.md" },
         { "from": "basic-design", "to": "detail-design", "command": "draft", "document": "020-detail-design.md" },
-        { "from": "detail-design", "to": "implement", "command": "build", "document": "030-implementation.md" },
+        { "from": "detail-design", "to": "approve", "command": "approve", "document": null },
+        { "from": "approve", "to": "implement", "command": "build", "document": "030-implementation.md" },
         { "from": "implement", "to": "verify", "command": "verify", "document": "070-integration-test.md" },
         { "from": "verify", "to": "done", "command": "done", "document": "080-manual.md" }
       ]
