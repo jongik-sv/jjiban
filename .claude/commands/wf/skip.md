@@ -32,8 +32,11 @@
 2. **설계 생략 기록**
    - Task에 설계 생략 사유 기록
 
-3. **상태 업데이트**
-   - `[ ]` → `[im]`
+3. **상태 전환** (자동)
+   ```bash
+   npx tsx .jjiban/script/transition.ts {Task-ID} skip -p {project}
+   ```
+   - 성공: `{ "success": true, "newStatus": "im" }`
 
 ---
 

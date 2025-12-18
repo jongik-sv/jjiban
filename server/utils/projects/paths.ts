@@ -114,14 +114,6 @@ export function getProjectFilePath(
 }
 
 /**
- * projects.json 파일 경로
- * @returns .jjiban/settings/projects.json
- */
-export function getProjectsListFilePath(): string {
-  return join(getBasePath(), '.jjiban', 'settings', 'projects.json');
-}
-
-/**
  * 프로젝트 ID 유효성 검증
  * BR-001: 영소문자, 숫자, 하이픈, 한글 허용
  * DR-009: 경로 탐색 공격 방지

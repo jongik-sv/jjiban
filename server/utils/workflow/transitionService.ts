@@ -70,7 +70,7 @@ export async function calculateRollbackDeletions(
   workflowsConfig?: WorkflowsConfig
 ): Promise<string[]> {
   const config = workflowsConfig || await getWorkflows();
-  const categoryWorkflow = config.workflows.find((wf) => wf.id === category);
+  const categoryWorkflow = config.workflows[category];
 
   if (!categoryWorkflow) {
     return [];
@@ -114,10 +114,8 @@ async function findTransition(
 ): Promise<WorkflowTransition | null> {
   const workflows = workflowsConfig || await getWorkflows();
 
-  // 카테고리에 해당하는 워크플로우 찾기
-  const categoryWorkflow = workflows.workflows.find(
-    (wf) => wf.id === category
-  );
+  // 카테고리에 해당하는 워크플로우 찾기 (v2.0: Record 접근)
+  const categoryWorkflow = workflows.workflows[category];
 
   if (!categoryWorkflow) {
     return null;
@@ -400,11 +398,9 @@ export async function getAvailableCommands(
   const currentStatus = formatStatusCode(statusCode);
   const category = task.category as TaskCategory;
 
-  // 워크플로우에서 가능한 전이 조회
+  // 워크플로우에서 가능한 전이 조회 (v2.0: Record 접근)
   const workflows = await getWorkflows();
-  const categoryWorkflow = workflows.workflows.find(
-    (wf) => wf.id === category
-  );
+  const categoryWorkflow = workflows.workflows[category];
 
   if (!categoryWorkflow) {
     return [];

@@ -156,11 +156,9 @@ export async function getExpectedDocuments(
   const statusCode = extractStatusCode(currentStatus);
   const formattedStatus = formatStatusCode(statusCode);
 
-  // 워크플로우 조회
+  // 워크플로우 조회 (v2.0: Record 접근)
   const workflows = await getWorkflows();
-  const categoryWorkflow = workflows.workflows.find(
-    (wf) => wf.id === category
-  );
+  const categoryWorkflow = workflows.workflows[category];
 
   if (!categoryWorkflow) {
     return [];

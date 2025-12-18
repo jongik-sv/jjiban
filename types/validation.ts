@@ -70,8 +70,9 @@ export interface ValidationOptions {
 
 /**
  * 유효한 상태 코드 상수
+ * @deprecated Phase2: workflows.json 기반 런타임 조회로 전환. getValidStatusCodes() 사용 권장
  */
-export const VALID_STATUS_CODES = ['[ ]', '[bd]', '[dd]', '[an]', '[ds]', '[im]', '[fx]', '[vf]', '[xx]'] as const;
+export const VALID_STATUS_CODES = ['[ ]', '[bd]', '[dd]', '[ap]', '[an]', '[ds]', '[im]', '[fx]', '[vf]', '[xx]'] as const;
 
 /**
  * 상태 코드 타입

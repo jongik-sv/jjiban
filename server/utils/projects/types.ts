@@ -9,7 +9,8 @@
 // ============================================================
 
 /**
- * 프로젝트 목록 항목 (projects.json 내 항목)
+ * 프로젝트 목록 항목
+ * 폴더 스캔 시 project.json에서 추출되는 항목
  */
 export interface ProjectListItem {
   id: string;
@@ -21,12 +22,13 @@ export interface ProjectListItem {
 }
 
 /**
- * 전역 프로젝트 목록 설정 (projects.json)
+ * 프로젝트 목록 조회 결과
+ * 폴더 스캔 방식으로 생성된 프로젝트 목록
  */
 export interface ProjectsConfig {
   version: string;
   projects: ProjectListItem[];
-  defaultProject?: string | null;
+  defaultProject: null;  // 미사용 (하위 호환성 유지)
 }
 
 /**

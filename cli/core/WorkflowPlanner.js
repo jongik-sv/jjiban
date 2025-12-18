@@ -4,7 +4,7 @@
  * 책임: 현재 상태 → 목표까지 단계 목록 생성 (SRP-001)
  */
 
-import { getStepsToTarget, TARGET_MAPPING } from '../config/workflowSteps.js';
+import { getStepsToTarget, TARGET_MAPPING, getCommandForStep } from '../config/workflowSteps.js';
 import { ValidationError } from '../errors/JjibanError.js';
 
 /**
@@ -100,9 +100,9 @@ export class WorkflowPlanner {
       };
     }
 
-    // 남은 단계에 대한 명령어 생성
+    // 남은 단계에 대한 명령어 생성 (설정 파일 기반)
     const steps = remainingSteps.map((stepName, i) => {
-      const command = this.getCommandForStep(task.category, stepName);
+      const command = getCommandForStep(task.category, stepName) || `/wf:${stepName}`;
       return {
         index: savedState.currentStep + i,
         step: stepName,
@@ -122,30 +122,5 @@ export class WorkflowPlanner {
       completedSteps: savedState.completedSteps,
       resumeFromStep: savedState.currentStep
     };
-  }
-
-  /**
-   * 단계 이름으로 명령어 가져오기
-   * @param {string} category - 카테고리
-   * @param {string} stepName - 단계 이름
-   * @returns {string} 명령어
-   */
-  getCommandForStep(category, stepName) {
-    const commandMap = {
-      start: '/wf:start',
-      draft: '/wf:draft',
-      review: '/wf:review',
-      apply: '/wf:apply',
-      build: '/wf:build',
-      test: '/wf:test',
-      audit: '/wf:audit',
-      patch: '/wf:patch',
-      verify: '/wf:verify',
-      done: '/wf:done',
-      fix: '/wf:fix',
-      skip: '/wf:skip'
-    };
-
-    return commandMap[stepName] || `/wf:${stepName}`;
   }
 }

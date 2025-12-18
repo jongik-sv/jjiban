@@ -19,9 +19,9 @@
           :aria-current="index === currentStepIndex ? 'step' : undefined"
           :data-testid="index === currentStepIndex ? 'workflow-node-current' : `workflow-node-${index}`"
         >
-          <div class="font-semibold">{{ step.name }}</div>
+          <div class="font-semibold">{{ step.labelEn }}</div>
           <div class="text-xs opacity-80">{{ step.code }}</div>
-          <div class="text-xs opacity-70">{{ step.description }}</div>
+          <div class="text-xs opacity-70">{{ step.label }}</div>
         </div>
 
         <!-- 화살표 (마지막 노드 제외) -->
@@ -48,8 +48,8 @@
  * - 읽기 전용 (상호작용 없음)
  */
 
-import type { TaskDetail, WorkflowStep } from '~/types'
-import { WORKFLOW_STEPS } from '~/types'
+import type { TaskDetail } from '~/types'
+import type { WorkflowStepInfo } from '~/types/workflow-config'
 
 // ============================================================
 // Props
@@ -61,15 +61,20 @@ interface Props {
 const props = defineProps<Props>()
 
 // ============================================================
+// Composables
+// ============================================================
+const workflowConfig = useWorkflowConfig()
+
+// ============================================================
 // Computed
 // ============================================================
 
 /**
- * 카테고리별 워크플로우 단계 계산
+ * 카테고리별 워크플로우 단계 계산 (설정 기반)
  * FR-001, BR-WF-01
  */
-const workflowSteps = computed<WorkflowStep[]>(() => {
-  return WORKFLOW_STEPS[props.task.category] || WORKFLOW_STEPS.development
+const workflowSteps = computed<WorkflowStepInfo[]>(() => {
+  return workflowConfig.getWorkflowSteps(props.task.category)
 })
 
 /**

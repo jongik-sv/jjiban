@@ -2,6 +2,14 @@
  * Workflow Commands - 워크플로우 명령어 정의
  * Task: TSK-02-01
  * 상세설계: 020-detail-design.md 섹션 2, 4
+ *
+ * @deprecated This file is being phased out in favor of useWorkflowConfig() composable
+ * which reads from .jjiban/settings/workflows.json for dynamic configuration.
+ *
+ * Migration guide:
+ * - WORKFLOW_COMMANDS → useWorkflowConfig().getAvailableTransitions() + getStateActions()
+ * - isCommandAvailable() → useWorkflowConfig().getAvailableTransitions() includes check
+ * - getFilteredCommands() → useWorkflowConfig().getAvailableTransitions() + getStateActions()
  */
 
 import type { TaskCategory } from '~/types/index'

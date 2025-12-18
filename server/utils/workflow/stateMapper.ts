@@ -7,7 +7,7 @@
  */
 
 import type { TaskCategory } from '../../../types';
-import type { Workflow } from '../../../types/settings';
+import type { WorkflowDefinition } from '../../../types/settings';
 import { getWorkflows } from '../settings';
 import { createNotFoundError } from '../errors/standardError';
 
@@ -15,15 +15,16 @@ import { createNotFoundError } from '../errors/standardError';
  * 카테고리별 워크플로우 조회 (공통 헬퍼)
  * @param category - Task 카테고리
  * @param throwOnNotFound - 없을 때 에러 발생 여부 (기본: false)
- * @returns WorkflowConfig 또는 null
+ * @returns WorkflowDefinition 또는 null
  * @throws WORKFLOW_NOT_FOUND (throwOnNotFound가 true일 때)
  */
 async function getWorkflowByCategory(
   category: TaskCategory,
   throwOnNotFound = false
-): Promise<Workflow | null> {
+): Promise<WorkflowDefinition | null> {
   const workflows = await getWorkflows();
-  const workflow = workflows.workflows.find((wf) => wf.id === category);
+  // v2.0: Record 접근
+  const workflow = workflows.workflows[category];
 
   if (!workflow && throwOnNotFound) {
     throw createNotFoundError(

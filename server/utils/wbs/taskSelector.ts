@@ -7,7 +7,6 @@
  */
 
 import type { WbsNode, TaskCategory, Priority } from '../../../types';
-import { WORKFLOW_STEPS } from '../../../types';
 
 // 실행 가능한 Task 정보
 export interface ExecutableTask {

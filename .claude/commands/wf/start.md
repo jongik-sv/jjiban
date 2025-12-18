@@ -48,8 +48,12 @@
    - Task 폴더 생성: `.jjiban/projects/{project}/tasks/{TSK-ID}/`
    - 템플릿 참조: `.jjiban/templates/010-*.md`
 
-6. **wbs.md 상태 업데이트**
-   - status 필드 변경
+6. **상태 전환** (자동)
+   ```bash
+   npx tsx .jjiban/script/transition.ts {Task-ID} start -p {project}
+   ```
+   - 성공: `{ "success": true, "newStatus": "bd|an|dd" }`
+   - 실패: 에러 메시지 표시
 
 ---
 

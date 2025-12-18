@@ -3,54 +3,118 @@
  * Task: TSK-07-01
  */
 
-/**
- * 카테고리별 워크플로우 단계 정의
- */
-export const WORKFLOW_STEPS = {
-  development: [
-    { step: 'start', command: '/wf:start', status: '[ ]', nextStatus: '[bd]' },
-    { step: 'draft', command: '/wf:draft', status: '[bd]', nextStatus: '[dd]' },
-    { step: 'review', command: '/wf:review', status: '[dd]', nextStatus: '[dd]' },
-    { step: 'apply', command: '/wf:apply', status: '[dd]', nextStatus: '[dd]' },
-    { step: 'build', command: '/wf:build', status: '[dd]', nextStatus: '[im]' },
-    { step: 'test', command: '/wf:test', status: '[im]', nextStatus: '[im]' },
-    { step: 'audit', command: '/wf:audit', status: '[im]', nextStatus: '[im]' },
-    { step: 'patch', command: '/wf:patch', status: '[im]', nextStatus: '[im]' },
-    { step: 'verify', command: '/wf:verify', status: '[im]', nextStatus: '[ts]' },
-    { step: 'done', command: '/wf:done', status: '[ts]', nextStatus: '[xx]' }
-  ],
-  defect: [
-    { step: 'start', command: '/wf:start', status: '[ ]', nextStatus: '[an]' },
-    { step: 'fix', command: '/wf:fix', status: '[an]', nextStatus: '[fx]' },
-    { step: 'test', command: '/wf:test', status: '[fx]', nextStatus: '[fx]' },
-    { step: 'audit', command: '/wf:audit', status: '[fx]', nextStatus: '[fx]' },
-    { step: 'patch', command: '/wf:patch', status: '[fx]', nextStatus: '[fx]' },
-    { step: 'verify', command: '/wf:verify', status: '[fx]', nextStatus: '[ts]' },
-    { step: 'done', command: '/wf:done', status: '[ts]', nextStatus: '[xx]' }
-  ],
-  infrastructure: [
-    { step: 'start', command: '/wf:start', status: '[ ]', nextStatus: '[ds]' },
-    { step: 'build', command: '/wf:build', status: '[ds]', nextStatus: '[im]' },
-    { step: 'audit', command: '/wf:audit', status: '[im]', nextStatus: '[im]' },
-    { step: 'patch', command: '/wf:patch', status: '[im]', nextStatus: '[im]' },
-    { step: 'done', command: '/wf:done', status: '[im]', nextStatus: '[xx]' }
-  ]
-};
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 /**
- * Target 단계 매핑 (--until 옵션용)
+ * 워크플로우 설정 파일 로드
  */
-export const TARGET_MAPPING = {
-  'basic-design': { targetSteps: ['start'], targetStatus: '[bd]' },
-  'detail-design': { targetSteps: ['start', 'draft'], targetStatus: '[dd]' },
-  'review': { targetSteps: ['start', 'draft', 'review'], targetStatus: '[dd]' },
-  'apply': { targetSteps: ['start', 'draft', 'review', 'apply'], targetStatus: '[dd]' },
-  'build': { targetSteps: ['start', 'draft', 'review', 'apply', 'build', 'test'], targetStatus: '[im]' },
-  'audit': { targetSteps: ['start', 'draft', 'review', 'apply', 'build', 'test', 'audit'], targetStatus: '[im]' },
-  'patch': { targetSteps: ['start', 'draft', 'review', 'apply', 'build', 'test', 'audit', 'patch'], targetStatus: '[im]' },
-  'verify': { targetSteps: ['start', 'draft', 'review', 'apply', 'build', 'test', 'audit', 'patch', 'verify'], targetStatus: '[ts]' },
-  'done': { targetSteps: null, targetStatus: '[xx]' } // null = 전체 실행
-};
+function loadWorkflowConfig() {
+  const configPath = path.join(__dirname, '../../.jjiban/settings/workflows.json');
+  if (!fs.existsSync(configPath)) {
+    throw new Error(`Workflow config not found: ${configPath}`);
+  }
+  return JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+}
+
+/**
+ * 설정 파일에서 워크플로우 단계 구성
+ */
+function buildWorkflowSteps(config) {
+  const steps = {};
+
+  for (const [category, workflow] of Object.entries(config.workflows)) {
+    const categorySteps = [];
+    const transitions = workflow.transitions;
+    const actions = workflow.actions || {};
+
+    // transitions에서 주요 단계 생성 (모든 전환 포함)
+    for (const transition of transitions) {
+      categorySteps.push({
+        step: transition.command,
+        command: `/wf:${transition.command}`,
+        status: transition.from,
+        nextStatus: transition.to
+      });
+    }
+
+    // 상태별 액션을 각 상태의 첫 번째 전환 뒤에 삽입
+    const finalSteps = [];
+    const processedStatesForActions = new Set();
+
+    for (const step of categorySteps) {
+      finalSteps.push(step);
+
+      // 해당 상태의 액션들 추가 (각 상태당 한 번만)
+      if (actions[step.status] && !processedStatesForActions.has(step.status)) {
+        for (const action of actions[step.status]) {
+          finalSteps.push({
+            step: action,
+            command: `/wf:${action}`,
+            status: step.status,
+            nextStatus: step.status // 액션은 상태를 변경하지 않음
+          });
+        }
+        processedStatesForActions.add(step.status);
+      }
+    }
+
+    steps[category] = finalSteps;
+  }
+
+  return steps;
+}
+
+/**
+ * Target 단계 매핑 구성 (--until 옵션용)
+ */
+function buildTargetMapping(config) {
+  const mapping = {};
+
+  // 각 카테고리의 development 워크플로우 기준으로 target 매핑 생성
+  const devWorkflow = config.workflows.development;
+  if (!devWorkflow) return mapping;
+
+  const transitions = devWorkflow.transitions;
+
+  // 각 전환의 목적지 상태를 target으로 등록
+  for (let i = 0; i < transitions.length; i++) {
+    const transition = transitions[i];
+    const targetState = config.states[transition.to];
+
+    if (!targetState) continue;
+
+    // 해당 target까지의 모든 명령어 수집
+    const targetSteps = transitions.slice(0, i + 1).map(t => t.command);
+
+    mapping[targetState.id] = {
+      targetSteps: targetSteps,
+      targetStatus: transition.to
+    };
+  }
+
+  // 'done'은 전체 실행
+  mapping['done'] = { targetSteps: null, targetStatus: '[xx]' };
+
+  return mapping;
+}
+
+// 설정 로드
+const workflowConfig = loadWorkflowConfig();
+
+/**
+ * 카테고리별 워크플로우 단계 정의 (설정 파일 기반)
+ */
+export const WORKFLOW_STEPS = buildWorkflowSteps(workflowConfig);
+
+/**
+ * Target 단계 매핑 (--until 옵션용, 설정 파일 기반)
+ */
+export const TARGET_MAPPING = buildTargetMapping(workflowConfig);
 
 /**
  * 상태 코드에서 다음 시작 단계 찾기

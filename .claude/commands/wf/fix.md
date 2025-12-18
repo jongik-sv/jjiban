@@ -37,8 +37,11 @@
    - `030-implementation.md` 생성
    - 수정 내역 기록
 
-5. **상태 업데이트**
-   - `[an]` → `[fx]`
+5. **상태 전환** (자동)
+   ```bash
+   npx tsx .jjiban/script/transition.ts {Task-ID} fix -p {project}
+   ```
+   - 성공: `{ "success": true, "newStatus": "fx" }`
 
 ---
 

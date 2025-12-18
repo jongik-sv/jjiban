@@ -170,6 +170,7 @@ const props = defineProps<Props>()
 const selectionStore = useSelectionStore()
 const notification = useNotification()
 const errorHandler = useErrorHandler()
+const workflowConfig = useWorkflowConfig()
 
 // ============================================================
 // State
@@ -183,38 +184,14 @@ const executingCommand = ref<string | null>(null)
 
 /**
  * 워크플로우 단계 계산 (카테고리별)
+ * 설정 기반 동적 로딩
  */
 const workflowSteps = computed(() => {
-  interface WorkflowStep {
-    code: string
-    label: string
-  }
-
-  const workflows: Record<TaskCategory, WorkflowStep[]> = {
-    development: [
-      { code: '[ ]', label: '시작 전' },
-      { code: '[bd]', label: '기본설계' },
-      { code: '[dd]', label: '상세설계' },
-      { code: '[im]', label: '구현' },
-      { code: '[vf]', label: '검증' },
-      { code: '[xx]', label: '완료' },
-    ],
-    defect: [
-      { code: '[ ]', label: '시작 전' },
-      { code: '[an]', label: '분석' },
-      { code: '[fx]', label: '수정' },
-      { code: '[vf]', label: '검증' },
-      { code: '[xx]', label: '완료' },
-    ],
-    infrastructure: [
-      { code: '[ ]', label: '시작 전' },
-      { code: '[ds]', label: '설계' },
-      { code: '[im]', label: '구현' },
-      { code: '[xx]', label: '완료' },
-    ],
-  }
-
-  return workflows[props.task.category] || workflows.development
+  const steps = workflowConfig.getWorkflowSteps(props.task.category)
+  return steps.map(step => ({
+    code: step.code,
+    label: step.label,
+  }))
 })
 
 /**
@@ -250,60 +227,23 @@ const progressPercentage = computed(() => {
 })
 
 /**
- * 상태별 액션 매핑 (v1.1 요구사항)
- * 각 단계에서 표시할 액션 목록
- */
-const stepActionsMap: Record<string, Record<string, string[]>> = {
-  development: {
-    '[ ]': ['start'],
-    '[bd]': ['draft', 'ui'],
-    '[dd]': ['build', 'review', 'apply'],
-    '[im]': ['verify', 'test', 'audit', 'patch'],
-    '[vf]': ['done', 'test'],
-    '[xx]': ['test'],
-  },
-  defect: {
-    '[ ]': ['start'],
-    '[an]': ['fix'],
-    '[fx]': ['verify', 'test', 'audit', 'patch'],
-    '[vf]': ['done', 'test'],
-    '[xx]': ['test'],
-  },
-  infrastructure: {
-    '[ ]': ['start', 'skip'],
-    '[ds]': ['build'],
-    '[im]': ['done', 'test', 'audit', 'patch'],
-    '[xx]': ['test'],
-  },
-}
-
-/**
- * 특정 단계의 액션 목록 반환 (v1.1)
+ * 특정 단계의 액션 목록 반환 (설정 기반)
  */
 function getStepActions(stepCode: string): string[] {
-  const categoryMap = stepActionsMap[props.task.category]
-  if (!categoryMap) return []
-  return categoryMap[stepCode] || []
+  // 전이 명령어 + 액션 명령어 조합
+  const transitions = workflowConfig.getAvailableTransitions(props.task.category, stepCode)
+  const actions = workflowConfig.getStateActions(props.task.category, stepCode)
+
+  // 명령어 이름만 추출
+  const transitionCommands = transitions.map(t => t.command)
+  const actionCommands = actions.map(a => a.command)
+
+  // 중복 제거 및 결합
+  return [...new Set([...transitionCommands, ...actionCommands])]
 }
 
-// ============================================================
-// Workflow Button Config
-// ============================================================
-const workflowButtonConfig: Record<string, { label: string; icon: string; severity: string }> = {
-  start: { label: '시작', icon: 'pi pi-play', severity: 'primary' },
-  draft: { label: '초안 작성', icon: 'pi pi-pencil', severity: 'info' },
-  build: { label: '구현', icon: 'pi pi-cog', severity: 'success' },
-  verify: { label: '검증', icon: 'pi pi-check-circle', severity: 'warn' },
-  done: { label: '완료', icon: 'pi pi-flag', severity: 'success' },
-  review: { label: '리뷰', icon: 'pi pi-eye', severity: 'info' },
-  apply: { label: '적용', icon: 'pi pi-check', severity: 'success' },
-  test: { label: '테스트', icon: 'pi pi-bolt', severity: 'warn' },
-  audit: { label: '감사', icon: 'pi pi-search', severity: 'info' },
-  patch: { label: '패치', icon: 'pi pi-wrench', severity: 'success' },
-  skip: { label: '건너뛰기', icon: 'pi pi-forward', severity: 'secondary' },
-  fix: { label: '수정', icon: 'pi pi-wrench', severity: 'warn' },
-  ui: { label: 'UI', icon: 'pi pi-palette', severity: 'info' },
-}
+// Workflow Button Config는 더 이상 하드코딩하지 않음
+// workflowConfig.getCommandInfo()를 통해 동적으로 가져옴
 
 // ============================================================
 // Methods
@@ -337,24 +277,27 @@ function selectStep(index: number) {
 }
 
 /**
- * 액션 라벨 반환
+ * 액션 라벨 반환 (설정 기반)
  */
 function getActionLabel(action: string): string {
-  return workflowButtonConfig[action]?.label || action
+  const cmdInfo = workflowConfig.getCommandInfo(action)
+  return cmdInfo?.label || action
 }
 
 /**
- * 액션 아이콘 반환
+ * 액션 아이콘 반환 (설정 기반)
  */
 function getActionIcon(action: string): string {
-  return workflowButtonConfig[action]?.icon || 'pi pi-arrow-right'
+  const cmdInfo = workflowConfig.getCommandInfo(action)
+  return cmdInfo?.icon || 'pi-arrow-right'
 }
 
 /**
- * 액션 심각도 반환
+ * 액션 심각도 반환 (설정 기반)
  */
 function getActionSeverity(action: string): 'primary' | 'secondary' | 'success' | 'info' | 'warn' | 'danger' | 'help' | 'contrast' {
-  return (workflowButtonConfig[action]?.severity || 'secondary') as any
+  const cmdInfo = workflowConfig.getCommandInfo(action)
+  return (cmdInfo?.severity || 'secondary') as any
 }
 
 /**

@@ -44,9 +44,11 @@
 4. **테스트 결과 문서 생성**
    - `070-integration-test.md`
 
-5. **상태 업데이트**
-   - `[im]` → `[ts]` (development)
-   - `[fx]` → `[ts]` (defect)
+5. **상태 전환** (자동)
+   ```bash
+   npx tsx .jjiban/script/transition.ts {Task-ID} verify -p {project}
+   ```
+   - 성공: `{ "success": true, "newStatus": "vf" }`
 
 ---
 

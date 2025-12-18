@@ -79,57 +79,114 @@ export interface CategoriesConfig {
 }
 
 // ============================================================
-// Workflow (워크플로우) 타입 정의
-// PRD 5.2 기반 카테고리별 상태 전이 규칙
+// Workflow (워크플로우) 타입 정의 - 확장 스키마 v2.0
 // ============================================================
 
 /**
- * 워크플로우 전이 규칙
+ * 상태 정의 (확장 스키마)
+ */
+export interface StateDefinition {
+  /** 상태 ID (kebab-case) */
+  id: string;
+  /** 상태 표시명 (한글) */
+  label: string;
+  /** 상태 표시명 (영문) */
+  labelEn: string;
+  /** PrimeIcons 아이콘 */
+  icon: string;
+  /** HEX 색상 */
+  color: string;
+  /** PrimeVue severity */
+  severity: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'danger';
+  /** 진행률 가중치 (0-100) */
+  progressWeight: number;
+}
+
+/**
+ * 명령어 정의 (확장 스키마)
+ */
+export interface CommandDefinition {
+  /** 명령어 표시명 (한글) */
+  label: string;
+  /** 명령어 표시명 (영문) */
+  labelEn: string;
+  /** PrimeIcons 아이콘 */
+  icon: string;
+  /** PrimeVue severity */
+  severity: string;
+  /** 상태 내 액션 여부 (true: 상태 전이 없음) */
+  isAction?: boolean;
+}
+
+/**
+ * 워크플로우 전이 규칙 (확장 스키마)
  */
 export interface WorkflowTransition {
   /** 시작 상태 코드 */
   from: string;
   /** 종료 상태 코드 */
   to: string;
-  /** 전이 명령어 (wf:start, wf:build 등) */
+  /** 전이 명령어 */
   command: string;
-  /** 전이 레이블 (UI 표시용) */
-  label: string;
-  /** 생성할 문서 파일명 (null이면 문서 없음) */
-  document: string | null;
-  /** 선택적 전이 여부 (생략 가능) */
-  optional?: boolean;
+  /** 전이 시 생성할 문서 (선택, 하위호환성) */
+  document?: string | null;
+  /** 전이 레이블 (선택, 하위호환성) */
+  label?: string;
 }
 
 /**
- * 워크플로우 정의
+ * 워크플로우 정의 (확장 스키마)
  */
-export interface Workflow {
-  /** 워크플로우 ID (고유 식별자) */
-  id: string;
+export interface WorkflowDefinition {
   /** 워크플로우 표시명 */
   name: string;
-  /** 워크플로우 설명 */
-  description: string;
-  /** 포함된 상태 코드 목록 */
+  /** 포함된 상태 코드 목록 (순서대로) */
   states: string[];
-  /** 초기 상태 코드 */
-  initialState: string;
-  /** 최종 상태 코드 목록 */
-  finalStates: string[];
   /** 상태 전이 규칙 목록 */
   transitions: WorkflowTransition[];
+  /** 상태별 허용 액션 */
+  actions?: Record<string, string[]>;
 }
 
 /**
- * workflows.json 설정 파일 스키마
+ * workflows.json 설정 파일 스키마 (확장 v2.0)
  */
 export interface WorkflowsConfig {
   /** JSON 스키마 참조 (선택) */
   $schema?: string;
   /** 설정 버전 */
   version: string;
-  /** 워크플로우 목록 */
+  /** 상태 정의 맵 (상태코드 → StateDefinition) */
+  states: Record<string, StateDefinition>;
+  /** 명령어 정의 맵 (명령어 → CommandDefinition) */
+  commands: Record<string, CommandDefinition>;
+  /** 워크플로우 정의 맵 (카테고리 → WorkflowDefinition) */
+  workflows: Record<string, WorkflowDefinition>;
+}
+
+// ============================================================
+// 하위 호환성 타입 (v1.0 스키마)
+// ============================================================
+
+/**
+ * @deprecated v1.0 스키마 - v2.0 WorkflowDefinition 사용 권장
+ */
+export interface Workflow {
+  id: string;
+  name: string;
+  description?: string;
+  states: string[];
+  initialState?: string;
+  finalStates?: string[];
+  transitions: WorkflowTransition[];
+}
+
+/**
+ * @deprecated v1.0 스키마 - v2.0 WorkflowsConfig 사용 권장
+ */
+export interface WorkflowsConfigV1 {
+  $schema?: string;
+  version: string;
   workflows: Workflow[];
 }
 

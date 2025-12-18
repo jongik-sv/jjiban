@@ -67,9 +67,9 @@ export async function getWorkflowState(
   // 상태명 조회
   const currentStateName = (await statusCodeToName(category, currentState)) || 'todo';
 
-  // 워크플로우 정의 조회
+  // 워크플로우 정의 조회 (v2.0: Record 접근)
   const workflows = await getWorkflows();
-  const workflow = workflows.workflows.find((wf) => wf.id === category);
+  const workflow = workflows.workflows[category];
 
   if (!workflow) {
     throw createBadRequestError(
@@ -87,7 +87,7 @@ export async function getWorkflowState(
     currentState,
     currentStateName,
     workflow: {
-      id: workflow.id,
+      id: category,  // v2.0: 카테고리가 워크플로우 ID
       name: workflow.name,
       states: workflow.states,
       transitions: workflow.transitions,

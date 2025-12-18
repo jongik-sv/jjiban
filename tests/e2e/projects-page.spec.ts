@@ -64,23 +64,6 @@ async function createTestProject(
   };
 }
 
-// 폴더 스캔 방식이므로 projects.json 업데이트 불필요 (settings.json만 defaultProject 저장)
-async function updateDefaultProject(defaultProject: string | null = null) {
-  const settingsPath = join(JJIBAN_ROOT, 'settings');
-  await mkdir(settingsPath, { recursive: true });
-
-  const settingsConfig = {
-    version: '1.0',
-    defaultProject,
-  };
-
-  await writeFile(
-    join(settingsPath, 'settings.json'),
-    JSON.stringify(settingsConfig, null, 2),
-    'utf-8'
-  );
-}
-
 // 테스트 프로젝트 정리 헬퍼
 async function cleanupTestProjects() {
   const projectsPath = join(JJIBAN_ROOT, 'projects');
@@ -111,7 +94,6 @@ test.describe.serial('Projects Page E2E Tests', () => {
     const project = await createTestProject(`${TEST_PROJECT_PREFIX}-001`, {
       name: 'Test Project 001',
     });
-    await updateDefaultProject(project.id);
 
     // Act
     await page.goto('/projects');
@@ -135,7 +117,6 @@ test.describe.serial('Projects Page E2E Tests', () => {
       name: 'Detail Test Project',
       wbsDepth: 4,
     });
-    await updateDefaultProject(project.id);
 
     // Act
     await page.goto('/projects');
@@ -164,7 +145,6 @@ test.describe.serial('Projects Page E2E Tests', () => {
     const project = await createTestProject(`${TEST_PROJECT_PREFIX}-004`, {
       name: 'Navigation Test',
     });
-    await updateDefaultProject(project.id);
 
     // wbs.md 파일 생성 (WBS 페이지가 로드되려면 필요)
     const projectPath = join(JJIBAN_ROOT, 'projects', project.id);
@@ -210,7 +190,6 @@ test.describe.serial('Projects Page E2E Tests', () => {
       name: 'Archived 1',
       status: 'archived',
     });
-    await updateDefaultProject(active1.id);
 
     // Act
     await page.goto('/projects');
@@ -241,7 +220,6 @@ test.describe.serial('Projects Page E2E Tests', () => {
     const project = await createTestProject(`${TEST_PROJECT_PREFIX}-007`, {
       name: 'Loading Test',
     });
-    await updateDefaultProject(project.id);
 
     // Act: 페이지 로드
     await page.goto('/projects');
@@ -256,7 +234,7 @@ test.describe.serial('Projects Page E2E Tests', () => {
 
   test('E2E-009: should show empty state message when no projects exist', async ({ page }) => {
     // Arrange: 빈 프로젝트 목록 설정 (테스트 프로젝트 없음)
-    await updateDefaultProject(null);
+    // 폴더 스캔 방식이므로 별도 설정 불필요
 
     // Act
     await page.goto('/projects');
@@ -272,34 +250,13 @@ test.describe.serial('Projects Page E2E Tests', () => {
     await expect(cards).toHaveCount(0);
   });
 
-  test('E2E-010: should show default badge on default project', async ({ page }) => {
-    // Arrange: 2개 프로젝트, 첫 번째가 기본
-    const defaultProj = await createTestProject(`${TEST_PROJECT_PREFIX}-010a`, {
-      name: 'Default Project',
-    });
-    const otherProj = await createTestProject(`${TEST_PROJECT_PREFIX}-010b`, {
-      name: 'Other Project',
-    });
-    await updateDefaultProject(defaultProj.id);
-
-    // Act
-    await page.goto('/projects');
-
-    // Assert: 카드 확인
-    await expect(page.locator('.p-card')).toHaveCount(2);
-
-    // Default 배지 확인
-    const badge = page.locator('.p-badge').filter({ hasText: 'Default' });
-    await expect(badge).toBeVisible();
-    await expect(badge).toHaveCount(1);
-  });
+  // E2E-010 제거: defaultProject 기능 미사용
 
   test('E2E-011: should display correctly on different viewports', async ({ page }) => {
     // Arrange
     const project = await createTestProject(`${TEST_PROJECT_PREFIX}-011`, {
       name: 'Responsive Test',
     });
-    await updateDefaultProject(project.id);
 
     // Act
     await page.goto('/projects');

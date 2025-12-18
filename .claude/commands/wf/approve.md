@@ -47,22 +47,21 @@
    설계승인을 진행하시겠습니까? (y/n)
    ```
 
-4. **상태 업데이트**
-   - `[dd]` → `[ap]`
+4. **상태 전환**
+   ```bash
+   npx tsx .jjiban/script/transition.ts {Task-ID} approve -p {project} --force
+   ```
+   - `--force`: manual 모드에서 확인 없이 실행
 
 ### Auto 모드
 
-1. **문서 존재 확인**
-   - `010-basic-design.md` 확인
-   - `020-detail-design.md` 확인
-
-2. **리뷰 검증**
-   - `021-design-review-*.md` 1개 이상 존재
-   - Critical/P1 미해결 이슈 없음
-
-3. **자동 승인**
-   - 조건 충족 시 즉시 상태 전환
-   - 조건 미충족 시 수동 모드로 전환
+1. **자동 승인** (스크립트가 조건 검증)
+   ```bash
+   npx tsx .jjiban/script/transition.ts {Task-ID} approve -p {project}
+   ```
+   - 스크립트가 `project.json`의 `approvalMode` 확인
+   - 조건 충족 시 자동 전환
+   - 조건 미충족 시 실패 JSON 반환
 
 ---
 

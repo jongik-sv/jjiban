@@ -51,9 +51,11 @@
 - `030-implementation.md` 생성
 - 템플릿: `.jjiban/templates/030-implementation.md`
 
-### 5단계: 상태 업데이트
-- `[ap]` → `[im]` (development)
-- `[dd]` → `[im]` (infrastructure)
+### 5단계: 상태 전환 (자동)
+```bash
+npx tsx .jjiban/script/transition.ts {Task-ID} build -p {project}
+```
+- 성공: `{ "success": true, "newStatus": "im" }`
 
 ---
 

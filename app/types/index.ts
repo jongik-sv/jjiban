@@ -4,8 +4,8 @@ export type WbsNodeType = 'project' | 'wp' | 'act' | 'task';
 // Task 카테고리
 export type TaskCategory = 'development' | 'defect' | 'infrastructure';
 
-// Task 상태 코드
-export type TaskStatus = '[ ]' | '[bd]' | '[dd]' | '[an]' | '[ds]' | '[im]' | '[fx]' | '[vf]' | '[xx]';
+// Task 상태 코드 (하위 호환: string으로 확장)
+export type TaskStatus = string;
 
 // 우선순위
 export type Priority = 'critical' | 'high' | 'medium' | 'low';
@@ -91,6 +91,7 @@ export interface TaskDetail {
   ref?: string;
   documents: DocumentInfo[];
   availableActions: string[];
+  completed?: CompletedTimestamps; // 단계별 완료시각
 }
 
 // 팀 멤버
@@ -164,36 +165,12 @@ export interface WorkflowRule {
 }
 
 // 워크플로우 단계 (TSK-05-02 R-02: 타입 정의 추출)
+// @deprecated Phase2: workflows.json 기반 런타임 조회로 전환. getWorkflowSteps() 사용 권장
 export interface WorkflowStep {
   code: string;        // 상태 코드 (예: '[ ]', '[bd]', '[dd]', '[im]', '[vf]', '[xx]')
   name: string;        // 상태 이름 (예: 'Todo', 'Design', 'Detail', 'Implement', 'Verify', 'Done')
   description: string; // 상태 설명 (예: '시작 전', '기본설계', '상세설계')
 }
-
-// 카테고리별 워크플로우 단계 정의
-export const WORKFLOW_STEPS: Record<TaskCategory, WorkflowStep[]> = {
-  development: [
-    { code: '[ ]', name: 'Todo', description: '시작 전' },
-    { code: '[bd]', name: 'Design', description: '기본설계' },
-    { code: '[dd]', name: 'Detail', description: '상세설계' },
-    { code: '[im]', name: 'Implement', description: '구현' },
-    { code: '[vf]', name: 'Verify', description: '검증' },
-    { code: '[xx]', name: 'Done', description: '완료' }
-  ],
-  defect: [
-    { code: '[ ]', name: 'Todo', description: '시작 전' },
-    { code: '[an]', name: 'Analysis', description: '분석' },
-    { code: '[fx]', name: 'Fix', description: '수정' },
-    { code: '[vf]', name: 'Verify', description: '검증' },
-    { code: '[xx]', name: 'Done', description: '완료' }
-  ],
-  infrastructure: [
-    { code: '[ ]', name: 'Todo', description: '시작 전' },
-    { code: '[ds]', name: 'Design', description: '설계' },
-    { code: '[im]', name: 'Implement', description: '구현' },
-    { code: '[xx]', name: 'Done', description: '완료' }
-  ]
-};
 
 // JJIBAN 디렉토리 경로 상수
 export const JJIBAN_PATHS = {

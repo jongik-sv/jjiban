@@ -11,9 +11,11 @@ import type {
   ColumnsConfig,
   Category,
   CategoriesConfig,
-  Workflow,
+  WorkflowDefinition,
   WorkflowTransition,
   WorkflowsConfig,
+  StateDefinition,
+  CommandDefinition,
   Action,
   ActionsConfig,
   Settings,
@@ -117,136 +119,77 @@ export const DEFAULT_CATEGORIES: CategoriesConfig = {
 };
 
 // ============================================================
-// 기본 workflows.json (워크플로우 규칙)
+// 기본 workflows.json (워크플로우 규칙) - v2.0 확장 스키마
 // PRD 5.2 기반 카테고리별 상태 전이 규칙
 // ============================================================
 
 export const DEFAULT_WORKFLOWS: WorkflowsConfig = {
-  version: '1.0',
-  workflows: [
-    {
-      id: 'development',
+  version: '2.0',
+  states: {
+    '[ ]': { id: 'todo', label: '시작 전', labelEn: 'Todo', icon: 'pi-inbox', color: '#6b7280', severity: 'secondary', progressWeight: 0 },
+    '[bd]': { id: 'basic-design', label: '기본설계', labelEn: 'Basic Design', icon: 'pi-pencil', color: '#3b82f6', severity: 'info', progressWeight: 20 },
+    '[dd]': { id: 'detail-design', label: '상세설계', labelEn: 'Detail Design', icon: 'pi-file-edit', color: '#8b5cf6', severity: 'info', progressWeight: 40 },
+    '[ap]': { id: 'approve', label: '승인', labelEn: 'Approve', icon: 'pi-check-square', color: '#10b981', severity: 'success', progressWeight: 50 },
+    '[im]': { id: 'implement', label: '구현', labelEn: 'Implement', icon: 'pi-code', color: '#f59e0b', severity: 'warning', progressWeight: 60 },
+    '[vf]': { id: 'verify', label: '검증', labelEn: 'Verify', icon: 'pi-verified', color: '#22c55e', severity: 'success', progressWeight: 80 },
+    '[xx]': { id: 'done', label: '완료', labelEn: 'Done', icon: 'pi-check-circle', color: '#10b981', severity: 'success', progressWeight: 100 },
+    '[an]': { id: 'analysis', label: '분석', labelEn: 'Analysis', icon: 'pi-search', color: '#f59e0b', severity: 'warning', progressWeight: 30 },
+    '[fx]': { id: 'fix', label: '수정', labelEn: 'Fix', icon: 'pi-wrench', color: '#ef4444', severity: 'danger', progressWeight: 60 },
+    '[ds]': { id: 'design', label: '설계', labelEn: 'Design', icon: 'pi-sitemap', color: '#3b82f6', severity: 'info', progressWeight: 30 },
+  },
+  commands: {
+    start: { label: '시작', labelEn: 'Start', icon: 'pi-play', severity: 'primary' },
+    draft: { label: '상세설계', labelEn: 'Draft', icon: 'pi-pencil', severity: 'info' },
+    approve: { label: '승인', labelEn: 'Approve', icon: 'pi-check', severity: 'success' },
+    build: { label: '구현', labelEn: 'Build', icon: 'pi-wrench', severity: 'warning' },
+    verify: { label: '검증', labelEn: 'Verify', icon: 'pi-verified', severity: 'success' },
+    done: { label: '완료', labelEn: 'Done', icon: 'pi-check-circle', severity: 'success' },
+    fix: { label: '수정', labelEn: 'Fix', icon: 'pi-wrench', severity: 'danger' },
+    skip: { label: '건너뛰기', labelEn: 'Skip', icon: 'pi-forward', severity: 'secondary' },
+    ui: { label: 'UI설계', labelEn: 'UI Design', icon: 'pi-palette', severity: 'info', isAction: true },
+    review: { label: '리뷰', labelEn: 'Review', icon: 'pi-eye', severity: 'secondary', isAction: true },
+    apply: { label: '적용', labelEn: 'Apply', icon: 'pi-check', severity: 'secondary', isAction: true },
+    test: { label: '테스트', labelEn: 'Test', icon: 'pi-bolt', severity: 'warning', isAction: true },
+    audit: { label: '코드리뷰', labelEn: 'Audit', icon: 'pi-search', severity: 'secondary', isAction: true },
+    patch: { label: '패치', labelEn: 'Patch', icon: 'pi-file-edit', severity: 'secondary', isAction: true },
+  },
+  workflows: {
+    development: {
       name: 'Development Workflow',
-      description: '신규 기능 개발 워크플로우',
-      states: ['[ ]', '[bd]', '[dd]', '[im]', '[vf]', '[xx]'],
-      initialState: '[ ]',
-      finalStates: ['[xx]'],
+      states: ['[ ]', '[bd]', '[dd]', '[ap]', '[im]', '[vf]', '[xx]'],
       transitions: [
-        {
-          from: '[ ]',
-          to: '[bd]',
-          command: 'start',
-          label: '기본설계 시작',
-          document: '010-basic-design.md',
-        },
-        {
-          from: '[bd]',
-          to: '[dd]',
-          command: 'draft',
-          label: '상세설계 시작',
-          document: '020-detail-design.md',
-        },
-        {
-          from: '[dd]',
-          to: '[im]',
-          command: 'build',
-          label: '구현 시작',
-          document: '030-implementation.md',
-        },
-        {
-          from: '[im]',
-          to: '[vf]',
-          command: 'verify',
-          label: '통합테스트 시작',
-          document: '070-integration-test.md',
-        },
-        {
-          from: '[vf]',
-          to: '[xx]',
-          command: 'done',
-          label: '작업 완료',
-          document: '080-manual.md',
-        },
+        { from: '[ ]', to: '[bd]', command: 'start' },
+        { from: '[bd]', to: '[dd]', command: 'draft' },
+        { from: '[dd]', to: '[ap]', command: 'approve' },
+        { from: '[ap]', to: '[im]', command: 'build' },
+        { from: '[im]', to: '[vf]', command: 'verify' },
+        { from: '[vf]', to: '[xx]', command: 'done' },
       ],
+      actions: { '[bd]': ['ui'], '[dd]': ['review', 'apply'], '[im]': ['test', 'audit', 'patch'], '[vf]': ['test'] },
     },
-    {
-      id: 'defect',
+    defect: {
       name: 'Defect Workflow',
-      description: '결함 수정 워크플로우',
       states: ['[ ]', '[an]', '[fx]', '[vf]', '[xx]'],
-      initialState: '[ ]',
-      finalStates: ['[xx]'],
       transitions: [
-        {
-          from: '[ ]',
-          to: '[an]',
-          command: 'start',
-          label: '분석 시작',
-          document: '010-defect-analysis.md',
-        },
-        {
-          from: '[an]',
-          to: '[fx]',
-          command: 'fix',
-          label: '수정 시작',
-          document: '030-implementation.md',
-        },
-        {
-          from: '[fx]',
-          to: '[vf]',
-          command: 'verify',
-          label: '검증 시작',
-          document: '070-test-results.md',
-        },
-        {
-          from: '[vf]',
-          to: '[xx]',
-          command: 'done',
-          label: '작업 완료',
-          document: null,
-        },
+        { from: '[ ]', to: '[an]', command: 'start' },
+        { from: '[an]', to: '[fx]', command: 'fix' },
+        { from: '[fx]', to: '[vf]', command: 'verify' },
+        { from: '[vf]', to: '[xx]', command: 'done' },
       ],
+      actions: { '[fx]': ['test', 'audit', 'patch'], '[vf]': ['test'] },
     },
-    {
-      id: 'infrastructure',
+    infrastructure: {
       name: 'Infrastructure Workflow',
-      description: '인프라/리팩토링 워크플로우',
-      states: ['[ ]', '[dd]', '[im]', '[xx]'],
-      initialState: '[ ]',
-      finalStates: ['[xx]'],
+      states: ['[ ]', '[ds]', '[im]', '[xx]'],
       transitions: [
-        {
-          from: '[ ]',
-          to: '[dd]',
-          command: 'start',
-          label: '설계 시작',
-          document: '010-tech-design.md',
-          optional: true,
-        },
-        {
-          from: '[ ]',
-          to: '[im]',
-          command: 'skip',
-          label: '설계 생략, 구현 시작',
-          document: '030-implementation.md',
-        },
-        {
-          from: '[dd]',
-          to: '[im]',
-          command: 'build',
-          label: '구현 시작',
-          document: '030-implementation.md',
-        },
-        {
-          from: '[im]',
-          to: '[xx]',
-          command: 'done',
-          label: '작업 완료',
-          document: null,
-        },
+        { from: '[ ]', to: '[ds]', command: 'start' },
+        { from: '[ ]', to: '[im]', command: 'skip' },
+        { from: '[ds]', to: '[im]', command: 'build' },
+        { from: '[im]', to: '[xx]', command: 'done' },
       ],
+      actions: { '[im]': ['test', 'audit', 'patch'] },
     },
-  ],
+  },
 };
 
 // ============================================================
@@ -350,10 +293,10 @@ export function findColumnByStatus(statusCode: string): Column | undefined {
  * @param categoryId 카테고리 ID (예: 'development')
  * @returns 해당 워크플로우 또는 undefined
  */
-export function findWorkflowByCategory(categoryId: string): Workflow | undefined {
+export function findWorkflowByCategory(categoryId: string): WorkflowDefinition | undefined {
   const category = DEFAULT_CATEGORIES.categories.find((cat: Category) => cat.id === categoryId);
   if (!category) return undefined;
-  return DEFAULT_WORKFLOWS.workflows.find((wf: Workflow) => wf.id === category.workflowId);
+  return DEFAULT_WORKFLOWS.workflows[category.workflowId];
 }
 
 /**
@@ -363,7 +306,7 @@ export function findWorkflowByCategory(categoryId: string): Workflow | undefined
  * @returns 사용 가능한 전이 목록
  */
 export function getAvailableTransitions(workflowId: string, currentState: string): WorkflowTransition[] {
-  const workflow = DEFAULT_WORKFLOWS.workflows.find((wf: Workflow) => wf.id === workflowId);
+  const workflow = DEFAULT_WORKFLOWS.workflows[workflowId];
   if (!workflow) return [];
   return workflow.transitions.filter((t: WorkflowTransition) => t.from === currentState);
 }

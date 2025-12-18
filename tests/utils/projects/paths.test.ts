@@ -10,7 +10,6 @@ import {
   getProjectsBasePath,
   getProjectDir,
   getProjectFilePath,
-  getProjectsListFilePath,
   validateProjectId,
 } from '../../../server/utils/projects/paths';
 
@@ -87,15 +86,6 @@ describe('ProjectPaths', () => {
       const result = getProjectFilePath('test-project', 'team.json');
       expect(result).toContain('test-project');
       expect(result).toContain('team.json');
-    });
-  });
-
-  describe('getProjectsListFilePath', () => {
-    it('should return projects.json path', () => {
-      const result = getProjectsListFilePath();
-      expect(result).toContain('.jjiban');
-      expect(result).toContain('settings');
-      expect(result).toContain('projects.json');
     });
   });
 
