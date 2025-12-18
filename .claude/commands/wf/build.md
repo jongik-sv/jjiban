@@ -1,3 +1,16 @@
+---
+subagent:
+  primary: backend-architect
+  parallel:
+    - backend-architect
+    - frontend-architect
+  conditions:
+    backend-only: backend-architect
+    frontend-only: frontend-architect
+    infrastructure: devops-architect
+  description: TDD 기반 백엔드/프론트엔드 병렬 구현
+---
+
 # /wf:build - TDD 기반 구현 (Lite)
 
 > **상태 전환**: `[ap] 설계승인` → `[im] 구현` (development)

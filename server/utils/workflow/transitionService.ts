@@ -10,7 +10,6 @@
  * - formatCompletedTimestamp(): 타임스탬프 포맷 유틸리티
  */
 
-import { join } from 'path';
 import type {
   TransitionResult,
   TaskCategory,
@@ -21,17 +20,30 @@ import { findTaskById, findTaskInProject } from '../wbs/taskService';
 import { getWbsTree, saveWbsTree } from '../wbs/wbsService';
 import { getWorkflows } from '../settings';
 import {
-  ensureDir,
-  writeMarkdownFile,
-  getTaskFolderPath,
-  fileExists,
-} from '../file';
-import {
   createNotFoundError,
   createBadRequestError,
   createConflictError,
 } from '../errors/standardError';
 import { extractStatusCode, formatStatusCode } from './statusUtils';
+
+/**
+ * command에서 wf: prefix를 제거하여 순수 명령어 이름 추출
+ * workflows.json에서 command가 'wf:start' 형태로 저장됨
+ * @param command - 명령어 (예: 'wf:start' 또는 'start')
+ * @returns 순수 명령어 이름 (예: 'start')
+ */
+function extractCommandName(command: string): string {
+  return command.startsWith('wf:') ? command.slice(3) : command;
+}
+
+/**
+ * 명령어를 wf: prefix 형태로 변환
+ * @param command - 순수 명령어 이름 (예: 'start')
+ * @returns wf: prefix가 붙은 명령어 (예: 'wf:start')
+ */
+function toWorkflowCommand(command: string): string {
+  return command.startsWith('wf:') ? command : `wf:${command}`;
+}
 
 /**
  * 완료 시각을 "YYYY-MM-DD HH:mm" 형식으로 포맷
@@ -121,50 +133,13 @@ async function findTransition(
     return null;
   }
 
-  // 전이 규칙 찾기
+  // 전이 규칙 찾기 (command는 'start' 또는 'wf:start' 형태 모두 지원)
+  const normalizedInputCommand = extractCommandName(command);
   const transition = categoryWorkflow.transitions.find(
-    (t) => t.from === currentStatus && t.command === command
+    (t) => t.from === currentStatus && extractCommandName(t.command) === normalizedInputCommand
   );
 
   return transition || null;
-}
-
-/**
- * 문서 생성 (템플릿 기반 또는 기본 콘텐츠)
- * @param projectId - 프로젝트 ID
- * @param taskId - Task ID
- * @param documentName - 문서 파일명
- * @returns 성공 여부
- */
-async function createDocument(
-  projectId: string,
-  taskId: string,
-  documentName: string
-): Promise<boolean> {
-  const taskFolderPath = getTaskFolderPath(projectId, taskId);
-  await ensureDir(taskFolderPath);
-
-  const documentPath = join(taskFolderPath, documentName);
-
-  // 이미 존재하면 건너뛰기
-  if (await fileExists(documentPath)) {
-    return true;
-  }
-
-  // 기본 템플릿 내용
-  const defaultContent = `# ${documentName.replace('.md', '')}
-
-**Task ID:** ${taskId}
-**Created:** ${new Date().toISOString().split('T')[0]}
-
----
-
-## 내용
-
-이 문서는 자동으로 생성되었습니다.
-`;
-
-  return await writeMarkdownFile(documentPath, defaultContent);
 }
 
 /** 검증 결과 타입 (내부용) */
@@ -359,14 +334,7 @@ export async function executeTransition(
     );
   }
 
-  // 문서 생성 (필요한 경우)
-  let documentCreated: string | undefined;
-  if (transition.document) {
-    const created = await createDocument(foundProjectId, taskId, transition.document);
-    if (created) {
-      documentCreated = transition.document;
-    }
-  }
+  // 문서 생성은 슬래시 명령어에서 처리 (워크플로우 설정에서 제거됨)
 
   return {
     success: true,
@@ -374,7 +342,6 @@ export async function executeTransition(
     previousStatus: statusCode,
     newStatus: extractStatusCode(transition.to),
     command,
-    documentCreated,
     timestamp,
   };
 }
@@ -406,10 +373,10 @@ export async function getAvailableCommands(
     return [];
   }
 
-  // 현재 상태에서 가능한 명령어 추출
+  // 현재 상태에서 가능한 명령어 추출 (wf: prefix 제거하여 반환)
   const commands = categoryWorkflow.transitions
     .filter((t) => t.from === currentStatus)
-    .map((t) => t.command);
+    .map((t) => extractCommandName(t.command));
 
   return commands;
 }

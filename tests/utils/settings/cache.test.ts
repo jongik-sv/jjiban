@@ -12,11 +12,8 @@ import {
   refreshCache,
 } from '../../../server/utils/settings/_cache';
 import {
-  DEFAULT_SETTINGS,
   DEFAULT_COLUMNS,
-  DEFAULT_CATEGORIES,
   DEFAULT_WORKFLOWS,
-  DEFAULT_ACTIONS,
 } from '../../../server/utils/settings/defaults';
 
 // Mock fs/promises
@@ -42,16 +39,12 @@ describe('Settings Cache Module', () => {
     it('UT-001: should load settings from files when all files exist', async () => {
       // Given: 모든 설정 파일이 존재
       const mockColumns = { ...DEFAULT_COLUMNS, version: '2.0' };
-      const mockCategories = { ...DEFAULT_CATEGORIES, version: '2.0' };
-      const mockWorkflows = { ...DEFAULT_WORKFLOWS, version: '2.0' };
-      const mockActions = { ...DEFAULT_ACTIONS, version: '2.0' };
+      const mockWorkflows = { ...DEFAULT_WORKFLOWS, version: '3.0' };
 
       vi.mocked(readFile).mockImplementation((path: unknown) => {
         const pathStr = String(path);
         if (pathStr.includes('columns')) return Promise.resolve(JSON.stringify(mockColumns));
-        if (pathStr.includes('categories')) return Promise.resolve(JSON.stringify(mockCategories));
         if (pathStr.includes('workflows')) return Promise.resolve(JSON.stringify(mockWorkflows));
-        if (pathStr.includes('actions')) return Promise.resolve(JSON.stringify(mockActions));
         return Promise.reject(new Error('Unknown file'));
       });
 
@@ -60,9 +53,7 @@ describe('Settings Cache Module', () => {
 
       // Then: 파일에서 로드된 설정 반환
       expect(settings.columns).toEqual(mockColumns);
-      expect(settings.categories).toEqual(mockCategories);
       expect(settings.workflows).toEqual(mockWorkflows);
-      expect(settings.actions).toEqual(mockActions);
     });
 
     it('UT-002: should use default settings when files do not exist', async () => {
@@ -76,9 +67,7 @@ describe('Settings Cache Module', () => {
 
       // Then: 기본값 반환
       expect(settings.columns).toEqual(DEFAULT_COLUMNS);
-      expect(settings.categories).toEqual(DEFAULT_CATEGORIES);
       expect(settings.workflows).toEqual(DEFAULT_WORKFLOWS);
-      expect(settings.actions).toEqual(DEFAULT_ACTIONS);
     });
 
     it('UT-003: should fallback to defaults and log warning on JSON parse error', async () => {
@@ -90,7 +79,8 @@ describe('Settings Cache Module', () => {
       const settings = await loadSettings();
 
       // Then: 기본값 반환 및 경고 로그
-      expect(settings).toEqual(DEFAULT_SETTINGS);
+      expect(settings.columns).toEqual(DEFAULT_COLUMNS);
+      expect(settings.workflows).toEqual(DEFAULT_WORKFLOWS);
       expect(warnSpy).toHaveBeenCalled();
 
       warnSpy.mockRestore();

@@ -67,11 +67,12 @@ describe('ProjectPaths', () => {
     });
 
     it('should throw error for invalid project ID (uppercase)', () => {
-      expect(() => getProjectDir('TestProject')).toThrow('영소문자, 숫자, 하이픈만 허용');
+      expect(() => getProjectDir('TestProject')).toThrow('영소문자, 숫자, 한글, 하이픈, 언더스코어만 허용');
     });
 
     it('should throw error for invalid project ID (special characters)', () => {
-      expect(() => getProjectDir('test_project!')).toThrow('영소문자, 숫자, 하이픈만 허용');
+      // 언더스코어는 허용되므로 느낌표 같은 특수문자만 거부됨
+      expect(() => getProjectDir('test_project!')).toThrow('영소문자, 숫자, 한글, 하이픈, 언더스코어만 허용');
     });
   });
 
@@ -94,12 +95,20 @@ describe('ProjectPaths', () => {
       expect(() => validateProjectId('test-project-123')).not.toThrow();
     });
 
-    it('should reject uppercase letters', () => {
-      expect(() => validateProjectId('TestProject')).toThrow('영소문자, 숫자, 하이픈만 허용');
+    it('should accept valid project ID with Korean characters', () => {
+      expect(() => validateProjectId('테스트-프로젝트')).not.toThrow();
     });
 
-    it('should reject special characters', () => {
-      expect(() => validateProjectId('test_project')).toThrow('영소문자, 숫자, 하이픈만 허용');
+    it('should accept valid project ID with underscore', () => {
+      expect(() => validateProjectId('test_project')).not.toThrow();
+    });
+
+    it('should reject uppercase letters', () => {
+      expect(() => validateProjectId('TestProject')).toThrow('영소문자, 숫자, 한글, 하이픈, 언더스코어만 허용');
+    });
+
+    it('should reject special characters (exclamation, etc)', () => {
+      expect(() => validateProjectId('test-project!')).toThrow('영소문자, 숫자, 한글, 하이픈, 언더스코어만 허용');
     });
 
     it('should reject path traversal (..)', () => {
@@ -107,7 +116,7 @@ describe('ProjectPaths', () => {
     });
 
     it('should reject path with slashes', () => {
-      expect(() => validateProjectId('test/project')).toThrow('영소문자, 숫자, 하이픈만 허용');
+      expect(() => validateProjectId('test/project')).toThrow('영소문자, 숫자, 한글, 하이픈, 언더스코어만 허용');
     });
   });
 });

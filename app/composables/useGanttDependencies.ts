@@ -164,9 +164,9 @@ export function useGanttDependencies() {
 
     return arrows.filter(arrow => {
       // Parse path to extract bounding box (simplified AABB check)
-      // Path format: M x1,y1 H x2 V y3 H x3
+      // Path format: M x1,y1 H x2 V y3 H x3 (5 numbers)
       const coords = arrow.path.match(/[\d.]+/g)?.map(Number)
-      if (!coords || coords.length < 6) return true
+      if (!coords || coords.length < 5) return true
 
       const [x1, y1, x2, y3, x3] = coords
       const minX = Math.min(x1, x2, x3)

@@ -14,16 +14,11 @@ import type {
   Settings,
   SettingsFileType,
   ColumnsConfig,
-  CategoriesConfig,
   WorkflowsConfig,
-  ActionsConfig,
 } from '../../../types/settings';
 import {
-  DEFAULT_SETTINGS,
   DEFAULT_COLUMNS,
-  DEFAULT_CATEGORIES,
   DEFAULT_WORKFLOWS,
-  DEFAULT_ACTIONS,
 } from './defaults';
 import { getSettingsFilePath } from './paths';
 
@@ -48,11 +43,9 @@ let cache: CacheState = {
 // 기본값 매핑
 // ============================================================
 
-const DEFAULTS: Record<SettingsFileType, ColumnsConfig | CategoriesConfig | WorkflowsConfig | ActionsConfig> = {
+const DEFAULTS: Record<SettingsFileType, ColumnsConfig | WorkflowsConfig> = {
   columns: DEFAULT_COLUMNS,
-  categories: DEFAULT_CATEGORIES,
   workflows: DEFAULT_WORKFLOWS,
-  actions: DEFAULT_ACTIONS,
 };
 
 // ============================================================
@@ -97,18 +90,14 @@ async function loadFromFile<T>(type: SettingsFileType): Promise<T> {
  * @returns 전체 Settings 객체
  */
 async function loadFromFiles(): Promise<Settings> {
-  const [columns, categories, workflows, actions] = await Promise.all([
+  const [columns, workflows] = await Promise.all([
     loadFromFile<ColumnsConfig>('columns'),
-    loadFromFile<CategoriesConfig>('categories'),
     loadFromFile<WorkflowsConfig>('workflows'),
-    loadFromFile<ActionsConfig>('actions'),
   ]);
 
   return {
     columns,
-    categories,
     workflows,
-    actions,
   };
 }
 

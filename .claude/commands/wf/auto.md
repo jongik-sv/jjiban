@@ -1,6 +1,6 @@
 # /wf:auto - 자동 워크플로우 실행
 
-> **Task 자동 선택**: `npx jjiban next-task`로 실행 가능한 Task를 조회하여 워크플로우를 자동 실행합니다.
+> **Task 자동 선택**: `npx tsx .jjiban/script/next-task.ts`로 실행 가능한 Task를 조회하여 워크플로우를 자동 실행합니다.
 
 ## 실행 절차
 
@@ -8,10 +8,10 @@
 
 ```bash
 # 기본 (의존관계 적용)
-npx jjiban next-task {PROJECT}
+npx tsx .jjiban/script/next-task.ts -p {PROJECT}
 
 # 설계 단계용 (의존관계 무시)
-npx jjiban next-task {PROJECT} --ignore-deps
+npx tsx .jjiban/script/next-task.ts -p {PROJECT} --ignore-deps
 ```
 
 **--until 옵션에 따른 조회 방식:**
@@ -126,7 +126,7 @@ npx jjiban next-task {PROJECT} --ignore-deps
 ## 핵심 실행 로직
 
 ```
-1. npx jjiban next-task [PROJECT] 실행 → JSON 결과 획득
+1. npx tsx .jjiban/script/next-task.ts [-p PROJECT] 실행 → JSON 결과 획득
 2. --until 옵션 확인:
    - 설계 단계(basic-design ~ apply): executable + waiting 모두 대상
    - 구현 단계(build ~): executable만 대상
@@ -158,7 +158,7 @@ npx jjiban next-task {PROJECT} --ignore-deps
 ```
 [wf:auto] Task 자동 선택
 
-실행: npx jjiban next-task
+실행: npx tsx .jjiban/script/next-task.ts
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 🎯 실행 가능한 Task (3개)
@@ -219,7 +219,7 @@ npx jjiban next-task {PROJECT} --ignore-deps
 | 에러 | 메시지 | 처리 |
 |------|--------|------|
 | Task 없음 | `[ERROR] 실행 가능한 Task가 없습니다` | 종료 |
-| CLI 실패 | `[ERROR] next-task 실행 실패` | 종료 |
+| 스크립트 실패 | `[ERROR] next-task.ts 실행 실패` | 종료 |
 | JSON 파싱 실패 | `[ERROR] 결과 파싱 실패` | 종료 |
 
 ---

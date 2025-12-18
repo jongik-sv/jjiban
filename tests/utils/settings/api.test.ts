@@ -13,9 +13,7 @@ import { isValidSettingsType } from '../../../server/utils/settings';
 import { refreshCache } from '../../../server/utils/settings/_cache';
 import {
   DEFAULT_COLUMNS,
-  DEFAULT_CATEGORIES,
   DEFAULT_WORKFLOWS,
-  DEFAULT_ACTIONS,
 } from '../../../server/utils/settings/defaults';
 
 // Mock fs/promises
@@ -45,16 +43,8 @@ describe('Settings API Handler', () => {
       expect(isValidSettingsType('columns')).toBe(true);
     });
 
-    it('AT-002: should accept categories type', () => {
-      expect(isValidSettingsType('categories')).toBe(true);
-    });
-
-    it('AT-003: should accept workflows type', () => {
+    it('AT-002: should accept workflows type', () => {
       expect(isValidSettingsType('workflows')).toBe(true);
-    });
-
-    it('AT-004: should accept actions type', () => {
-      expect(isValidSettingsType('actions')).toBe(true);
     });
 
     it('should reject invalid type', () => {
@@ -62,6 +52,9 @@ describe('Settings API Handler', () => {
       expect(isValidSettingsType('')).toBe(false);
       expect(isValidSettingsType('COLUMNS')).toBe(false);
       expect(isValidSettingsType('column')).toBe(false);
+      // categories와 actions는 더 이상 별도 파일이 아님
+      expect(isValidSettingsType('categories')).toBe(false);
+      expect(isValidSettingsType('actions')).toBe(false);
     });
   });
 
@@ -80,45 +73,44 @@ describe('Settings API Handler', () => {
       expect(column).toHaveProperty('color');
     });
 
-    it('should have correct categories structure', () => {
-      expect(DEFAULT_CATEGORIES).toHaveProperty('version');
-      expect(DEFAULT_CATEGORIES).toHaveProperty('categories');
-      expect(Array.isArray(DEFAULT_CATEGORIES.categories)).toBe(true);
-      expect(DEFAULT_CATEGORIES.categories.length).toBe(3); // development, defect, infrastructure
-
-      // Check category structure
-      const category = DEFAULT_CATEGORIES.categories[0];
-      expect(category).toHaveProperty('id');
-      expect(category).toHaveProperty('name');
-      expect(category).toHaveProperty('workflowId');
-    });
-
-    it('should have correct workflows structure', () => {
+    it('should have correct workflows structure (v2.0 with states, commands, workflows)', () => {
       expect(DEFAULT_WORKFLOWS).toHaveProperty('version');
+      expect(DEFAULT_WORKFLOWS).toHaveProperty('states');
+      expect(DEFAULT_WORKFLOWS).toHaveProperty('commands');
       expect(DEFAULT_WORKFLOWS).toHaveProperty('workflows');
-      expect(Array.isArray(DEFAULT_WORKFLOWS.workflows)).toBe(true);
-      expect(DEFAULT_WORKFLOWS.workflows.length).toBe(3); // development, defect, infrastructure
+
+      // Check workflows is an object with category keys
+      expect(typeof DEFAULT_WORKFLOWS.workflows).toBe('object');
+      expect(DEFAULT_WORKFLOWS.workflows).toHaveProperty('development');
+      expect(DEFAULT_WORKFLOWS.workflows).toHaveProperty('defect');
+      expect(DEFAULT_WORKFLOWS.workflows).toHaveProperty('infrastructure');
 
       // Check workflow structure
-      const workflow = DEFAULT_WORKFLOWS.workflows[0];
-      expect(workflow).toHaveProperty('id');
+      const workflow = DEFAULT_WORKFLOWS.workflows.development;
+      expect(workflow).toHaveProperty('name');
       expect(workflow).toHaveProperty('states');
       expect(workflow).toHaveProperty('transitions');
+      expect(workflow).toHaveProperty('actions');
       expect(Array.isArray(workflow.transitions)).toBe(true);
     });
 
-    it('should have correct actions structure', () => {
-      expect(DEFAULT_ACTIONS).toHaveProperty('version');
-      expect(DEFAULT_ACTIONS).toHaveProperty('actions');
-      expect(Array.isArray(DEFAULT_ACTIONS.actions)).toBe(true);
-      expect(DEFAULT_ACTIONS.actions.length).toBeGreaterThan(0);
+    it('should derive categories from workflows keys', () => {
+      const categories = Object.keys(DEFAULT_WORKFLOWS.workflows);
+      expect(categories).toContain('development');
+      expect(categories).toContain('defect');
+      expect(categories).toContain('infrastructure');
+      expect(categories.length).toBe(3);
+    });
 
-      // Check action structure
-      const action = DEFAULT_ACTIONS.actions[0];
-      expect(action).toHaveProperty('id');
-      expect(action).toHaveProperty('command');
-      expect(action).toHaveProperty('allowedStates');
-      expect(action).toHaveProperty('allowedCategories');
+    it('should have actions defined in commands with isAction flag', () => {
+      const actionCommands = Object.entries(DEFAULT_WORKFLOWS.commands)
+        .filter(([_, cmd]) => cmd.isAction === true)
+        .map(([name]) => name);
+
+      expect(actionCommands).toContain('ui');
+      expect(actionCommands).toContain('review');
+      expect(actionCommands).toContain('test');
+      expect(actionCommands).toContain('audit');
     });
   });
 });

@@ -5,24 +5,43 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { setActivePinia, createPinia } from 'pinia'
-import { useDependencyGraph } from '~/composables/useDependencyGraph'
-import { useWbsStore } from '~/stores/wbs'
-import { useSelectionStore } from '~/stores/selection'
+import { ref, reactive } from 'vue'
 import type { WbsNode } from '~/types'
 import type { GraphFilter } from '~/types/graph'
 
+// Mock stores
+const mockFlatNodes = reactive(new Map<string, WbsNode>())
+const mockSelectedProjectId = ref<string | null>('test-project')
+
+const mockWbsStore = {
+  flatNodes: mockFlatNodes
+}
+
+const mockSelectionStore = {
+  get selectedProjectId() { return mockSelectedProjectId.value },
+  set selectedProjectId(val: string | null) { mockSelectedProjectId.value = val }
+}
+
+// Mock useFocusView
+const mockBuildFocusGraph = vi.fn().mockReturnValue({
+  includesNodes: new Set<string>()
+})
+
+vi.stubGlobal('useWbsStore', () => mockWbsStore)
+vi.stubGlobal('useSelectionStore', () => mockSelectionStore)
+vi.stubGlobal('useFocusView', () => ({
+  buildFocusGraph: mockBuildFocusGraph
+}))
+
+// Import after mocks are set up
+import { useDependencyGraph } from '~/composables/useDependencyGraph'
+
 describe('useDependencyGraph', () => {
   beforeEach(() => {
-    setActivePinia(createPinia())
-
-    // Mock stores
-    const wbsStore = useWbsStore()
-    const selectionStore = useSelectionStore()
-    selectionStore.selectedProjectId = 'test-project'
-
     // Clear flatNodes before each test
-    wbsStore.flatNodes.clear()
+    mockFlatNodes.clear()
+    mockSelectedProjectId.value = 'test-project'
+    mockBuildFocusGraph.mockClear()
   })
 
   // Helper to create mock task node
@@ -45,9 +64,8 @@ describe('useDependencyGraph', () => {
 
   // Helper to add task to store
   function addTaskToStore(taskId: string, category: string, status: string, depends?: string) {
-    const wbsStore = useWbsStore()
     const fullId = `test-project:${taskId}`
-    wbsStore.flatNodes.set(fullId, createMockTask(taskId, category, status, depends))
+    mockFlatNodes.set(fullId, createMockTask(taskId, category, status, depends))
   }
 
   describe('buildGraphData - Category Filtering', () => {
@@ -316,7 +334,7 @@ describe('useDependencyGraph', () => {
       const edge = result.edges.find(e => e.target === 'TSK-02')
       expect(edge?.animated).toBe(true) // TSK-02는 완료 아님
 
-      // TSK-01에서 나가는 엣지는 없지만, TSK-02가 완료되면 animated = false
+      // TSK-03 추가 (완료 상태)
       addTaskToStore('TSK-03', 'development', '[xx]', 'TSK-01')
       const result2 = buildGraphData()
       const edge2 = result2.edges.find(e => e.target === 'TSK-03')
@@ -334,9 +352,14 @@ describe('useDependencyGraph', () => {
 
       const result = buildGraphData()
 
-      expect(result.nodes[0].position.x).toBe(0) // Level 0
-      expect(result.nodes[1].position.x).toBe(280) // Level 1
-      expect(result.nodes[2].position.x).toBe(560) // Level 2
+      // 노드를 ID로 찾기
+      const node1 = result.nodes.find(n => n.id === 'TSK-01')
+      const node2 = result.nodes.find(n => n.id === 'TSK-02')
+      const node3 = result.nodes.find(n => n.id === 'TSK-03')
+
+      expect(node1?.position.x).toBe(0) // Level 0
+      expect(node2?.position.x).toBe(280) // Level 1
+      expect(node3?.position.x).toBe(560) // Level 2
     })
 
     // TC-UNIT-012: 순환 의존성 처리 (BR-005)
@@ -489,13 +512,10 @@ describe('useDependencyGraph', () => {
 
   describe('project filtering', () => {
     it('should only include tasks from selected project', () => {
-      const wbsStore = useWbsStore()
-      const selectionStore = useSelectionStore()
+      mockSelectedProjectId.value = 'project-a'
 
-      selectionStore.selectedProjectId = 'project-a'
-
-      wbsStore.flatNodes.set('project-a:TSK-01', createMockTask('TSK-01', 'development', '[ ]'))
-      wbsStore.flatNodes.set('project-b:TSK-02', createMockTask('TSK-02', 'development', '[ ]'))
+      mockFlatNodes.set('project-a:TSK-01', createMockTask('TSK-01', 'development', '[ ]'))
+      mockFlatNodes.set('project-b:TSK-02', createMockTask('TSK-02', 'development', '[ ]'))
 
       const { buildGraphData } = useDependencyGraph()
 
@@ -506,8 +526,7 @@ describe('useDependencyGraph', () => {
     })
 
     it('should return empty graph when no project is selected', () => {
-      const selectionStore = useSelectionStore()
-      selectionStore.selectedProjectId = null
+      mockSelectedProjectId.value = null
 
       addTaskToStore('TSK-01', 'development', '[ ]')
 
@@ -531,7 +550,6 @@ describe('useDependencyGraph', () => {
     })
 
     it('should handle tasks with undefined category', () => {
-      const wbsStore = useWbsStore()
       const node: WbsNode = {
         id: 'TSK-01',
         type: 'task',
@@ -540,7 +558,7 @@ describe('useDependencyGraph', () => {
         children: []
       } as WbsNode
 
-      wbsStore.flatNodes.set('test-project:TSK-01', node)
+      mockFlatNodes.set('test-project:TSK-01', node)
 
       const { buildGraphData } = useDependencyGraph()
 

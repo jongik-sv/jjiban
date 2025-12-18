@@ -121,9 +121,8 @@ describe('Project Metadata Service - API Integration Tests', () => {
       expect(teamJson.version).toBe('1.0');
       expect(teamJson.members).toEqual([]);
 
-      // And: Verify added to projects.json
-      const projectsListPath = join(TEST_BASE, '.jjiban', 'settings', 'projects.json');
-      const projectsList = JSON.parse(await readFile(projectsListPath, 'utf-8'));
+      // And: Verify project is discoverable via folder scan
+      const projectsList = await getProjectsList();
       // Should have at least 2 projects now (e2e-test-project from beforeAll + e2e-create-test)
       expect(projectsList.projects.length).toBeGreaterThanOrEqual(2);
       const createdProject = projectsList.projects.find((p: any) => p.id === 'e2e-create-test');
@@ -409,43 +408,45 @@ describe('Project Metadata Service - API Integration Tests', () => {
   });
 
   describe('Error Handling and Edge Cases', () => {
-    // Store original projects.json for restoration
-    let originalProjectsConfig: string;
+    // 폴더 스캔 방식에서는 projects.json이 아닌 projects 폴더를 확인
+    // 빈 프로젝트 목록 테스트는 폴더가 비어있어야 함
 
-    beforeAll(async () => {
-      const projectsPath = join(TEST_BASE, '.jjiban', 'settings', 'projects.json');
+    it('should handle empty project list gracefully', async () => {
+      // Given: 임시로 프로젝트 폴더를 백업하고 비우기
+      const projectsDir = join(TEST_BASE, '.jjiban', 'projects');
+      const backupDir = join(TEST_BASE, '.jjiban', 'projects-backup');
+
+      // 기존 프로젝트 폴더 백업
+      await mkdir(backupDir, { recursive: true });
+      const entries = await import('fs/promises').then(fs => fs.readdir(projectsDir));
+      for (const entry of entries) {
+        await import('fs/promises').then(fs =>
+          fs.rename(join(projectsDir, entry), join(backupDir, entry))
+        );
+      }
+
       try {
-        originalProjectsConfig = await readFile(projectsPath, 'utf-8');
-      } catch {
-        originalProjectsConfig = JSON.stringify({ version: '1.0', projects: [], defaultProject: null }, null, 2);
+        // When: Get list from empty folder
+        const result = await getProjectsList();
+
+        // Then: Should return empty array, not error
+        expect(result.projects).toEqual([]);
+        expect(result.defaultProject).toBeNull();
+      } finally {
+        // 백업된 프로젝트 복원
+        const backupEntries = await import('fs/promises').then(fs => fs.readdir(backupDir));
+        for (const entry of backupEntries) {
+          await import('fs/promises').then(fs =>
+            fs.rename(join(backupDir, entry), join(projectsDir, entry))
+          );
+        }
+        await rm(backupDir, { recursive: true, force: true });
       }
     });
 
-    afterAll(async () => {
-      // Restore original projects.json
-      const projectsPath = join(TEST_BASE, '.jjiban', 'settings', 'projects.json');
-      await writeFile(projectsPath, originalProjectsConfig, 'utf-8');
-    });
-
-    it('should handle empty project list gracefully', async () => {
-      // Given: Empty projects.json
-      await writeFile(
-        join(TEST_BASE, '.jjiban', 'settings', 'projects.json'),
-        JSON.stringify({ version: '1.0', projects: [], defaultProject: null }, null, 2),
-        'utf-8'
-      );
-
-      // When: Get list
-      const result = await getProjectsList();
-
-      // Then: Should return empty array, not error
-      expect(result.projects).toEqual([]);
-      expect(result.defaultProject).toBeNull();
-    });
-
     it('should validate project ID format strictly', async () => {
+      // Note: underscores are now allowed per paths.test.ts validation
       const invalidIds = [
-        'Project_With_Underscore',
         'ProjectWithUppercase',
         'project with spaces',
         'project@special',

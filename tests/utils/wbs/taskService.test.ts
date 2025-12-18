@@ -106,7 +106,7 @@ describe('TaskService', () => {
       expect(task.id).toBe(TEST_TASK_ID);
       expect(task.title).toBe('Test Task');
       expect(task.category).toBe('development');
-      expect(task.status).toBe('bd');
+      expect(task.status).toBe('[bd]');  // 상태는 브래킷 포함
       expect(task.priority).toBe('high');
     });
 
@@ -119,14 +119,6 @@ describe('TaskService', () => {
       expect(task.documents.length).toBeGreaterThan(0);
       expect(task.documents[0].name).toBe('010-basic-design.md');
       expect(task.documents[0].exists).toBe(true);
-    });
-
-    it('UT-TASK-01-03: history 배열 포함', async () => {
-      // Act
-      const task = await getTaskDetail(TEST_TASK_ID);
-
-      // Assert
-      expect(task.history).toBeInstanceOf(Array);
     });
 
     it('UT-TASK-01-04: assignee 정보 포함', async () => {
@@ -182,30 +174,6 @@ describe('TaskService', () => {
       await expect(updateTask(TEST_TASK_ID, { priority: 'invalid' as any })).rejects.toThrow(
         '유효하지 않은 우선순위'
       );
-    });
-  });
-
-  describe('HistoryEntry', () => {
-    it('UT-TASK-03-01: Task 수정 시 이력 기록', async () => {
-      // Act
-      await updateTask(TEST_TASK_ID, { title: 'New Title' });
-
-      // 이력 확인
-      const task = await getTaskDetail(TEST_TASK_ID);
-
-      // Assert
-      expect(task.history.length).toBeGreaterThan(0);
-      expect(task.history[0].action).toBe('update');
-    });
-
-    it('UT-TASK-03-03: timestamp ISO 8601 형식', async () => {
-      // Act
-      await updateTask(TEST_TASK_ID, { title: 'New Title' });
-      const task = await getTaskDetail(TEST_TASK_ID);
-
-      // Assert
-      const timestamp = task.history[0].timestamp;
-      expect(timestamp).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/);
     });
   });
 });

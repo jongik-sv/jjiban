@@ -1,3 +1,9 @@
+---
+subagent:
+  primary: refactoring-expert
+  description: 설계 리뷰 지적사항 반영
+---
+
 # /wf:apply - 설계 리뷰 반영 (Lite)
 
 > **상태 변경 없음**: 반복 실행 가능

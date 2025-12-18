@@ -1,3 +1,9 @@
+---
+subagent:
+  primary: devops-architect
+  description: 인프라 설계 생략 처리
+---
+
 # /wf:skip - 설계 생략 (Lite)
 
 > **상태 전환**: `[ ] Todo` → `[im] 구현`

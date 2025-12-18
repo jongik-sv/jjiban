@@ -156,7 +156,7 @@ describe('StateMapper', () => {
 
       expect(mappings).toBeDefined();
       expect(mappings['[ ]']).toBe('todo');
-      expect(mappings['[dd]']).toBe('dd');
+      expect(mappings['[ds]']).toBe('ds');  // infrastructure uses [ds] (design), not [dd]
       expect(mappings['[im]']).toBe('im');
       expect(mappings['[xx]']).toBe('xx');
     });
@@ -206,7 +206,7 @@ describe('StateMapper', () => {
     });
 
     test('infrastructure: statusCode -> name -> statusCode', async () => {
-      const testCases = ['dd', 'im', 'xx'];
+      const testCases = ['ds', 'im', 'xx'];  // infrastructure uses [ds] (design), not [dd]
 
       for (const code of testCases) {
         const name = await statusCodeToName('infrastructure', code);

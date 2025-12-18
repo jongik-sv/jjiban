@@ -124,7 +124,6 @@ export async function executeCommand(
     newStatus: result.newStatus,
     command: result.command,
     comment,
-    documentCreated: result.documentCreated,
   });
 
   return result;

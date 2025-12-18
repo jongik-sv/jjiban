@@ -10,7 +10,7 @@ import StatusBadge from '~/components/wbs/StatusBadge.vue'
 import Tag from 'primevue/tag'
 
 describe('StatusBadge', () => {
-  // UT-005: 상태 코드 정상 파싱
+  // UT-005: 상태 코드 정상 파싱 (한국어 라벨)
   it('should parse status code correctly', () => {
     const wrapper = mount(StatusBadge, {
       props: { status: 'basic-design [bd]' },
@@ -21,16 +21,16 @@ describe('StatusBadge', () => {
 
     const tag = wrapper.findComponent(Tag)
     expect(tag.exists()).toBe(true)
-    expect(tag.props('value')).toBe('Design')
+    expect(tag.props('value')).toBe('기본설계')
     expect(tag.props('severity')).toBe('info')
   })
 
   it.each([
-    ['detail-design [dd]', 'Detail', 'info'],
-    ['implement [im]', 'Implement', 'warning'],
-    ['verify [vf]', 'Verify', 'success'],
-    ['done [xx]', 'Done', 'success'],
-    ['todo [ ]', 'Todo', 'secondary']
+    ['detail-design [dd]', '상세설계', 'info'],
+    ['implement [im]', '구현', 'warning'],
+    ['verify [vf]', '검증', 'success'],
+    ['done [xx]', '완료', 'success'],
+    ['todo [ ]', '대기', 'secondary']
   ])('should parse "%s" to label "%s" with severity "%s"', (status, expectedLabel, expectedSeverity) => {
     const wrapper = mount(StatusBadge, {
       props: { status },

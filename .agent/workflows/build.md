@@ -1,6 +1,20 @@
+---
+subagent:
+  primary: backend-architect
+  parallel:
+    - backend-architect
+    - frontend-architect
+  conditions:
+    backend-only: backend-architect
+    frontend-only: frontend-architect
+    infrastructure: devops-architect
+  description: TDD 기반 백엔드/프론트엔드 병렬 구현
+---
+
 # /wf:build - TDD 기반 구현 (Lite)
 
-> **상태 전환**: `[dd] 상세설계` → `[im] 구현`
+> **상태 전환**: `[ap] 설계승인` → `[im] 구현` (development)
+> **상태 전환**: `[dd] 상세설계` → `[im] 구현` (infrastructure)
 > **적용 category**: development, infrastructure
 
 ## 사용법
@@ -50,8 +64,11 @@
 - `030-implementation.md` 생성
 - 템플릿: `.jjiban/templates/030-implementation.md`
 
-### 5단계: 상태 업데이트
-- `[dd]` → `[im]`
+### 5단계: 상태 전환 (자동)
+```bash
+npx tsx .jjiban/script/transition.ts {Task-ID} build -p {project}
+```
+- 성공: `{ "success": true, "newStatus": "im" }`
 
 ---
 
@@ -78,7 +95,8 @@
 | 에러 | 메시지 |
 |------|--------|
 | 잘못된 category | `[ERROR] development/infrastructure만 지원` |
-| 잘못된 상태 | `[ERROR] 상세설계 상태가 아닙니다` |
+| 잘못된 상태 (dev) | `[ERROR] 설계승인 상태가 아닙니다. /wf:approve 실행 필요` |
+| 잘못된 상태 (infra) | `[ERROR] 상세설계 상태가 아닙니다` |
 | 설계 문서 없음 | `[ERROR] 설계 문서가 없습니다` |
 | 테스트 5회 초과 | `[ERROR] 5회 시도 후에도 실패` |
 
@@ -104,5 +122,5 @@
 
 <!--
 wf:build lite
-Version: 1.0
+Version: 1.1
 -->

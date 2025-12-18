@@ -1,3 +1,9 @@
+---
+subagent:
+  primary: requirements-analyst
+  description: 요구사항 분석 및 기본설계 문서 생성
+---
+
 # /wf:start - 워크플로우 시작 (Lite)
 
 > **상태 전환**: `[ ] Todo` → `[bd]` | `[an]` | `[dd]`
@@ -48,8 +54,12 @@
    - Task 폴더 생성: `.jjiban/projects/{project}/tasks/{TSK-ID}/`
    - 템플릿 참조: `.jjiban/templates/010-*.md`
 
-6. **wbs.md 상태 업데이트**
-   - status 필드 변경
+6. **상태 전환** (자동)
+   ```bash
+   npx tsx .jjiban/script/transition.ts {Task-ID} start -p {project}
+   ```
+   - 성공: `{ "success": true, "newStatus": "bd|an|dd" }`
+   - 실패: 에러 메시지 표시
 
 ---
 

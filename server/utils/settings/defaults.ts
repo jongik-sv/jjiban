@@ -9,16 +9,9 @@
 import type {
   Column,
   ColumnsConfig,
-  Category,
-  CategoriesConfig,
   WorkflowDefinition,
   WorkflowTransition,
   WorkflowsConfig,
-  StateDefinition,
-  CommandDefinition,
-  Action,
-  ActionsConfig,
-  Settings,
 } from '../../../types/settings';
 
 // ============================================================
@@ -81,61 +74,25 @@ export const DEFAULT_COLUMNS: ColumnsConfig = {
 };
 
 // ============================================================
-// 기본 categories.json (카테고리)
-// PRD 4.3 기반 3가지 카테고리
-// ============================================================
-
-export const DEFAULT_CATEGORIES: CategoriesConfig = {
-  version: '1.0',
-  categories: [
-    {
-      id: 'development',
-      name: 'Development',
-      code: 'dev',
-      color: '#3b82f6',
-      icon: 'pi-code',
-      description: '신규 기능 개발 작업',
-      workflowId: 'development',
-    },
-    {
-      id: 'defect',
-      name: 'Defect',
-      code: 'defect',
-      color: '#ef4444',
-      icon: 'pi-exclamation-triangle',
-      description: '결함 수정 작업',
-      workflowId: 'defect',
-    },
-    {
-      id: 'infrastructure',
-      name: 'Infrastructure',
-      code: 'infra',
-      color: '#8b5cf6',
-      icon: 'pi-cog',
-      description: '인프라, 리팩토링 등 기술 작업',
-      workflowId: 'infrastructure',
-    },
-  ],
-};
-
-// ============================================================
 // 기본 workflows.json (워크플로우 규칙) - v2.0 확장 스키마
+// categories: workflows 키에서 파생 (development, defect, infrastructure)
+// actions: workflows[category].actions + commands.isAction에서 파생
 // PRD 5.2 기반 카테고리별 상태 전이 규칙
 // ============================================================
 
 export const DEFAULT_WORKFLOWS: WorkflowsConfig = {
   version: '2.0',
   states: {
-    '[ ]': { id: 'todo', label: '시작 전', labelEn: 'Todo', icon: 'pi-inbox', color: '#6b7280', severity: 'secondary', progressWeight: 0 },
-    '[bd]': { id: 'basic-design', label: '기본설계', labelEn: 'Basic Design', icon: 'pi-pencil', color: '#3b82f6', severity: 'info', progressWeight: 20 },
-    '[dd]': { id: 'detail-design', label: '상세설계', labelEn: 'Detail Design', icon: 'pi-file-edit', color: '#8b5cf6', severity: 'info', progressWeight: 40 },
-    '[ap]': { id: 'approve', label: '승인', labelEn: 'Approve', icon: 'pi-check-square', color: '#10b981', severity: 'success', progressWeight: 50 },
-    '[im]': { id: 'implement', label: '구현', labelEn: 'Implement', icon: 'pi-code', color: '#f59e0b', severity: 'warning', progressWeight: 60 },
-    '[vf]': { id: 'verify', label: '검증', labelEn: 'Verify', icon: 'pi-verified', color: '#22c55e', severity: 'success', progressWeight: 80 },
-    '[xx]': { id: 'done', label: '완료', labelEn: 'Done', icon: 'pi-check-circle', color: '#10b981', severity: 'success', progressWeight: 100 },
-    '[an]': { id: 'analysis', label: '분석', labelEn: 'Analysis', icon: 'pi-search', color: '#f59e0b', severity: 'warning', progressWeight: 30 },
-    '[fx]': { id: 'fix', label: '수정', labelEn: 'Fix', icon: 'pi-wrench', color: '#ef4444', severity: 'danger', progressWeight: 60 },
-    '[ds]': { id: 'design', label: '설계', labelEn: 'Design', icon: 'pi-sitemap', color: '#3b82f6', severity: 'info', progressWeight: 30 },
+    '[ ]': { id: 'todo', label: '시작 전', labelEn: 'Todo', icon: 'pi-inbox', color: '#6b7280', severity: 'secondary', progressWeight: 0, phase: 'todo' },
+    '[bd]': { id: 'basic-design', label: '기본설계', labelEn: 'Basic Design', icon: 'pi-pencil', color: '#3b82f6', severity: 'info', progressWeight: 20, phase: 'design' },
+    '[dd]': { id: 'detail-design', label: '상세설계', labelEn: 'Detail Design', icon: 'pi-file-edit', color: '#8b5cf6', severity: 'info', progressWeight: 40, phase: 'design' },
+    '[ap]': { id: 'approve', label: '승인', labelEn: 'Approve', icon: 'pi-check-square', color: '#10b981', severity: 'success', progressWeight: 50, phase: 'design' },
+    '[im]': { id: 'implement', label: '구현', labelEn: 'Implement', icon: 'pi-code', color: '#f59e0b', severity: 'warning', progressWeight: 60, phase: 'implement' },
+    '[vf]': { id: 'verify', label: '검증', labelEn: 'Verify', icon: 'pi-verified', color: '#22c55e', severity: 'success', progressWeight: 80, phase: 'implement' },
+    '[xx]': { id: 'done', label: '완료', labelEn: 'Done', icon: 'pi-check-circle', color: '#10b981', severity: 'success', progressWeight: 100, phase: 'done' },
+    '[an]': { id: 'analysis', label: '분석', labelEn: 'Analysis', icon: 'pi-search', color: '#f59e0b', severity: 'warning', progressWeight: 30, phase: 'design' },
+    '[fx]': { id: 'fix', label: '수정', labelEn: 'Fix', icon: 'pi-wrench', color: '#ef4444', severity: 'danger', progressWeight: 60, phase: 'implement' },
+    '[ds]': { id: 'design', label: '설계', labelEn: 'Design', icon: 'pi-sitemap', color: '#3b82f6', severity: 'info', progressWeight: 30, phase: 'design' },
   },
   commands: {
     start: { label: '시작', labelEn: 'Start', icon: 'pi-play', severity: 'primary' },
@@ -193,85 +150,6 @@ export const DEFAULT_WORKFLOWS: WorkflowsConfig = {
 };
 
 // ============================================================
-// 기본 actions.json (상태 내 액션)
-// PRD 5.3 기반 상태 변경 없는 액션
-// ============================================================
-
-export const DEFAULT_ACTIONS: ActionsConfig = {
-  version: '1.0',
-  actions: [
-    {
-      id: 'ui',
-      name: '화면설계',
-      command: 'ui',
-      allowedStates: ['[bd]'],
-      allowedCategories: ['development'],
-      document: '011-ui-design.md',
-      description: '화면설계 문서 작성',
-    },
-    {
-      id: 'review',
-      name: '설계 리뷰',
-      command: 'review',
-      allowedStates: ['[dd]'],
-      allowedCategories: ['development'],
-      document: '021-design-review-{llm}-{n}.md',
-      description: 'LLM 설계 리뷰 수행',
-    },
-    {
-      id: 'apply',
-      name: '리뷰 반영',
-      command: 'apply',
-      allowedStates: ['[dd]'],
-      allowedCategories: ['development'],
-      document: null,
-      description: '설계 리뷰 내용 반영',
-    },
-    {
-      id: 'test',
-      name: 'TDD/E2E 테스트',
-      command: 'test',
-      allowedStates: ['[im]', '[fx]'],
-      allowedCategories: ['development', 'defect'],
-      document: '070-tdd-test-results.md',
-      description: 'TDD/E2E 테스트 실행',
-    },
-    {
-      id: 'audit',
-      name: '코드 리뷰',
-      command: 'audit',
-      allowedStates: ['[im]', '[fx]'],
-      allowedCategories: ['development', 'defect'],
-      document: '031-code-review-{llm}-{n}.md',
-      description: 'LLM 코드 리뷰 수행',
-    },
-    {
-      id: 'patch',
-      name: '코드 리뷰 반영',
-      command: 'patch',
-      allowedStates: ['[im]', '[fx]'],
-      allowedCategories: ['development', 'defect'],
-      document: null,
-      description: '코드 리뷰 내용 반영',
-    },
-  ],
-};
-
-// ============================================================
-// 통합 기본 설정
-// ============================================================
-
-/**
- * 전체 기본 설정
- */
-export const DEFAULT_SETTINGS: Settings = {
-  columns: DEFAULT_COLUMNS,
-  categories: DEFAULT_CATEGORIES,
-  workflows: DEFAULT_WORKFLOWS,
-  actions: DEFAULT_ACTIONS,
-};
-
-// ============================================================
 // 헬퍼 함수
 // ============================================================
 
@@ -294,9 +172,7 @@ export function findColumnByStatus(statusCode: string): Column | undefined {
  * @returns 해당 워크플로우 또는 undefined
  */
 export function findWorkflowByCategory(categoryId: string): WorkflowDefinition | undefined {
-  const category = DEFAULT_CATEGORIES.categories.find((cat: Category) => cat.id === categoryId);
-  if (!category) return undefined;
-  return DEFAULT_WORKFLOWS.workflows[category.workflowId];
+  return DEFAULT_WORKFLOWS.workflows[categoryId];
 }
 
 /**
@@ -312,15 +188,13 @@ export function getAvailableTransitions(workflowId: string, currentState: string
 }
 
 /**
- * 현재 상태에서 사용 가능한 액션 목록 조회
+ * 현재 상태에서 사용 가능한 액션 명령어 목록 조회
  * @param categoryId 카테고리 ID
  * @param currentState 현재 상태 코드
- * @returns 사용 가능한 액션 목록
+ * @returns 사용 가능한 액션 명령어 목록
  */
-export function getAvailableActions(categoryId: string, currentState: string): Action[] {
-  return DEFAULT_ACTIONS.actions.filter(
-    (action: Action) =>
-      action.allowedCategories.includes(categoryId) &&
-      action.allowedStates.includes(currentState)
-  );
+export function getAvailableActionCommands(categoryId: string, currentState: string): string[] {
+  const workflow = DEFAULT_WORKFLOWS.workflows[categoryId];
+  if (!workflow || !workflow.actions) return [];
+  return workflow.actions[currentState] || [];
 }

@@ -1,12 +1,13 @@
 /**
  * GET /api/settings/workflows
  * Workflows configuration API
- * Returns .jjiban/settings/workflows.json
+ * Returns .jjiban/settings/workflows.json or defaults
  */
 
 import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import type { WorkflowsConfig } from '~/types/workflow-config'
+import { DEFAULT_WORKFLOWS } from '~~/server/utils/settings/defaults'
 
 export default defineEventHandler(async (event): Promise<WorkflowsConfig> => {
   try {
@@ -18,10 +19,8 @@ export default defineEventHandler(async (event): Promise<WorkflowsConfig> => {
 
     return config
   } catch (error) {
-    console.error('[API] Failed to load workflows.json:', error)
-    throw createError({
-      statusCode: 500,
-      statusMessage: 'Failed to load workflow configuration',
-    })
+    // File not found or parse error - return defaults
+    console.warn('[API] workflows.json not found, using defaults')
+    return DEFAULT_WORKFLOWS as WorkflowsConfig
   }
 })

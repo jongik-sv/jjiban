@@ -4,7 +4,7 @@
 
 | 항목 | 내용 |
 |------|------|
-| 문서 버전 | 5.2 |
+| 문서 버전 | 5.3 |
 | 작성일 | 2025-12-18 |
 | 상태 | Draft |
 
@@ -240,25 +240,38 @@ Project (프로젝트)
 }
 ```
 
-#### 3.2.4 워크플로우 규칙 (workflow-rules.json)
+#### 3.2.4 워크플로우 규칙 (workflows.json v2.0)
 
-카테고리별 상태 전환 규칙을 정의합니다.
+카테고리별 상태 전환 규칙을 `.jjiban/settings/workflows.json`에서 정의합니다.
 
-**규칙 스키마**
+**v2.0 스키마 구조**
+
+워크플로우 설정 파일은 세 개의 Record 섹션으로 구성됩니다:
+
+| 섹션 | 타입 | 설명 |
+|------|------|------|
+| `states` | `Record<string, StateDefinition>` | 상태 코드별 UI 정보 (label, icon, color, severity, progressWeight) |
+| `commands` | `Record<string, CommandDefinition>` | 명령어별 UI 정보 (label, icon, severity, isAction) |
+| `workflows` | `Record<string, WorkflowDefinition>` | 카테고리별 워크플로우 정의 (states, transitions, actions) |
+
+**WorkflowDefinition 구조**
 
 | 필드 | 설명 |
 |------|------|
-| `id` | 규칙 고유 ID |
-| `category` | 적용 카테고리 |
-| `command` | 실행 명령어 |
-| `currentStatus` | 현재 상태 |
-| `currentKanban` | 현재 칸반 컬럼 |
-| `nextStatus` | 다음 상태 |
-| `nextKanban` | 다음 칸반 컬럼 |
-| `llmCommand` | LLM CLI 명령어 |
-| `document` | 생성할 문서 |
-| `documentTemplate` | 문서 템플릿 |
-| `description` | 규칙 설명 |
+| `name` | 워크플로우 표시명 |
+| `states` | 포함된 상태 코드 목록 (순서대로) |
+| `transitions` | 상태 전이 규칙 배열 |
+| `actions` | 상태별 허용 액션 (선택) |
+
+**WorkflowTransition 구조**
+
+| 필드 | 설명 |
+|------|------|
+| `from` | 시작 상태 코드 |
+| `to` | 종료 상태 코드 |
+| `command` | 전이 명령어 |
+| `document` | 생성할 문서 (선택) |
+| `label` | 전이 레이블 (선택) |
 
 **development 워크플로우 규칙**
 
@@ -1103,5 +1116,6 @@ WBS 트리 목업을 기반으로 한 다크 블루 테마를 기본 테마로 �
 
 | 버전 | 날짜 | 변경 내용 |
 |------|------|-----------|
+| 5.3 | 2025-12-18 | **워크플로우 스키마 v2.0**: 섹션 3.2.4 업데이트. Record 기반 스키마 구조 설명 추가 (states, commands, workflows 섹션) |
 | 5.2 | 2025-12-18 | 설계승인(approve) 단계 추가: [ap] 상태, Approve 컬럼 |
 | 5.1 | 2025-12-13 | 초기 버전 |

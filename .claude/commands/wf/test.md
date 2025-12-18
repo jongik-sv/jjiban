@@ -1,3 +1,9 @@
+---
+subagent:
+  primary: quality-engineer
+  description: TDD/E2E 테스트 실행 및 품질 검증
+---
+
 # /wf:test - 테스트 실행 (Lite)
 
 > **상태 변경 없음**: 반복 실행 가능

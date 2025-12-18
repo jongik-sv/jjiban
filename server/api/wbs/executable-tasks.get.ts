@@ -21,7 +21,7 @@ export default defineEventHandler(async (event): Promise<TaskSelectorResult> => 
   const { tree } = await getWbsTree(projectId);
 
   // 실행 가능한 Task 필터링
-  const result = getExecutableTasks(tree, {
+  const result = await getExecutableTasks(tree, {
     category,
     projectId,
   });

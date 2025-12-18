@@ -1,3 +1,12 @@
+---
+subagent:
+  primary: backend-architect
+  conditions:
+    backend: backend-architect
+    frontend: frontend-architect
+  description: 결함 분석 및 수정
+---
+
 # /wf:fix - 결함 수정 (Lite)
 
 > **상태 전환**: `[an] 분석` → `[fx] 수정`
@@ -37,8 +46,11 @@
    - `030-implementation.md` 생성
    - 수정 내역 기록
 
-5. **상태 업데이트**
-   - `[an]` → `[fx]`
+5. **상태 전환** (자동)
+   ```bash
+   npx tsx .jjiban/script/transition.ts {Task-ID} fix -p {project}
+   ```
+   - 성공: `{ "success": true, "newStatus": "fx" }`
 
 ---
 

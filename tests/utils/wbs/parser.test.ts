@@ -189,7 +189,7 @@ describe('parseNodeAttributes', () => {
     const lines = ['- depends: TSK-01-02'];
     const result = parseNodeAttributes(lines);
 
-    expect(result.depends).toBe('TSK-01-02');
+    expect(result.depends).toEqual(['TSK-01-02']);
   });
 
   // TC-002-008: requirements 속성 파싱 (다중 라인)
@@ -250,8 +250,8 @@ describe('parseNodeAttributes', () => {
     const lines = ['- depends: TSK-01-01, TSK-01-02'];
     const result = parseNodeAttributes(lines);
 
-    // depends는 string으로 저장 (콤마 구분 문자열)
-    expect(result.depends).toBe('TSK-01-01, TSK-01-02');
+    // depends는 배열로 저장 (split 처리)
+    expect(result.depends).toEqual(['TSK-01-01', 'TSK-01-02']);
   });
 
   // TC-002-015: 모든 속성 동시 파싱
@@ -277,7 +277,7 @@ describe('parseNodeAttributes', () => {
     expect(result.assignee).toBe('hong');
     expect(result.schedule).toEqual({ start: '2025-12-01', end: '2025-12-31' });
     expect(result.tags).toEqual(['parser', 'markdown']);
-    expect(result.depends).toBe('TSK-01-01');
+    expect(result.depends).toEqual(['TSK-01-01']);
     expect(result.requirements).toEqual(['Requirement 1', 'Requirement 2']);
     expect(result.ref).toBe('PRD 7.2');
   });

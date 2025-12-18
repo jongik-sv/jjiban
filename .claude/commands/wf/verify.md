@@ -1,3 +1,9 @@
+---
+subagent:
+  primary: quality-engineer
+  description: 통합테스트 실행 및 검증
+---
+
 # /wf:verify - 통합테스트 (Lite)
 
 > **상태 전환**: `[im] 구현` → `[ts] 테스트` (development)

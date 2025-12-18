@@ -4,8 +4,8 @@
 
 | 항목 | 내용 |
 |------|------|
-| 문서 버전 | 1.0 |
-| 작성일 | 2025-12-17 |
+| 문서 버전 | 1.5 |
+| 작성일 | 2025-12-18 |
 | 범위 | 2차 (터미널 통합 + 워크플로우 실행) |
 | 상태 | Draft |
 | 선행 PRD | jjiban PRD 1.0 (WBS 트리 뷰 중심) |
@@ -119,7 +119,7 @@ Task 상세 패널에 통합된 xterm.js 터미널에서 `/wf:*` 명령어를 �
 - `--max N`, `--parallel N` 옵션
 
 **`/wf:auto` (순차)**
-- `npx jjiban next-task`로 Task 자동 선택
+- `npx tsx .jjiban/script/next-task.ts`로 Task 자동 선택
 - 단일 Task 완료까지 순차 실행
 - `--until <target>` 부분 실행 지원
 
@@ -769,26 +769,84 @@ CLI 하드코딩된 워크플로우를 설정 파일 기반으로 전환하여 �
 
 ### 10.4 설정 파일 구조
 
-**`.jjiban/settings/workflows.json`**
+**`.jjiban/settings/workflows.json` (v2.0 스키마)**
+
+워크플로우 설정은 v2.0 확장 스키마를 사용합니다. Record 기반 구조로 상태, 명령어, 워크플로우를 정의합니다.
 
 ```json
 {
-  "version": "1.0",
-  "workflows": [
-    {
-      "id": "development",
-      "states": ["[ ]", "[bd]", "[dd]", "[im]", "[vf]", "[xx]"],
+  "version": "2.0",
+  "states": {
+    "[ ]": { "id": "todo", "label": "시작 전", "labelEn": "Todo", "icon": "pi-inbox", "color": "#6b7280", "severity": "secondary", "progressWeight": 0 },
+    "[bd]": { "id": "basic-design", "label": "기본설계", "labelEn": "Basic Design", "icon": "pi-pencil", "color": "#3b82f6", "severity": "info", "progressWeight": 20 },
+    "[dd]": { "id": "detail-design", "label": "상세설계", "labelEn": "Detail Design", "icon": "pi-file-edit", "color": "#8b5cf6", "severity": "info", "progressWeight": 40 },
+    "[ap]": { "id": "approve", "label": "승인", "labelEn": "Approve", "icon": "pi-check-square", "color": "#10b981", "severity": "success", "progressWeight": 50 },
+    "[im]": { "id": "implement", "label": "구현", "labelEn": "Implement", "icon": "pi-code", "color": "#f59e0b", "severity": "warning", "progressWeight": 60 },
+    "[vf]": { "id": "verify", "label": "검증", "labelEn": "Verify", "icon": "pi-verified", "color": "#22c55e", "severity": "success", "progressWeight": 80 },
+    "[xx]": { "id": "done", "label": "완료", "labelEn": "Done", "icon": "pi-check-circle", "color": "#10b981", "severity": "success", "progressWeight": 100 }
+  },
+  "commands": {
+    "start": { "label": "시작", "labelEn": "Start", "icon": "pi-play", "severity": "primary" },
+    "draft": { "label": "상세설계", "labelEn": "Draft", "icon": "pi-pencil", "severity": "info" },
+    "approve": { "label": "승인", "labelEn": "Approve", "icon": "pi-check", "severity": "success" },
+    "build": { "label": "구현", "labelEn": "Build", "icon": "pi-wrench", "severity": "warning" },
+    "verify": { "label": "검증", "labelEn": "Verify", "icon": "pi-verified", "severity": "success" },
+    "done": { "label": "완료", "labelEn": "Done", "icon": "pi-check-circle", "severity": "success" }
+  },
+  "workflows": {
+    "development": {
+      "name": "Development Workflow",
+      "states": ["[ ]", "[bd]", "[dd]", "[ap]", "[im]", "[vf]", "[xx]"],
       "transitions": [
         { "from": "[ ]", "to": "[bd]", "command": "start", "document": "010-basic-design.md" },
         { "from": "[bd]", "to": "[dd]", "command": "draft", "document": "020-detail-design.md" },
-        { "from": "[dd]", "to": "[im]", "command": "build", "document": "030-implementation.md" },
+        { "from": "[dd]", "to": "[ap]", "command": "approve" },
+        { "from": "[ap]", "to": "[im]", "command": "build", "document": "030-implementation.md" },
         { "from": "[im]", "to": "[vf]", "command": "verify", "document": "070-integration-test.md" },
         { "from": "[vf]", "to": "[xx]", "command": "done", "document": "080-manual.md" }
+      ],
+      "actions": { "[bd]": ["ui"], "[dd]": ["review", "apply"], "[im]": ["test", "audit", "patch"] }
+    },
+    "defect": {
+      "name": "Defect Workflow",
+      "states": ["[ ]", "[an]", "[fx]", "[vf]", "[xx]"],
+      "transitions": [
+        { "from": "[ ]", "to": "[an]", "command": "start", "document": "010-analysis.md" },
+        { "from": "[an]", "to": "[fx]", "command": "fix", "document": "020-fix.md" },
+        { "from": "[fx]", "to": "[vf]", "command": "verify" },
+        { "from": "[vf]", "to": "[xx]", "command": "done" }
+      ]
+    },
+    "infrastructure": {
+      "name": "Infrastructure Workflow",
+      "states": ["[ ]", "[ds]", "[im]", "[xx]"],
+      "transitions": [
+        { "from": "[ ]", "to": "[ds]", "command": "start", "document": "010-design.md" },
+        { "from": "[ ]", "to": "[im]", "command": "skip" },
+        { "from": "[ds]", "to": "[im]", "command": "build", "document": "030-implementation.md" },
+        { "from": "[im]", "to": "[xx]", "command": "done" }
       ]
     }
-  ]
+  }
 }
 ```
+
+**스키마 구조 설명:**
+
+| 섹션 | 타입 | 설명 |
+|------|------|------|
+| `states` | `Record<string, StateDefinition>` | 상태 코드 → UI 정보 매핑 |
+| `commands` | `Record<string, CommandDefinition>` | 명령어 → UI 정보 매핑 |
+| `workflows` | `Record<string, WorkflowDefinition>` | 카테고리 → 워크플로우 정의 |
+
+**v1.0 → v2.0 주요 변경:**
+
+| 항목 | v1.0 | v2.0 |
+|------|------|------|
+| workflows 구조 | Array (id로 검색) | Record (카테고리 키로 직접 접근) |
+| 상태 정의 | 없음 | states 섹션에 UI 정보 포함 |
+| 명령어 정의 | 없음 | commands 섹션에 UI 정보 포함 |
+| 접근 방식 | `workflows.find(w => w.id === category)` | `workflows[category]` |
 
 ### 10.5 하위 호환성
 
@@ -886,3 +944,4 @@ wbsStore.flatNodes → useDependencyGraph.buildGraphData() → GraphData { nodes
 | 1.2 | 2025-12-17 | 워크플로우 설정 기반 유연화 섹션 추가 |
 | 1.3 | 2025-12-17 | 의존관계 그래프 시각화 섹션 추가 |
 | 1.4 | 2025-12-17 | **터미널 구현 방식 변경**: xterm.js + node-pty 기반 터미널 에뮬레이터 제거. child_process.spawn() + SSE 스트리밍 기반 단순 텍스트 출력으로 변경. Task 상세 패널 내에서 Claude Code CLI 실행 결과를 표시하는 방식으로 단순화. |
+| 1.5 | 2025-12-18 | **워크플로우 스키마 v2.0 마이그레이션**: 섹션 10.4 업데이트. Array 기반 v1.0 → Record 기반 v2.0 스키마로 변경. states/commands/workflows 섹션 분리, UI 정보 포함. |

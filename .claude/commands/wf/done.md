@@ -1,3 +1,9 @@
+---
+subagent:
+  primary: requirements-analyst
+  description: 완료 검증 및 매뉴얼 문서 생성
+---
+
 # /wf:done - 작업 완료 (Lite)
 
 > **상태 전환**: `[ts] 테스트` → `[xx] 완료`

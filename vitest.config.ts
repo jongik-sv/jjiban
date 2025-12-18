@@ -12,6 +12,7 @@ export default defineConfig({
       '~/utils': fileURLToPath(new URL('./app/utils', import.meta.url)),
       '~/stores': fileURLToPath(new URL('./app/stores', import.meta.url)),
       '~/components': fileURLToPath(new URL('./app/components', import.meta.url)),
+      '~/server': fileURLToPath(new URL('./server', import.meta.url)),
     },
   },
   test: {

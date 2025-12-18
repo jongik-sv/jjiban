@@ -2,11 +2,12 @@
  * Task Selector 유틸리티
  *
  * 의존관계 분석하여 실행 가능한 Task 목록 반환
- * - CLI: npx jjiban next-task
+ * - Script: npx tsx .jjiban/script/next-task.ts
  * - API: GET /api/wbs/executable-tasks
  */
 
-import type { WbsNode, TaskCategory, Priority } from '../../../types';
+import type { WbsNode, TaskCategory, Priority, WorkflowsConfig } from '../../../types';
+import { getWorkflows } from '../settings';
 
 // 실행 가능한 Task 정보
 export interface ExecutableTask {
@@ -62,6 +63,16 @@ const PRIORITY_ORDER: Record<string, number> = {
 };
 
 /**
+ * phase 우선순위 (낮을수록 먼저)
+ */
+const PHASE_ORDER: Record<string, number> = {
+  todo: 0,
+  design: 1,
+  implement: 2,
+  done: 99,
+};
+
+/**
  * 카테고리별 다음 액션 매핑
  */
 const NEXT_ACTION_MAP: Record<TaskCategory, Record<string, string>> = {
@@ -95,6 +106,22 @@ function getNextAction(category: TaskCategory, statusCode: string): string {
   const categoryMap = NEXT_ACTION_MAP[category];
   if (!categoryMap) return 'start';
   return categoryMap[statusCode] || 'start';
+}
+
+/**
+ * 상태 코드에서 phase 조회
+ */
+function getPhase(statusCode: string, workflows: WorkflowsConfig): string {
+  const state = workflows.states[statusCode];
+  return state?.phase || 'todo';
+}
+
+/**
+ * 의존성 체크가 필요한지 확인 (implement phase만 체크)
+ */
+function shouldCheckDeps(statusCode: string, workflows: WorkflowsConfig): boolean {
+  const phase = getPhase(statusCode, workflows);
+  return phase === 'implement';
 }
 
 /**
@@ -154,18 +181,30 @@ function checkDependencies(
 }
 
 /**
- * Task 정렬 (우선순위 → WBS ID)
+ * Task 정렬 (phase → 우선순위 → WBS ID)
  */
-function sortTasks<T extends { priority?: Priority; id: string }>(tasks: T[]): T[] {
+function sortTasks<T extends { priority?: Priority; id: string; status?: string }>(
+  tasks: T[],
+  workflows: WorkflowsConfig
+): T[] {
   return tasks.sort((a, b) => {
-    // 1. 우선순위
+    // 1. phase 우선 (todo/design이 implement보다 먼저)
+    if (a.status && b.status) {
+      const phaseA = PHASE_ORDER[getPhase(a.status, workflows)] ?? 2;
+      const phaseB = PHASE_ORDER[getPhase(b.status, workflows)] ?? 2;
+      if (phaseA !== phaseB) {
+        return phaseA - phaseB;
+      }
+    }
+
+    // 2. 우선순위
     const priorityA = PRIORITY_ORDER[a.priority || 'medium'] ?? 2;
     const priorityB = PRIORITY_ORDER[b.priority || 'medium'] ?? 2;
     if (priorityA !== priorityB) {
       return priorityA - priorityB;
     }
 
-    // 2. WBS ID 순서
+    // 3. WBS ID 순서
     return a.id.localeCompare(b.id);
   });
 }
@@ -177,10 +216,11 @@ function sortTasks<T extends { priority?: Priority; id: string }>(tasks: T[]): T
  * @param options - 필터 옵션
  * @returns { executable, waiting }
  */
-export function getExecutableTasks(
+export async function getExecutableTasks(
   tree: WbsNode[],
   options?: TaskSelectorOptions
-): TaskSelectorResult {
+): Promise<TaskSelectorResult> {
+  const workflows = await getWorkflows();
   const allTasks = extractAllTasks(tree);
 
   // Task ID → Node 맵 생성
@@ -205,7 +245,23 @@ export function getExecutableTasks(
       continue;
     }
 
-    // 3. 의존성 검사
+    // 3. phase 기반 의존성 체크 여부 결정
+    const needsDepsCheck = shouldCheckDeps(statusCode, workflows);
+
+    if (!needsDepsCheck) {
+      // 의존성 체크 스킵 (todo/design 단계)
+      executable.push({
+        id: task.id,
+        title: task.title,
+        category: task.category || 'development',
+        status: statusCode,
+        priority: task.priority || 'medium',
+        nextAction: getNextAction(task.category || 'development', statusCode),
+      });
+      continue;
+    }
+
+    // 4. 구현(implement) 단계: 의존성 검사
     const { satisfied, blockedBy } = checkDependencies(task, taskMap);
 
     if (satisfied) {
@@ -228,10 +284,10 @@ export function getExecutableTasks(
 
   // 정렬
   return {
-    executable: sortTasks(executable),
+    executable: sortTasks(executable, workflows),
     waiting: sortTasks(waiting.map((w) => ({
       ...w,
       priority: taskMap.get(w.id)?.priority,
-    }))).map(({ priority, ...rest }) => rest),
+    })), workflows).map(({ priority, ...rest }) => rest),
   };
 }

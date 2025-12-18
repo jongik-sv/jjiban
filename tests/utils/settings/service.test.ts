@@ -10,14 +10,14 @@ import {
   getColumns,
   getCategories,
   getWorkflows,
+  getActionCommands,
+  getSettingsByType,
   isValidSettingsType,
 } from '../../../server/utils/settings';
-import { refreshCache, loadSettings } from '../../../server/utils/settings/_cache';
+import { refreshCache } from '../../../server/utils/settings/_cache';
 import {
   DEFAULT_COLUMNS,
-  DEFAULT_CATEGORIES,
   DEFAULT_WORKFLOWS,
-  DEFAULT_ACTIONS,
 } from '../../../server/utils/settings/defaults';
 
 // Mock fs/promises
@@ -53,26 +53,41 @@ describe('Settings Service', () => {
       expect(Array.isArray(columns.columns)).toBe(true);
     });
 
-    it('UT-008: should return categories config', async () => {
+    it('UT-008: should return categories as string array from workflows keys', async () => {
       // When: getCategories 호출
       const categories = await getCategories();
 
-      // Then: CategoriesConfig 반환
-      expect(categories).toHaveProperty('version');
-      expect(categories).toHaveProperty('categories');
-      expect(Array.isArray(categories.categories)).toBe(true);
+      // Then: string[] 반환 (workflows.workflows의 키들)
+      expect(Array.isArray(categories)).toBe(true);
+      expect(categories).toContain('development');
+      expect(categories).toContain('defect');
+      expect(categories).toContain('infrastructure');
     });
 
-    it('UT-009: should return workflows and actions config', async () => {
-      // When: getWorkflows, getActions 호출
+    it('UT-009: should return workflows config', async () => {
+      // When: getWorkflows 호출
       const workflows = await getWorkflows();
-      const actions = await getActions();
 
-      // Then: 각 config 반환
+      // Then: WorkflowsConfig 반환
       expect(workflows).toHaveProperty('version');
+      expect(workflows).toHaveProperty('states');
+      expect(workflows).toHaveProperty('commands');
       expect(workflows).toHaveProperty('workflows');
-      expect(actions).toHaveProperty('version');
-      expect(actions).toHaveProperty('actions');
+    });
+
+    it('UT-010: should return action commands from workflows.commands', async () => {
+      // When: getActionCommands 호출
+      const actionCommands = await getActionCommands();
+
+      // Then: isAction=true인 명령어 목록 반환
+      expect(Array.isArray(actionCommands)).toBe(true);
+      expect(actionCommands).toContain('ui');
+      expect(actionCommands).toContain('review');
+      expect(actionCommands).toContain('test');
+      expect(actionCommands).toContain('audit');
+      // 상태 전이 명령어는 포함되지 않음
+      expect(actionCommands).not.toContain('start');
+      expect(actionCommands).not.toContain('done');
     });
   });
 
@@ -82,35 +97,26 @@ describe('Settings Service', () => {
       expect(result).toEqual(DEFAULT_COLUMNS);
     });
 
-    it('should return categories when type is categories', async () => {
-      const result = await getSettingsByType('categories');
-      expect(result).toEqual(DEFAULT_CATEGORIES);
-    });
-
     it('should return workflows when type is workflows', async () => {
       const result = await getSettingsByType('workflows');
       expect(result).toEqual(DEFAULT_WORKFLOWS);
-    });
-
-    it('should return actions when type is actions', async () => {
-      const result = await getSettingsByType('actions');
-      expect(result).toEqual(DEFAULT_ACTIONS);
     });
   });
 
   describe('isValidSettingsType', () => {
     it('should return true for valid types', () => {
       expect(isValidSettingsType('columns')).toBe(true);
-      expect(isValidSettingsType('categories')).toBe(true);
       expect(isValidSettingsType('workflows')).toBe(true);
-      expect(isValidSettingsType('actions')).toBe(true);
     });
 
-    it('UT-010: should return false for invalid types', () => {
+    it('UT-011: should return false for invalid types', () => {
       expect(isValidSettingsType('invalid')).toBe(false);
       expect(isValidSettingsType('')).toBe(false);
       expect(isValidSettingsType('column')).toBe(false);
       expect(isValidSettingsType('COLUMNS')).toBe(false);
+      // categories와 actions는 더 이상 별도 설정 타입이 아님
+      expect(isValidSettingsType('categories')).toBe(false);
+      expect(isValidSettingsType('actions')).toBe(false);
     });
   });
 });

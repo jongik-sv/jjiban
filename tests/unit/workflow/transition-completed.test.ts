@@ -1,10 +1,12 @@
 /**
  * 단위 테스트: executeTransition 롤백 로직 (TSK-03-06)
  * 테스트 명세: 026-test-specification.md (UT-007, UT-008, UT-009)
+ *
+ * v2.0 스키마 적용 (Record 기반 워크플로우)
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import type { WbsNode, WbsMetadata, TaskCategory } from '../../../types';
+import type { WbsNode, WbsMetadata } from '../../../types';
 import type { WorkflowsConfig } from '../../../types/settings';
 
 // Mock dependencies
@@ -36,34 +38,57 @@ describe('executeTransition - 롤백 로직', () => {
   });
 
   /**
+   * v2.0 스키마 기본 워크플로우 설정 생성
+   */
+  function createMockWorkflowsConfig(
+    category: string,
+    states: string[],
+    transitions: Array<{ from: string; to: string; command: string }>
+  ): WorkflowsConfig {
+    return {
+      version: '2.0',
+      states: {
+        '[ ]': { id: 'todo', label: '시작 전', labelEn: 'Todo', icon: 'pi-inbox', color: '#6b7280', severity: 'secondary', progressWeight: 0 },
+        '[bd]': { id: 'basic-design', label: '기본설계', labelEn: 'Basic Design', icon: 'pi-pencil', color: '#3b82f6', severity: 'info', progressWeight: 20 },
+        '[dd]': { id: 'detail-design', label: '상세설계', labelEn: 'Detail Design', icon: 'pi-file-edit', color: '#8b5cf6', severity: 'info', progressWeight: 40 },
+        '[ap]': { id: 'approve', label: '승인', labelEn: 'Approve', icon: 'pi-check-square', color: '#10b981', severity: 'success', progressWeight: 50 },
+        '[im]': { id: 'implement', label: '구현', labelEn: 'Implement', icon: 'pi-code', color: '#f59e0b', severity: 'warning', progressWeight: 60 },
+        '[vf]': { id: 'verify', label: '검증', labelEn: 'Verify', icon: 'pi-verified', color: '#22c55e', severity: 'success', progressWeight: 80 },
+        '[xx]': { id: 'done', label: '완료', labelEn: 'Done', icon: 'pi-check-circle', color: '#10b981', severity: 'success', progressWeight: 100 },
+        '[an]': { id: 'analysis', label: '분석', labelEn: 'Analysis', icon: 'pi-search', color: '#f59e0b', severity: 'warning', progressWeight: 30 },
+        '[fx]': { id: 'fix', label: '수정', labelEn: 'Fix', icon: 'pi-wrench', color: '#ef4444', severity: 'danger', progressWeight: 60 },
+      },
+      commands: {
+        start: { label: '시작', labelEn: 'Start', icon: 'pi-play', severity: 'primary' },
+        draft: { label: '상세설계', labelEn: 'Draft', icon: 'pi-pencil', severity: 'info' },
+        approve: { label: '승인', labelEn: 'Approve', icon: 'pi-check', severity: 'success' },
+        build: { label: '구현', labelEn: 'Build', icon: 'pi-wrench', severity: 'warning' },
+        verify: { label: '검증', labelEn: 'Verify', icon: 'pi-verified', severity: 'success' },
+        done: { label: '완료', labelEn: 'Done', icon: 'pi-check-circle', severity: 'success' },
+        fix: { label: '수정', labelEn: 'Fix', icon: 'pi-wrench', severity: 'danger' },
+      },
+      workflows: {
+        [category]: {
+          name: `${category.charAt(0).toUpperCase() + category.slice(1)} Workflow`,
+          states,
+          transitions,
+        },
+      },
+    };
+  }
+
+  /**
    * UT-007: 롤백 감지
    * 새 상태 인덱스 < 현재 상태 인덱스인 경우 롤백으로 판단
    */
   describe('UT-007: 롤백 감지', () => {
     it('should detect rollback when new state index < current state index', async () => {
       // Arrange: development 워크플로우, [im] → [dd] 롤백
-      const mockWorkflows: WorkflowsConfig = {
-        version: '1.0',
-        workflows: [
-          {
-            id: 'development',
-            name: 'Development Workflow',
-            description: 'Standard development workflow',
-            states: ['[ ]', '[bd]', '[dd]', '[im]', '[vf]', '[xx]'],
-            initialState: '[ ]',
-            finalStates: ['[xx]'],
-            transitions: [
-              {
-                from: '[im]',
-                to: '[dd]',
-                command: 'draft',
-                label: 'Back to Detail Design',
-                document: null,
-              },
-            ],
-          },
-        ],
-      };
+      const mockWorkflows = createMockWorkflowsConfig(
+        'development',
+        ['[ ]', '[bd]', '[dd]', '[im]', '[vf]', '[xx]'],
+        [{ from: '[im]', to: '[dd]', command: 'draft' }]
+      );
 
       const mockMetadata: WbsMetadata = {
         version: '1.0',
@@ -122,28 +147,11 @@ describe('executeTransition - 롤백 로직', () => {
     it('should delete completed keys for subsequent states on rollback', async () => {
       // Arrange: development 워크플로우, [im] → [dd] 롤백
       // 기존 completed: { bd, dd, im, vf }
-      const mockWorkflows: WorkflowsConfig = {
-        version: '1.0',
-        workflows: [
-          {
-            id: 'development',
-            name: 'Development Workflow',
-            description: 'Standard development workflow',
-            states: ['[ ]', '[bd]', '[dd]', '[im]', '[vf]', '[xx]'],
-            initialState: '[ ]',
-            finalStates: ['[xx]'],
-            transitions: [
-              {
-                from: '[im]',
-                to: '[dd]',
-                command: 'draft',
-                label: 'Back to Detail Design',
-                document: null,
-              },
-            ],
-          },
-        ],
-      };
+      const mockWorkflows = createMockWorkflowsConfig(
+        'development',
+        ['[ ]', '[bd]', '[dd]', '[im]', '[vf]', '[xx]'],
+        [{ from: '[im]', to: '[dd]', command: 'draft' }]
+      );
 
       const mockMetadata: WbsMetadata = {
         version: '1.0',
@@ -197,28 +205,11 @@ describe('executeTransition - 롤백 로직', () => {
 
     it('should handle defect workflow rollback correctly', async () => {
       // Arrange: defect 워크플로우, [fx] → [an] 롤백
-      const mockWorkflows: WorkflowsConfig = {
-        version: '1.0',
-        workflows: [
-          {
-            id: 'defect',
-            name: 'Defect Workflow',
-            description: 'Defect fix workflow',
-            states: ['[ ]', '[an]', '[fx]', '[vf]', '[xx]'],
-            initialState: '[ ]',
-            finalStates: ['[xx]'],
-            transitions: [
-              {
-                from: '[fx]',
-                to: '[an]',
-                command: 'start',
-                label: 'Back to Analysis',
-                document: null,
-              },
-            ],
-          },
-        ],
-      };
+      const mockWorkflows = createMockWorkflowsConfig(
+        'defect',
+        ['[ ]', '[an]', '[fx]', '[vf]', '[xx]'],
+        [{ from: '[fx]', to: '[an]', command: 'start' }]
+      );
 
       const mockMetadata: WbsMetadata = {
         version: '1.0',
@@ -273,28 +264,11 @@ describe('executeTransition - 롤백 로직', () => {
     it('should handle rollback when no completed keys to delete', async () => {
       // Arrange: development 워크플로우, [im] → [dd] 롤백
       // 기존 completed: { bd, dd } (im 없음)
-      const mockWorkflows: WorkflowsConfig = {
-        version: '1.0',
-        workflows: [
-          {
-            id: 'development',
-            name: 'Development Workflow',
-            description: 'Standard development workflow',
-            states: ['[ ]', '[bd]', '[dd]', '[im]', '[vf]', '[xx]'],
-            initialState: '[ ]',
-            finalStates: ['[xx]'],
-            transitions: [
-              {
-                from: '[im]',
-                to: '[dd]',
-                command: 'draft',
-                label: 'Back to Detail Design',
-                document: null,
-              },
-            ],
-          },
-        ],
-      };
+      const mockWorkflows = createMockWorkflowsConfig(
+        'development',
+        ['[ ]', '[bd]', '[dd]', '[im]', '[vf]', '[xx]'],
+        [{ from: '[im]', to: '[dd]', command: 'draft' }]
+      );
 
       const mockMetadata: WbsMetadata = {
         version: '1.0',
@@ -346,28 +320,11 @@ describe('executeTransition - 롤백 로직', () => {
 
     it('should handle rollback when completed field is empty', async () => {
       // Arrange: completed 필드가 비어있는 경우
-      const mockWorkflows: WorkflowsConfig = {
-        version: '1.0',
-        workflows: [
-          {
-            id: 'development',
-            name: 'Development Workflow',
-            description: 'Standard development workflow',
-            states: ['[ ]', '[bd]', '[dd]', '[im]', '[vf]', '[xx]'],
-            initialState: '[ ]',
-            finalStates: ['[xx]'],
-            transitions: [
-              {
-                from: '[im]',
-                to: '[dd]',
-                command: 'draft',
-                label: 'Back to Detail Design',
-                document: null,
-              },
-            ],
-          },
-        ],
-      };
+      const mockWorkflows = createMockWorkflowsConfig(
+        'development',
+        ['[ ]', '[bd]', '[dd]', '[im]', '[vf]', '[xx]'],
+        [{ from: '[im]', to: '[dd]', command: 'draft' }]
+      );
 
       const mockMetadata: WbsMetadata = {
         version: '1.0',

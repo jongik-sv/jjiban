@@ -22,6 +22,24 @@ function loadWorkflowConfig() {
 }
 
 /**
+ * command에서 wf: prefix를 제거하여 순수 step 이름 추출
+ * @param {string} command - 명령어 (예: 'wf:start' 또는 'start')
+ * @returns {string} 순수 step 이름 (예: 'start')
+ */
+function extractStepName(command) {
+  return command.startsWith('wf:') ? command.slice(3) : command;
+}
+
+/**
+ * step 이름으로 CLI command 생성
+ * @param {string} stepName - step 이름 (예: 'start')
+ * @returns {string} CLI command (예: '/wf:start')
+ */
+function buildCommand(stepName) {
+  return `/wf:${stepName}`;
+}
+
+/**
  * 설정 파일에서 워크플로우 단계 구성
  */
 function buildWorkflowSteps(config) {
@@ -34,9 +52,10 @@ function buildWorkflowSteps(config) {
 
     // transitions에서 주요 단계 생성 (모든 전환 포함)
     for (const transition of transitions) {
+      const stepName = extractStepName(transition.command);
       categorySteps.push({
-        step: transition.command,
-        command: `/wf:${transition.command}`,
+        step: stepName,
+        command: buildCommand(stepName),
         status: transition.from,
         nextStatus: transition.to
       });
@@ -52,9 +71,10 @@ function buildWorkflowSteps(config) {
       // 해당 상태의 액션들 추가 (각 상태당 한 번만)
       if (actions[step.status] && !processedStatesForActions.has(step.status)) {
         for (const action of actions[step.status]) {
+          const actionName = extractStepName(action);
           finalSteps.push({
-            step: action,
-            command: `/wf:${action}`,
+            step: actionName,
+            command: buildCommand(actionName),
             status: step.status,
             nextStatus: step.status // 액션은 상태를 변경하지 않음
           });

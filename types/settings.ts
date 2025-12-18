@@ -100,6 +100,8 @@ export interface StateDefinition {
   severity: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'danger';
   /** 진행률 가중치 (0-100) */
   progressWeight: number;
+  /** 워크플로우 단계 (todo, design, implement, done) */
+  phase: 'todo' | 'design' | 'implement' | 'done';
 }
 
 /**
@@ -233,16 +235,14 @@ export interface ActionsConfig {
 
 /**
  * 전체 설정 통합 인터페이스
+ * - categories: workflows.workflows 키에서 파생
+ * - actions: workflows.workflows[category].actions + workflows.commands에서 파생
  */
 export interface Settings {
   /** 칸반 컬럼 설정 */
   columns: ColumnsConfig;
-  /** 카테고리 설정 */
-  categories: CategoriesConfig;
-  /** 워크플로우 설정 */
+  /** 워크플로우 설정 (categories, actions 포함) */
   workflows: WorkflowsConfig;
-  /** 액션 설정 */
-  actions: ActionsConfig;
 }
 
 // ============================================================
@@ -252,14 +252,12 @@ export interface Settings {
 /**
  * 설정 파일 타입 열거형
  */
-export type SettingsFileType = 'columns' | 'categories' | 'workflows' | 'actions';
+export type SettingsFileType = 'columns' | 'workflows';
 
 /**
  * 설정 파일명 매핑
  */
 export const SETTINGS_FILE_NAMES: Record<SettingsFileType, string> = {
   columns: 'columns.json',
-  categories: 'categories.json',
   workflows: 'workflows.json',
-  actions: 'actions.json',
 } as const;

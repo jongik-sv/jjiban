@@ -42,9 +42,7 @@
   - --force 옵션으로 이전 테스트가 끝나지 않았더라도 구현을 할 수 있다.
 - 태스크의 워크플로우 실행 우선 순위
   - 설계를 하지 않은 태스크의 설계를 가장 우선(태스크가 기본설계를 하면 UI설계, 상세설계까지 한번에 진행)
-  - 구현 부터는 `승인(ap)`단계에 있으면 실행이 가능하다. 우선순위가 두번째로 높다.
-- project 별로 자동 `승인(ap)` 여부를 설정할 수 있다.
-
+ 
 ---
 ## 워크플로우 단계를 유연하게 결정해보자
 - 명령어에서 직접 완료후 Task의 단계를 넣지 않는다.
@@ -129,19 +127,19 @@
 
 
 
-CLI
+Script
 
-# 기본 - JSON 출력 (jjiban 프로젝트)
-npx jjiban next-task
+# 기본 - JSON 출력 (자동 프로젝트)
+npx tsx .jjiban/script/next-task.ts
 
 # 프로젝트 지정
-npx jjiban next-task myproject
+npx tsx .jjiban/script/next-task.ts -p myproject
 
 # 카테고리 필터
-npx jjiban next-task --category development
+npx tsx .jjiban/script/next-task.ts -c development
 
 # 표 형식 출력 (사람이 보기용)
-npx jjiban next-task --table
+npx tsx .jjiban/script/next-task.ts --table
 
 API
 
@@ -154,7 +152,7 @@ GET /api/wbs/executable-tasks?projectId=jjiban&category=development
 wf/run.md 프롬프트에서 사용
 
 ## 실행 전
-1. `npx jjiban next-task` 실행 (JSON 기본 출력)
+1. `npx tsx .jjiban/script/next-task.ts` 실행 (JSON 기본 출력)
 2. 결과에서 첫 번째 Task 선택
 3. 해당 Task로 워크플로우 실행
 

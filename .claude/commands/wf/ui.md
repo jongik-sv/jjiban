@@ -1,3 +1,9 @@
+---
+subagent:
+  primary: frontend-architect
+  description: UI/UX 설계 및 화면 와이어프레임 생성
+---
+
 # /wf:ui - 화면설계 (Lite)
 
 > **상태 변경 없음**: `[bd] 기본설계` 유지

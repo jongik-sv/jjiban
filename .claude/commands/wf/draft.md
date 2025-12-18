@@ -1,3 +1,9 @@
+---
+subagent:
+  primary: system-architect
+  description: 아키텍처 설계 및 상세설계 문서 생성
+---
+
 # /wf:draft - 상세설계 (Lite)
 
 > **상태 전환**: `[bd] 기본설계` → `[dd] 상세설계`

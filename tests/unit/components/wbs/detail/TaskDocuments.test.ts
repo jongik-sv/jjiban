@@ -4,20 +4,41 @@
  * Test Spec: 026-test-specification.md
  *
  * Coverage:
- * - UT-006: getDocumentCardStyle function
- * - UT-007: handleOpenDocument (exists=false check)
+ * - Document icon and color by type
+ * - File size formatting
+ * - Date formatting
+ * - Document type labels
+ * - Row click handling (open-document event)
  */
 
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import TaskDocuments from '~/components/wbs/detail/TaskDocuments.vue'
 import Panel from 'primevue/panel'
-import Card from 'primevue/card'
-import Button from 'primevue/button'
 import Message from 'primevue/message'
+import DataTable from 'primevue/datatable'
+import Column from 'primevue/column'
+import Tag from 'primevue/tag'
 import type { DocumentInfo } from '~/types'
 
+// Mock DOCUMENT_TYPE_CONFIG
+vi.mock('~/utils/documentConfig', () => ({
+  DOCUMENT_TYPE_CONFIG: {
+    design: { icon: 'pi pi-file-edit', color: '#3b82f6', label: '설계 문서' },
+    implementation: { icon: 'pi pi-code', color: '#10b981', label: '구현 문서' },
+    test: { icon: 'pi pi-check-circle', color: '#f59e0b', label: '테스트 문서' },
+    manual: { icon: 'pi pi-book', color: '#8b5cf6', label: '매뉴얼' },
+    analysis: { icon: 'pi pi-search', color: '#6366f1', label: '분석 문서' },
+    review: { icon: 'pi pi-comments', color: '#ec4899', label: '리뷰 문서' }
+  }
+}))
+
 describe('TaskDocuments', () => {
+  // Global components for all tests
+  const globalComponents = {
+    components: { Panel, Message, DataTable, Column, Tag }
+  }
+
   // Helper to create mock documents
   const createExistingDoc = (): DocumentInfo => ({
     name: '010-basic-design.md',
@@ -40,124 +61,12 @@ describe('TaskDocuments', () => {
     command: '/wf:draft'
   })
 
-  describe('getDocumentCardClasses method', () => {
-    // UT-006: exists=true should have doc-card-exists class
-    it('should return doc-card-exists class for existing documents', () => {
-      const doc = createExistingDoc()
-      const wrapper = mount(TaskDocuments, {
-        props: { documents: [doc] },
-        global: {
-          components: { Panel, Card, Button, Message }
-        }
-      })
-
-      const vm = wrapper.vm as any
-      const classes = vm.getDocumentCardClasses(doc)
-
-      expect(classes).toContain('doc-card-exists')
-      expect(classes).toContain('cursor-pointer')
-      expect(classes).toContain('transition-all')
-    })
-
-    // UT-006: exists=false should have doc-card-expected class
-    it('should return doc-card-expected class for expected documents', () => {
-      const doc = createExpectedDoc()
-      const wrapper = mount(TaskDocuments, {
-        props: { documents: [doc] },
-        global: {
-          components: { Panel, Card, Button, Message }
-        }
-      })
-
-      const vm = wrapper.vm as any
-      const classes = vm.getDocumentCardClasses(doc)
-
-      expect(classes).toContain('doc-card-expected')
-      expect(classes).not.toContain('cursor-pointer')
-      expect(classes).toContain('transition-all')
-    })
-  })
-
-  describe('handleOpenDocument method', () => {
-    // UT-007: should emit event for existing documents
-    it('should emit open-document event when exists=true', () => {
-      const doc = createExistingDoc()
-      const wrapper = mount(TaskDocuments, {
-        props: { documents: [doc] },
-        global: {
-          components: { Panel, Card, Button, Message }
-        }
-      })
-
-      const vm = wrapper.vm as any
-      vm.handleOpenDocument(doc)
-
-      expect(wrapper.emitted('open-document')).toBeTruthy()
-      expect(wrapper.emitted('open-document')?.[0]).toEqual([doc])
-    })
-
-    // UT-007: should NOT emit event for expected documents (exists=false)
-    it('should NOT emit open-document event when exists=false', () => {
-      const doc = createExpectedDoc()
-      const wrapper = mount(TaskDocuments, {
-        props: { documents: [doc] },
-        global: {
-          components: { Panel, Card, Button, Message }
-        }
-      })
-
-      const vm = wrapper.vm as any
-      vm.handleOpenDocument(doc)
-
-      // Should not emit event
-      expect(wrapper.emitted('open-document')).toBeFalsy()
-    })
-  })
-
-  describe('Document Card Classes - CSS Class Based Styling', () => {
-    // TSK-08-05: CSS 클래스 중앙화 - hover 스타일은 CSS에서 처리
-    it('should use doc-card-exists class for existing documents (CSS handles hover)', () => {
-      const doc = createExistingDoc()
-      const wrapper = mount(TaskDocuments, {
-        props: { documents: [doc] },
-        global: {
-          components: { Panel, Card, Button, Message }
-        }
-      })
-
-      const vm = wrapper.vm as any
-      const classes = vm.getDocumentCardClasses(doc)
-
-      expect(classes).toContain('cursor-pointer')
-      expect(classes).toContain('doc-card-exists')
-    })
-
-    // TSK-08-05: CSS 클래스 중앙화 - cursor 스타일은 CSS에서 처리
-    it('should use doc-card-expected class for expected documents (CSS handles cursor)', () => {
-      const doc = createExpectedDoc()
-      const wrapper = mount(TaskDocuments, {
-        props: { documents: [doc] },
-        global: {
-          components: { Panel, Card, Button, Message }
-        }
-      })
-
-      const vm = wrapper.vm as any
-      const classes = vm.getDocumentCardClasses(doc)
-
-      expect(classes).toContain('doc-card-expected')
-      expect(classes).not.toContain('cursor-pointer')
-    })
-  })
-
   describe('Document Type Icons and Colors', () => {
     it('should return correct icon for design documents', () => {
       const doc = createExistingDoc()
       const wrapper = mount(TaskDocuments, {
         props: { documents: [doc] },
-        global: {
-          components: { Panel, Card, Button, Message }
-        }
+        global: globalComponents
       })
 
       const vm = wrapper.vm as any
@@ -168,14 +77,11 @@ describe('TaskDocuments', () => {
       expect(color).toBe('#3b82f6')
     })
 
-    // TSK-08-06: CSS 변수 사용으로 변경
     it('should return fallback icon for unknown type', () => {
       const doc = { ...createExistingDoc(), type: 'unknown' as any }
       const wrapper = mount(TaskDocuments, {
         props: { documents: [doc] },
-        global: {
-          components: { Panel, Card, Button, Message }
-        }
+        global: globalComponents
       })
 
       const vm = wrapper.vm as any
@@ -185,15 +91,29 @@ describe('TaskDocuments', () => {
       expect(icon).toBe('pi pi-file')
       expect(color).toBe('var(--color-text-muted)')
     })
+
+    it('should return correct icons for all document types', () => {
+      const wrapper = mount(TaskDocuments, {
+        props: { documents: [] },
+        global: globalComponents
+      })
+
+      const vm = wrapper.vm as any
+
+      expect(vm.getDocumentIcon({ type: 'design' })).toBe('pi pi-file-edit')
+      expect(vm.getDocumentIcon({ type: 'implementation' })).toBe('pi pi-code')
+      expect(vm.getDocumentIcon({ type: 'test' })).toBe('pi pi-check-circle')
+      expect(vm.getDocumentIcon({ type: 'manual' })).toBe('pi pi-book')
+      expect(vm.getDocumentIcon({ type: 'analysis' })).toBe('pi pi-search')
+      expect(vm.getDocumentIcon({ type: 'review' })).toBe('pi pi-comments')
+    })
   })
 
   describe('File Size Formatting', () => {
     it('should format bytes correctly', () => {
       const wrapper = mount(TaskDocuments, {
         props: { documents: [] },
-        global: {
-          components: { Panel, Card, Button, Message }
-        }
+        global: globalComponents
       })
 
       const vm = wrapper.vm as any
@@ -204,113 +124,45 @@ describe('TaskDocuments', () => {
       expect(vm.formatFileSize(1024 * 1024)).toBe('1.0 MB')
       expect(vm.formatFileSize(1.5 * 1024 * 1024)).toBe('1.5 MB')
     })
+
+    it('should handle edge cases', () => {
+      const wrapper = mount(TaskDocuments, {
+        props: { documents: [] },
+        global: globalComponents
+      })
+
+      const vm = wrapper.vm as any
+
+      expect(vm.formatFileSize(0)).toBe('0 B')
+      expect(vm.formatFileSize(1023)).toBe('1023 B')
+      expect(vm.formatFileSize(1024 * 1024 - 1)).toBe('1024.0 KB')
+    })
   })
 
   describe('Date Formatting', () => {
-    it('should format date string to Korean locale', () => {
+    it('should format date string to YY.MM.DD format', () => {
       const wrapper = mount(TaskDocuments, {
         props: { documents: [] },
-        global: {
-          components: { Panel, Card, Button, Message }
-        }
+        global: globalComponents
       })
 
       const vm = wrapper.vm as any
       const formatted = vm.formatDate('2025-12-15T13:12:00Z')
 
-      expect(formatted).toContain('2025')
-      expect(formatted).toContain('12')
-      expect(formatted).toContain('15')
+      // Date will be formatted as YY.MM.DD
+      expect(formatted).toBe('25.12.15')
     })
-  })
 
-  describe('Document Base Name Extraction', () => {
-    it('should remove file extension from filename', () => {
+    it('should handle different date formats', () => {
       const wrapper = mount(TaskDocuments, {
         props: { documents: [] },
-        global: {
-          components: { Panel, Card, Button, Message }
-        }
+        global: globalComponents
       })
 
       const vm = wrapper.vm as any
 
-      expect(vm.getDocumentBaseName('010-basic-design.md')).toBe('010-basic-design')
-      expect(vm.getDocumentBaseName('test.pdf')).toBe('test')
-      expect(vm.getDocumentBaseName('file.name.with.dots.txt')).toBe('file.name.with.dots')
-    })
-  })
-
-  describe('Rendering', () => {
-    it('should render document cards with correct data-testid', () => {
-      const existingDoc = createExistingDoc()
-      const expectedDoc = createExpectedDoc()
-      const wrapper = mount(TaskDocuments, {
-        props: { documents: [existingDoc, expectedDoc] },
-        global: {
-          components: { Panel, Card, Button, Message }
-        }
-      })
-
-      expect(wrapper.find('[data-testid="document-exists-010-basic-design"]').exists()).toBe(true)
-      expect(wrapper.find('[data-testid="document-expected-020-detail-design"]').exists()).toBe(true)
-    })
-
-    it('should display open button only for existing documents', () => {
-      const existingDoc = createExistingDoc()
-      const expectedDoc = createExpectedDoc()
-      const wrapper = mount(TaskDocuments, {
-        props: { documents: [existingDoc, expectedDoc] },
-        global: {
-          components: { Panel, Card, Button, Message }
-        }
-      })
-
-      expect(wrapper.find('[data-testid="open-document-btn-0"]').exists()).toBe(true)
-      expect(wrapper.find('[data-testid="open-document-btn-1"]').exists()).toBe(false)
-    })
-
-    it('should display file size and updated date for existing documents', () => {
-      const doc = createExistingDoc()
-      const wrapper = mount(TaskDocuments, {
-        props: { documents: [doc] },
-        global: {
-          components: { Panel, Card, Button, Message }
-        }
-      })
-
-      const cardText = wrapper.find('[data-testid="document-exists-010-basic-design"]').text()
-      expect(cardText).toContain('KB') // File size
-      expect(cardText).toContain('수정일') // Updated date label
-    })
-
-    it('should display expected condition for expected documents', () => {
-      const doc = createExpectedDoc()
-      const wrapper = mount(TaskDocuments, {
-        props: { documents: [doc] },
-        global: {
-          components: { Panel, Card, Button, Message }
-        }
-      })
-
-      const cardText = wrapper.find('[data-testid="document-expected-020-detail-design"]').text()
-      expect(cardText).toContain('생성 조건')
-      expect(cardText).toContain('/wf:draft 실행 후 생성')
-    })
-  })
-
-  describe('Empty State', () => {
-    it('should display message when no documents exist', () => {
-      const wrapper = mount(TaskDocuments, {
-        props: { documents: [] },
-        global: {
-          components: { Panel, Card, Button, Message }
-        }
-      })
-
-      const message = wrapper.findComponent(Message)
-      expect(message.exists()).toBe(true)
-      expect(message.text()).toContain('관련 문서가 없습니다')
+      expect(vm.formatDate('2024-01-01T00:00:00Z')).toBe('24.01.01')
+      expect(vm.formatDate('2025-06-30T23:59:59Z')).toBe('25.07.01') // UTC conversion
     })
   })
 
@@ -318,9 +170,7 @@ describe('TaskDocuments', () => {
     it('should return correct label for each document type', () => {
       const wrapper = mount(TaskDocuments, {
         props: { documents: [] },
-        global: {
-          components: { Panel, Card, Button, Message }
-        }
+        global: globalComponents
       })
 
       const vm = wrapper.vm as any
@@ -332,6 +182,133 @@ describe('TaskDocuments', () => {
       expect(vm.getDocumentTypeLabel('analysis')).toBe('분석 문서')
       expect(vm.getDocumentTypeLabel('review')).toBe('리뷰 문서')
       expect(vm.getDocumentTypeLabel('unknown')).toBe('문서')
+    })
+  })
+
+  describe('Row Click Handling', () => {
+    it('should emit open-document event when clicking existing document row', () => {
+      const doc = createExistingDoc()
+      const wrapper = mount(TaskDocuments, {
+        props: { documents: [doc] },
+        global: globalComponents
+      })
+
+      const vm = wrapper.vm as any
+      // Simulate row click event
+      vm.onRowClick({ data: doc })
+
+      expect(wrapper.emitted('open-document')).toBeTruthy()
+      expect(wrapper.emitted('open-document')?.[0]).toEqual([doc])
+    })
+
+    it('should NOT emit open-document event when clicking expected document row', () => {
+      const doc = createExpectedDoc()
+      const wrapper = mount(TaskDocuments, {
+        props: { documents: [doc] },
+        global: globalComponents
+      })
+
+      const vm = wrapper.vm as any
+      // Simulate row click event
+      vm.onRowClick({ data: doc })
+
+      // Should not emit event
+      expect(wrapper.emitted('open-document')).toBeFalsy()
+    })
+  })
+
+  describe('Empty State', () => {
+    it('should display message when no documents exist', () => {
+      const wrapper = mount(TaskDocuments, {
+        props: { documents: [] },
+        global: globalComponents
+      })
+
+      const message = wrapper.findComponent(Message)
+      expect(message.exists()).toBe(true)
+      expect(message.text()).toContain('관련 문서가 없습니다')
+    })
+
+    it('should not display DataTable when no documents', () => {
+      const wrapper = mount(TaskDocuments, {
+        props: { documents: [] },
+        global: globalComponents
+      })
+
+      const dataTable = wrapper.findComponent(DataTable)
+      expect(dataTable.exists()).toBe(false)
+    })
+  })
+
+  describe('DataTable Rendering', () => {
+    it('should render DataTable when documents exist', () => {
+      const doc = createExistingDoc()
+      const wrapper = mount(TaskDocuments, {
+        props: { documents: [doc] },
+        global: globalComponents
+      })
+
+      const dataTable = wrapper.findComponent(DataTable)
+      expect(dataTable.exists()).toBe(true)
+    })
+
+    it('should pass correct props to DataTable', () => {
+      const doc = createExistingDoc()
+      const wrapper = mount(TaskDocuments, {
+        props: { documents: [doc] },
+        global: globalComponents
+      })
+
+      const dataTable = wrapper.findComponent(DataTable)
+      expect(dataTable.props('value')).toEqual([doc])
+      expect(dataTable.props('size')).toBe('small')
+      expect(dataTable.props('scrollable')).toBe(true)
+      expect(dataTable.props('selectionMode')).toBe('single')
+      expect(dataTable.props('dataKey')).toBe('path')
+    })
+  })
+
+  describe('Panel Structure', () => {
+    it('should render Panel with correct header', () => {
+      const wrapper = mount(TaskDocuments, {
+        props: { documents: [] },
+        global: globalComponents
+      })
+
+      const panel = wrapper.findComponent(Panel)
+      expect(panel.exists()).toBe(true)
+      expect(panel.props('header')).toBe('관련 문서')
+      expect(panel.props('toggleable')).toBe(true)
+    })
+
+    it('should have correct data-testid', () => {
+      const wrapper = mount(TaskDocuments, {
+        props: { documents: [] },
+        global: globalComponents
+      })
+
+      expect(wrapper.find('[data-testid="task-documents-panel"]').exists()).toBe(true)
+    })
+  })
+
+  describe('Component Mounting', () => {
+    it('should mount without errors', () => {
+      expect(() =>
+        mount(TaskDocuments, {
+          props: { documents: [] },
+          global: globalComponents
+        })
+      ).not.toThrow()
+    })
+
+    it('should mount with multiple documents', () => {
+      const docs = [createExistingDoc(), createExpectedDoc()]
+      const wrapper = mount(TaskDocuments, {
+        props: { documents: docs },
+        global: globalComponents
+      })
+
+      expect(wrapper.exists()).toBe(true)
     })
   })
 })

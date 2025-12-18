@@ -1,3 +1,9 @@
+---
+subagent:
+  primary: system-architect
+  description: 아키텍처 설계 및 상세설계 문서 생성
+---
+
 # /wf:draft - 상세설계 (Lite)
 
 > **상태 전환**: `[bd] 기본설계` → `[dd] 상세설계`
@@ -67,8 +73,11 @@
    - FR → PRD → 기본설계 → 상세설계 → 테스트
    - BR → 구현 위치 → 테스트
 
-6. **Task JSON 상태 업데이트**
-   - `[bd]` → `[dd]}
+6. **상태 전환** (자동)
+   ```bash
+   npx tsx .jjiban/script/transition.ts {Task-ID} draft -p {project}
+   ```
+   - 성공: `{ "success": true, "newStatus": "dd" }`
 
 ---
 

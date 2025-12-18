@@ -1,10 +1,11 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
 import WpActChildren from '~/components/wbs/detail/WpActChildren.vue'
+import StatusBadge from '~/components/wbs/StatusBadge.vue'
 import type { WbsNode } from '~/types'
 import Panel from 'primevue/panel'
 import Message from 'primevue/message'
-import Badge from 'primevue/badge'
+import Tag from 'primevue/tag'
 
 describe('WpActChildren', () => {
   describe('하위 노드 목록 렌더링', () => {
@@ -17,7 +18,7 @@ describe('WpActChildren', () => {
       const wrapper = mount(WpActChildren, {
         props: { children },
         global: {
-          components: { Panel, Message, Badge }
+          components: { Panel, Message, StatusBadge, Tag }
         }
       })
 
@@ -33,7 +34,7 @@ describe('WpActChildren', () => {
       const wrapper = mount(WpActChildren, {
         props: { children: [] },
         global: {
-          components: { Panel, Message, Badge }
+          components: { Panel, Message, StatusBadge, Tag }
         }
       })
 
@@ -51,7 +52,7 @@ describe('WpActChildren', () => {
       const wrapper = mount(WpActChildren, {
         props: { children },
         global: {
-          components: { Panel, Message, Badge }
+          components: { Panel, Message, StatusBadge, Tag }
         }
       })
 
@@ -69,7 +70,7 @@ describe('WpActChildren', () => {
       const wrapper = mount(WpActChildren, {
         props: { children },
         global: {
-          components: { Panel, Message, Badge }
+          components: { Panel, Message, StatusBadge, Tag }
         }
       })
 
@@ -88,7 +89,7 @@ describe('WpActChildren', () => {
       const wrapper = mount(WpActChildren, {
         props: { children },
         global: {
-          components: { Panel, Message, Badge }
+          components: { Panel, Message, StatusBadge, Tag }
         }
       })
 
@@ -108,7 +109,7 @@ describe('WpActChildren', () => {
       const wrapper = mount(WpActChildren, {
         props: { children },
         global: {
-          components: { Panel, Message, Badge }
+          components: { Panel, Message, StatusBadge, Tag }
         }
       })
 
@@ -124,7 +125,7 @@ describe('WpActChildren', () => {
   })
 
   describe('Task 노드 상태 표시', () => {
-    it('Task 노드는 상태 Badge를 표시한다', () => {
+    it('Task 노드는 상태 StatusBadge를 표시한다', () => {
       const children: WbsNode[] = [
         { id: 'TSK-01', type: 'task', title: 'Test', status: '[xx]', children: [] }
       ]
@@ -132,16 +133,16 @@ describe('WpActChildren', () => {
       const wrapper = mount(WpActChildren, {
         props: { children },
         global: {
-          components: { Panel, Message, Badge }
+          components: { Panel, Message, StatusBadge, Tag }
         }
       })
 
-      const badge = wrapper.findComponent(Badge)
-      expect(badge.exists()).toBe(true)
-      expect(badge.props('value')).toBe('[xx]')
+      const statusBadge = wrapper.findComponent(StatusBadge)
+      expect(statusBadge.exists()).toBe(true)
+      expect(statusBadge.props('status')).toBe('[xx]')
     })
 
-    it('Task 노드는 다양한 상태 Badge를 표시한다', () => {
+    it('Task 노드는 다양한 상태 StatusBadge를 표시한다', () => {
       const children: WbsNode[] = [
         { id: 'TSK-01', type: 'task', title: 'T1', status: '[ ]', children: [] },
         { id: 'TSK-02', type: 'task', title: 'T2', status: '[bd]', children: [] },
@@ -151,18 +152,18 @@ describe('WpActChildren', () => {
       const wrapper = mount(WpActChildren, {
         props: { children },
         global: {
-          components: { Panel, Message, Badge }
+          components: { Panel, Message, StatusBadge, Tag }
         }
       })
 
-      const badges = wrapper.findAllComponents(Badge)
-      expect(badges.length).toBe(3)
-      expect(badges[0].props('value')).toBe('[ ]')
-      expect(badges[1].props('value')).toBe('[bd]')
-      expect(badges[2].props('value')).toBe('[xx]')
+      const statusBadges = wrapper.findAllComponents(StatusBadge)
+      expect(statusBadges.length).toBe(3)
+      expect(statusBadges[0].props('status')).toBe('[ ]')
+      expect(statusBadges[1].props('status')).toBe('[bd]')
+      expect(statusBadges[2].props('status')).toBe('[xx]')
     })
 
-    it('Task 노드 status가 없으면 Badge를 표시하지 않는다', () => {
+    it('Task 노드 status가 없으면 StatusBadge를 표시하지 않는다', () => {
       const children: WbsNode[] = [
         { id: 'TSK-01', type: 'task', title: 'Test', children: [] }
       ]
@@ -170,12 +171,12 @@ describe('WpActChildren', () => {
       const wrapper = mount(WpActChildren, {
         props: { children },
         global: {
-          components: { Panel, Message, Badge }
+          components: { Panel, Message, StatusBadge, Tag }
         }
       })
 
-      const badges = wrapper.findAllComponents(Badge)
-      expect(badges.length).toBe(0)
+      const statusBadges = wrapper.findAllComponents(StatusBadge)
+      expect(statusBadges.length).toBe(0)
     })
   })
 
@@ -195,7 +196,7 @@ describe('WpActChildren', () => {
       const wrapper = mount(WpActChildren, {
         props: { children },
         global: {
-          components: { Panel, Message, Badge }
+          components: { Panel, Message, StatusBadge, Tag }
         }
       })
 
@@ -220,7 +221,7 @@ describe('WpActChildren', () => {
       const wrapper = mount(WpActChildren, {
         props: { children },
         global: {
-          components: { Panel, Message, Badge }
+          components: { Panel, Message, StatusBadge, Tag }
         }
       })
 
@@ -238,7 +239,7 @@ describe('WpActChildren', () => {
       const wrapper = mount(WpActChildren, {
         props: { children },
         global: {
-          components: { Panel, Message, Badge }
+          components: { Panel, Message, StatusBadge, Tag }
         }
       })
 
@@ -259,7 +260,7 @@ describe('WpActChildren', () => {
       const wrapper = mount(WpActChildren, {
         props: { children },
         global: {
-          components: { Panel, Message, Badge }
+          components: { Panel, Message, StatusBadge, Tag }
         }
       })
 
@@ -282,7 +283,7 @@ describe('WpActChildren', () => {
       const wrapper = mount(WpActChildren, {
         props: { children },
         global: {
-          components: { Panel, Message, Badge }
+          components: { Panel, Message, StatusBadge, Tag }
         }
       })
 
@@ -301,7 +302,7 @@ describe('WpActChildren', () => {
       const wrapper = mount(WpActChildren, {
         props: { children },
         global: {
-          components: { Panel, Message, Badge }
+          components: { Panel, Message, StatusBadge, Tag }
         }
       })
 
@@ -318,7 +319,7 @@ describe('WpActChildren', () => {
       const wrapper = mount(WpActChildren, {
         props: { children },
         global: {
-          components: { Panel, Message, Badge }
+          components: { Panel, Message, StatusBadge, Tag }
         }
       })
 
@@ -334,7 +335,7 @@ describe('WpActChildren', () => {
       const wrapper = mount(WpActChildren, {
         props: { children: [] },
         global: {
-          components: { Panel, Message, Badge }
+          components: { Panel, Message, StatusBadge, Tag }
         }
       })
 
@@ -350,7 +351,7 @@ describe('WpActChildren', () => {
       const wrapper = mount(WpActChildren, {
         props: { children },
         global: {
-          components: { Panel, Message, Badge }
+          components: { Panel, Message, StatusBadge, Tag }
         }
       })
 
@@ -370,7 +371,7 @@ describe('WpActChildren', () => {
       const wrapper = mount(WpActChildren, {
         props: { children },
         global: {
-          components: { Panel, Message, Badge }
+          components: { Panel, Message, StatusBadge, Tag }
         }
       })
 
@@ -388,9 +389,9 @@ describe('WpActChildren', () => {
       const infos = wrapper.findAll('.child-info')
       expect(infos.length).toBe(2)
 
-      // Task has badge
-      const badges = wrapper.findAllComponents(Badge)
-      expect(badges.length).toBe(1)
+      // Task has StatusBadge
+      const statusBadges = wrapper.findAllComponents(StatusBadge)
+      expect(statusBadges.length).toBe(1)
     })
 
     it('대량의 하위 노드를 렌더링할 수 있다', () => {
@@ -405,7 +406,7 @@ describe('WpActChildren', () => {
       const wrapper = mount(WpActChildren, {
         props: { children },
         global: {
-          components: { Panel, Message, Badge }
+          components: { Panel, Message, StatusBadge, Tag }
         }
       })
 

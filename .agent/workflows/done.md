@@ -1,3 +1,9 @@
+---
+subagent:
+  primary: requirements-analyst
+  description: 완료 검증 및 매뉴얼 문서 생성
+---
+
 # /wf:done - 작업 완료 (Lite)
 
 > **상태 전환**: `[ts] 테스트` → `[xx] 완료`
@@ -46,8 +52,11 @@
    - 화면 캡처/설명
    - 템플릿: `.jjiban/templates/080-manual.md`
 
-3. **상태 업데이트**
-   - `[ts]`/`[im]` → `[xx]`
+3. **상태 전환** (자동)
+   ```bash
+   npx tsx .jjiban/script/transition.ts {Task-ID} done -p {project}
+   ```
+   - 성공: `{ "success": true, "newStatus": "xx" }`
 
 4. **상위 계층 상태 갱신**
    - ACT 내 모든 Task 완료 시 ACT 상태 업데이트

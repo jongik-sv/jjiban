@@ -5,25 +5,58 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { ref, reactive } from 'vue'
 import { setActivePinia, createPinia } from 'pinia'
-import { useGanttDependencies } from '~/composables/useGanttDependencies'
-import { useWbsStore } from '~/stores/wbs'
-import { useSelectionStore } from '~/stores/selection'
 import type { TaskEdge } from '~/types/graph'
 import type { GanttTaskBounds } from '~/types/gantt'
 import type { WbsNode } from '~/types'
+
+// Mock flatNodes and selectedProjectId
+const mockFlatNodes = reactive(new Map<string, WbsNode>())
+const mockSelectedProjectId = ref<string | null>('test-project')
+
+// Mock extractStatusCode function
+function mockExtractStatusCode(status?: string): string {
+  if (!status) return '[ ]'
+  const match = status.match(/\[[\w\s]*\]/)
+  return match ? match[0] : '[ ]'
+}
+
+// Mock useWbsStore
+vi.mock('~/stores/wbs', () => ({
+  useWbsStore: () => ({
+    flatNodes: mockFlatNodes,
+    selectedProjectId: mockSelectedProjectId.value
+  })
+}))
+
+// Mock useDependencyGraph
+vi.mock('~/composables/useDependencyGraph', () => ({
+  useDependencyGraph: () => ({
+    extractStatusCode: mockExtractStatusCode
+  })
+}))
+
+// Stub globals for Nuxt auto-import
+vi.stubGlobal('useWbsStore', () => ({
+  flatNodes: mockFlatNodes,
+  selectedProjectId: mockSelectedProjectId.value
+}))
+
+vi.stubGlobal('useDependencyGraph', () => ({
+  extractStatusCode: mockExtractStatusCode
+}))
+
+// Import after mocking
+import { useGanttDependencies } from '~/composables/useGanttDependencies'
 
 describe('useGanttDependencies', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
 
-    // Setup stores
-    const wbsStore = useWbsStore()
-    const selectionStore = useSelectionStore()
-    selectionStore.selectedProjectId = 'test-project'
-
-    // Clear flatNodes before each test
-    wbsStore.flatNodes.clear()
+    // Reset mock data
+    mockFlatNodes.clear()
+    mockSelectedProjectId.value = 'test-project'
   })
 
   // Helper to create mock container with task bars
@@ -66,9 +99,8 @@ describe('useGanttDependencies', () => {
 
   // Helper to add task to store (status should already be in [xx] format)
   function addTaskToStore(taskId: string, status: string) {
-    const wbsStore = useWbsStore()
     const fullId = `test-project:${taskId}`
-    wbsStore.flatNodes.set(fullId, createMockTask(taskId, status))
+    mockFlatNodes.set(fullId, createMockTask(taskId, status))
   }
 
   describe('buildGanttArrows', () => {

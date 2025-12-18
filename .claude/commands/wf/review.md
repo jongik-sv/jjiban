@@ -1,3 +1,9 @@
+---
+subagent:
+  primary: refactoring-expert
+  description: 설계 품질 분석 및 리뷰 수행
+---
+
 # /wf:review - 설계 리뷰 (Lite)
 
 > **상태 변경 없음**: 반복 실행 가능

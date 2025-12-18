@@ -4,6 +4,20 @@
  */
 
 import { vi } from 'vitest'
+import { existsSync, mkdirSync, copyFileSync } from 'fs'
+import { join } from 'path'
+
+// CLI 테스트를 위한 settings 폴더 설정
+const settingsDir = join(process.cwd(), '.jjiban', 'settings')
+const workflowsSrc = join(process.cwd(), '.claude', 'skills', 'jjiban-init', 'assets', 'settings', 'workflows.json')
+const workflowsDest = join(settingsDir, 'workflows.json')
+
+if (!existsSync(settingsDir)) {
+  mkdirSync(settingsDir, { recursive: true })
+}
+if (!existsSync(workflowsDest) && existsSync(workflowsSrc)) {
+  copyFileSync(workflowsSrc, workflowsDest)
+}
 import { computed, ref, reactive, readonly } from 'vue'
 import { defineStore } from 'pinia'
 import { config } from '@vue/test-utils'

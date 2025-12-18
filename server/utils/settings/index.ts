@@ -9,9 +9,7 @@ import type {
   Settings,
   SettingsFileType,
   ColumnsConfig,
-  CategoriesConfig,
   WorkflowsConfig,
-  ActionsConfig,
   StateDefinition,
   CommandDefinition,
 } from '../../../types/settings';
@@ -41,12 +39,12 @@ export async function getColumns(): Promise<ColumnsConfig> {
 }
 
 /**
- * 카테고리 설정 조회
- * @returns Promise<CategoriesConfig>
+ * 카테고리 목록 조회 (workflows.workflows 키에서 파생)
+ * @returns Promise<string[]> 카테고리 ID 목록
  */
-export async function getCategories(): Promise<CategoriesConfig> {
+export async function getCategories(): Promise<string[]> {
   const settings = await getSettings();
-  return settings.categories;
+  return Object.keys(settings.workflows.workflows);
 }
 
 /**
@@ -59,12 +57,14 @@ export async function getWorkflows(): Promise<WorkflowsConfig> {
 }
 
 /**
- * 액션 설정 조회
- * @returns Promise<ActionsConfig>
+ * 액션 명령어 목록 조회 (workflows.commands에서 isAction=true인 것들)
+ * @returns Promise<string[]> 액션 명령어 목록
  */
-export async function getActions(): Promise<ActionsConfig> {
+export async function getActionCommands(): Promise<string[]> {
   const settings = await getSettings();
-  return settings.actions;
+  return Object.entries(settings.workflows.commands)
+    .filter(([_, cmd]) => cmd.isAction === true)
+    .map(([name]) => name);
 }
 
 /**
@@ -74,14 +74,14 @@ export async function getActions(): Promise<ActionsConfig> {
  */
 export async function getSettingsByType(
   type: SettingsFileType
-): Promise<ColumnsConfig | CategoriesConfig | WorkflowsConfig | ActionsConfig> {
+): Promise<ColumnsConfig | WorkflowsConfig> {
   const settings = await getSettings();
   return settings[type];
 }
 
 /**
  * 설정 타입 유효성 검사
- * BR-004: 설정 타입은 4가지로 제한
+ * BR-004: 설정 타입은 2가지로 제한 (columns, workflows)
  * ISS-CR-006: SETTINGS_FILE_NAMES와 동기화하여 Magic Number 제거
  * @param type 검사할 타입 문자열
  * @returns 유효한 SettingsFileType이면 true

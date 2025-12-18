@@ -8,19 +8,14 @@
 
 import { join } from 'path';
 import { promises as fs } from 'fs';
-import type {
-  DocumentInfo,
-  TaskCategory,
-} from '../../../types';
+import type { DocumentInfo } from '../../../types';
 import { findTaskById } from '../wbs/taskService';
-import { getWorkflows } from '../settings';
 import {
   getTaskFolderPath,
   listFiles,
   fileExists,
 } from '../file';
 import { createNotFoundError } from '../errors/standardError';
-import { extractStatusCode, formatStatusCode } from './statusUtils';
 
 // ============================================================
 // 문서 타입 상수
@@ -134,58 +129,17 @@ export async function getExistingDocuments(
 }
 
 /**
- * Task의 예정 문서 목록 조회 (워크플로우 기반)
- * @param projectId - 프로젝트 ID
- * @param taskId - Task ID
- * @param currentStatus - 현재 상태
- * @returns 예정 문서 목록
+ * Task의 예정 문서 목록 조회 (비활성화됨)
+ * @deprecated 문서 생성은 슬래시 명령어에서 처리
+ * @returns 빈 배열
  */
 export async function getExpectedDocuments(
-  projectId: string,
-  taskId: string,
-  currentStatus: string
+  _projectId: string,
+  _taskId: string,
+  _currentStatus: string
 ): Promise<DocumentInfo[]> {
-  // Task 조회 (카테고리 확인)
-  const taskResult = await findTaskById(taskId);
-  if (!taskResult) {
-    return [];
-  }
-
-  const { task } = taskResult;
-  const category = task.category as TaskCategory;
-  const statusCode = extractStatusCode(currentStatus);
-  const formattedStatus = formatStatusCode(statusCode);
-
-  // 워크플로우 조회 (v2.0: Record 접근)
-  const workflows = await getWorkflows();
-  const categoryWorkflow = workflows.workflows[category];
-
-  if (!categoryWorkflow) {
-    return [];
-  }
-
-  const documents: DocumentInfo[] = [];
-
-  // 현재 상태에서 가능한 전이의 문서 목록
-  const futureTransitions = categoryWorkflow.transitions.filter(
-    (t) => t.from === formattedStatus && t.document
-  );
-
-  for (const transition of futureTransitions) {
-    if (transition.document) {
-      documents.push({
-        name: transition.document,
-        path: `tasks/${taskId}/${transition.document}`,
-        exists: false,
-        type: determineDocumentType(transition.document),
-        stage: 'expected',
-        expectedAfter: `[${transition.to}] ${transition.label}`,
-        command: transition.command,
-      });
-    }
-  }
-
-  return documents;
+  // 예정 문서 기능 비활성화 - 문서 생성은 슬래시 명령어에서 처리
+  return [];
 }
 
 /**

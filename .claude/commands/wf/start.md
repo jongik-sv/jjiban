@@ -1,3 +1,9 @@
+---
+subagent:
+  primary: requirements-analyst
+  description: 요구사항 분석 및 기본설계 문서 생성
+---
+
 # /wf:start - 워크플로우 시작 (Lite)
 
 > **상태 전환**: `[ ] Todo` → `[bd]` | `[an]` | `[dd]`

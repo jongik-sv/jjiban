@@ -268,3 +268,10 @@ export interface ProjectFilesResponse {
 export interface FileContentResponse {
   content: string;  // UTF-8 텍스트 또는 Base64 인코딩된 바이너리
 }
+
+// Settings 타입 re-export
+export type {
+  WorkflowsConfig,
+  StateDefinition,
+  CommandDefinition,
+} from './settings';
