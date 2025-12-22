@@ -9,8 +9,8 @@ parallel-processing: true
 # /wf:done - 작업 완료 (Lite)
 
 > **상태 전환**: `[vf] 검증` → `[xx] 완료` (development, defect)
-> **상태 전환**: `[im] 구현` → `[xx] 완료` (infrastructure)
-> **적용 category**: development, defect, infrastructure
+> **상태 전환**: `[im] 구현` → `[xx] 완료` (infrastructure, simple-dev)
+> **적용 category**: development, defect, infrastructure, simple-dev
 > **계층 입력**: WP/ACT/Task 단위 (하위 Task 병렬 처리)
 
 ## 사용법
@@ -34,6 +34,7 @@ parallel-processing: true
 | development | `[vf]` 검증 | `[xx]` 완료 | `080-manual.md` |
 | defect | `[vf]` 검증 | `[xx]` 완료 | - |
 | infrastructure | `[im]` 구현 | `[xx]` 완료 | - |
+| simple-dev | `[im]` 구현 | `[xx]` 완료 | `080-manual.md` (선택) |
 
 ---
 
@@ -63,7 +64,14 @@ parallel-processing: true
 - [ ] 구현 (`030-implementation.md`)
 - [ ] 코드리뷰 (`031-code-review-*.md`)
 
-### 2단계: 매뉴얼 생성 (development만)
+**simple-dev 체크리스트**:
+- [ ] 통합설계 (`010-design.md`)
+- [ ] 추적성 매트릭스 (`025-traceability-matrix.md`)
+- [ ] 테스트 명세 (`026-test-specification.md`)
+- [ ] 구현 (`030-implementation.md`)
+- [ ] 코드리뷰 (`031-code-review-*.md`, 선택)
+
+### 2단계: 매뉴얼 생성 (development, simple-dev)
 
 ```
 080-manual.md 구조:
@@ -173,7 +181,7 @@ Category: [category]
 | 에러 | 메시지 |
 |------|--------|
 | 잘못된 상태 (dev/defect) | `[ERROR] 검증 상태가 아닙니다` |
-| 잘못된 상태 (infra) | `[ERROR] 구현 상태가 아닙니다` |
+| 잘못된 상태 (infra/simple-dev) | `[ERROR] 구현 상태가 아닙니다` |
 | 필수 문서 없음 | `[ERROR] 필수 문서가 없습니다: {파일명}` |
 | 테스트 미완료 | `[ERROR] 테스트가 완료되지 않았습니다` |
 

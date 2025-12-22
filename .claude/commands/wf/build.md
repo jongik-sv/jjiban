@@ -17,8 +17,8 @@ parallel-processing: true
 # /wf:build - TDD 기반 구현 (Lite)
 
 > **상태 전환**: `[ap] 설계승인` → `[im] 구현` (development)
-> **상태 전환**: `[dd] 상세설계` → `[im] 구현` (infrastructure)
-> **적용 category**: development, infrastructure
+> **상태 전환**: `[dd] 상세설계` → `[im] 구현` (infrastructure, simple-dev)
+> **적용 category**: development, infrastructure, simple-dev
 > **계층 입력**: WP/ACT/Task 단위 (하위 Task 병렬 처리)
 
 ## 사용법
@@ -30,7 +30,7 @@ parallel-processing: true
 | 예시 | 설명 |
 |------|------|
 | `/wf:build TSK-01-01` | Task 단위 |
-| `/wf:build ACT-01-01` | ACT 내 모든 `[ap]`/`[dd]` Task 병렬 |
+| `/wf:build ACT-01-01` | ACT 내 모든 `[ap]`/`[dd]` Task 병렬 (category별 필터) |
 | `/wf:build WP-01` | WP 내 모든 Task 병렬 |
 
 ---
@@ -42,6 +42,7 @@ parallel-processing: true
 | Backend-only | 1 → 2 → 4 → 5 | backend-architect |
 | Frontend-only | 1 → 3 → 4 → 5 | frontend-architect |
 | Full-stack | 1 → 2 → 3 → 4 → 5 | backend + frontend |
+| simple-dev | 1 → 2 → 3 → 4 → 5 | backend + frontend |
 | infrastructure | 1 → 2(간소화) → 5 | devops-architect |
 
 ---
@@ -51,11 +52,15 @@ parallel-processing: true
 ### 1단계: 설계 분석
 
 ```
-탐색 경로:
-├── 분할 설계 문서 (development):
+탐색 경로 (category별):
+├── development:
 │   ├── 020-detail-design.md ✅
 │   ├── 025-traceability-matrix.md (FR/BR → 테스트 매핑) ⭐
 │   └── 026-test-specification.md (UT/E2E 시나리오) ⭐
+├── simple-dev:
+│   ├── 010-design.md ✅ (통합 설계 문서)
+│   ├── 025-traceability-matrix.md ⭐
+│   └── 026-test-specification.md ⭐
 ├── 화면 자료 (Frontend 포함 시):
 │   ├── ui-assets/*.png|jpg|svg ⭐ (최우선 참조)
 │   ├── 011-ui-design.md (Fallback)
@@ -79,8 +84,16 @@ parallel-processing: true
    - Controller/Service/Repository 구현
    - Prisma 스키마/모델 구현
 
-3. **Refactor Phase**:
-   - 코드 품질 개선, 중복 제거
+3. **Refactor Phase** ⭐:
+   - **SOLID 원칙**
+     - SRP: 클래스/함수 단일 책임
+     - OCP: 확장에 열림, 수정에 닫힘
+     - DIP: 추상화 의존
+   - **클린 코드**
+     - 의미있는 네이밍
+     - 함수 크기 최소화 (20줄 이하 권장)
+     - 중복 제거 (DRY)
+   - **프로젝트 규칙** (→ `CLAUDE.md`)
 
 ### 3단계: Frontend 구현
 
@@ -140,6 +153,27 @@ npx tsx .jjiban/script/transition.ts {Task-ID} build -p {project}
 
 ---
 
+## 프로젝트 코딩 규칙 (CLAUDE.md)
+
+### Backend
+- TypeScript 필수
+- 파일 접근은 Server Routes 통해서만
+- Prisma ORM 사용
+
+### Frontend
+- Vue 3 Composition API (`<script setup>`)
+- 일반 HTML 금지, **PrimeVue 4.x** 우선 사용
+- Pinia 상태 관리
+
+### CSS 중앙화 원칙 ⭐
+- `:style` 및 HEX 하드코딩 **금지**
+- `main.css` Tailwind 클래스로 통일
+- **권장**: `:class="\`node-icon-${type}\`"`
+- **금지**: `:style="{ backgroundColor: '#3b82f6' }"`
+- **예외**: 동적 계산 필수 (paddingLeft, 드래그)
+
+---
+
 ## 품질 기준
 
 | 항목 | 기준 |
@@ -185,10 +219,11 @@ Task: TSK-01-01-01 | Full-stack
 
 | 에러 | 메시지 |
 |------|--------|
-| 잘못된 category | `[ERROR] development/infrastructure만 지원` |
+| 잘못된 category | `[ERROR] development/infrastructure/simple-dev만 지원` |
 | 잘못된 상태 (dev) | `[ERROR] 설계승인 상태가 아닙니다. /wf:approve 실행 필요` |
+| 잘못된 상태 (simple-dev) | `[ERROR] 상세설계 상태가 아닙니다. /wf:design 실행 필요` |
 | 잘못된 상태 (infra) | `[ERROR] 상세설계 상태가 아닙니다` |
-| 설계 문서 없음 | `[ERROR] 설계 문서가 없습니다` |
+| 설계 문서 없음 | `[ERROR] 설계 문서가 없습니다 (010-design.md 또는 020-detail-design.md)` |
 | UI Assets 없음 | `[INFO] ui-assets/ 없음. 문서/테마 참조` |
 | TDD 5회 초과 | `[ERROR] TDD 5회 시도 후 실패. 수동 개입 필요` |
 | E2E 5회 초과 | `[ERROR] E2E 5회 시도 후 실패. 수동 개입 필요` |
@@ -202,6 +237,9 @@ Task: TSK-01-01-01 | Full-stack
 | development | `/wf:audit` | 코드 리뷰 |
 | development | `/wf:test` | 테스트 실행 |
 | development | `/wf:verify` | 통합테스트 |
+| simple-dev | `/wf:audit` | 코드 리뷰 (선택) |
+| simple-dev | `/wf:test` | 테스트 실행 (선택) |
+| simple-dev | `/wf:done` | 작업 완료 |
 | infrastructure | `/wf:done` | 작업 완료 |
 
 ---

@@ -76,11 +76,11 @@
 |------|------|----------|------|
 | `[ ]` | Todo | 공통 | Todo |
 | `[bd]` | 기본설계 | development | Design |
-| `[dd]` | 상세설계 | development | Detail |
+| `[dd]` | 상세설계 | development, simple-dev | Detail |
 | `[an]` | 분석 | defect | Detail |
 | `[ds]` | 설계 | infrastructure | Detail |
 | `[ap]` | 설계승인 | development | Approve |
-| `[im]` | 구현 | dev/infra | Implement |
+| `[im]` | 구현 | dev/infra/simple-dev | Implement |
 | `[fx]` | 수정 | defect | Implement |
 | `[vf]` | 테스트 | dev/defect | Verify |
 | `[xx]` | 완료 | 공통 | Done |
@@ -91,7 +91,8 @@
 
 | 번호 | 파일명 | 단계 |
 |------|--------|------|
-| 010 | `010-basic-design.md` | 기본설계 |
+| 010 | `010-basic-design.md` | 기본설계 (development) |
+| 010 | `010-design.md` | 통합설계 (simple-dev) |
 | 011 | `011-ui-design.md` | 화면설계 |
 | 020 | `020-detail-design.md` | 상세설계 |
 | 021 | `021-design-review-{llm}-{n}.md` | 설계리뷰 |
@@ -150,6 +151,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 | 명령어 | 메시지 |
 |--------|--------|
 | `/wf:start` | `[wf:start] TSK-01-01-01: 기본설계 완료` |
+| `/wf:design` | `[wf:design] TSK-01-01: 통합설계 완료` |
 | `/wf:draft` | `[wf:draft] TSK-01-01-01: 상세설계 완료` |
 | `/wf:approve` | `[wf:approve] TSK-01-01-01: 설계승인 완료` |
 | `/wf:build` | `[wf:build] TSK-01-01-01: 구현 완료` |
