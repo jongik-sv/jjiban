@@ -143,7 +143,7 @@
             :severity="getActionSeverity(action)"
             size="small"
             :loading="transitioningCommand === action"
-            :disabled="isUpdating || transitioningCommand !== null"
+            :disabled="isUpdating || transitioningCommand !== null || claudeStore.isRunning"
             :data-testid="`task-actions-${action}-btn`"
             :aria-label="`${getActionLabel(action)} 실행`"
             @click="handleTransition(action)"
@@ -187,6 +187,7 @@
 
 import { storeToRefs } from 'pinia'
 import type { TaskDetail, Priority, TeamMember } from '~/types/index'
+import { useClaudeCodeStore } from '~/stores/claudeCode'
 
 // ============================================================
 // Props & Emits
@@ -211,6 +212,7 @@ const emit = defineEmits<{
 // ============================================================
 const selectionStore = useSelectionStore()
 const { selectedTask } = storeToRefs(selectionStore)
+const claudeStore = useClaudeCodeStore()
 const optimisticUpdate = useOptimisticUpdate()
 const errorHandler = useErrorHandler()
 const notification = useNotification()
@@ -419,22 +421,27 @@ async function handleSave() {
 
 /**
  * 상태 전이 핸들러
+ * Claude CLI로 /wf:command 형식의 워크플로우 명령어 실행
  */
 async function handleTransition(command: string) {
   if (!selectedTask.value) return
   if (transitioningCommand.value) return
+  if (claudeStore.isRunning) return  // 동시 실행 방지
 
   transitioningCommand.value = command
 
   try {
-    await $fetch(`/api/tasks/${props.task.id}/transition`, {
-      method: 'POST',
-      body: { command },
+    // /wf:command 형식으로 Claude CLI 실행
+    await claudeStore.execute(`/wf:${command}`, process.cwd(), {
+      onComplete: (success) => {
+        // 완료 시 Task 상태 새로고침
+        selectionStore.refreshTaskDetail()
+        if (success) {
+          notification.success(`'${getActionLabel(command)}' 명령이 실행되었습니다.`)
+          emit('transition-completed', command)
+        }
+      }
     })
-
-    await selectionStore.refreshTaskDetail()
-    notification.success(`'${getActionLabel(command)}' 명령이 실행되었습니다.`)
-    emit('transition-completed', command)
   } catch (error) {
     errorHandler.handle(error, 'TaskActions.handleTransition')
   } finally {

@@ -1,17 +1,23 @@
 import { defineStore } from 'pinia'
 import type { ClaudeCodeSession, ClaudeCodeStatus, ExecuteResponse, OutputEvent, CompleteEvent } from '~/types/claudeCode'
 
+interface ExecuteOptions {
+  onComplete?: (success: boolean) => void
+}
+
 interface ClaudeCodeState {
   sessions: Record<string, ClaudeCodeSession>
   activeSessionId: string | null
   eventSources: Record<string, EventSource>
+  sessionCallbacks: Record<string, ExecuteOptions>
 }
 
 export const useClaudeCodeStore = defineStore('claudeCode', {
   state: (): ClaudeCodeState => ({
     sessions: {},
     activeSessionId: null,
-    eventSources: {}
+    eventSources: {},
+    sessionCallbacks: {}
   }),
 
   getters: {
@@ -28,8 +34,11 @@ export const useClaudeCodeStore = defineStore('claudeCode', {
   actions: {
     /**
      * 명령 실행
+     * @param command - 실행할 명령어
+     * @param cwd - 작업 디렉토리
+     * @param options - 콜백 옵션 (onComplete)
      */
-    async execute(command: string, cwd?: string): Promise<string> {
+    async execute(command: string, cwd?: string, options?: ExecuteOptions): Promise<string> {
       const response = await $fetch<ExecuteResponse>('/api/claude-code/execute', {
         method: 'POST',
         body: { command, cwd }
@@ -48,6 +57,11 @@ export const useClaudeCodeStore = defineStore('claudeCode', {
 
       this.sessions[response.sessionId] = session
       this.activeSessionId = response.sessionId
+
+      // 콜백 저장
+      if (options) {
+        this.sessionCallbacks[response.sessionId] = options
+      }
 
       // SSE 연결
       this.connectSSE(response.sessionId)
@@ -96,6 +110,13 @@ export const useClaudeCodeStore = defineStore('claudeCode', {
           session.exitCode = data.exitCode
           session.updatedAt = new Date().toISOString()
         }
+
+        // 콜백 호출
+        const callbacks = this.sessionCallbacks[sessionId]
+        if (callbacks?.onComplete) {
+          callbacks.onComplete(data.success)
+        }
+        delete this.sessionCallbacks[sessionId]
 
         // SSE 연결 종료
         eventSource.close()
