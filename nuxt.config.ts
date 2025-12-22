@@ -13,6 +13,11 @@ export default defineNuxtConfig({
     preset: 'node-server'
   },
 
+  // 라우팅 규칙 - 루트를 /wbs로 리다이렉트
+  routeRules: {
+    '/': { redirect: '/wbs' }
+  },
+
   // Vite 설정 - zod를 서버 빌드에 포함
   vite: {
     optimizeDeps: {

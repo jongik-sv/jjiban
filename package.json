@@ -6,10 +6,16 @@
   "bin": {
     "jjiban": "./bin/jjiban.js"
   },
+  "files": [
+    "bin/",
+    "cli/",
+    ".output/"
+  ],
   "scripts": {
     "dev": "nuxt dev",
     "build": "nuxt build",
     "preview": "nuxt preview",
+    "prepublishOnly": "npm run build",
     "postinstall": "nuxt prepare",
     "typecheck": "nuxt typecheck",
     "test": "vitest run --exclude 'tests/api/**'",
