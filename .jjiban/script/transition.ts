@@ -37,15 +37,17 @@ interface Transition {
 }
 
 interface Workflow {
-  id: string;
   name: string;
   states: string[];
   transitions: Transition[];
+  actions?: Record<string, string[]>;
 }
 
 interface WorkflowsConfig {
   version: string;
-  workflows: Workflow[];
+  states: Record<string, unknown>;
+  commands: Record<string, unknown>;
+  workflows: Record<string, Workflow>;
 }
 
 interface TransitionOutput {
@@ -122,7 +124,7 @@ function findTransition(
   currentStatus: string,
   command: string
 ): Transition | null {
-  const workflow = workflows.workflows.find(w => w.id === category);
+  const workflow = workflows.workflows[category];
   if (!workflow) return null;
   return workflow.transitions.find(
     t => t.from === currentStatus && t.command === command
@@ -139,7 +141,7 @@ function calculateRollbackDeletions(
   currentStatus: string,
   newStatus: string
 ): string[] {
-  const workflow = workflows.workflows.find(w => w.id === category);
+  const workflow = workflows.workflows[category];
   if (!workflow) return [];
 
   const currentIndex = workflow.states.indexOf(currentStatus);
