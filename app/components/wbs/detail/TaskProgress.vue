@@ -314,11 +314,22 @@ async function executeAutoCommand() {
   try {
     // 프롬프트 생성 및 Claude Code 실행
     const prompt = generateWorkflowPrompt('auto', props.task.id)
-    await claudeCodeStore.execute(prompt)
+    notification.info('Auto 명령 실행 중...')
 
-    // 상태 새로고침 (Claude Code가 완료되면 상태가 변경됨)
-    await selectionStore.refreshTaskDetail()
-    notification.success('Auto 명령 실행 완료')
+    // 완료 대기를 위한 Promise 생성
+    await new Promise<void>((resolve, reject) => {
+      claudeCodeStore.execute(prompt, undefined, {
+        onComplete: async (success) => {
+          if (success) {
+            await selectionStore.refreshTaskDetail()
+            notification.success('Auto 명령 실행 완료')
+            resolve()
+          } else {
+            reject(new Error('Auto 명령 실행 실패'))
+          }
+        }
+      }).catch(reject)
+    })
   } catch (error) {
     errorHandler.handle(error, 'TaskProgress.executeAutoCommand')
   } finally {
@@ -337,11 +348,23 @@ async function executeAction(action: string) {
   try {
     // 프롬프트 생성 및 Claude Code 실행
     const prompt = generateWorkflowPrompt(action, props.task.id)
-    await claudeCodeStore.execute(prompt)
+    const actionLabel = getActionLabel(action)
+    notification.info(`'${actionLabel}' 실행 중...`)
 
-    // 상태 새로고침 (Claude Code가 완료되면 상태가 변경됨)
-    await selectionStore.refreshTaskDetail()
-    notification.success(`'${getActionLabel(action)}' 실행 완료`)
+    // 완료 대기를 위한 Promise 생성
+    await new Promise<void>((resolve, reject) => {
+      claudeCodeStore.execute(prompt, undefined, {
+        onComplete: async (success) => {
+          if (success) {
+            await selectionStore.refreshTaskDetail()
+            notification.success(`'${actionLabel}' 실행 완료`)
+            resolve()
+          } else {
+            reject(new Error(`'${actionLabel}' 실행 실패`))
+          }
+        }
+      }).catch(reject)
+    })
   } catch (error) {
     errorHandler.handle(error, 'TaskProgress.executeAction')
   } finally {
