@@ -217,7 +217,7 @@
 ## WP-05: 워크플로우 유연화
 - priority: medium
 - schedule: 2026-01-03 ~ 2026-01-10
-- progress: 45%
+- progress: 40%
 
 ### TSK-05-01: CLI 설정 로더 생성
 - category: infrastructure
@@ -237,7 +237,7 @@
 
 ### TSK-05-02: workflowSteps 리팩토링
 - category: development
-- status: [ap]
+- status: [im]
 - priority: high
 - schedule: 2026-01-04 ~ 2026-01-06
 - tags: cli, refactoring, workflow
@@ -252,7 +252,7 @@
 
 ### TSK-05-03: 상태 코드 통일
 - category: development
-- status: [dd]
+- status: [ap]
 - priority: medium
 - schedule: 2026-01-06 ~ 2026-01-08
 - tags: status-code, migration
@@ -262,10 +262,12 @@
   - 슬래시 명령어 상태 코드 수정 ([ts]→[vf])
   - .claude/includes/wf-common-lite.md 수정
 - ref: PRD 10.5
+- completed:
+  - ap: 2025-12-26 20:37
 
 ### TSK-05-04: 통합 테스트
 - category: development
-- status: [dd]
+- status: [ap]
 - priority: medium
 - schedule: 2026-01-08 ~ 2026-01-10
 - tags: test, integration
@@ -278,6 +280,7 @@
 - completed:
   - bd: 2025-12-17
   - dd: 2025-12-17
+  - ap: 2025-12-26 20:36
 
 ---
 
