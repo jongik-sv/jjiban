@@ -165,8 +165,8 @@ export function useWorkflowExecution(
       // 3. 프롬프트 생성
       const prompt = generatePrompt(commandName, options.taskId)
 
-      // 4. Claude Code 실행
-      await claudeCodeStore.execute(prompt, process.cwd())
+      // 4. Claude Code 실행 (cwd는 서버에서 자동 설정)
+      await claudeCodeStore.execute(prompt)
 
       // 5. 성공 Toast
       showSuccessToast(commandName)

@@ -314,7 +314,7 @@ async function executeAutoCommand() {
   try {
     // 프롬프트 생성 및 Claude Code 실행
     const prompt = generateWorkflowPrompt('auto', props.task.id)
-    await claudeCodeStore.execute(prompt, process.cwd())
+    await claudeCodeStore.execute(prompt)
 
     // 상태 새로고침 (Claude Code가 완료되면 상태가 변경됨)
     await selectionStore.refreshTaskDetail()
@@ -337,7 +337,7 @@ async function executeAction(action: string) {
   try {
     // 프롬프트 생성 및 Claude Code 실행
     const prompt = generateWorkflowPrompt(action, props.task.id)
-    await claudeCodeStore.execute(prompt, process.cwd())
+    await claudeCodeStore.execute(prompt)
 
     // 상태 새로고침 (Claude Code가 완료되면 상태가 변경됨)
     await selectionStore.refreshTaskDetail()
