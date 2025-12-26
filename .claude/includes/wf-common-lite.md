@@ -168,7 +168,42 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 
 ---
 
+## 실행 훅 (TSK-03-03)
+
+> 워크플로우 명령어 실행 시 실행 상태를 서버에 등록/해제
+
+### 시작 훅 (명령어 실행 직후)
+
+모든 `/wf:*` 명령어 실행 직후 (문서 생성 전) 다음 명령어를 **Bash 도구**로 실행:
+
+```bash
+npx jjiban exec start {TASK_ID} {COMMAND_NAME}
+```
+
+| 변수 | 설명 | 예시 |
+|------|------|------|
+| `{TASK_ID}` | 대상 Task ID | `TSK-01-01` |
+| `{COMMAND_NAME}` | 워크플로우 명령어명 | `build`, `verify`, `done` |
+
+### 종료 훅 (커밋 완료 직후)
+
+모든 `/wf:*` 명령어 종료 직전 (커밋 완료 후) 다음 명령어를 **Bash 도구**로 실행:
+
+```bash
+npx jjiban exec stop {TASK_ID}
+```
+
+### 훅 실행 규칙
+
+| 규칙 | 설명 |
+|------|------|
+| 실패 허용 | 훅 실패 시 경고만 출력, 워크플로우는 계속 진행 |
+| 선택적 | 환경변수 미설정 시 경고 출력 후 스킵 |
+| 비차단 | API 응답 대기 중 타임아웃 시 스킵 |
+
+---
+
 <!--
 jjiban - Workflow Common Module (Lite)
-Version: 1.1
+Version: 1.2
 -->
