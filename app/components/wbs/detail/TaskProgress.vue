@@ -344,10 +344,10 @@ async function executeAutoCommand() {
 }
 
 /**
- * 상태 전환 명령어인지 확인
- * 상태 전환 명령어는 직접 API 호출, 나머지는 Claude Code 사용
+ * 단순 상태 전환 명령어 (Claude 작업 불필요)
+ * 이 명령어들만 직접 API 호출, 나머지는 Claude Code 사용
  */
-const transitionCommands = ['start', 'draft', 'approve', 'build', 'verify', 'done', 'fix', 'skip', 'design']
+const transitionCommands = ['approve', 'skip']
 
 /**
  * 액션 실행 - 상태 전환은 API 직접 호출, 나머지는 Claude Code
