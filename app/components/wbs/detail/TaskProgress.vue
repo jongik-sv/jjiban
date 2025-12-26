@@ -172,6 +172,13 @@ const notification = useNotification()
 const errorHandler = useErrorHandler()
 const workflowConfig = useWorkflowConfig()
 
+// 워크플로우 실행 composable (Claude Code 연동) - TSK-04-01
+const workflowExecution = computed(() => useWorkflowExecution({
+  taskId: props.task.id,
+  projectId: selectionStore.selectedProjectId || '',
+  useToast: true
+}))
+
 // ============================================================
 // State
 // ============================================================
@@ -301,7 +308,7 @@ function getActionSeverity(action: string): 'primary' | 'secondary' | 'success' 
 }
 
 /**
- * Auto 명령어 실행 (wf:auto)
+ * Auto 명령어 실행 (wf:auto) - TSK-04-01: Claude Code 연동
  */
 async function executeAutoCommand() {
   if (executingCommand.value) return
@@ -309,14 +316,12 @@ async function executeAutoCommand() {
   executingCommand.value = 'auto'
 
   try {
-    // wf:auto API 호출
-    await $fetch(`/api/tasks/${props.task.id}/transition`, {
-      method: 'POST',
-      body: { command: 'auto' },
-    })
+    // Claude Code로 워크플로우 명령어 실행
+    await workflowExecution.value.executeCommand('auto')
 
+    // 상태 새로고침 (Claude Code가 완료되면 상태가 변경됨)
     await selectionStore.refreshTaskDetail()
-    notification.success('Auto 명령이 실행되었습니다.')
+    notification.success('Auto 명령 실행 완료')
   } catch (error) {
     errorHandler.handle(error, 'TaskProgress.executeAutoCommand')
   } finally {
@@ -325,7 +330,7 @@ async function executeAutoCommand() {
 }
 
 /**
- * 액션 실행
+ * 액션 실행 - TSK-04-01: Claude Code 연동
  */
 async function executeAction(action: string) {
   if (executingCommand.value) return
@@ -333,13 +338,12 @@ async function executeAction(action: string) {
   executingCommand.value = action
 
   try {
-    await $fetch(`/api/tasks/${props.task.id}/transition`, {
-      method: 'POST',
-      body: { command: action },
-    })
+    // Claude Code로 워크플로우 명령어 실행
+    await workflowExecution.value.executeCommand(action)
 
+    // 상태 새로고침 (Claude Code가 완료되면 상태가 변경됨)
     await selectionStore.refreshTaskDetail()
-    notification.success(`'${getActionLabel(action)}' 명령이 실행되었습니다.`)
+    notification.success(`'${getActionLabel(action)}' 실행 완료`)
   } catch (error) {
     errorHandler.handle(error, 'TaskProgress.executeAction')
   } finally {

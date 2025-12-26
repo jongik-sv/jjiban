@@ -70,7 +70,7 @@
 ## WP-02: 워크플로우 시스템
 - priority: high
 - schedule: 2025-12-22 ~ 2025-12-30
-- progress: 53%
+- progress: 60%
 
 ### TSK-02-01: 워크플로우 액션 UI
 - category: development
@@ -94,7 +94,7 @@
 
 ### TSK-02-02: 워크플로우 프롬프트 생성
 - category: development
-- status: [vf]
+- status: [xx]
 - priority: high
 - schedule: 2025-12-24 ~ 2025-12-28
 - tags: workflow, prompt
@@ -111,10 +111,11 @@
   - ap: 2025-12-26 15:29
   - im: 2025-12-26 17:35
   - vf: 2025-12-26 16:50
+  - xx: 2025-12-26 16:51
 
 ### TSK-02-03: 워크플로우 타입 및 스토어
 - category: development
-- status: [ap]
+- status: [im]
 - priority: medium
 - schedule: 2025-12-28 ~ 2025-12-30
 - tags: types, pinia
@@ -129,6 +130,7 @@
   - ui: 2025-12-17
   - dd: 2025-12-17
   - ap: 2025-12-26 16:25
+  - im: 2025-12-26
 
 ---
 
@@ -190,7 +192,7 @@
 
 ### TSK-04-01: 전역 터미널 및 워크플로우 통합
 - category: development
-- status: [ap]
+- status: [im]
 - priority: critical
 - schedule: 2025-12-30 ~ 2026-01-03
 - tags: integration, header, workflow
@@ -202,6 +204,7 @@
 - ref: PRD 3.1, 5.3
 - completed:
   - ap: 2025-12-26 16:24
+  - im: 2025-12-26 17:15
 
 ---
 

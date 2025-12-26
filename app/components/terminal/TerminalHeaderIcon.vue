@@ -1,38 +1,101 @@
 <script setup lang="ts">
 /**
- * TerminalHeaderIcon 컴포넌트 - 헤더 터미널 아이콘
+ * TerminalHeaderIcon - 헤더 터미널 아이콘
+ * Task: TSK-04-01
+ * 상세설계: 020-detail-design.md 섹션 2.2
  *
- * @stub TSK-01-02 터미널 UI 시스템 미구현으로 인한 임시 스텁
- * @todo stores/terminal.ts, composables/useTerminal.ts 구현 후 전체 기능 활성화
+ * 책임:
+ * - 터미널 아이콘 렌더링
+ * - 세션 개수 배지 표시
+ * - TerminalDialog 트리거
  */
-import { useToast } from 'primevue/usetoast'
+import { useClaudeCodeStore } from '~/stores/claudeCode'
 
-const toast = useToast()
+// ============================================================
+// Stores
+// ============================================================
+const claudeCodeStore = useClaudeCodeStore()
 
+// ============================================================
+// State
+// ============================================================
+const dialogVisible = ref(false)
+
+// ============================================================
+// Computed
+// ============================================================
+
+/** 세션 개수 */
+const sessionCount = computed(() => Object.keys(claudeCodeStore.sessions).length)
+
+/** 실행 중인 세션 있음 */
+const hasRunningSession = computed(() => claudeCodeStore.isRunning)
+
+// ============================================================
+// Methods
+// ============================================================
+
+/** 다이얼로그 열기 */
 function handleClick(): void {
-  toast.add({
-    severity: 'info',
-    summary: '알림',
-    detail: '터미널 기능은 준비 중입니다',
-    life: 3000
-  })
+  dialogVisible.value = true
 }
 </script>
 
 <template>
   <div class="terminal-header-icon">
     <Button
-      class="p-button-text p-button-rounded"
-      aria-label="터미널 열기 (준비 중)"
+      class="p-button-text p-button-rounded terminal-icon-btn"
+      :class="{ 'terminal-icon-running': hasRunningSession }"
+      aria-label="터미널 열기"
       @click="handleClick"
     >
       <i class="pi pi-desktop text-lg" />
+      <Badge
+        v-if="sessionCount > 0"
+        :value="sessionCount"
+        :severity="hasRunningSession ? 'info' : 'secondary'"
+        class="terminal-badge"
+      />
     </Button>
+
+    <!-- 전역 터미널 다이얼로그 -->
+    <TerminalDialog v-model:visible="dialogVisible" />
   </div>
 </template>
 
 <style scoped>
 .terminal-header-icon {
   position: relative;
+}
+
+.terminal-icon-btn {
+  position: relative;
+}
+
+.terminal-icon-running {
+  @apply text-sky-500;
+}
+
+.terminal-icon-running i {
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.terminal-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  font-size: 0.65rem;
+  min-width: 1rem;
+  height: 1rem;
+  line-height: 1rem;
 }
 </style>
