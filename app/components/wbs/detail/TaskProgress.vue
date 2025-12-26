@@ -170,6 +170,7 @@ const props = defineProps<Props>()
 // Stores & Composables
 // ============================================================
 const selectionStore = useSelectionStore()
+const wbsStore = useWbsStore()
 const notification = useNotification()
 const errorHandler = useErrorHandler()
 const workflowConfig = useWorkflowConfig()
@@ -321,7 +322,11 @@ async function executeAutoCommand() {
       claudeCodeStore.execute(prompt, undefined, {
         onComplete: async (success) => {
           if (success) {
-            await selectionStore.refreshTaskDetail()
+            // WBS 트리 및 Task 상세 새로고침
+            await Promise.all([
+              wbsStore.fetchAllWbs(),
+              selectionStore.refreshTaskDetail()
+            ])
             notification.success('Auto 명령 실행 완료')
             resolve()
           } else {
@@ -367,7 +372,11 @@ async function executeAction(action: string) {
       })
 
       if (result.success) {
-        await selectionStore.refreshTaskDetail()
+        // WBS 트리 및 Task 상세 새로고침
+        await Promise.all([
+          wbsStore.fetchAllWbs(),
+          selectionStore.refreshTaskDetail()
+        ])
         notification.success(`'${actionLabel}' 실행 완료: [${result.previousStatus}] → [${result.newStatus}]`)
       } else {
         throw new Error(result.message || '전환 실패')
@@ -381,7 +390,11 @@ async function executeAction(action: string) {
         claudeCodeStore.execute(prompt, undefined, {
           onComplete: async (success) => {
             if (success) {
-              await selectionStore.refreshTaskDetail()
+              // WBS 트리 및 Task 상세 새로고침
+              await Promise.all([
+                wbsStore.fetchAllWbs(),
+                selectionStore.refreshTaskDetail()
+              ])
               notification.success(`'${actionLabel}' 실행 완료`)
               resolve()
             } else {
