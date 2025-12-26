@@ -70,7 +70,7 @@
 ## WP-02: 워크플로우 시스템
 - priority: high
 - schedule: 2025-12-22 ~ 2025-12-30
-- progress: 60%
+- progress: 100%
 
 ### TSK-02-01: 워크플로우 액션 UI
 - category: development
@@ -120,7 +120,6 @@
 - schedule: 2025-12-28 ~ 2025-12-30
 - tags: types, pinia
 - depends: TSK-02-02
-- test-result: pass
 - requirements:
   - types/terminal.ts (인터페이스 정의)
   - stores/terminal.ts, stores/workflow.ts
@@ -138,7 +137,7 @@
 ## WP-03: 실행 상태 관리
 - priority: high
 - schedule: 2025-12-17 ~ 2025-12-20
-- progress: 80%
+- progress: 100%
 
 ### TSK-03-01: 실행 상태 서버/API
 - category: development
@@ -171,7 +170,6 @@
 - schedule: 2025-12-18 ~ 2025-12-20
 - tags: workflow, hook, cli
 - depends: TSK-03-01
-- test-result: pass
 - requirements:
   - cli/commands/exec.js 신규 생성 (start/stop 서브커맨드)
   - bin/jjiban.js에 exec 명령어 등록
@@ -194,7 +192,7 @@
 ## WP-04: 전역 통합
 - priority: high
 - schedule: 2025-12-30 ~ 2026-01-03
-- progress: 0%
+- progress: 100%
 
 ### TSK-04-01: 전역 터미널 및 워크플로우 통합
 - category: development
@@ -203,7 +201,6 @@
 - schedule: 2025-12-30 ~ 2026-01-03
 - tags: integration, header, workflow
 - depends: TSK-01-02,TSK-02-01,TSK-02-03
-- test-result: pass
 - requirements:
   - AppHeader에 TerminalHeaderIcon 추가
   - TaskDetailPanel에 WorkflowActions 추가
@@ -240,7 +237,7 @@
 
 ### TSK-05-02: workflowSteps 리팩토링
 - category: development
-- status: [dd]
+- status: [ap]
 - priority: high
 - schedule: 2026-01-04 ~ 2026-01-06
 - tags: cli, refactoring, workflow
@@ -250,6 +247,8 @@
   - cli/core/WorkflowPlanner.js 설정 주입 방식
   - WORKFLOW_STEPS → getWorkflowSteps() 함수화
 - ref: PRD 10.3
+- completed:
+  - ap: 2025-12-26 20:21
 
 ### TSK-05-03: 상태 코드 통일
 - category: development
