@@ -98,16 +98,16 @@ export function useWorkflowExecution(
   function generatePrompt(commandName: string, taskId: string): string {
     // run 명령어는 taskId 불필요
     if (commandName === 'run') {
-      return '/wf:run\n'
+      return '/wf:run'
     }
 
     // auto 명령어
     if (commandName === 'auto') {
-      return `/wf:auto ${taskId}\n`
+      return `/wf:auto ${taskId}`
     }
 
     // 일반 명령어
-    return `/wf:${commandName} ${taskId}\n`
+    return `/wf:${commandName} ${taskId}`
   }
 
   /**
@@ -202,10 +202,10 @@ export function useWorkflowExecution(
  */
 export function generateWorkflowPrompt(commandName: string, taskId: string): string {
   if (commandName === 'run') {
-    return '/wf:run\n'
+    return '/wf:run'
   }
   if (commandName === 'auto') {
-    return `/wf:auto ${taskId}\n`
+    return `/wf:auto ${taskId}`
   }
-  return `/wf:${commandName} ${taskId}\n`
+  return `/wf:${commandName} ${taskId}`
 }

@@ -90,8 +90,13 @@ class ClaudeCodeService {
     session.updatedAt = new Date()
 
     // Claude Code CLI 실행
-    // -p 옵션: print mode (비대화형)
-    const proc = spawn('claude', ['-p', session.command], {
+    // -p: print mode (비대화형)
+    // --dangerously-skip-permissions: 권한 확인 스킵 (중요: 신뢰할 수 있는 디렉토리에서만 사용)
+    const proc = spawn('claude', [
+      '-p',
+      '--dangerously-skip-permissions',
+      session.command
+    ], {
       cwd: session.cwd,
       shell: true,
       env: {
