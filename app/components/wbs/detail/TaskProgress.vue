@@ -154,6 +154,8 @@
  */
 
 import type { TaskDetail, TaskCategory, TaskStatus } from '~/types'
+import { useClaudeCodeStore } from '~/stores/claudeCode'
+import { generateWorkflowPrompt } from '~/composables/useWorkflowExecution'
 
 // ============================================================
 // Props
@@ -171,13 +173,7 @@ const selectionStore = useSelectionStore()
 const notification = useNotification()
 const errorHandler = useErrorHandler()
 const workflowConfig = useWorkflowConfig()
-
-// 워크플로우 실행 composable (Claude Code 연동) - TSK-04-01
-const workflowExecution = computed(() => useWorkflowExecution({
-  taskId: props.task.id,
-  projectId: selectionStore.selectedProjectId || '',
-  useToast: true
-}))
+const claudeCodeStore = useClaudeCodeStore()
 
 // ============================================================
 // State
@@ -316,8 +312,9 @@ async function executeAutoCommand() {
   executingCommand.value = 'auto'
 
   try {
-    // Claude Code로 워크플로우 명령어 실행
-    await workflowExecution.value.executeCommand('auto')
+    // 프롬프트 생성 및 Claude Code 실행
+    const prompt = generateWorkflowPrompt('auto', props.task.id)
+    await claudeCodeStore.execute(prompt, process.cwd())
 
     // 상태 새로고침 (Claude Code가 완료되면 상태가 변경됨)
     await selectionStore.refreshTaskDetail()
@@ -338,8 +335,9 @@ async function executeAction(action: string) {
   executingCommand.value = action
 
   try {
-    // Claude Code로 워크플로우 명령어 실행
-    await workflowExecution.value.executeCommand(action)
+    // 프롬프트 생성 및 Claude Code 실행
+    const prompt = generateWorkflowPrompt(action, props.task.id)
+    await claudeCodeStore.execute(prompt, process.cwd())
 
     // 상태 새로고침 (Claude Code가 완료되면 상태가 변경됨)
     await selectionStore.refreshTaskDetail()
