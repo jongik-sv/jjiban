@@ -165,11 +165,12 @@
 
 ### TSK-03-03: 워크플로우 명령어 훅
 - category: development
-- status: [im]
+- status: [vf]
 - priority: medium
 - schedule: 2025-12-18 ~ 2025-12-20
 - tags: workflow, hook, cli
 - depends: TSK-03-01
+- test-result: pass
 - requirements:
   - cli/commands/exec.js 신규 생성 (start/stop 서브커맨드)
   - bin/jjiban.js에 exec 명령어 등록
@@ -184,6 +185,7 @@
   - dd: 2025-12-17
   - ap: 2025-12-26
   - im: 2025-12-26
+  - vf: 2025-12-26
 
 ---
 
