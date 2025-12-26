@@ -338,33 +338,59 @@ async function executeAutoCommand() {
 }
 
 /**
- * 액션 실행 - TSK-04-01: Claude Code 연동
+ * 상태 전환 명령어인지 확인
+ * 상태 전환 명령어는 직접 API 호출, 나머지는 Claude Code 사용
+ */
+const transitionCommands = ['start', 'draft', 'approve', 'build', 'verify', 'done', 'fix', 'skip', 'design']
+
+/**
+ * 액션 실행 - 상태 전환은 API 직접 호출, 나머지는 Claude Code
  */
 async function executeAction(action: string) {
   if (executingCommand.value) return
 
   executingCommand.value = action
+  const actionLabel = getActionLabel(action)
 
   try {
-    // 프롬프트 생성 및 Claude Code 실행
-    const prompt = generateWorkflowPrompt(action, props.task.id)
-    const actionLabel = getActionLabel(action)
-    notification.info(`'${actionLabel}' 실행 중...`)
+    // 상태 전환 명령어는 API 직접 호출
+    if (transitionCommands.includes(action)) {
+      notification.info(`'${actionLabel}' 실행 중...`)
 
-    // 완료 대기를 위한 Promise 생성
-    await new Promise<void>((resolve, reject) => {
-      claudeCodeStore.execute(prompt, undefined, {
-        onComplete: async (success) => {
-          if (success) {
-            await selectionStore.refreshTaskDetail()
-            notification.success(`'${actionLabel}' 실행 완료`)
-            resolve()
-          } else {
-            reject(new Error(`'${actionLabel}' 실행 실패`))
-          }
+      const result = await $fetch('/api/workflow/transition', {
+        method: 'POST',
+        body: {
+          taskId: props.task.id,
+          command: action,
+          projectId: selectionStore.selectedProjectId
         }
-      }).catch(reject)
-    })
+      })
+
+      if (result.success) {
+        await selectionStore.refreshTaskDetail()
+        notification.success(`'${actionLabel}' 실행 완료: [${result.previousStatus}] → [${result.newStatus}]`)
+      } else {
+        throw new Error(result.message || '전환 실패')
+      }
+    } else {
+      // 기타 명령어 (review, apply, test, audit, patch 등)는 Claude Code 사용
+      const prompt = generateWorkflowPrompt(action, props.task.id)
+      notification.info(`'${actionLabel}' 실행 중...`)
+
+      await new Promise<void>((resolve, reject) => {
+        claudeCodeStore.execute(prompt, undefined, {
+          onComplete: async (success) => {
+            if (success) {
+              await selectionStore.refreshTaskDetail()
+              notification.success(`'${actionLabel}' 실행 완료`)
+              resolve()
+            } else {
+              reject(new Error(`'${actionLabel}' 실행 실패`))
+            }
+          }
+        }).catch(reject)
+      })
+    }
   } catch (error) {
     errorHandler.handle(error, 'TaskProgress.executeAction')
   } finally {
