@@ -1,6 +1,6 @@
 > version: 2.0
 > depth: 3
-> updated: 2025-12-18
+> updated: 2025-12-26
 > start: 2025-12-17
 
 ---
@@ -70,11 +70,11 @@
 ## WP-02: 워크플로우 시스템
 - priority: high
 - schedule: 2025-12-22 ~ 2025-12-30
-- progress: 7%
+- progress: 20%
 
 ### TSK-02-01: 워크플로우 액션 UI
 - category: development
-- status: implementation [im]
+- status: [vf]
 - priority: high
 - schedule: 2025-12-22 ~ 2025-12-26
 - tags: workflow, button, actions
@@ -89,10 +89,11 @@
   - ui: 2025-12-17
   - dd: 2025-12-17
   - im: 2025-12-17
+  - vf: 2025-12-26 16:44
 
 ### TSK-02-02: 워크플로우 프롬프트 생성
 - category: development
-- status: detail-design [dd]
+- status: [ap]
 - priority: high
 - schedule: 2025-12-24 ~ 2025-12-28
 - tags: workflow, prompt
@@ -106,10 +107,11 @@
   - bd: 2025-12-17
   - ui: 2025-12-17
   - dd: 2025-12-17
+  - ap: 2025-12-26 15:29
 
 ### TSK-02-03: 워크플로우 타입 및 스토어
 - category: development
-- status: detail-design [dd]
+- status: [ap]
 - priority: medium
 - schedule: 2025-12-28 ~ 2025-12-30
 - tags: types, pinia
@@ -123,13 +125,14 @@
   - bd: 2025-12-17
   - ui: 2025-12-17
   - dd: 2025-12-17
+  - ap: 2025-12-26 16:25
 
 ---
 
 ## WP-03: 실행 상태 관리
 - priority: high
 - schedule: 2025-12-17 ~ 2025-12-20
-- progress: 67%
+- progress: 80%
 
 ### TSK-03-01: 실행 상태 서버/API
 - category: development
@@ -157,7 +160,7 @@
 
 ### TSK-03-03: 워크플로우 명령어 훅
 - category: development
-- status: detail-design [dd]
+- status: [dd]
 - priority: medium
 - schedule: 2025-12-18 ~ 2025-12-20
 - tags: workflow, hook, cli
@@ -184,7 +187,7 @@
 
 ### TSK-04-01: 전역 터미널 및 워크플로우 통합
 - category: development
-- status: detail-design [dd]
+- status: [ap]
 - priority: critical
 - schedule: 2025-12-30 ~ 2026-01-03
 - tags: integration, header, workflow
@@ -194,17 +197,19 @@
   - TaskDetailPanel에 WorkflowActions 추가
   - 터미널 ↔ 워크플로우 연동 (세션 생성/실행)
 - ref: PRD 3.1, 5.3
+- completed:
+  - ap: 2025-12-26 16:24
 
 ---
 
 ## WP-05: 워크플로우 유연화
 - priority: medium
 - schedule: 2026-01-03 ~ 2026-01-10
-- progress: 0%
+- progress: 45%
 
 ### TSK-05-01: CLI 설정 로더 생성
 - category: infrastructure
-- status: detail-design [dd]
+- status: [im]
 - priority: high
 - schedule: 2026-01-03 ~ 2026-01-04
 - tags: cli, settings, loader
@@ -214,6 +219,9 @@
   - cli/config/workflowBuilder.js 신규 생성
   - workflows.json 로드 및 폴백 로직
 - ref: PRD 10.3
+- completed:
+  - ds: 2025-12-26 16:27
+  - im: 2025-12-26 16:28
 
 ### TSK-05-02: workflowSteps 리팩토링
 - category: development
@@ -230,7 +238,7 @@
 
 ### TSK-05-03: 상태 코드 통일
 - category: development
-- status: detail-design [dd]
+- status: [dd]
 - priority: medium
 - schedule: 2026-01-06 ~ 2026-01-08
 - tags: status-code, migration
@@ -262,11 +270,11 @@
 ## WP-06: 의존관계 시각화
 - priority: medium
 - schedule: 2025-12-17 ~ 2025-12-20
-- progress: 50%
+- progress: 87%
 
 ### TSK-06-01: 의존관계 그래프 시각화 기능 구현
 - category: development
-- status: implementation [im]
+- status: [im]
 - priority: high
 - schedule: 2025-12-17 ~ 2025-12-18
 - tags: vis-network, graph, modal
@@ -282,7 +290,7 @@
 
 ### TSK-06-02: Gantt 차트 의존성 화살표
 - category: development
-- status: done [xx]
+- status: [xx]
 - priority: high
 - schedule: 2025-12-18 ~ 2025-12-19
 - tags: gantt, dependency, arrow
