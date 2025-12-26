@@ -115,11 +115,12 @@
 
 ### TSK-02-03: 워크플로우 타입 및 스토어
 - category: development
-- status: [im]
+- status: [vf]
 - priority: medium
 - schedule: 2025-12-28 ~ 2025-12-30
 - tags: types, pinia
 - depends: TSK-02-02
+- test-result: pass
 - requirements:
   - types/terminal.ts (인터페이스 정의)
   - stores/terminal.ts, stores/workflow.ts
