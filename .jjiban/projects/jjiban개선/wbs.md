@@ -115,7 +115,7 @@
 
 ### TSK-02-03: 워크플로우 타입 및 스토어
 - category: development
-- status: [vf]
+- status: [xx]
 - priority: medium
 - schedule: 2025-12-28 ~ 2025-12-30
 - tags: types, pinia
