@@ -13,6 +13,12 @@ export default defineNuxtConfig({
     preset: 'node-server'
   },
 
+  // Sourcemap 비활성화 (빌드 오류 방지)
+  sourcemap: {
+    server: false,
+    client: false
+  },
+
   // 라우팅 규칙 - 루트를 /wbs로 리다이렉트
   routeRules: {
     '/': { redirect: '/wbs' }

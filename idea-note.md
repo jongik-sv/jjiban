@@ -151,42 +151,19 @@ GET /api/wbs/executable-tasks?projectId=jjiban&category=development
 
 wf/run.md 프롬프트에서 사용
 
-## 실행 전
-1. `npx tsx .jjiban/script/next-task.ts` 실행 (JSON 기본 출력)
-2. 결과에서 첫 번째 Task 선택
-3. 해당 Task로 워크플로우 실행
 
----
-출력 형식
 
-JSON (기본)
+> 그럼 한번에 하나씩만 실행가능한거야? 
 
-{
-"executable": [
-  {
-    "id": "TSK-09-01",
-    "title": "다중 프로젝트 WBS 통합 뷰",
-    "category": "development",
-    "status": "[ ]",
-    "priority": "high",
-    "nextAction": "start"
-  }
-],
-"waiting": [
-  {
-    "id": "TSK-10-01",
-    "blockedBy": ["TSK-09-01"]
-  }
-]
-}
+● 네, Claude CLI는 history.jsonl.lock 파일로 인해 동시에 하나만 실행 가능합니다.
 
-표 형식 (--table 옵션)
+  현재 제약:
+  - 웹 UI에서 여러 Task의 버튼을 동시에 클릭하면 충돌
+  - 터미널에서 Claude 실행 중에 웹 UI에서 실행하면 충돌
 
-🎯 실행 가능한 Task (1개)
+  해결 방안:
 
-|#  | Task ID      | 카테고리     | 우선순위 | 다음 액션 |
-|----+--------------+-------------+---------+----------|
-|1  | TSK-09-01    | development | high    | start |
+  1. UI에서 실행 중 다른 버튼 비활성화 (현재 구현됨 - Task별로만)
+  2. 전역 실행 상태 관리 - 모든 Task에서 Claude 실행 중이면 버튼 비활성화
 
-⏳ 대기 중 (1개)
-- TSK-10-01: TSK-09-01 완료 대기
+  전역 실행 상태를 추가하시겠습니까? 그러면 어떤 Task에서든 Claude가 실행 중이면 모든 Claude 관련 버튼이 비활성화됩니 다.
