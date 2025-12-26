@@ -198,11 +198,12 @@
 
 ### TSK-04-01: 전역 터미널 및 워크플로우 통합
 - category: development
-- status: [im]
+- status: [vf]
 - priority: critical
 - schedule: 2025-12-30 ~ 2026-01-03
 - tags: integration, header, workflow
 - depends: TSK-01-02,TSK-02-01,TSK-02-03
+- test-result: pass
 - requirements:
   - AppHeader에 TerminalHeaderIcon 추가
   - TaskDetailPanel에 WorkflowActions 추가
