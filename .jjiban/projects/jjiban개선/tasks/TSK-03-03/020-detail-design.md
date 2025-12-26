@@ -1,6 +1,6 @@
 # 상세설계 (020-detail-design.md)
 
-**Version:** 1.0.0 — **Last Updated:** 2025-12-17
+**Version:** 1.1.0 — **Last Updated:** 2025-12-26
 
 ---
 
@@ -107,11 +107,23 @@ graph TD
 
 | 단계 | 동작 | 실패 시 |
 |------|------|---------|
-| 1 | 환경변수/옵션에서 sessionId 추출 | 경고 출력 후 계속 |
-| 2 | 환경변수/옵션에서 pid 추출 | 경고 출력 후 계속 |
-| 3 | API 엔드포인트 URL 구성 | - |
-| 4 | POST /api/execution/start 호출 | 경고 출력 후 계속 |
-| 5 | 성공 메시지 출력 | - |
+| 1 | taskId 형식 검증 (정규식) | 경고 출력 후 계속 |
+| 2 | 환경변수/옵션에서 sessionId 추출 | 경고 출력 후 계속 |
+| 3 | 환경변수/옵션에서 pid 추출 | 경고 출력 후 계속 |
+| 4 | API 엔드포인트 URL 구성 | - |
+| 5 | POST /api/execution/start 호출 | 경고 출력 후 계속 |
+| 6 | 성공 메시지 출력 | - |
+
+**taskId 형식 검증** (ISS-001 반영)
+
+```javascript
+const TASK_ID_REGEX = /^TSK-\d{2}-\d{2}(-\d{2})?$/;
+if (!TASK_ID_REGEX.test(taskId)) {
+  console.warn(`[exec] 경고: 잘못된 taskId 형식: ${taskId}`);
+  // API 호출 생략, 워크플로우는 계속
+  return;
+}
+```
 
 **API 요청 본문**
 
@@ -188,11 +200,19 @@ graph TD
 
 ### 5.1 기본 설정
 
-| 항목 | 값 |
-|------|---|
-| Base URL | `http://localhost:3000` |
-| Content-Type | `application/json` |
-| 타임아웃 | 5000ms |
+| 항목 | 값 | 비고 |
+|------|---|------|
+| Base URL | `http://localhost:3000` | 환경변수 `JJIBAN_API_URL` 오버라이드 가능 |
+| Content-Type | `application/json` | - |
+| 타임아웃 | 5000ms (기본값) | 환경변수 `JJIBAN_API_TIMEOUT` 오버라이드 가능 |
+
+**상수 정의** (ISS-002 반영)
+
+```javascript
+const DEFAULT_API_TIMEOUT = 5000;
+const API_TIMEOUT = parseInt(process.env.JJIBAN_API_TIMEOUT) || DEFAULT_API_TIMEOUT;
+const API_BASE_URL = process.env.JJIBAN_API_URL || 'http://localhost:3000';
+```
 
 ### 5.2 에러 처리
 
@@ -258,13 +278,22 @@ npx jjiban exec stop {TASK_ID}
 | 종료 성공 | `[exec] 실행 해제: {taskId}` |
 | 경고 | `[exec] 경고: {message}` |
 
-### 7.2 색상 (chalk 사용 시)
+### 7.2 색상 출력
 
-| 상황 | 색상 |
-|------|------|
-| 성공 | green |
-| 경고 | yellow |
-| 오류 | red |
+**결정**: chalk 미사용 (ISS-003 반영)
+
+| 이유 |
+|------|
+| 의존성 최소화 원칙 준수 |
+| Node.js 기본 console.log로 충분 |
+| 터미널 호환성 이슈 방지 |
+
+**대안**: console.log/warn/error 사용
+```javascript
+console.log(`[exec] 실행 등록: ${taskId} (${command})`);
+console.warn(`[exec] 경고: ${message}`);
+console.error(`[exec] 오류: ${message}`);
+```
 
 ---
 

@@ -1,6 +1,6 @@
 # 테스트 명세 (026-test-specification.md)
 
-**Version:** 1.0.0 — **Last Updated:** 2025-12-17
+**Version:** 1.1.0 — **Last Updated:** 2025-12-26
 
 ---
 
@@ -206,13 +206,13 @@
 
 ## 5. 테스트 환경
 
-| 항목 | 값 |
-|------|---|
-| 프레임워크 | Jest 또는 Vitest |
-| Mock | nock (HTTP mock) |
-| 환경변수 | process.env 조작 |
-| 커버리지 도구 | c8 또는 @vitest/coverage-v8 |
-| 목표 커버리지 | >= 80% |
+| 항목 | 값 | 비고 |
+|------|---|------|
+| 프레임워크 | **Vitest** | 프로젝트 표준 (ISS-005 반영) |
+| Mock | msw (Mock Service Worker) | Vitest 권장 |
+| 환경변수 | vi.stubEnv() | Vitest 내장 기능 |
+| 커버리지 도구 | @vitest/coverage-v8 | - |
+| 목표 커버리지 | >= 80% | - |
 
 ---
 
