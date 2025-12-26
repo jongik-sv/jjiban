@@ -198,7 +198,7 @@
 
 ### TSK-04-01: 전역 터미널 및 워크플로우 통합
 - category: development
-- status: [vf]
+- status: [xx]
 - priority: critical
 - schedule: 2025-12-30 ~ 2026-01-03
 - tags: integration, header, workflow
@@ -212,6 +212,8 @@
 - completed:
   - ap: 2025-12-26 16:24
   - im: 2025-12-26 17:15
+  - vf: 2025-12-26
+  - xx: 2025-12-26
 
 ---
 
