@@ -93,7 +93,7 @@
 
 ### TSK-02-02: 워크플로우 프롬프트 생성
 - category: development
-- status: [ap]
+- status: [im]
 - priority: high
 - schedule: 2025-12-24 ~ 2025-12-28
 - tags: workflow, prompt
@@ -108,6 +108,7 @@
   - ui: 2025-12-17
   - dd: 2025-12-17
   - ap: 2025-12-26 15:29
+  - im: 2025-12-26 17:35
 
 ### TSK-02-03: 워크플로우 타입 및 스토어
 - category: development

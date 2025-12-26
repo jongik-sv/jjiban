@@ -174,7 +174,7 @@
 <script setup lang="ts">
 /**
  * TaskActions - Task 액션 컴포넌트
- * Task: TSK-05-03
+ * Task: TSK-05-03, TSK-02-02
  * 상세설계: 020-detail-design.md
  *
  * 책임:
@@ -183,11 +183,13 @@
  * - useOptimisticUpdate를 통한 API 호출
  * - useErrorHandler를 통한 에러 처리
  * - 상태 전이 버튼 렌더링
+ * - TSK-02-02: useWorkflowExecution을 통한 워크플로우 실행
  */
 
 import { storeToRefs } from 'pinia'
 import type { TaskDetail, Priority, TeamMember } from '~/types/index'
 import { useClaudeCodeStore } from '~/stores/claudeCode'
+import { useWorkflowExecution } from '~/composables/useWorkflowExecution'
 
 // ============================================================
 // Props & Emits
@@ -211,11 +213,23 @@ const emit = defineEmits<{
 // Composables & Stores
 // ============================================================
 const selectionStore = useSelectionStore()
-const { selectedTask } = storeToRefs(selectionStore)
+const projectStore = useProjectStore()
+const { selectedTask, selectedProjectId } = storeToRefs(selectionStore)
 const claudeStore = useClaudeCodeStore()
 const optimisticUpdate = useOptimisticUpdate()
 const errorHandler = useErrorHandler()
 const notification = useNotification()
+
+// TSK-02-02: 워크플로우 실행 composable
+const workflowExecution = computed(() => {
+  if (!selectedTask.value) return null
+
+  return useWorkflowExecution({
+    taskId: selectedTask.value.id,
+    projectId: selectedProjectId.value || projectStore.currentProject?.id || 'jjiban',
+    useToast: true
+  })
+})
 
 // ============================================================
 // State
@@ -421,27 +435,23 @@ async function handleSave() {
 
 /**
  * 상태 전이 핸들러
- * Claude CLI로 /wf:command 형식의 워크플로우 명령어 실행
+ * TSK-02-02: useWorkflowExecution을 통해 워크플로우 명령어 실행
  */
 async function handleTransition(command: string) {
   if (!selectedTask.value) return
+  if (!workflowExecution.value) return
   if (transitioningCommand.value) return
   if (claudeStore.isRunning) return  // 동시 실행 방지
 
   transitioningCommand.value = command
 
   try {
-    // /wf:command 형식으로 Claude CLI 실행
-    await claudeStore.execute(`/wf:${command}`, process.cwd(), {
-      onComplete: (success) => {
-        // 완료 시 Task 상태 새로고침
-        selectionStore.refreshTaskDetail()
-        if (success) {
-          notification.success(`'${getActionLabel(command)}' 명령이 실행되었습니다.`)
-          emit('transition-completed', command)
-        }
-      }
-    })
+    // TSK-02-02: useWorkflowExecution composable을 통해 실행
+    await workflowExecution.value.executeCommand(command)
+
+    // 실행 완료 후 Task 상태 새로고침 및 이벤트 발생
+    await selectionStore.refreshTaskDetail()
+    emit('transition-completed', command)
   } catch (error) {
     errorHandler.handle(error, 'TaskActions.handleTransition')
   } finally {
