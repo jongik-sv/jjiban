@@ -70,7 +70,7 @@
 ## WP-02: 워크플로우 시스템
 - priority: high
 - schedule: 2025-12-22 ~ 2025-12-30
-- progress: 47%
+- progress: 53%
 
 ### TSK-02-01: 워크플로우 액션 UI
 - category: development
@@ -94,7 +94,7 @@
 
 ### TSK-02-02: 워크플로우 프롬프트 생성
 - category: development
-- status: [im]
+- status: [vf]
 - priority: high
 - schedule: 2025-12-24 ~ 2025-12-28
 - tags: workflow, prompt
@@ -110,6 +110,7 @@
   - dd: 2025-12-17
   - ap: 2025-12-26 15:29
   - im: 2025-12-26 17:35
+  - vf: 2025-12-26 16:50
 
 ### TSK-02-03: 워크플로우 타입 및 스토어
 - category: development
