@@ -3,6 +3,7 @@ import type { ClaudeCodeSession, ClaudeCodeStatus, ExecuteResponse, OutputEvent,
 
 interface ExecuteOptions {
   onComplete?: (success: boolean) => void
+  taskId?: string  // 실행을 시작한 Task ID
 }
 
 interface ClaudeCodeState {
@@ -28,6 +29,25 @@ export const useClaudeCodeStore = defineStore('claudeCode', {
     isRunning: (state): boolean => {
       if (!state.activeSessionId) return false
       return state.sessions[state.activeSessionId]?.status === 'running'
+    },
+    /**
+     * Task ID로 세션 조회
+     */
+    getSessionByTaskId: (state) => (taskId: string): ClaudeCodeSession | null => {
+      const sessions = Object.values(state.sessions)
+      // 해당 Task의 가장 최근 세션 반환
+      const taskSessions = sessions.filter(s => s.taskId === taskId)
+      if (taskSessions.length === 0) return null
+      return taskSessions.sort((a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      )[0]
+    },
+    /**
+     * Task ID로 실행 중 여부 확인
+     */
+    isTaskRunning: (state) => (taskId: string): boolean => {
+      const sessions = Object.values(state.sessions)
+      return sessions.some(s => s.taskId === taskId && s.status === 'running')
     }
   },
 
@@ -52,7 +72,8 @@ export const useClaudeCodeStore = defineStore('claudeCode', {
         output: '',
         exitCode: null,
         createdAt: response.createdAt,
-        updatedAt: response.createdAt
+        updatedAt: response.createdAt,
+        taskId: options?.taskId
       }
 
       this.sessions[response.sessionId] = session

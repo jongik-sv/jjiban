@@ -18,8 +18,40 @@ const toast = useToast()
 const commandInput = ref('')
 const isExpanded = ref(false)
 
-// 현재 실행 중인지
-const isRunning = computed(() => store.isRunning)
+// 현재 Task의 세션
+const taskSession = computed(() => store.getSessionByTaskId(props.taskId))
+
+// 현재 Task가 실행 중인지
+const isRunning = computed(() => store.isTaskRunning(props.taskId))
+
+// 상태 아이콘
+const statusIcon = computed(() => {
+  if (!taskSession.value) return 'pi pi-circle'
+  switch (taskSession.value.status) {
+    case 'running': return 'pi pi-spin pi-spinner'
+    case 'completed': return 'pi pi-check-circle'
+    case 'error': return 'pi pi-times-circle'
+    case 'cancelled': return 'pi pi-ban'
+    default: return 'pi pi-circle'
+  }
+})
+
+// 상태 라벨
+const statusLabel = computed(() => {
+  if (!taskSession.value) return ''
+  switch (taskSession.value.status) {
+    case 'running': return '실행 중...'
+    case 'completed': return '완료'
+    case 'error': return '오류'
+    case 'cancelled': return '취소됨'
+    default: return ''
+  }
+})
+
+// Emits
+defineEmits<{
+  openTerminal: []
+}>()
 
 // 실행 핸들러
 async function handleExecute() {
@@ -35,7 +67,7 @@ async function handleExecute() {
 
   try {
     isExpanded.value = true
-    await store.execute(commandInput.value, process.cwd())
+    await store.execute(commandInput.value, undefined, { taskId: props.taskId })
     commandInput.value = ''
   } catch (e) {
     toast.add({
@@ -118,8 +150,44 @@ function toggleExpanded() {
       </div>
 
       <!-- 출력 뷰 -->
-      <div v-if="store.activeSession" class="output-wrapper">
-        <ClaudeCodeOutputView />
+      <div v-if="taskSession" class="output-wrapper">
+        <div class="output-header">
+          <div class="output-status">
+            <i :class="statusIcon" />
+            <span>{{ statusLabel }}</span>
+            <code class="output-command">{{ taskSession.command }}</code>
+          </div>
+          <div class="output-actions">
+            <Button
+              icon="pi pi-external-link"
+              text
+              rounded
+              size="small"
+              title="터미널에서 보기"
+              @click="$emit('openTerminal')"
+            />
+            <Button
+              v-if="taskSession.status === 'running'"
+              icon="pi pi-stop"
+              text
+              rounded
+              size="small"
+              severity="danger"
+              title="중단"
+              @click="handleCancel"
+            />
+            <Button
+              v-if="taskSession.status !== 'running'"
+              icon="pi pi-refresh"
+              text
+              rounded
+              size="small"
+              title="다시 실행"
+              disabled
+            />
+          </div>
+        </div>
+        <pre class="output-content">{{ taskSession.output || '실행 결과가 여기에 표시됩니다.' }}</pre>
       </div>
     </div>
   </Panel>
@@ -162,5 +230,49 @@ function toggleExpanded() {
 
 .rotate-180 {
   transform: rotate(180deg);
+}
+
+.output-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem;
+  background: var(--p-surface-100);
+  border-radius: 0.25rem 0.25rem 0 0;
+}
+
+.output-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.output-command {
+  font-family: monospace;
+  background: var(--p-surface-200);
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+}
+
+.output-actions {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.output-content {
+  margin: 0;
+  padding: 0.75rem;
+  background: var(--p-surface-900);
+  color: var(--p-surface-0);
+  font-family: monospace;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  overflow: auto;
+  max-height: 250px;
+  border-radius: 0 0 0.25rem 0.25rem;
+  white-space: pre-wrap;
+  word-break: break-all;
 }
 </style>

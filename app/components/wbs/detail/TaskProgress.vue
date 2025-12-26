@@ -320,6 +320,7 @@ async function executeAutoCommand() {
     // 완료 대기를 위한 Promise 생성
     await new Promise<void>((resolve, reject) => {
       claudeCodeStore.execute(prompt, undefined, {
+        taskId: props.task.id,
         onComplete: async (success) => {
           if (success) {
             // WBS 트리 및 Task 상세 새로고침
@@ -388,6 +389,7 @@ async function executeAction(action: string) {
 
       await new Promise<void>((resolve, reject) => {
         claudeCodeStore.execute(prompt, undefined, {
+          taskId: props.task.id,
           onComplete: async (success) => {
             if (success) {
               // WBS 트리 및 Task 상세 새로고침

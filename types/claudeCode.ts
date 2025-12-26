@@ -15,6 +15,7 @@ export interface ClaudeCodeSession {
   exitCode: number | null
   createdAt: string
   updatedAt: string
+  taskId?: string  // 실행을 시작한 Task ID
 }
 
 /**
