@@ -33,7 +33,7 @@
 | L3 | Activity (선택) | 1~4주 |
 | L4 | Task | 1일~1주 |
 
-**Task 유형 (category)**: `development`, `defect`, `infrastructure`
+**Task 유형 (category)**: `development`, `defect`, `infrastructure`, `simple-dev`
 
 ---
 
@@ -50,12 +50,14 @@ Todo [ ] → Design [bd] → Detail [dd] → Approve [ap] → Implement [im] →
 | 카테고리 | 상태 흐름 |
 |---------|----------|
 | development | `[ ]` → `[bd]` → `[dd]` → `[ap]` → `[im]` → `[vf]` → `[xx]` |
+| simple-dev | `[ ]` → `[dd]` → `[im]` → `[xx]` |
 | defect | `[ ]` → `[an]` → `[fx]` → `[vf]` → `[xx]` |
 | infrastructure | `[ ]` → `[ds]?` → `[im]` → `[xx]` |
 
 ### 워크플로우 명령어
 
 **development**: `start` → `draft` → `approve` → `build` → `verify` → `done`
+**simple-dev**: `design` → `build` → `done`
 **defect**: `start` → `analyze` → `verify` → `done`
 **infrastructure**: `start`/`skip` → `build` → `done`
 
@@ -87,7 +89,8 @@ Todo [ ] → Design [bd] → Detail [dd] → Approve [ap] → Implement [im] →
 
 | 단계 | 파일명 |
 |------|--------|
-| 기본설계 | `010-basic-design.md` |
+| 기본설계 | `010-basic-design.md` (development) |
+| 통합설계 | `010-design.md` (simple-dev) |
 | 화면설계 | `011-ui-design.md` |
 | 상세설계 | `020-detail-design.md` |
 | 설계리뷰 | `021-design-review-{llm}-{n}.md` |
